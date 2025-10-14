@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 0c5d7a8b0785c294b9ab8c19f202b111
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - baldoPrefab: {fileID: 8611842689374235054, guid: cee7bf1011e79424bbbe2d23637633fd, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

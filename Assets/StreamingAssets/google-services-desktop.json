@@ -1,0 +1,32 @@
+{
+  "project_info": {
+    "project_number": "715165302113",
+    "firebase_url": "https://pro2p-bb7f7-default-rtdb.firebaseio.com",
+    "project_id": "pro2p-bb7f7",
+    "storage_bucket": "pro2p-bb7f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715165302113:ios:8fa26a919ea94c47fad920",
+        "android_client_info": {
+          "package_name": "com.PRO.2P"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs2oN1V3WP-BcI0rs_r9S1XWa5TcK_utM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
