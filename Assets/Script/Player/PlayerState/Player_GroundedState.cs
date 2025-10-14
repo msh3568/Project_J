@@ -14,8 +14,11 @@ public class Player_GroundedState : PlayerState
             stateMachine.ChangeState(player.fallState);
         
             
-        if (input.Player.Baldo.WasPressedThisFrame())
+        if (input.Player.Baldo.WasPressedThisFrame() && player.skillManager.baldo.CanUseSkill())
+        {
+            player.PlaySound(player.baldoSkillSound);
             stateMachine.ChangeState(player.baldoState);
+        }
 
         if (input.Player.Jump.WasPressedThisFrame())
             stateMachine.ChangeState(player.jumpState);

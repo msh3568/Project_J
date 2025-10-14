@@ -13,7 +13,6 @@ public class Player_BaldoState : PlayerState
         //base.Enter();
         stateTimer = 0.5f; 
         
-        player.PlaySound(player.baldoSkillSound);
        
         if (player.moveInput.x != 0 && player.moveInput.x != player.facingDir)
         {

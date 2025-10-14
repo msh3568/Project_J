@@ -25,6 +25,8 @@ public abstract class PlayerState : EntityState
 
         if (input.Player.Dash.WasPressedThisFrame() && CanDash() && player.CanDash())
         {
+            player.PlaySound(player.dashSound1);
+            player.PlaySound(player.dashSound2);
             stateMachine.ChangeState(player.dashState);
         }
         
