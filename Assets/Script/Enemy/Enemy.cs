@@ -19,7 +19,7 @@ public class Enemy : Entity
     public float minRetreatDistance = 1;
     public Vector2 retreatVelocity;
 
-    [Header("기절상태 디테일")]
+    [Header("Stun Details")]
     public float stunnedDuration = 1;
     public Vector2 stunnedVelocity = new Vector2(7, 7);
     [SerializeField] protected bool canBestunned;
@@ -39,6 +39,9 @@ public class Enemy : Entity
     [SerializeField] private Transform playerCheck;
     [SerializeField] private float playerCheckDistance = 10;
     [SerializeField] private float playerCheckDistanceBackward = 5;
+
+    [Header("Collision checks")]
+    [SerializeField] private Transform wallCheck;
 
     public Transform player { get; private set; }
 
@@ -110,7 +113,13 @@ public class Enemy : Entity
         }
     }
 
-   
+    protected override void HandleCollisionDetection()
+    {
+        base.HandleCollisionDetection(); // Keep ground detection from parent
+
+        // Use the new wallCheck position for wall detection
+        wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+    }
 
     protected override void OnDrawGizmos()
     {
@@ -124,5 +133,12 @@ public class Enemy : Entity
         Gizmos.DrawLine(playerCheck.position, new Vector3(playerCheck.position.x + (facingDir * attackDistance), playerCheck.position.y));
         Gizmos.color = Color.green;
         Gizmos.DrawLine(playerCheck.position, new Vector3(playerCheck.position.x + (facingDir * minRetreatDistance), playerCheck.position.y));
+
+        // Draw the wall check gizmo from the new position
+        if (wallCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(wallCheck.position, wallCheck.position + new Vector3(wallCheckDistance * facingDir, 0));
+        }
     }
 }

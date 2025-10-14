@@ -38,7 +38,7 @@ public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBool
             stateMachine.ChangeState(enemy.attackState);
         else
         {
-            if (enemy.groundDetected == false || enemy.wallDetected)
+            if (enemy.wallDetected)
             {
                 enemy.SetVelocity(0, 0);
             }

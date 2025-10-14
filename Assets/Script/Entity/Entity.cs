@@ -22,10 +22,11 @@ public class Entity : MonoBehaviour
     [SerializeField] protected LayerMask whatIsGround;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.2f);
-    [SerializeField] private float wallCheckDistance;
-    [SerializeField] private Transform groundcheck;
+    [SerializeField] protected float wallCheckDistance;
+    [SerializeField] private Vector2 groundCheckPositionOffset;
+
     public bool groundDetected { get; private set; }
-    public bool wallDetected { get; private set; }
+    public bool wallDetected { get; protected set; }
 
     private bool isKnocked;
     private Coroutine knockbackCo;
@@ -103,10 +104,10 @@ public class Entity : MonoBehaviour
         facingDir = facingDir * -1;
     }
 
-    private void HandleCollisionDetection()
+    protected virtual void HandleCollisionDetection()
     {
-        Vector3 groundCheckPos = groundcheck.position;
-        groundDetected = Physics2D.BoxCast(groundCheckPos, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
+        Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
+        groundDetected = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
         wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
     }
 
@@ -118,8 +119,8 @@ public class Entity : MonoBehaviour
 
     protected virtual void OnDrawGizmos()
     {
-        Vector3 groundCheckPos = groundcheck.position + new Vector3(facingDir * 0.3f, 0);
-        Gizmos.DrawWireCube(groundCheckPos + new Vector3(0, -groundCheckDistance), groundCheckSize);
+        Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
+        Gizmos.DrawWireCube(box_origin + Vector2.down * groundCheckDistance, groundCheckSize);
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(wallCheckDistance * facingDir, 0));
     } 
 }
