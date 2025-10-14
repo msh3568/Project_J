@@ -9,9 +9,6 @@ public class Enemy_MoveState : Enemy_GroundedState
     public override void Enter()
     {
         base.Enter();
-
-        if (enemy.wallDetected)
-            enemy.Flip();
     }
 
     public override void Update()
