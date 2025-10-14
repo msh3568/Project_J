@@ -13,6 +13,9 @@ public class Player_DashState : PlayerState
     {
         base.Enter();
 
+        player.PlaySound(player.dashSound1);
+        player.PlaySound(player.dashSound2);
+
         player.StartDashCooldown();
 
         dashDir = player.facingDir;

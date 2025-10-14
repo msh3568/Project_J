@@ -65127,6 +65127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14dbac316e2f21b439c12f0bac2a97d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  bgmSource: {fileID: 0}
+  bgmClip: {fileID: 8300000, guid: 67bccd62fd5e37c47ab8526b105e9d93, type: 3}
 --- !u!4 &1529693310
 Transform:
   m_ObjectHideFlags: 0
@@ -66452,6 +66454,7 @@ GameObject:
   - component: {fileID: 1709141864}
   - component: {fileID: 1709141863}
   - component: {fileID: 1709141865}
+  - component: {fileID: 1709141866}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -66566,6 +66569,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1577635c61bfe2541b0ae06540c5f2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1709141866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709141861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c779440a72e065346b901975c4585772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventHandler
 --- !u!1 &1716158058
 GameObject:
   m_ObjectHideFlags: 0
@@ -68644,7 +68659,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2049881624}
   - component: {fileID: 2049881623}
-  - component: {fileID: 2049881634}
   - component: {fileID: 2049881626}
   - component: {fileID: 2049881625}
   - component: {fileID: 2049881629}
@@ -68695,6 +68709,28 @@ MonoBehaviour:
   dashSpeed: 20
   dashCooldown: 0.5
   defense: 1
+  fxSource: {fileID: 0}
+  dashSound1:
+    clip: {fileID: 8300000, guid: 430678261efe7474f91340bffafa7f74, type: 3}
+    volume: 1
+  dashSound2:
+    clip: {fileID: 8300000, guid: 806b58b1489abaa439da2cfc3d027aeb, type: 3}
+    volume: 1
+  jumpSound:
+    clip: {fileID: 8300000, guid: bd1f16598da328b498da10f3c8aafe61, type: 3}
+    volume: 1
+  walkSound:
+    clip: {fileID: 8300000, guid: b9949249e648dee4a82c847f727fa6bf, type: 3}
+    volume: 0.398
+  hitSound:
+    clip: {fileID: 8300000, guid: ab615fe872eaf03478322cd019df627f, type: 3}
+    volume: 1
+  basicAttackSound:
+    clip: {fileID: 8300000, guid: e7f8c133294633341bda99f58e877a63, type: 3}
+    volume: 1
+  baldoSkillSound:
+    clip: {fileID: 8300000, guid: 4d8c99531e97f9d449cb2dac91b73563, type: 3}
+    volume: 1
 --- !u!4 &2049881624
 Transform:
   m_ObjectHideFlags: 0
@@ -68879,18 +68915,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   counterRecovery: 0
---- !u!114 &2049881634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049881622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 141c0fee4aa36464c8c84cbba10bf386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Clock
 --- !u!114 &2049881635
 MonoBehaviour:
   m_ObjectHideFlags: 0

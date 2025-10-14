@@ -42,6 +42,8 @@ public class Entity_Health : MonoBehaviour, IDamagable
         Player player = GetComponent<Player>();
         if (player != null)
         {
+            player.PlaySound(player.hitSound);
+
             float damageReduction = (float)player.defense / 100f;
             damage *= (1 - damageReduction);
         }

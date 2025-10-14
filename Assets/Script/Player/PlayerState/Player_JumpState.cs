@@ -10,6 +10,8 @@ public class Player_JumpState : Player_AiredState
     {
         base.Enter();
 
+        player.PlaySound(player.jumpSound);
+
         player.SetVelocity(rb.linearVelocity.x, player.jumpForce);
     }
 

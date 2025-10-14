@@ -44,9 +44,24 @@ public class Player : Entity
     [Range(1, 100)]
     public int defense = 1;
 
+    [Header("Audio")]
+    public AudioSource fxSource;
+    public SoundEffect dashSound1;
+    public SoundEffect dashSound2;
+    public SoundEffect jumpSound;
+    public SoundEffect walkSound;
+    public SoundEffect hitSound;
+    public SoundEffect basicAttackSound;
+    public SoundEffect baldoSkillSound;
+
     protected override void Awake()
     {
         base.Awake();
+
+        fxSource = GetComponent<AudioSource>();
+        if (fxSource == null)
+            fxSource = gameObject.AddComponent<AudioSource>();
+
         if (GetComponent<Entity_VFX>() == null)
             gameObject.AddComponent<Entity_VFX>();
         input = new PlayerInputSet();
@@ -117,5 +132,16 @@ public class Player : Entity
     {
         if (other.gameObject.CompareTag("Wall"))
             isTouchingWall = false;
+    }
+
+    public void PlaySound(SoundEffect _sound)
+    {
+        if (_sound.clip != null)
+            fxSource.PlayOneShot(_sound.clip, _sound.volume);
+    }
+
+    public void PlayWalkSound()
+    {
+        PlaySound(walkSound);
     }
 }

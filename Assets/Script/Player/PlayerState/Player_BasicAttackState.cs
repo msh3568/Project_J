@@ -21,6 +21,9 @@ public class Player_BasicAttackState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        player.PlaySound(player.basicAttackSound);
+
         ResetComboIndexIfNeeded();
 
         anim.SetInteger("basicAttackIndex", comboIndex);
