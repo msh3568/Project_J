@@ -10,6 +10,7 @@ public class Player : Entity
     public Player_IdleState idleState { get; private set; }
     public Player_MoveState moveState { get; private set; }
     public Player_JumpState jumpState { get; private set; }
+    public Player_AiredState airedState { get; private set; }
     public Player_FallState fallState { get; private set; }
     public Player_WallSlideState wallSlideState { get; private set; }
     public Player_WallJumpState wallJumpState { get; private set; }
@@ -35,6 +36,7 @@ public class Player : Entity
     [Space]
     public float dashDuration = .25f;
     public float dashSpeed = 20;
+    public AnimationCurve dashSpeedCurve;
     public float dashCooldown = 1f;
     public float dashCooldownTimer { get; private set; }
     public bool isTouchingWall { get; private set; }
@@ -68,6 +70,7 @@ public class Player : Entity
         skillManager = GetComponent<Player_SkillManager>();
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
+        airedState = new Player_AiredState(this, stateMachine, "jumpfall");
         jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
         fallState = new Player_FallState(this, stateMachine, "jumpfall");
         wallSlideState = new Player_WallSlideState(this, stateMachine, "wallslide");

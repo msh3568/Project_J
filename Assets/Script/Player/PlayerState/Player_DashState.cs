@@ -26,7 +26,9 @@ public class Player_DashState : PlayerState
     {
         base.Update();
         CancelDashIfNeeded();
-        player.SetVelocity(player.dashSpeed * dashDir, 0);
+        float normalizedTime = (player.dashDuration - stateTimer) / player.dashDuration;
+        float currentSpeed = player.dashSpeed * player.dashSpeedCurve.Evaluate(normalizedTime);
+        player.SetVelocity(currentSpeed * dashDir, 0);
 
         if (stateTimer < 0)
         {

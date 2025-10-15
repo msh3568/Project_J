@@ -12,14 +12,17 @@ public class Player_WallSlideState : PlayerState
         base.Update();
         HandleWallSlide();
 
+        if (input.Player.Jump.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.wallJumpState);
+            return;
+        }
+
         if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
         {
             stateMachine.ChangeState(player.dashState);
             return;
         }
-
-        if(input.Player.Jump.WasPressedThisFrame())
-            stateMachine.ChangeState(player.wallJumpState);
 
 
         if(player.wallDetected == false)

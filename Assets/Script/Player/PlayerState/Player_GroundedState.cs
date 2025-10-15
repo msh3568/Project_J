@@ -10,6 +10,14 @@ public class Player_GroundedState : PlayerState
     {
         base.Update();
 
+        if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
+        {
+            player.PlaySound(player.dashSound1);
+            player.PlaySound(player.dashSound2);
+            stateMachine.ChangeState(player.dashState);
+            return;
+        }
+
         if (rb.linearVelocity.y < 0 && player.groundDetected == false)
             stateMachine.ChangeState(player.fallState);
         

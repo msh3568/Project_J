@@ -10,6 +10,14 @@ public class Player_AiredState : PlayerState
     {
         base.Update();
 
+        if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
+        {
+            player.PlaySound(player.dashSound1);
+            player.PlaySound(player.dashSound2);
+            stateMachine.ChangeState(player.dashState);
+            return;
+        }
+
         if (player.moveInput.x != 0)
             player.SetVelocity(player.moveInput.x * (player.moveSpeed * player.inAirMoveMultiPlier), rb.linearVelocity.y);
     }
