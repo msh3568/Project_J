@@ -79,6 +79,7 @@ public class ActivatingBridge : MonoBehaviour
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null && !player.isImmobilized)
             {
+                AnalyticsManager.Instance.LogTrapEvent("ActivatingBridge", player.transform.position);
                 player.PlaySound(immobilizationSound);
                 player.Immobilize(immobilizationDuration);
             }

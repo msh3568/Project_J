@@ -70,6 +70,43 @@ public class AnalyticsManager : MonoBehaviour
         rKeyPressLocations.Add(locationData);
     }
 
+    public void LogTrapEvent(string trapType, Vector3 position)
+    {
+        if (reference == null)
+        {
+            Debug.LogError("Firebase not initialized. Cannot log trap event.");
+            return;
+        }
+
+        // 1. Log the individual event with details
+        string logKey = reference.Child("trap_logs").Push().Key;
+        var trapLog = new Dictionary<string, object>
+        {
+            ["trap_type"] = trapType,
+            ["timestamp"] = ServerValue.Timestamp,
+            ["position"] = new Dictionary<string, object>
+            {
+                ["x"] = position.x,
+                ["y"] = position.y,
+                ["z"] = position.z
+            }
+        };
+        reference.Child("trap_logs").Child(logKey).SetValueAsync(trapLog);
+
+        // 2. Increment the total count for this trap type
+        DatabaseReference trapCountRef = reference.Child("trap_counts").Child(trapType);
+        trapCountRef.RunTransaction(mutableData => {
+            long count = 0;
+            if (mutableData.Value != null)
+            {
+                long.TryParse(mutableData.Value.ToString(), out count);
+            }
+            count++;
+            mutableData.Value = count;
+            return TransactionResult.Success(mutableData);
+        });
+    }
+
     void OnApplicationPause(bool pauseStatus)
     {
         if (pauseStatus)

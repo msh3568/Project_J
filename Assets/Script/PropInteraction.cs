@@ -17,6 +17,7 @@ public class PropInteraction : MonoBehaviour
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
+                AnalyticsManager.Instance.LogTrapEvent("SlowingPot", player.transform.position);
                 player.PlaySound(interactionSound);
                 player.ApplySlow(slowDuration, speedMultiplier);
             }

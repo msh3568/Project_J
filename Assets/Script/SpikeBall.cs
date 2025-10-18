@@ -27,6 +27,7 @@ public class SpikeBall : MonoBehaviour
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
+                AnalyticsManager.Instance.LogTrapEvent("SpikeBall", player.transform.position);
                 player.PlaySound(hitSound);
                 player.Immobilize(immobilizationDuration);
             }
