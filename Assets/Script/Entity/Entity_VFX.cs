@@ -25,7 +25,9 @@ public class Entity_VFX : MonoBehaviour
 
     public void CreateOnHitVFX(Transform target)
     {
-        Instantiate(hitVfx, target.position, Quaternion.identity);
+        Vector3 spawnPosition = target.position + new Vector3(0.03f, -0.19f);
+        GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, Quaternion.identity);
+        Destroy(newHitVfx, 0.2f);
     }
 
     public void PlayOnDamageVfx()

@@ -1,34 +1,39 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // ¾À ÀüÈ¯À» À§ÇØ ²À ÇÊ¿äÇÕ´Ï´Ù!
+using UnityEngine.SceneManagement; //  È¯   Ê¿Õ´Ï´!
 
 public class TitleManager : MonoBehaviour
 {
     [Header("UI Group Objects")]
-    public GameObject titleContentsGroup;    // "°ÔÀÓ ½ÃÀÛ" µî ±âº» ¹öÆ°ÀÌ ÀÖ´Â ±×·ì
-    public GameObject settingsContentsGroup; // ¼³Á¤ UI ¿ä¼ÒµéÀÌ ÀÖ´Â ±×·ì
+    public GameObject titleContentsGroup;    // " "  âº» Æ° Ö´ ×·
+    public GameObject settingsContentsGroup; //  UI Òµ Ö´ ×·
 
     /// <summary>
-    /// '°ÔÀÓ ½ÃÀÛ' ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// ' ' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnStartButtonClick()
     {
-        // "GameScene"ÀÌ¶ó´Â ÀÌ¸§ÀÇ ¾ÀÀ» ºÒ·¯¿É´Ï´Ù.
-        // ÇÁ·ÎÁ§Æ®¿¡ ÀÖ´Â ¾À ÆÄÀÏ ÀÌ¸§°ú Á¤È®È÷ °°¾Æ¾ß ÇÕ´Ï´Ù.
+        if (AnalyticsManager.Instance != null)
+        {
+            AnalyticsManager.Instance.StartSession();
+        }
+
+        // "GameScene"Ì¶ Ì¸  Ò·É´Ï´.
+        // Æ® Ö´   Ì¸ È® Æ¾ Õ´Ï´.
         SceneManager.LoadScene("GameScene");
     }
 
     /// <summary>
-    /// '¼³Á¤' ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// '' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnSettingsButtonClick()
     {
-        // Å¸ÀÌÆ² ±âº» UI´Â ²ô°í
+        // Å¸Æ² âº» UI 
         if (titleContentsGroup != null)
         {
             titleContentsGroup.SetActive(false);
         }
 
-        // ¼³Á¤ UI´Â ÄÕ´Ï´Ù.
+        //  UI Õ´Ï´.
         if (settingsContentsGroup != null)
         {
             settingsContentsGroup.SetActive(true);
@@ -36,17 +41,17 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼³Á¤ È­¸éÀÇ '´Ý±â' ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    ///  È­ 'Ý±' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnSettingsCloseButtonClick()
     {
-        // ¼³Á¤ UI´Â ²ô°í
+        //  UI 
         if (settingsContentsGroup != null)
         {
             settingsContentsGroup.SetActive(false);
         }
 
-        // Å¸ÀÌÆ² ±âº» UI´Â ´Ù½Ã ÄÕ´Ï´Ù.
+        // Å¸Æ² âº» UI Ù½ Õ´Ï´.
         if (titleContentsGroup != null)
         {
             titleContentsGroup.SetActive(true);
@@ -54,7 +59,7 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// '°ÔÀÓ Á¾·á' ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// ' ' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnExitButtonClick()
     {

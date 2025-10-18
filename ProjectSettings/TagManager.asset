@@ -18,7 +18,7 @@ TagManager:
   - Player
   - Enemy
   - BackGround
-  - 
+  - Draggable
   - 
   - 
   - 
@@ -55,6 +55,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Draggable
+    uniqueID: 580985107
     locked: 0
   m_RenderingLayers:
   - Default
