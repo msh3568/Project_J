@@ -87,11 +87,29 @@ public class Player : Entity
         stateMachine.Initialize(idleState);
     }
 
+    public bool isImmobilized { get; private set; }
+
     protected override void Update()
     {
+        if (isImmobilized)
+            return;
+
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
+    }
+
+    public void Immobilize(float duration)
+    {
+        StartCoroutine(ImmobilizeCoroutine(duration));
+    }
+
+    private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
+    {
+        stateMachine.ChangeState(idleState);
+        isImmobilized = true;
+        yield return new WaitForSeconds(duration);
+        isImmobilized = false;
     }
 
     private void OnEnable()
@@ -123,6 +141,19 @@ public class Player : Entity
     public void StartDashCooldown()
     {
         dashCooldownTimer = dashCooldown;
+    }
+
+    public void ApplySlow(float duration, float multiplier)
+    {
+        StartCoroutine(SlowCoroutine(duration, multiplier));
+    }
+
+    private System.Collections.IEnumerator SlowCoroutine(float duration, float multiplier)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= multiplier;
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

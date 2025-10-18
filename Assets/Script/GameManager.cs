@@ -33,7 +33,11 @@ public class GameManager : MonoBehaviour
         {
             if (AnalyticsManager.Instance != null)
             {
-                AnalyticsManager.Instance.IncrementRKeyPressCount();
+                GameObject player = GameObject.FindWithTag("Player");
+                if (player != null)
+                {
+                    AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
+                }
             }
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }

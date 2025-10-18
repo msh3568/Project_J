@@ -4,6 +4,7 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using System;
+using System.Collections.Generic;
 
 public class AnalyticsManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class AnalyticsManager : MonoBehaviour
     private DateTime sessionStartTime;
     private bool isSessionStarted = false;
     private bool isSessionEnded = false; // Flag to prevent multiple EndSession calls
-    private int rKeyPressCount = 0;
+    private List<object> rKeyPressLocations = new List<object>();
 
     void Awake()
     {
@@ -57,13 +58,16 @@ public class AnalyticsManager : MonoBehaviour
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
         isSessionEnded = false;
-        rKeyPressCount = 0; // Reset counter at the start of a new session
+        rKeyPressLocations.Clear(); // Reset list at the start of a new session
         Debug.Log("Analytics session started.");
     }
 
-    public void IncrementRKeyPressCount()
+    public void LogRKeyPress(Vector2 position)
     {
-        rKeyPressCount++;
+        var locationData = new Dictionary<string, object>();
+        locationData["x"] = position.x;
+        locationData["y"] = position.y;
+        rKeyPressLocations.Add(locationData);
     }
 
     void OnApplicationPause(bool pauseStatus)
@@ -99,11 +103,18 @@ public class AnalyticsManager : MonoBehaviour
         sessionData["start_time"] = sessionStartTime.ToString("o");
         sessionData["end_time"] = sessionEndTime.ToString("o");
         sessionData["duration"] = formattedDuration;
-        sessionData["r_key_press_count"] = rKeyPressCount;
+        sessionData["r_key_presses"] = rKeyPressLocations;
+
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            sessionData["player_end_position_x"] = player.transform.position.x;
+            sessionData["player_end_position_y"] = player.transform.position.y;
+        }
 
         reference.Child("sessions").Child(sessionId).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(task => {
             if (task.IsCompleted) {
-                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressCount}. Data sent to Firebase.");
+                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressLocations.Count}. Data sent to Firebase.");
             } else if (task.IsFaulted) {
                 Debug.LogError("Failed to send analytics session data: " + task.Exception);
             }
