@@ -12,6 +12,8 @@ public class AnalyticsManager : MonoBehaviour
     private DatabaseReference reference;
     private DateTime sessionStartTime;
     private bool isSessionStarted = false;
+    private bool isSessionEnded = false; // Flag to prevent multiple EndSession calls
+    private int rKeyPressCount = 0;
 
     void Awake()
     {
@@ -54,12 +56,31 @@ public class AnalyticsManager : MonoBehaviour
         }
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
+        isSessionEnded = false;
+        rKeyPressCount = 0; // Reset counter at the start of a new session
         Debug.Log("Analytics session started.");
     }
 
-    private void OnApplicationQuit()
+    public void IncrementRKeyPressCount()
     {
-        if (isSessionStarted && reference != null)
+        rKeyPressCount++;
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            // App is pausing
+            if (isSessionStarted && !isSessionEnded && reference != null)
+            {
+                EndSession();
+            }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        if (isSessionStarted && !isSessionEnded && reference != null)
         {
             EndSession();
         }
@@ -67,14 +88,25 @@ public class AnalyticsManager : MonoBehaviour
 
     private void EndSession()
     {
+        isSessionEnded = true; // Set flag to true to prevent multiple calls
+
         DateTime sessionEndTime = DateTime.UtcNow;
         TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
+        string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
 
         string sessionId = reference.Child("sessions").Push().Key;
-        reference.Child("sessions").Child(sessionId).Child("start_time").SetValueAsync(sessionStartTime.ToString("o"));
-        reference.Child("sessions").Child(sessionId).Child("end_time").SetValueAsync(sessionEndTime.ToString("o"));
-        reference.Child("sessions").Child(sessionId).Child("duration_seconds").SetValueAsync(sessionDuration.TotalSeconds);
+        var sessionData = new System.Collections.Generic.Dictionary<string, object>();
+        sessionData["start_time"] = sessionStartTime.ToString("o");
+        sessionData["end_time"] = sessionEndTime.ToString("o");
+        sessionData["duration"] = formattedDuration;
+        sessionData["r_key_press_count"] = rKeyPressCount;
 
-        Debug.Log($"Analytics session ended. Duration: {sessionDuration.TotalSeconds} seconds. Data sent to Firebase.");
+        reference.Child("sessions").Child(sessionId).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(task => {
+            if (task.IsCompleted) {
+                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressCount}. Data sent to Firebase.");
+            } else if (task.IsFaulted) {
+                Debug.LogError("Failed to send analytics session data: " + task.Exception);
+            }
+        });
     }
 }

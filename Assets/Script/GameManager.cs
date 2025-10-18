@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            if (AnalyticsManager.Instance != null)
+            {
+                AnalyticsManager.Instance.IncrementRKeyPressCount();
+            }
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
