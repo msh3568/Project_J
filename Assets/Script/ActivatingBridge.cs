@@ -13,6 +13,7 @@ public class ActivatingBridge : MonoBehaviour
 
     [Header("Visuals")]
     [SerializeField] private Color activeColor = Color.red;
+    [SerializeField] private Color playerTemporaryColor = new Color(1f, 1f, 0f, 0.5f); // Semi-transparent yellow (RGBA)
 
     [Header("Sound")]
     [SerializeField] private SoundEffect activationSound;
@@ -53,7 +54,7 @@ public class ActivatingBridge : MonoBehaviour
             yield return new WaitForSeconds(deactivationDuration);
 
             // Activated State
-            if (activationSound.clip != null)
+            if (activationSound != null && activationSound.clip != null)
             {
                 audioSource.PlayOneShot(activationSound.clip, activationSound.volume);
             }
@@ -77,11 +78,26 @@ public class ActivatingBridge : MonoBehaviour
         if (bridgeCollider.enabled && other.gameObject.CompareTag("Player"))
         {
             Player player = other.gameObject.GetComponent<Player>();
+
             if (player != null && !player.isImmobilized)
             {
-                AnalyticsManager.Instance.LogTrapEvent("ActivatingBridge", player.transform.position);
+                if (AnalyticsManager.Instance != null)
+                {
+                    AnalyticsManager.Instance.LogTrapEvent("ActivatingBridge", player.transform.position);
+                }
+
                 player.PlaySound(immobilizationSound);
                 player.Immobilize(immobilizationDuration);
+
+                // Apply temporary color to player
+                if (player.playerVisualEffects != null)
+                {
+                    player.playerVisualEffects.ApplyTemporaryColor(playerTemporaryColor, immobilizationDuration);
+                }
+                else
+                {
+                    Debug.LogWarning("ActivatingBridge: PlayerVisualEffects component not found on player. Cannot apply temporary color.");
+                }
             }
         }
     }

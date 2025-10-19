@@ -48,6 +48,7 @@ public class GameClearUI : MonoBehaviour
         }
 
         // 2. 게임 흐름과 타이머를 정지시킵니다.
+        if (AnalyticsManager.Instance != null) AnalyticsManager.Instance.SetGoalReached(true);
         this.clearTime = TimeManager.elapsedTime;
         if (timeManager != null) timeManager.enabled = false;
         Time.timeScale = 0f; // 게임 시간을 여기서 멈춥니다.

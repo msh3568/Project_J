@@ -6,9 +6,6 @@ public class SpikeBall : MonoBehaviour
     public float lifetime = 5f;
     public float immobilizationDuration = 2f;
 
-    [Header("Sound")]
-    public SoundEffect hitSound;
-
     void Start()
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
@@ -25,11 +22,20 @@ public class SpikeBall : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Player player = other.gameObject.GetComponent<Player>();
+
             if (player != null)
             {
-                AnalyticsManager.Instance.LogTrapEvent("SpikeBall", player.transform.position);
-                player.PlaySound(hitSound);
+                if (AnalyticsManager.Instance != null)
+                {
+                    AnalyticsManager.Instance.LogTrapEvent("SpikeBall", player.transform.position);
+                }
+                
                 player.Immobilize(immobilizationDuration);
+                
+                if (player.hitSound != null && player.hitSound.clip != null)
+                {
+                    player.PlaySound(player.hitSound);
+                }
             }
             Destroy(gameObject);
         }

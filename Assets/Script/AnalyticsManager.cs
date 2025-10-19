@@ -14,6 +14,9 @@ public class AnalyticsManager : MonoBehaviour
     private bool isSessionStarted = false;
     private bool isSessionEnded = false; // Flag to prevent multiple EndSession calls
     private List<object> rKeyPressLocations = new List<object>();
+    private List<object> trapEventsDuringSession = new List<object>(); // To store trap events per session
+    private List<object> checkpointActivationsDuringSession = new List<object>(); // New: To store checkpoint activations per session
+    private bool hasReachedGoal = false; // New: To track if the goal was reached
 
     void Awake()
     {
@@ -57,7 +60,10 @@ public class AnalyticsManager : MonoBehaviour
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
         isSessionEnded = false;
-        rKeyPressLocations.Clear(); // Reset list at the start of a new session
+        rKeyPressLocations.Clear();
+        trapEventsDuringSession.Clear();
+        checkpointActivationsDuringSession.Clear(); // New: Clear checkpoint events at session start
+        hasReachedGoal = false; // New: Reset goal reached flag
         Debug.Log("Analytics session started.");
     }
 
@@ -77,8 +83,7 @@ public class AnalyticsManager : MonoBehaviour
             return;
         }
 
-        // 1. Log the individual event with details
-        string logKey = reference.Child("trap_logs").Push().Key;
+        // Collect the individual event with details for the session
         var trapLog = new Dictionary<string, object>
         {
             ["trap_type"] = trapType,
@@ -90,9 +95,9 @@ public class AnalyticsManager : MonoBehaviour
                 ["z"] = position.z
             }
         };
-        reference.Child("trap_logs").Child(logKey).SetValueAsync(trapLog);
+        trapEventsDuringSession.Add(trapLog);
 
-        // 2. Increment the total count for this trap type
+        // Increment the total count for this trap type (global aggregate, still useful)
         DatabaseReference trapCountRef = reference.Child("trap_counts").Child(trapType);
         trapCountRef.RunTransaction(mutableData => {
             long count = 0;
@@ -114,13 +119,21 @@ public class AnalyticsManager : MonoBehaviour
             return;
         }
 
-        string logKey = reference.Child("checkpoint_activations").Push().Key;
+        // Collect the individual event with details for the session
         var checkpointLog = new Dictionary<string, object>
         {
             ["timestamp"] = ServerValue.Timestamp,
-            ["activated_count"] = count
+            ["활성화한_체크포인트_갯수"] = count // 활성화한 체크포인트 갯수
         };
-        reference.Child("checkpoint_activations").Child(logKey).SetValueAsync(checkpointLog);
+        checkpointActivationsDuringSession.Add(checkpointLog); // New: Add to session list
+
+        // The direct push to 'checkpoint_activations' is removed as it's now part of the session
+        // If you still want a global aggregate for checkpoints, similar to trap_counts, you'd add it here.
+    }
+
+    public void SetGoalReached(bool reached)
+    {
+        hasReachedGoal = reached;
     }
 
     void OnApplicationPause(bool pauseStatus)
@@ -151,23 +164,26 @@ public class AnalyticsManager : MonoBehaviour
         TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
         string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
 
-        string sessionId = reference.Child("sessions").Push().Key;
+        string sessionId = reference.Child("유저_데이터").Push().Key;
         var sessionData = new System.Collections.Generic.Dictionary<string, object>();
-        sessionData["start_time"] = sessionStartTime.ToString("o");
-        sessionData["end_time"] = sessionEndTime.ToString("o");
-        sessionData["duration"] = formattedDuration;
-        sessionData["r_key_presses"] = rKeyPressLocations;
+        sessionData["게임시작_시간"] = sessionStartTime.ToString("o"); // 게임 시작 시간
+        sessionData["게임종료_시간"] = sessionEndTime.ToString("o");     // 종료 시간
+        sessionData["총_플레이_타임"] = formattedDuration;                 // 총 플레이 타임
+        sessionData["리셋_횟수"] = rKeyPressLocations;           // R키 누른 횟수
+        sessionData["함정"] = trapEventsDuringSession;       // 함정에 걸린 로그
+        sessionData["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession; // 활성화한 체크포인트 로그
+        sessionData["골인_?"] = hasReachedGoal;               // 최종 목표 도달 여부
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            sessionData["player_end_position_x"] = player.transform.position.x;
-            sessionData["player_end_position_y"] = player.transform.position.y;
+            sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
+            sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
         }
 
         reference.Child("sessions").Child(sessionId).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(task => {
             if (task.IsCompleted) {
-                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressLocations.Count}. Data sent to Firebase.");
+                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressLocations.Count}. Trap events: {trapEventsDuringSession.Count}. Checkpoint activations: {checkpointActivationsDuringSession.Count}. Goal reached: {hasReachedGoal}. Data sent to Firebase.");
             } else if (task.IsFaulted) {
                 Debug.LogError("Failed to send analytics session data: " + task.Exception);
             }

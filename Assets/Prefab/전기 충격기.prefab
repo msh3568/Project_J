@@ -155,6 +155,7 @@ MonoBehaviour:
   deactivationDuration: 4
   immobilizationDuration: 1
   activeColor: {r: 1, g: 0.821988, b: 0, a: 1}
+  playerTemporaryColor: {r: 1, g: 1, b: 0, a: 1}
   activationSound:
     clip: {fileID: 8300000, guid: 002078accc914d447beb76271486b6be, type: 3}
     volume: 0.843

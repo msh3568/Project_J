@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class DisappearingPlatform : MonoBehaviour
 {
     [Header("Timings")]
@@ -9,14 +8,11 @@ public class DisappearingPlatform : MonoBehaviour
     [SerializeField] private float respawnTime = 3f;
     [SerializeField] private float fadeDuration = 0.5f;
 
-    [Header("Sound")]
-    [SerializeField] private SoundEffect triggerSound;
-    [SerializeField] private SoundEffect disappearSound;
-    [SerializeField] private SoundEffect reappearSound;
+    // Removed sound-related fields
 
     private SpriteRenderer spriteRenderer;
     private Collider2D platformCollider;
-    private AudioSource audioSource;
+    // Removed AudioSource audioSource;
     private Color originalColor;
     private bool isTriggered = false;
 
@@ -24,8 +20,7 @@ public class DisappearingPlatform : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         platformCollider = GetComponent<Collider2D>();
-        audioSource = GetComponent<AudioSource>();
-        audioSource.spatialBlend = 1f; // Set to 3D sound
+        // Removed audioSource initialization
 
         if (spriteRenderer != null)
         {
@@ -35,13 +30,11 @@ public class DisappearingPlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        Debug.Log($"DisappearingPlatform.OnCollisionEnter2D with {other.gameObject.name}. Tag: {other.gameObject.tag}");
+
         if (other.gameObject.CompareTag("Player") && !isTriggered)
         {
-            Player player = other.gameObject.GetComponent<Player>();
-            if (player != null)
-            {
-                player.PlaySound(triggerSound);
-            }
+            // Removed player.PlaySound(triggerSound) call and try-catch block
             StartCoroutine(DisappearCycle());
         }
     }
@@ -53,7 +46,7 @@ public class DisappearingPlatform : MonoBehaviour
         yield return new WaitForSeconds(disappearDelay);
 
         // Fade Out
-        if (disappearSound.clip != null) audioSource.PlayOneShot(disappearSound.clip, disappearSound.volume);
+        // Removed disappearSound play
         yield return StartCoroutine(Fade(1, 0));
 
         // Deactivate collider and renderer
@@ -67,7 +60,7 @@ public class DisappearingPlatform : MonoBehaviour
         if (spriteRenderer != null) spriteRenderer.enabled = true;
 
         // Fade In
-        if (reappearSound.clip != null) audioSource.PlayOneShot(reappearSound.clip, reappearSound.volume);
+        // Removed reappearSound play
         yield return StartCoroutine(Fade(0, 1));
 
         isTriggered = false;

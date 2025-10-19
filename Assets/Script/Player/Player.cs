@@ -1,5 +1,6 @@
 using NUnit.Framework.Constraints;
 using UnityEngine;
+using System.Collections;
 
 public class Player : Entity
 {
@@ -56,13 +57,19 @@ public class Player : Entity
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
 
+    public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+
     protected override void Awake()
     {
         base.Awake();
 
         fxSource = GetComponent<AudioSource>();
         if (fxSource == null)
+        {
             fxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
 
         if (GetComponent<Entity_VFX>() == null)
             gameObject.AddComponent<Entity_VFX>();
@@ -84,7 +91,14 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        stateMachine.Initialize(idleState);
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.Initialize(idleState);
+        }
+        else
+        {
+            Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+        }
     }
 
     public bool isImmobilized { get; private set; }
@@ -106,11 +120,33 @@ public class Player : Entity
 
     private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
     {
-        stateMachine.ChangeState(idleState);
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        else
+        {
+            Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+        }
         isImmobilized = true;
         yield return new WaitForSeconds(duration);
         isImmobilized = false;
     }
+
+    public void ApplySlow(float duration, float multiplier)
+    {
+        StartCoroutine(SlowCoroutine(duration, multiplier));
+    }
+
+    private System.Collections.IEnumerator SlowCoroutine(float duration, float multiplier)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= multiplier;
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+    }
+
+    // Removed ApplyTemporaryColor and TemporaryColorCoroutine
 
     private void OnEnable()
     {
@@ -143,19 +179,6 @@ public class Player : Entity
         dashCooldownTimer = dashCooldown;
     }
 
-    public void ApplySlow(float duration, float multiplier)
-    {
-        StartCoroutine(SlowCoroutine(duration, multiplier));
-    }
-
-    private System.Collections.IEnumerator SlowCoroutine(float duration, float multiplier)
-    {
-        float originalSpeed = moveSpeed;
-        moveSpeed *= multiplier;
-        yield return new WaitForSeconds(duration);
-        moveSpeed = originalSpeed;
-    }
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
@@ -170,12 +193,29 @@ public class Player : Entity
 
     public void PlaySound(SoundEffect _sound)
     {
-        if (_sound.clip != null)
-            fxSource.PlayOneShot(_sound.clip, _sound.volume);
+        if (fxSource == null)
+        {
+            Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+            return;
+        }
+        if (_sound == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+            return;
+        }
+        if (_sound.clip == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+            return;
+        }
+
+        fxSource.PlayOneShot(_sound.clip, _sound.volume);
     }
 
     public void PlayWalkSound()
     {
         PlaySound(walkSound);
     }
+
+    // Removed OnDestroy related to color changes
 }
