@@ -48,7 +48,7 @@ public class GameClearUI : MonoBehaviour
         }
 
         // 2. 게임 흐름과 타이머를 정지시킵니다.
-        this.clearTime = timeManager.elapsedTime;
+        this.clearTime = TimeManager.elapsedTime;
         if (timeManager != null) timeManager.enabled = false;
         Time.timeScale = 0f; // 게임 시간을 여기서 멈춥니다.
 

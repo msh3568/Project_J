@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
@@ -105,6 +104,23 @@ public class AnalyticsManager : MonoBehaviour
             mutableData.Value = count;
             return TransactionResult.Success(mutableData);
         });
+    }
+
+    public void LogCheckpointActivation(int count)
+    {
+        if (reference == null)
+        {
+            Debug.LogError("Firebase not initialized. Cannot log checkpoint activation.");
+            return;
+        }
+
+        string logKey = reference.Child("checkpoint_activations").Push().Key;
+        var checkpointLog = new Dictionary<string, object>
+        {
+            ["timestamp"] = ServerValue.Timestamp,
+            ["activated_count"] = count
+        };
+        reference.Child("checkpoint_activations").Child(logKey).SetValueAsync(checkpointLog);
     }
 
     void OnApplicationPause(bool pauseStatus)
