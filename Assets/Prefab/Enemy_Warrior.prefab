@@ -335,6 +335,9 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 0
   groundCheckDistance: 0.5
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.5
@@ -486,5 +489,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
-  hitVfx: {fileID: 0}
+  hitVfx: {fileID: 1345081126871789188, guid: 2b326e96230651545b7370ddcf2a86e5, type: 3}
   attackAlert: {fileID: 1455090909206326654}

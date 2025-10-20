@@ -1,5 +1,6 @@
 using NUnit.Framework.Constraints;
 using UnityEngine;
+using System.Collections;
 
 public class Player : Entity
 {
@@ -10,6 +11,7 @@ public class Player : Entity
     public Player_IdleState idleState { get; private set; }
     public Player_MoveState moveState { get; private set; }
     public Player_JumpState jumpState { get; private set; }
+    public Player_AiredState airedState { get; private set; }
     public Player_FallState fallState { get; private set; }
     public Player_WallSlideState wallSlideState { get; private set; }
     public Player_WallJumpState wallJumpState { get; private set; }
@@ -35,6 +37,7 @@ public class Player : Entity
     [Space]
     public float dashDuration = .25f;
     public float dashSpeed = 20;
+    public AnimationCurve dashSpeedCurve;
     public float dashCooldown = 1f;
     public float dashCooldownTimer { get; private set; }
     public bool isTouchingWall { get; private set; }
@@ -54,13 +57,19 @@ public class Player : Entity
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
 
+    public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+
     protected override void Awake()
     {
         base.Awake();
 
         fxSource = GetComponent<AudioSource>();
         if (fxSource == null)
+        {
             fxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
 
         if (GetComponent<Entity_VFX>() == null)
             gameObject.AddComponent<Entity_VFX>();
@@ -68,6 +77,7 @@ public class Player : Entity
         skillManager = GetComponent<Player_SkillManager>();
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
+        airedState = new Player_AiredState(this, stateMachine, "jumpfall");
         jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
         fallState = new Player_FallState(this, stateMachine, "jumpfall");
         wallSlideState = new Player_WallSlideState(this, stateMachine, "wallslide");
@@ -81,15 +91,62 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        stateMachine.Initialize(idleState);
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.Initialize(idleState);
+        }
+        else
+        {
+            Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+        }
     }
+
+    public bool isImmobilized { get; private set; }
 
     protected override void Update()
     {
+        if (isImmobilized)
+            return;
+
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
     }
+
+    public void Immobilize(float duration)
+    {
+        StartCoroutine(ImmobilizeCoroutine(duration));
+    }
+
+    private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
+    {
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        else
+        {
+            Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+        }
+        isImmobilized = true;
+        yield return new WaitForSeconds(duration);
+        isImmobilized = false;
+    }
+
+    public void ApplySlow(float duration, float multiplier)
+    {
+        StartCoroutine(SlowCoroutine(duration, multiplier));
+    }
+
+    private System.Collections.IEnumerator SlowCoroutine(float duration, float multiplier)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed *= multiplier;
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+    }
+
+    // Removed ApplyTemporaryColor and TemporaryColorCoroutine
 
     private void OnEnable()
     {
@@ -136,12 +193,29 @@ public class Player : Entity
 
     public void PlaySound(SoundEffect _sound)
     {
-        if (_sound.clip != null)
-            fxSource.PlayOneShot(_sound.clip, _sound.volume);
+        if (fxSource == null)
+        {
+            Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+            return;
+        }
+        if (_sound == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+            return;
+        }
+        if (_sound.clip == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+            return;
+        }
+
+        fxSource.PlayOneShot(_sound.clip, _sound.volume);
     }
 
     public void PlayWalkSound()
     {
         PlaySound(walkSound);
     }
+
+    // Removed OnDestroy related to color changes
 }

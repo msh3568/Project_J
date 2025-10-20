@@ -21,15 +21,6 @@ public abstract class PlayerState : EntityState
     public override void Update()
     {
         base.Update();
-
-
-        if (input.Player.Dash.WasPressedThisFrame() && CanDash() && player.CanDash())
-        {
-            player.PlaySound(player.dashSound1);
-            player.PlaySound(player.dashSound2);
-            stateMachine.ChangeState(player.dashState);
-        }
-        
     }
 
     public override void UpdateAnimationParameters()
@@ -42,16 +33,6 @@ public abstract class PlayerState : EntityState
     {
 
     }
-    private bool CanDash()
-    {
 
-        if (player.wallDetected)
-            return false;
-
-        if (stateMachine.currentState == player.dashState)
-            return false;
-
-        return  true;
-    }
    
 }

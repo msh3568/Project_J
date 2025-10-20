@@ -18,7 +18,15 @@ public class Player_WallJumpState : PlayerState
     {
         base.Update();
 
-        if(rb.linearVelocity.y < 0)
+        if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
+        {
+            player.PlaySound(player.dashSound1);
+            player.PlaySound(player.dashSound2);
+            stateMachine.ChangeState(player.dashState);
+            return;
+        }
+
+        if (rb.linearVelocity.y < 0)
             stateMachine.ChangeState(player.fallState);
 
         if(player.wallDetected)

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <projectSettings>
+<<<<<<< HEAD
   <projectSetting name="com.google.external-dependency-managerAnalyticsCookie" value="af9680cf4c574433bf9a483f072b842c" />
   <projectSetting name="com.google.external-dependency-managerAnalyticsEnabled" value="True" />
   <projectSetting name="com.google.firebaseAnalyticsCookie" value="e440b0ef99124d43a1e3c6d3c110f804" />
+=======
+  <projectSetting name="com.google.external-dependency-managerAnalyticsCookie" value="b69bd9dec1794c9294810b8aca38d664" />
+  <projectSetting name="com.google.external-dependency-managerAnalyticsEnabled" value="True" />
+  <projectSetting name="com.google.firebaseAnalyticsCookie" value="9e1f6da1e75e4645aebeaaeabd826acc" />
+>>>>>>> cbe165a810e32660b4fb8c86c7684ef00cce0430
   <projectSetting name="com.google.firebaseAnalyticsEnabled" value="True" />
 </projectSettings>

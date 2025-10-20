@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour
 
     [Header("Collision detection")]
     [SerializeField] protected LayerMask whatIsGround;
+    [SerializeField] protected LayerMask whatIsWall;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.2f);
     [SerializeField] protected float wallCheckDistance;
@@ -108,7 +109,7 @@ public class Entity : MonoBehaviour
     {
         Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
         groundDetected = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
+        wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsWall);
     }
 
 
