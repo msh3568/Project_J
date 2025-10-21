@@ -12,9 +12,9 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Project_J
-  defaultCursor: {fileID: 0}
+  companyName: ORUM
+  productName: Fixer
+  defaultCursor: {fileID: 2800000, guid: e53430c3589ad4841832d04fd0dcf3a2, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.12156863, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
@@ -141,7 +141,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 1.0
+  bundleVersion: 0.0.9
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -289,7 +289,14 @@ PlayerSettings:
   AndroidAppBundleSizeToValidate: 200
   AndroidReportGooglePlayAppDependencies: 1
   androidSymbolsSizeThreshold: 800
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: e53430c3589ad4841832d04fd0dcf3a2, type: 3}
+      m_Width: 128
+      m_Height: 128
+      m_Kind: 0
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: iPhone
     m_Icons:
@@ -791,8 +798,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Project_J
-  metroPackageVersion: 
+  metroPackageName: ProjectJ
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -800,7 +807,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Project_J
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Project_J
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

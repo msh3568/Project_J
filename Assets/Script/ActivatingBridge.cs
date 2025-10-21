@@ -88,6 +88,7 @@ public class ActivatingBridge : MonoBehaviour
 
                 player.PlaySound(immobilizationSound);
                 player.Immobilize(immobilizationDuration);
+                StatusEffectUIManager.Instance.ShowImmobilizedEffect(immobilizationDuration);
 
                 // Apply temporary color to player
                 if (player.playerVisualEffects != null)

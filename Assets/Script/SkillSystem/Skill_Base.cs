@@ -23,6 +23,8 @@ public class Skill_Base : MonoBehaviour
     }
 
 
+    public float GetCooldown() { return cooldown; }
+
     public float GetCooldownTimer()
     {
         return Mathf.Max(0, lastTimeUsed + cooldown - Time.time);

@@ -41,6 +41,7 @@ public class PropInteraction : MonoBehaviour
                 }
                 player.PlaySound(interactionSound);
                 player.ApplySlow(slowDuration, speedMultiplier);
+                StatusEffectUIManager.Instance.ShowSlowEffect(slowDuration);
                 
                 // Call the visual effect method on the new component
                 if (player.playerVisualEffects != null)
