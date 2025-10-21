@@ -9,7 +9,7 @@ public class PlayerVisualEffects : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Color originalMaterialColor;
-    private Coroutine currentFadeCoroutine; // To manage multiple calls
+    private Coroutine currentFadeCoroutine; // Manages the temporary color application and fade-out
 
     void Awake()
     {
@@ -35,6 +35,8 @@ public class PlayerVisualEffects : MonoBehaviour
         }
     }
 
+    private int activeColorEffects = 0;
+
     public void ApplyTemporaryColor(Color color, float duration)
     {
         if (spriteRenderer == null)
@@ -43,38 +45,37 @@ public class PlayerVisualEffects : MonoBehaviour
             return;
         }
 
-        // Stop any existing fade coroutine to prevent conflicts
+        // Stop any existing temporary color application coroutine to prevent conflicts
         if (currentFadeCoroutine != null)
         {
             StopCoroutine(currentFadeCoroutine);
         }
 
-        Debug.Log($"PlayerVisualEffects: ApplyTemporaryColor called. Target Color: {color}, Duration: {duration}");
         currentFadeCoroutine = StartCoroutine(TemporaryColorCoroutine(color, duration));
     }
 
     private IEnumerator TemporaryColorCoroutine(Color targetColor, float duration)
     {
-        Debug.Log($"PlayerVisualEffects: TemporaryColorCoroutine started. Current Material Color (before change): {spriteRenderer.material.color}");
-        Color startColor = spriteRenderer.material.color;
+        activeColorEffects++;
         spriteRenderer.material.color = targetColor;
-        Debug.Log($"PlayerVisualEffects: Material Color set to Target Color: {spriteRenderer.material.color}");
 
-        // Wait for the main duration
         yield return new WaitForSeconds(duration);
 
-        // Fade back to original color
-        float timer = 0f;
-        Color currentColor = spriteRenderer.material.color;
-        while (timer < fadeDuration)
+        activeColorEffects--;
+        if (activeColorEffects == 0)
         {
-            timer += Time.deltaTime;
-            spriteRenderer.material.color = Color.Lerp(currentColor, startColor, timer / fadeDuration);
-            yield return null;
+            // Fade back to original color
+            float timer = 0f;
+            Color currentColor = spriteRenderer.material.color;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                spriteRenderer.material.color = Color.Lerp(currentColor, originalMaterialColor, timer / fadeDuration);
+                yield return null;
+            }
+            spriteRenderer.material.color = originalMaterialColor; // Ensure it snaps to the exact original color
+            currentFadeCoroutine = null; // Clear the coroutine reference
         }
-        spriteRenderer.material.color = startColor; // Ensure it snaps to the exact start color
-        Debug.Log($"PlayerVisualEffects: Material Color reverted to Start Color: {spriteRenderer.material.color}");
-        currentFadeCoroutine = null; // Clear the coroutine reference
     }
 
     void OnDestroy()

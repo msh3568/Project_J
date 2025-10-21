@@ -133,17 +133,39 @@ public class Player : Entity
         isImmobilized = false;
     }
 
-    public void ApplySlow(float duration, float multiplier)
+    private int activeSlows = 0;
+    private float originalMoveSpeed;
+    private float originalDashSpeed;
+    private float originalJumpForce;
+
+    public void ApplySlow(float duration, float moveSpeedMultiplier)
     {
-        StartCoroutine(SlowCoroutine(duration, multiplier));
+        StartCoroutine(SlowCoroutine(duration, moveSpeedMultiplier));
     }
 
-    private System.Collections.IEnumerator SlowCoroutine(float duration, float multiplier)
+    private System.Collections.IEnumerator SlowCoroutine(float duration, float moveSpeedMultiplier)
     {
-        float originalSpeed = moveSpeed;
-        moveSpeed *= multiplier;
+        if (activeSlows == 0)
+        {
+            originalMoveSpeed = moveSpeed;
+            originalDashSpeed = dashSpeed;
+            originalJumpForce = jumpForce;
+        }
+
+        activeSlows++;
+        moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
+        dashSpeed = originalDashSpeed * moveSpeedMultiplier;
+        jumpForce = originalJumpForce * moveSpeedMultiplier;
+
         yield return new WaitForSeconds(duration);
-        moveSpeed = originalSpeed;
+
+        activeSlows--;
+        if (activeSlows == 0)
+        {
+            moveSpeed = originalMoveSpeed;
+            dashSpeed = originalDashSpeed;
+            jumpForce = originalJumpForce;
+        }
     }
 
     // Removed ApplyTemporaryColor and TemporaryColorCoroutine

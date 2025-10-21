@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PropInteraction : MonoBehaviour
 {
@@ -12,6 +13,20 @@ public class PropInteraction : MonoBehaviour
 
     [Header("Sound")]
     public SoundEffect interactionSound;
+
+    [Header("Respawn")]
+    public float respawnTime = 8f;
+
+    private Vector3 originalPosition;
+    private Collider2D propCollider;
+    private SpriteRenderer propRenderer;
+
+    void Awake()
+    {
+        originalPosition = transform.position;
+        propCollider = GetComponent<Collider2D>();
+        propRenderer = GetComponent<SpriteRenderer>();
+    }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -37,7 +52,23 @@ public class PropInteraction : MonoBehaviour
                     Debug.LogWarning("PropInteraction: PlayerVisualEffects component not found on player. Cannot apply temporary color.");
                 }
             }
-            Destroy(gameObject);
+            DeactivateAndRespawn();
         }
+    }
+
+    private void DeactivateAndRespawn()
+    {
+        propCollider.enabled = false;
+        propRenderer.enabled = false;
+        StartCoroutine(RespawnCoroutine(respawnTime));
+    }
+
+    private IEnumerator RespawnCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        propCollider.enabled = true;
+        propRenderer.enabled = true;
+        transform.position = originalPosition;
     }
 }
