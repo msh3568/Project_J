@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3564026850829729315}
   - component: {fileID: -8437402610061550950}
   - component: {fileID: 2639931940621820807}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PF Village Props - Flower 02
-  m_TagString: Untagged
+  m_TagString: Trap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
   interactionSound:
     clip: {fileID: 8300000, guid: ab615fe872eaf03478322cd019df627f, type: 3}
     volume: 1
+  respawnTime: 8
 --- !u!61 &2639931940621820807
 BoxCollider2D:
   m_ObjectHideFlags: 0
