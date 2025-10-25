@@ -6233,10 +6233,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 521215831}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
 --- !u!1001 &427050576
 PrefabInstance:
@@ -7438,23 +7435,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1 &521215830 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-  m_PrefabInstance: {fileID: 423053553}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &521215831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 521215830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad585dd41edd9d942ad4b3b9b365bdc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Draggable
 --- !u!4 &521215834 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8990237130882715441, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
@@ -18458,10 +18438,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1417615026}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
 --- !u!4 &1218534684 stripped
 Transform:
@@ -22359,23 +22336,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1417615025 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-  m_PrefabInstance: {fileID: 1217729238}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1417615026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417615025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad585dd41edd9d942ad4b3b9b365bdc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Draggable
 --- !u!4 &1417615029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8990237130882715441, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
@@ -23395,28 +23355,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1469572675}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
---- !u!1 &1469572674 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-  m_PrefabInstance: {fileID: 1469572673}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1469572675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1469572674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad585dd41edd9d942ad4b3b9b365bdc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Draggable
 --- !u!4 &1469572678 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8990237130882715441, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
@@ -114877,28 +114817,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1987568173}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
---- !u!1 &1987568172 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7535209197869888826, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
-  m_PrefabInstance: {fileID: 1987568171}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1987568173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987568172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad585dd41edd9d942ad4b3b9b365bdc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Draggable
 --- !u!4 &1987568176 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8990237130882715441, guid: bc73efda6eb91ca45ada74ab589ad692, type: 3}
@@ -116387,6 +116307,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dashCooldown: 0.5
+  minChargeJumpForce: 10
+  maxChargeJumpForce: 18
+  maxChargeTime: 0.2
   defense: 1
   fxSource: {fileID: 0}
   dashSound1:
