@@ -3436,7 +3436,7 @@ Transform:
   m_GameObject: {fileID: 252985346}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 109.13997, y: -41.745903, z: 10.975195}
+  m_LocalPosition: {x: -17.760033, y: -82.8459, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7400,7 +7400,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 109.13997, y: -41.745903, z: 10.975195}
+  m_LocalPosition: {x: -17.760033, y: -82.8459, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16240,7 +16240,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 9539793
   m_SortingLayer: -4
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 348691796887303384, guid: 2baeba3e7ff2a754f875e01a0b1eb16b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -109790,7 +109790,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 9539793
   m_SortingLayer: -4
-  m_SortingOrder: -5
+  m_SortingOrder: -10
   m_Sprite: {fileID: -3672557680498422541, guid: c407296d87f43724793ba91f5267170a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -115245,6 +115245,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f3cabe756561e14e92a7532e4fa995c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RankingManager
+  rankingPanel: {fileID: 0}
+  showRankingButton: {fileID: 0}
+  closeRankingButton: {fileID: 0}
+  rankUITexts: []
 --- !u!4 &2003159799
 Transform:
   m_ObjectHideFlags: 0
@@ -116415,7 +116419,7 @@ Transform:
   m_GameObject: {fileID: 2049881622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 110.4, y: -41.8, z: 0}
+  m_LocalPosition: {x: -16.5, y: -82.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
