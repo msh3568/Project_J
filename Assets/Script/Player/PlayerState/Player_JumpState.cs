@@ -10,6 +10,11 @@ public class Player_JumpState : Player_AiredState
     {
         base.Enter();
 
+        if (player.jumpSmokeEffect != null)
+        {
+            UnityEngine.Object.Instantiate(player.jumpSmokeEffect, player.transform.position + player.smokeOffset, Quaternion.Euler(player.smokeRotation));
+        }
+
         player.PlaySound(player.jumpSound);
 
         float calculatedJumpForce;
@@ -23,7 +28,7 @@ public class Player_JumpState : Player_AiredState
             calculatedJumpForce = Mathf.Lerp(player.minChargeJumpForce, player.maxChargeJumpForce, chargeRatio);
         }
 
-        player.SetVelocity(rb.linearVelocity.x, calculatedJumpForce);
+        player.SetVelocity(player.rb.linearVelocity.x, calculatedJumpForce);
         player.currentChargeTime = 0f;
     }
 
@@ -32,7 +37,7 @@ public class Player_JumpState : Player_AiredState
         base.Update();
 
 
-        if (rb.linearVelocity.y < 0)
+        if (player.rb.linearVelocity.y < 0)
             stateMachine.ChangeState(player.fallState);
     }
 }
