@@ -21,6 +21,11 @@ public class Player : Entity
     public Player_CounterAttackState counterAttackState { get; private set; }
     #endregion
 
+    [Header("Effect Prefabs")]
+    public GameObject jumpSmokeEffect;
+    public Vector3 smokeOffset;
+    public Vector3 smokeRotation;
+
     [Header("AttackDetails")]
     public Vector2[] attackVelocity;
     public float attackVelocityDuration = .1f;
@@ -42,6 +47,13 @@ public class Player : Entity
     public float dashCooldownTimer { get; private set; }
     public bool isTouchingWall { get; private set; }
     public Vector2 moveInput { get; private set; }
+
+    [Header("Charge Jump Details")]
+    [SerializeField] public float minChargeJumpForce = 2f;
+    [SerializeField] public float maxChargeJumpForce = 18f;
+    [SerializeField] public float maxChargeTime = 1f;
+    public float currentChargeTime { get; set; }
+    public bool isChargingJump { get; set; }
 
     [Header("Defensive details")]
     [Range(1, 100)]
@@ -111,6 +123,16 @@ public class Player : Entity
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
+
+        CheckForFall();
+    }
+
+    private void CheckForFall()
+    {
+        if (transform.position.y < -105f)
+        {
+            GameManager.Instance.RespawnPlayer();
+        }
     }
 
     public void Immobilize(float duration)

@@ -112,8 +112,11 @@ public class RankingManager : MonoBehaviour
             {
                 string playerName = userRecord.Child("name").Value.ToString();
                 float clearTimeValue = Convert.ToSingle(userRecord.Child("time").Value);
+
+                TimeSpan timeSpan = TimeSpan.FromSeconds(clearTimeValue);
+                string formattedTime = timeSpan.ToString(@"hh\:mm\:ss");
                 
-                rankUITexts[rank - 1].text = $"{rank}. {playerName} - {clearTimeValue.ToString("F2")}초";
+                rankUITexts[rank - 1].text = $"{rank}. {playerName} - {formattedTime}";
                 rank++;
             }
             catch (Exception e)

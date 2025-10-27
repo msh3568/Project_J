@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeBall
   lifetime: 5
-  immobilizationDuration: 4
+  immobilizationDuration: 2
 --- !u!50 &5991943194609097291
 Rigidbody2D:
   serializedVersion: 5
