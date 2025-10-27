@@ -21,11 +21,6 @@ public class Player : Entity
     public Player_CounterAttackState counterAttackState { get; private set; }
     #endregion
 
-    [Header("Effect Prefabs")]
-    public GameObject jumpSmokeEffect;
-    public Vector3 smokeOffset;
-    public Vector3 smokeRotation;
-
     [Header("AttackDetails")]
     public Vector2[] attackVelocity;
     public float attackVelocityDuration = .1f;
@@ -123,16 +118,6 @@ public class Player : Entity
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
-
-        CheckForFall();
-    }
-
-    private void CheckForFall()
-    {
-        if (transform.position.y < -105f)
-        {
-            GameManager.Instance.RespawnPlayer();
-        }
     }
 
     public void Immobilize(float duration)

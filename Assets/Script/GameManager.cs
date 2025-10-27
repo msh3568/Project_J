@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private Vector3? activeCheckpointPosition = null;
     private int activatedCheckpointCount = 0; // New counter for activated checkpoints
 
-    public GameObject player;
+    private GameObject player;
     private TimeManager timeManager;
 
     void Awake()
@@ -56,43 +56,38 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RespawnPlayer()
-    {
-        if (player == null) // Try to find player again if it was null
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-
-        if (AnalyticsManager.Instance != null && player != null)
-        {
-            AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
-        }
-
-        if (activeCheckpointPosition.HasValue)
-        {
-            // Respawn at checkpoint
-            if (player != null)
-            {
-                player.transform.position = activeCheckpointPosition.Value;
-            }
-        }
-        else
-        {
-            // Reset scene
-            if(timeManager != null)
-            {
-                timeManager.ResetTimer();
-            }
-            activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RespawnPlayer();
+            if (player == null) // Try to find player again if it was null
+            {
+                player = GameObject.FindWithTag("Player");
+            }
+
+            if (AnalyticsManager.Instance != null && player != null)
+            {
+                AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
+            }
+
+            if (activeCheckpointPosition.HasValue)
+            {
+                // Respawn at checkpoint
+                if (player != null)
+                {
+                    player.transform.position = activeCheckpointPosition.Value;
+                }
+            }
+            else
+            {
+                // Reset scene
+                if(timeManager != null)
+                {
+                    timeManager.ResetTimer();
+                }
+                activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
     }
 

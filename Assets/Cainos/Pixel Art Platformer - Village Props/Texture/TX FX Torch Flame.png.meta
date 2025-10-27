@@ -1,17 +1,9 @@
 fileFormatVersion: 2
 guid: 22a56ebdc97997341afdcb2e902b2ee6
-AssetOrigin:
-  serializedVersion: 1
-  productId: 166114
-  packageName: Pixel Art Platformer - Village Props
-  packageVersion: 2.3.0
-  assetPath: Assets/Cainos/Pixel Art Platformer - Village Props/Texture/TX FX Torch
-    Flame.png
-  uploadId: 584302
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 13
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -28,12 +20,11 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMipmapLimit: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -51,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -72,10 +63,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  swizzle: 50462976
-  cookieLightType: 1
   platformSettings:
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
     resizeAlgorithm: 0
@@ -85,10 +74,9 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -98,10 +86,9 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -111,10 +98,9 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -124,10 +110,9 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -137,762 +122,12 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: TX FX Torch Flame_0
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 106
-        width: 16
-        height: 11
-      alignment: 9
-      pivot: {x: 0.5231885, y: 0.41005707}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 485c0397993a6d746b6405e305af47cd
-      internalID: 1905936291
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_1
-      rect:
-        serializedVersion: 2
-        x: 26
-        y: 105
-        width: 12
-        height: 13
-      alignment: 9
-      pivot: {x: 0.5309181, y: 0.34778947}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6669ae387c27c4542bfcb5ca48843d3c
-      internalID: -289014081
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_2
-      rect:
-        serializedVersion: 2
-        x: 49
-        y: 105
-        width: 11
-        height: 13
-      alignment: 9
-      pivot: {x: 0.41005743, y: 0.34778947}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5364541475a2b024e900d1c906550f05
-      internalID: 2004755856
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_3
-      rect:
-        serializedVersion: 2
-        x: 70
-        y: 106
-        width: 10
-        height: 13
-      alignment: 9
-      pivot: {x: 0.54946977, y: 0.26217064}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 22f390b68fc43a14aaae9423762b8fd8
-      internalID: -2052729513
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_4
-      rect:
-        serializedVersion: 2
-        x: 93
-        y: 104
-        width: 8
-        height: 17
-      alignment: 9
-      pivot: {x: 0.46908283, y: 0.3181305}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a04da3f670469334a83a5b7fe88b8dc8
-      internalID: 8492097
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_5
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 105
-        width: 12
-        height: 17
-      alignment: 9
-      pivot: {x: 0.5515315, y: 0.26720697}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ab1d157acf011104487127abdd06e7c4
-      internalID: -1924759849
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_6
-      rect:
-        serializedVersion: 2
-        x: 5
-        y: 83
-        width: 13
-        height: 16
-      alignment: 9
-      pivot: {x: 0.51902646, y: 0.27584553}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4eb0e9a1226beff4687eeadc7ec42e3a
-      internalID: -721654593
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_7
-      rect:
-        serializedVersion: 2
-        x: 26
-        y: 84
-        width: 11
-        height: 15
-      alignment: 9
-      pivot: {x: 0.66864294, y: 0.25265706}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: df79476fe10344947abdd9e99fede722
-      internalID: 141281141
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_8
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 84
-        width: 13
-        height: 17
-      alignment: 9
-      pivot: {x: 0.6046454, y: 0.23083271}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d57884abbe26d3848af50925fde710f9
-      internalID: -1997972795
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_9
-      rect:
-        serializedVersion: 2
-        x: 70
-        y: 83
-        width: 11
-        height: 20
-      alignment: 9
-      pivot: {x: 0.5787, y: 0.20318833}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c8d7e94c4c9b6644e933ebe6db8f970f
-      internalID: -1368339309
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_10
-      rect:
-        serializedVersion: 2
-        x: 89
-        y: 85
-        width: 16
-        height: 17
-      alignment: 9
-      pivot: {x: 0.5, y: 0.14353539}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 41df0fecd1326cf4dad913f2fc5029a6
-      internalID: 1824234631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_11
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 84
-        width: 17
-        height: 17
-      alignment: 9
-      pivot: {x: 0.54364914, y: 0.18718405}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ba1656ed76da1644db7ba65513f9a21c
-      internalID: 1176279712
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_12
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 63
-        width: 11
-        height: 19
-      alignment: 9
-      pivot: {x: 0.45502862, y: 0.18756665}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bca618bfddf57fc498aaecbb955c5f84
-      internalID: 366896350
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_13
-      rect:
-        serializedVersion: 2
-        x: 27
-        y: 65
-        width: 11
-        height: 17
-      alignment: 9
-      pivot: {x: 0.5, y: 0.092611425}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3034742aef3e3644cadd43dc7577ba7f
-      internalID: -1197892030
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_14
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 63
-        width: 13
-        height: 19
-      alignment: 9
-      pivot: {x: 0.45243424, y: 0.18105757}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f67547fdb7396ae4a969d5fd90e1f524
-      internalID: -1626104205
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_15
-      rect:
-        serializedVersion: 2
-        x: 71
-        y: 64
-        width: 8
-        height: 18
-      alignment: 9
-      pivot: {x: 0.5, y: 0.13585621}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 76387d5e7236eff4fb1a3d9b81a14141
-      internalID: 266718639
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_16
-      rect:
-        serializedVersion: 2
-        x: 91
-        y: 63
-        width: 11
-        height: 21
-      alignment: 9
-      pivot: {x: 0.56745774, y: 0.12898545}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2abecb44c36dae449b66e369cf18484a
-      internalID: -1890920457
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_17
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 64
-        width: 13
-        height: 18
-      alignment: 9
-      pivot: {x: 0.5285398, y: 0.09463247}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 85f368b5ce8c2d24e9ee0f324dccf83f
-      internalID: 1739169414
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_18
-      rect:
-        serializedVersion: 2
-        x: 4
-        y: 44
-        width: 13
-        height: 17
-      alignment: 9
-      pivot: {x: 0.60464513, y: 0.04168791}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5cfc6a821487e6b4fb2ac5db76706178
-      internalID: -1830373228
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_19
-      rect:
-        serializedVersion: 2
-        x: 25
-        y: 43
-        width: 12
-        height: 19
-      alignment: 9
-      pivot: {x: 0.6339776, y: 0.09644037}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fc860de9bdd7db34eb11adbbe6aa1119
-      internalID: -444556832
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_20
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 43
-        width: 14
-        height: 18
-      alignment: 9
-      pivot: {x: 0.46466556, y: 0.08089108}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a3c4780b9f6c5d747bc263a6fc7d7ea7
-      internalID: 1508165271
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_21
-      rect:
-        serializedVersion: 2
-        x: 67
-        y: 43
-        width: 14
-        height: 17
-      alignment: 9
-      pivot: {x: 0.5795032, y: 0.10716113}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b21ed2cc90eb8ab4a98247c56fe2e337
-      internalID: -1287924078
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_22
-      rect:
-        serializedVersion: 2
-        x: 89
-        y: 43
-        width: 13
-        height: 17
-      alignment: 9
-      pivot: {x: 0.5190265, y: 0.09261165}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4eabb9755244de0468d04e2002402c95
-      internalID: 500822303
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_23
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 42
-        width: 14
-        height: 19
-      alignment: 9
-      pivot: {x: 0.535335, y: 0.13549463}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f02bbd82bfdfe74e9e5b22794642d4d
-      internalID: 634476536
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_24
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 21
-        width: 13
-        height: 18
-      alignment: 9
-      pivot: {x: 0.62367153, y: 0.14959738}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 13e7a14e0f71284419cb67641f9bd0c4
-      internalID: -1510016343
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_25
-      rect:
-        serializedVersion: 2
-        x: 25
-        y: 22
-        width: 12
-        height: 18
-      alignment: 9
-      pivot: {x: 0.60305977, y: 0.080890976}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 564275774a7d26343a72298f9de46812
-      internalID: 957724195
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_26
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 22
-        width: 9
-        height: 18
-      alignment: 9
-      pivot: {x: 0.7198605, y: 0.15646808}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ef7f15a16abd3c540a3c5af76d6a2982
-      internalID: 1263082166
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_27
-      rect:
-        serializedVersion: 2
-        x: 69
-        y: 22
-        width: 10
-        height: 15
-      alignment: 9
-      pivot: {x: 0.6484062, y: 0.18669878}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c45d84758cdb6ce4397a50a17461ec0a
-      internalID: -1732667028
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_28
-      rect:
-        serializedVersion: 2
-        x: 90
-        y: 21
-        width: 12
-        height: 18
-      alignment: 9
-      pivot: {x: 0.5721423, y: 0.2045625}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8e5655407d3b9c646a26b9518ddfe38d
-      internalID: -1296466839
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_29
-      rect:
-        serializedVersion: 2
-        x: 110
-        y: 23
-        width: 13
-        height: 15
-      alignment: 9
-      pivot: {x: 0.67123765, y: 0.16196455}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 45dc022a81c36334482418371740e40a
-      internalID: -1214269063
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_30
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 3
-        width: 10
-        height: 13
-      alignment: 9
-      pivot: {x: 0.5989372, y: 0.14801179}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1214769ea176648419e1f5a7588f5ead
-      internalID: 319942807
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_31
-      rect:
-        serializedVersion: 2
-        x: 29
-        y: 1
-        width: 8
-        height: 13
-      alignment: 9
-      pivot: {x: 0.5309181, y: 0.24314374}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8aa4ec6afba36a543b12021f5672e00b
-      internalID: 1110288381
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_32
-      rect:
-        serializedVersion: 2
-        x: 49
-        y: 4
-        width: 9
-        height: 9
-      alignment: 9
-      pivot: {x: 0.62367165, y: 0.18395048}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2628f9f03e4655c49a9093ae278ab007
-      internalID: -683727602
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: TX FX Torch Flame_33
-      rect:
-        serializedVersion: 2
-        x: 72
-        y: 3
-        width: 10
-        height: 11
-      alignment: 9
-      pivot: {x: 0.7349762, y: 0.3875713}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8864fa32dd025be47b11cb33621747e5
-      internalID: -1839757336
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
-    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -902,49 +137,18 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceOnImport
-        value: False
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
-    nameFileIdTable:
-      TX FX Torch Flame_0: 1905936291
-      TX FX Torch Flame_1: -289014081
-      TX FX Torch Flame_10: 1824234631
-      TX FX Torch Flame_11: 1176279712
-      TX FX Torch Flame_12: 366896350
-      TX FX Torch Flame_13: -1197892030
-      TX FX Torch Flame_14: -1626104205
-      TX FX Torch Flame_15: 266718639
-      TX FX Torch Flame_16: -1890920457
-      TX FX Torch Flame_17: 1739169414
-      TX FX Torch Flame_18: -1830373228
-      TX FX Torch Flame_19: -444556832
-      TX FX Torch Flame_2: 2004755856
-      TX FX Torch Flame_20: 1508165271
-      TX FX Torch Flame_21: -1287924078
-      TX FX Torch Flame_22: 500822303
-      TX FX Torch Flame_23: 634476536
-      TX FX Torch Flame_24: -1510016343
-      TX FX Torch Flame_25: 957724195
-      TX FX Torch Flame_26: 1263082166
-      TX FX Torch Flame_27: -1732667028
-      TX FX Torch Flame_28: -1296466839
-      TX FX Torch Flame_29: -1214269063
-      TX FX Torch Flame_3: -2052729513
-      TX FX Torch Flame_30: 319942807
-      TX FX Torch Flame_31: 1110288381
-      TX FX Torch Flame_32: -683727602
-      TX FX Torch Flame_33: -1839757336
-      TX FX Torch Flame_4: 8492097
-      TX FX Torch Flame_5: -1924759849
-      TX FX Torch Flame_6: -721654593
-      TX FX Torch Flame_7: 141281141
-      TX FX Torch Flame_8: -1997972795
-      TX FX Torch Flame_9: -1368339309
-  mipmapLimitGroupName: 
+    nameFileIdTable: {}
+  spritePackingTag: 
   pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166114
+  packageName: Pixel Art Platformer - Village Props
+  packageVersion: 2.3.0
+  assetPath: Assets/Cainos/Pixel Art Platformer - Village Props/Texture/TX FX Torch
+    Flame.png
+  uploadId: 584302

@@ -831,7 +831,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -27.170166, y: -37.22998}
+  m_AnchoredPosition: {x: -27.170044, y: -37.22998}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &51969940
@@ -1398,37 +1398,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4467291543956729858, guid: 83c978175fb756d43a33165b2c731a5c, type: 3}
   m_PrefabInstance: {fileID: 1037723828}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &87186343
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 87186344}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &87186344
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87186343}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 59.80865, y: -76.98547, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &90324938
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3467,7 +3436,7 @@ Transform:
   m_GameObject: {fileID: 252985346}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.260033, y: -83.3459, z: 10.975195}
+  m_LocalPosition: {x: -17.760033, y: -82.8459, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7428,7 +7397,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.260033, y: -83.3459, z: 10.975195}
+  m_LocalPosition: {x: -17.760033, y: -82.8459, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -109402,7 +109371,6 @@ MonoBehaviour:
   bgmSource: {fileID: 0}
   bgmClip: {fileID: 0}
   checkpointText: {fileID: 997695589}
-  player: {fileID: 0}
 --- !u!4 &1621857251
 Transform:
   m_ObjectHideFlags: 0
@@ -113008,7 +112976,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 16817957889510421, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.88
+      value: -6.3193645
       objectReference: {fileID: 0}
     - target: {fileID: 16817957889510421, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -113046,29 +113014,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 927311680654184967, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1768839569377073060, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
       propertyPath: m_Name
       value: check point (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 2010889574111611009, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
-      propertyPath: activatedColor.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2935954651609186442, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
-      propertyPath: Mute
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4339998225605433697, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9086103463446909339, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
-      propertyPath: activatedColor.a
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -116312,9 +116260,6 @@ MonoBehaviour:
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
   groundCheckPositionOffset: {x: 0, y: 0}
-  jumpSmokeEffect: {fileID: 4421713868859347304, guid: f1456d6e68b080d4685da8247b35137b, type: 3}
-  smokeOffset: {x: 0, y: 0, z: 0}
-  smokeRotation: {x: 0, y: 0, z: 0}
   attackVelocity:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}
@@ -116362,9 +116307,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dashCooldown: 0.5
-  minChargeJumpForce: 8
+  minChargeJumpForce: 10
   maxChargeJumpForce: 18
-  maxChargeTime: 0.1
+  maxChargeTime: 0.2
   defense: 1
   fxSource: {fileID: 0}
   dashSound1:
@@ -116397,7 +116342,7 @@ Transform:
   m_GameObject: {fileID: 2049881622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16, y: -83.4, z: 0}
+  m_LocalPosition: {x: -16.5, y: -82.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -118421,4 +118366,3 @@ SceneRoots:
   - {fileID: 1641173016}
   - {fileID: 321897878}
   - {fileID: 1668206513}
-  - {fileID: 87186344}
