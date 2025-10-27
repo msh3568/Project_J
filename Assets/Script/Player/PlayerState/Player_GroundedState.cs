@@ -6,6 +6,12 @@ public class Player_GroundedState : PlayerState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        player.hasAirDashed = false;
+    }
+
     public override void Update()
     {
         base.Update();

@@ -26,6 +26,10 @@ public class Player : Entity
     public float attackVelocityDuration = .1f;
     public float comboResetTime = 1;
 
+    [Header("Air Dash Options")]
+    [SerializeField] public bool airDashWithJumpKey = true;
+    [SerializeField] public bool airDashWithDashKey = true;
+
     [Header("Movement details")]
     public float moveSpeed;
     public float jumpForce = 5;
@@ -40,6 +44,7 @@ public class Player : Entity
     public AnimationCurve dashSpeedCurve;
     public float dashCooldown = 1f;
     public float dashCooldownTimer { get; private set; }
+    public bool hasAirDashed { get; set; }
     public bool isTouchingWall { get; private set; }
     public Vector2 moveInput { get; private set; }
 

@@ -10,8 +10,12 @@ public class Player_AiredState : PlayerState
     {
         base.Update();
 
-        if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
+        bool jumpDash = player.airDashWithJumpKey && input.Player.Jump.WasPressedThisFrame();
+        bool dashDash = player.airDashWithDashKey && input.Player.Dash.WasPressedThisFrame();
+
+        if ((jumpDash || dashDash) && player.CanDash() && !player.hasAirDashed)
         {
+            player.hasAirDashed = true;
             player.PlaySound(player.dashSound1);
             player.PlaySound(player.dashSound2);
             stateMachine.ChangeState(player.dashState);

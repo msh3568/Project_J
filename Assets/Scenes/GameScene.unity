@@ -117068,6 +117068,8 @@ MonoBehaviour:
   - {x: 2.75, y: 1.75}
   attackVelocityDuration: 0.1
   comboResetTime: 1
+  airDashWithJumpKey: 1
+  airDashWithDashKey: 1
   moveSpeed: 8
   jumpForce: 18
   wallJumpForce: {x: 4, y: 10}
