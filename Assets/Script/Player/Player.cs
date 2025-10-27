@@ -43,6 +43,13 @@ public class Player : Entity
     public bool isTouchingWall { get; private set; }
     public Vector2 moveInput { get; private set; }
 
+    [Header("Charge Jump Details")]
+    [SerializeField] public float minChargeJumpForce = 2f;
+    [SerializeField] public float maxChargeJumpForce = 18f;
+    [SerializeField] public float maxChargeTime = 1f;
+    public float currentChargeTime { get; set; }
+    public bool isChargingJump { get; set; }
+
     [Header("Defensive details")]
     [Range(1, 100)]
     public int defense = 1;

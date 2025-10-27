@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 250183603332628446}
   - component: {fileID: -1622880498123267898}
   - component: {fileID: 5991943194609097291}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PF Village Props - Spike Ball
-  m_TagString: Untagged
+  m_TagString: Trap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,10 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeBall
   lifetime: 5
-  immobilizationDuration: 1
-  hitSound:
-    clip: {fileID: 8300000, guid: ab615fe872eaf03478322cd019df627f, type: 3}
-    volume: 1
+  immobilizationDuration: 2
 --- !u!50 &5991943194609097291
 Rigidbody2D:
   serializedVersion: 5

@@ -28,8 +28,28 @@ public class Player_GroundedState : PlayerState
             stateMachine.ChangeState(player.baldoState);
         }
 
+        // Charge Jump Logic
         if (input.Player.Jump.WasPressedThisFrame())
+        {
+            player.isChargingJump = true;
+            player.currentChargeTime = 0f;
+        }
+
+        if (player.isChargingJump && input.Player.Jump.IsPressed())
+        {
+            player.currentChargeTime += Time.deltaTime;
+            if (player.currentChargeTime >= player.maxChargeTime)
+            {
+                stateMachine.ChangeState(player.jumpState);
+                player.isChargingJump = false;
+            }
+        }
+
+        if (player.isChargingJump && input.Player.Jump.WasReleasedThisFrame())
+        {
             stateMachine.ChangeState(player.jumpState);
+            player.isChargingJump = false;
+        }
 
         if(input.Player.Attack.WasPressedThisFrame())
             stateMachine.ChangeState(player.basicAttackState);
