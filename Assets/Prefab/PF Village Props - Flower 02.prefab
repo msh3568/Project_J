@@ -107,10 +107,12 @@ MonoBehaviour:
   slowDuration: 4
   speedMultiplier: 0.5
   temporaryColor: {r: 0.5, g: 0, b: 0.5, a: 1}
+  propRenderer: {fileID: 0}
   interactionSound:
     clip: {fileID: 8300000, guid: ab615fe872eaf03478322cd019df627f, type: 3}
     volume: 1
-  respawnTime: 8
+  respawnTime: 4
+  gasPrefab: {fileID: 6360869966974452583, guid: a6dfbdba7a5227942a255a9bf3fc95f6, type: 3}
 --- !u!61 &2639931940621820807
 BoxCollider2D:
   m_ObjectHideFlags: 0

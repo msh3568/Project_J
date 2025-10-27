@@ -118,6 +118,11 @@ public class Player : Entity
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
+
+        if (transform.position.y < -16f)
+        {
+            GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+        }
     }
 
     public void Immobilize(float duration)

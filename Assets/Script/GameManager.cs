@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,34 +61,39 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (player == null) // Try to find player again if it was null
-            {
-                player = GameObject.FindWithTag("Player");
-            }
+            RespawnPlayerAtLastCheckpoint();
+        }
+    }
 
-            if (AnalyticsManager.Instance != null && player != null)
-            {
-                AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
-            }
+    public void RespawnPlayerAtLastCheckpoint()
+    {
+        if (player == null) // Try to find player again if it was null
+        {
+            player = GameObject.FindWithTag("Player");
+        }
 
-            if (activeCheckpointPosition.HasValue)
+        if (AnalyticsManager.Instance != null && player != null)
+        {
+            AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
+        }
+
+        if (activeCheckpointPosition.HasValue)
+        {
+            // Respawn at checkpoint
+            if (player != null)
             {
-                // Respawn at checkpoint
-                if (player != null)
-                {
-                    player.transform.position = activeCheckpointPosition.Value;
-                }
+                player.transform.position = activeCheckpointPosition.Value;
             }
-            else
+        }
+        else
+        {
+            // Reset scene
+            if (timeManager != null)
             {
-                // Reset scene
-                if(timeManager != null)
-                {
-                    timeManager.ResetTimer();
-                }
-                activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                timeManager.ResetTimer();
             }
+            activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

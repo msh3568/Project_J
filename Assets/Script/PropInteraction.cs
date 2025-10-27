@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections;
 
 public class PropInteraction : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PropInteraction : MonoBehaviour
 
     [Header("Visuals")]
     public Color temporaryColor = new Color(0.5f, 0f, 0.5f, 0.5f); // Semi-transparent purple (RGBA)
+    public SpriteRenderer propRenderer; // Assign this in the inspector if the renderer is on a child object
 
     [Header("Sound")]
     public SoundEffect interactionSound;
@@ -17,15 +19,20 @@ public class PropInteraction : MonoBehaviour
     [Header("Respawn")]
     public float respawnTime = 8f;
 
+    [Header("Gas Effect")]
+    public GameObject gasPrefab;
+
     private Vector3 originalPosition;
     private Collider2D propCollider;
-    private SpriteRenderer propRenderer;
 
     void Awake()
     {
         originalPosition = transform.position;
         propCollider = GetComponent<Collider2D>();
-        propRenderer = GetComponent<SpriteRenderer>();
+        if (propRenderer == null) // If not assigned in inspector, try to find it in children
+        {
+            propRenderer = GetComponentInChildren<SpriteRenderer>();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -39,6 +46,17 @@ public class PropInteraction : MonoBehaviour
                 {
                     AnalyticsManager.Instance.LogTrapEvent("SlowingPot", player.transform.position);
                 }
+
+                if (gasPrefab != null)
+                {
+                    GameObject gasInstance = Instantiate(gasPrefab, transform.position, Quaternion.identity);
+                    Animator gasAnimator = gasInstance.GetComponent<Animator>();
+                    if (gasAnimator != null)
+                    {
+                        gasAnimator.SetTrigger("TX FX Flame_0");
+                    }
+                }
+
                 player.PlaySound(interactionSound);
                 player.ApplySlow(slowDuration, speedMultiplier);
                 StatusEffectUIManager.Instance.ShowSlowEffect(slowDuration);

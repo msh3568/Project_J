@@ -1,9 +1,16 @@
 fileFormatVersion: 2
 guid: 9018b269c00ab544d814cc041d70fc91
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166114
+  packageName: Pixel Art Platformer - Village Props
+  packageVersion: 2.3.0
+  assetPath: Assets/Cainos/Pixel Art Platformer - Village Props/Texture/TX FX Flame.png
+  uploadId: 584302
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -20,11 +27,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -42,17 +50,17 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
+  alignment: 9
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 0
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -63,9 +71,10 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 1
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
     resizeAlgorithm: 0
@@ -75,9 +84,10 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -87,9 +97,10 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -99,9 +110,10 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -111,9 +123,10 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,10 +136,11 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
+  - serializedVersion: 4
+    buildTarget: iOS
     maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: 4
@@ -135,32 +149,1178 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
-    outline: []
+    sprites:
+    - serializedVersion: 2
+      name: TX FX Flame_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 163
+        width: 20
+        height: 27
+      alignment: 9
+      pivot: {x: 0.6, y: 0.25925925}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d35df48a5eedbc4b984b53ad369c1fe
+      internalID: 890456407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_1
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 165
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5882353, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04b52cbe23f8cff4ab40b1c2c4f783fa
+      internalID: 514267644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_2
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 167
+        width: 16
+        height: 14
+      alignment: 9
+      pivot: {x: 0.5, y: 0.21428573}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e541201f32da22241bfc5625ff56d8ed
+      internalID: -1071110481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_3
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 168
+        width: 15
+        height: 12
+      alignment: 9
+      pivot: {x: 0.4666667, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 179e29f8ae42fee41821d75299589f43
+      internalID: -1089382277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_4
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 167
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5882353, y: 0.125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e95b9b9bb5dea98409c2b92de6c1705f
+      internalID: 184009083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_5
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 166
+        width: 18
+        height: 16
+      alignment: 9
+      pivot: {x: 0.7222222, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 870b29a6d3cbad74281410a3b8215332
+      internalID: -139694964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_6
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 133
+        width: 17
+        height: 18
+      alignment: 9
+      pivot: {x: 0.64705884, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e5cc9101d4ce474997383291595d791
+      internalID: 1308910533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_7
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 132
+        width: 20
+        height: 19
+      alignment: 9
+      pivot: {x: 0.6, y: 0.15789473}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a7d3f80099ff3a468898c118a0b4149
+      internalID: 1045690199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_8
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 132
+        width: 21
+        height: 21
+      alignment: 9
+      pivot: {x: 0.61904764, y: 0.14285715}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4af262951405214694cfe1b75abb1a0
+      internalID: 998379658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_9
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 132
+        width: 24
+        height: 22
+      alignment: 9
+      pivot: {x: 0.5833334, y: 0.18181819}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e095c9e662d3d8c4f82c6ee09c424f9f
+      internalID: -2092223206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_10
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 132
+        width: 24
+        height: 24
+      alignment: 9
+      pivot: {x: 0.625, y: 0.125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98095ee1d2bbbbe41b005ef50cd5ebf0
+      internalID: -184988811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_11
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 132
+        width: 26
+        height: 25
+      alignment: 9
+      pivot: {x: 0.61538464, y: 0.12}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12e326393616a0d43be5c8f41a6b02f2
+      internalID: 514168736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_12
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 99
+        width: 23
+        height: 24
+      alignment: 9
+      pivot: {x: 0.5652174, y: 0.125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5523be9c9c6d27d4e91c69da28a52ef3
+      internalID: -1624598292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_13
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 98
+        width: 27
+        height: 26
+      alignment: 9
+      pivot: {x: 0.5555556, y: 0.15384616}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09f5940ef9fd4454a934cad93acfc2e4
+      internalID: 1017814758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_14
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 100
+        width: 24
+        height: 25
+      alignment: 9
+      pivot: {x: 0.625, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f23d5c07ffd047a4d8542d38b3de536a
+      internalID: -216161834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_15
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 99
+        width: 21
+        height: 29
+      alignment: 9
+      pivot: {x: 0.52380955, y: 0.10344827}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76751b7ee8b482a47a9402c078781041
+      internalID: -194625255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_16
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 100
+        width: 23
+        height: 28
+      alignment: 9
+      pivot: {x: 0.5217391, y: 0.071428575}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c01e5e106a76a142ba2d84dca7bd400
+      internalID: -766025453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_17
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 98
+        width: 27
+        height: 29
+      alignment: 9
+      pivot: {x: 0.5925926, y: 0.13793103}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20b81f8dd7c9f394dbed7c59f4ca10fa
+      internalID: -2005912575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 63
+        width: 31
+        height: 31
+      alignment: 9
+      pivot: {x: 0.58064514, y: 0.16129032}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0d553fc555ecc844a09315ffb10dde2
+      internalID: -1400925470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_19
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 66
+        width: 28
+        height: 27
+      alignment: 9
+      pivot: {x: 0.60714287, y: 0.11111111}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abe099046c633984f8ccefa8e4b47c3a
+      internalID: 1267876705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_20
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 66
+        width: 29
+        height: 26
+      alignment: 9
+      pivot: {x: 0.55172414, y: 0.11538462}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e529bcb6f43bc64884f6310e418136b
+      internalID: -213161563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_21
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 65
+        width: 32
+        height: 27
+      alignment: 9
+      pivot: {x: 0.5625, y: 0.14814815}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1db11d4acb4c71542ba196d44cbf9193
+      internalID: 2120711639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_22
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 66
+        width: 30
+        height: 24
+      alignment: 9
+      pivot: {x: 0.5666667, y: 0.125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c5beedccf9c6943aad79881cccc44b
+      internalID: 1316893682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_23
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 67
+        width: 29
+        height: 24
+      alignment: 9
+      pivot: {x: 0.55172414, y: 0.083333336}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 260623053d74fca41b703c69eb3f9d4c
+      internalID: 1930447978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_24
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 33
+        width: 28
+        height: 27
+      alignment: 9
+      pivot: {x: 0.5, y: 0.11111111}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 654bdde788ddf044d8bbc3fc2bc25ece
+      internalID: -454088699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_25
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 33
+        width: 26
+        height: 26
+      alignment: 9
+      pivot: {x: 0.5769231, y: 0.15384616}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c675bf8833f9294f8e17d1695567c19
+      internalID: -1843995209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_26
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 33
+        width: 25
+        height: 26
+      alignment: 9
+      pivot: {x: 0.64, y: 0.15384616}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7625f31a9b20a2c4a8ef0e333a89d582
+      internalID: 552764403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_27
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 33
+        width: 28
+        height: 27
+      alignment: 9
+      pivot: {x: 0.6428572, y: 0.14814815}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6685c8d3d6fc3944a1a16774ecc8296
+      internalID: 1527434458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_28
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 34
+        width: 24
+        height: 25
+      alignment: 9
+      pivot: {x: 0.875, y: 0.12}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6adcd35d97bd0e64088fd22ac2b4003b
+      internalID: -306089597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_29
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 33
+        width: 27
+        height: 22
+      alignment: 9
+      pivot: {x: 0.7407408, y: 0.22727273}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c99eb04a45462e542a2763201983b56f
+      internalID: -614441949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_30
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 2
+        width: 23
+        height: 24
+      alignment: 9
+      pivot: {x: 0.73913044, y: 0.16666667}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce9eb772df946c34789c9bee41e6e7cf
+      internalID: 865041046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_31
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 3
+        width: 21
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5714286, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d31197b65cb6414082ae3225fa012ce
+      internalID: 2126844695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_32
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 4
+        width: 20
+        height: 15
+      alignment: 9
+      pivot: {x: 0.55, y: 0.26666668}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e8fe1f1df6f22449aa52d651c96922f
+      internalID: -1936644550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_33
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 5
+        width: 22
+        height: 14
+      alignment: 9
+      pivot: {x: 0.45454547, y: 0.2857143}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b0b584c4f3130c4d8011e786ca2ffe5
+      internalID: -72385083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_34
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 6
+        width: 20
+        height: 14
+      alignment: 9
+      pivot: {x: 0.55, y: 0.2857143}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 989abc4fa7db1404abf6543cddf4e84f
+      internalID: 1857513976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TX FX Flame_35
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 3
+        width: 26
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0480150e85323d4293c63e9713a9b90
+      internalID: -218759979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: 92, y: 69}
+      - {x: 92, y: 78}
+      - {x: 90, y: 82}
+      - {x: 76, y: 82}
+      - {x: 72, y: 76}
+      - {x: 72, y: 70}
+      - {x: 77, y: 67}
+      - {x: 79, y: 66}
+      - {x: 91, y: 66}
+    - - {x: 60, y: 70}
+      - {x: 60, y: 77}
+      - {x: 57, y: 81}
+      - {x: 48, y: 81}
+      - {x: 43, y: 78}
+      - {x: 43, y: 67}
+      - {x: 47, y: 66}
+      - {x: 58, y: 66}
+    - - {x: -8, y: 71}
+      - {x: -8, y: 76}
+      - {x: -15, y: 80}
+      - {x: -20, y: 80}
+      - {x: -21, y: 79}
+      - {x: -21, y: 68}
+      - {x: -19, y: 67}
+      - {x: -14, y: 67}
+    - - {x: 26, y: 71}
+      - {x: 26, y: 76}
+      - {x: 25, y: 79}
+      - {x: 13, y: 79}
+      - {x: 12, y: 76}
+      - {x: 12, y: 67}
+      - {x: 13, y: 67}
+      - {x: 18, y: 66}
+      - {x: 20, y: 66}
+    - - {x: -42, y: 71}
+      - {x: -42, y: 72}
+      - {x: -49, y: 78}
+      - {x: -55, y: 78}
+      - {x: -56, y: 75}
+      - {x: -56, y: 68}
+      - {x: -52, y: 67}
+      - {x: -45, y: 67}
+    - - {x: -77, y: 71}
+      - {x: -77, y: 75}
+      - {x: -82, y: 77}
+      - {x: -88, y: 77}
+      - {x: -89, y: 74}
+      - {x: -89, y: 71}
+      - {x: -83, y: 67}
+      - {x: -80, y: 67}
+    - - {x: 95, y: 49}
+      - {x: 93, y: 55}
+      - {x: 86, y: 55}
+      - {x: 80, y: 54}
+      - {x: 73, y: 47}
+      - {x: 73, y: 36}
+      - {x: 74, y: 32}
+      - {x: 95, y: 32}
+    - - {x: 60, y: 33}
+      - {x: 61, y: 43}
+      - {x: 61, y: 52}
+      - {x: 58, y: 55}
+      - {x: 43, y: 55}
+      - {x: 37, y: 41}
+      - {x: 37, y: 38}
+      - {x: 39, y: 36}
+      - {x: 48, y: 32}
+      - {x: 57, y: 32}
+    - - {x: 28, y: 39}
+      - {x: 28, y: 49}
+      - {x: 25, y: 54}
+      - {x: 11, y: 54}
+      - {x: 6, y: 39}
+      - {x: 6, y: 37}
+      - {x: 7, y: 35}
+      - {x: 18, y: 32}
+      - {x: 23, y: 32}
+    - - {x: -6, y: 38}
+      - {x: -6, y: 49}
+      - {x: -10, y: 53}
+      - {x: -24, y: 53}
+      - {x: -27, y: 51}
+      - {x: -27, y: 34}
+      - {x: -21, y: 32}
+      - {x: -9, y: 32}
+    - - {x: -41, y: 36}
+      - {x: -40, y: 45}
+      - {x: -44, y: 51}
+      - {x: -57, y: 51}
+      - {x: -61, y: 50}
+      - {x: -61, y: 36}
+      - {x: -55, y: 32}
+      - {x: -46, y: 32}
+    - - {x: -74, y: 34}
+      - {x: -74, y: 45}
+      - {x: -77, y: 50}
+      - {x: -91, y: 50}
+      - {x: -93, y: 45}
+      - {x: -93, y: 35}
+      - {x: -85, y: 33}
+      - {x: -76, y: 33}
+    - - {x: 62, y: 7}
+      - {x: 62, y: 22}
+      - {x: 57, y: 27}
+      - {x: 49, y: 27}
+      - {x: 43, y: 25}
+      - {x: 36, y: 7}
+      - {x: 36, y: 2}
+      - {x: 42, y: -1}
+      - {x: 55, y: -1}
+    - - {x: 95, y: 0}
+      - {x: 95, y: 23}
+      - {x: 90, y: 25}
+      - {x: 83, y: 25}
+      - {x: 68, y: 7}
+      - {x: 68, y: 5}
+      - {x: 72, y: -1}
+      - {x: 90, y: -1}
+    - - {x: 29, y: 9}
+      - {x: 29, y: 24}
+      - {x: 28, y: 25}
+      - {x: 12, y: 25}
+      - {x: 5, y: 10}
+      - {x: 5, y: -1}
+      - {x: 28, y: -1}
+    - - {x: -5, y: 9}
+      - {x: -5, y: 23}
+      - {x: -18, y: 23}
+      - {x: -26, y: 18}
+      - {x: -27, y: 13}
+      - {x: -27, y: 0}
+      - {x: -22, y: -1}
+      - {x: -9, y: -1}
+    - - {x: -38, y: 10}
+      - {x: -38, y: 22}
+      - {x: -45, y: 22}
+      - {x: -51, y: 21}
+      - {x: -60, y: 14}
+      - {x: -60, y: 5}
+      - {x: -58, y: -1}
+      - {x: -43, y: -1}
+    - - {x: -73, y: 2}
+      - {x: -72, y: 10}
+      - {x: -72, y: 20}
+      - {x: -74, y: 21}
+      - {x: -79, y: 21}
+      - {x: -93, y: 12}
+      - {x: -93, y: 3}
+      - {x: -87, y: -1}
+      - {x: -78, y: -1}
+    - - {x: -36, y: -33}
+      - {x: -36, y: -18}
+      - {x: -40, y: -7}
+      - {x: -48, y: -7}
+      - {x: -53, y: -9}
+      - {x: -57, y: -10}
+      - {x: -64, y: -23}
+      - {x: -64, y: -29}
+      - {x: -58, y: -34}
+      - {x: -40, y: -34}
+    - - {x: -71, y: -34}
+      - {x: -71, y: -12}
+      - {x: -72, y: -11}
+      - {x: -75, y: -9}
+      - {x: -83, y: -9}
+      - {x: -92, y: -14}
+      - {x: -98, y: -20}
+      - {x: -98, y: -28}
+      - {x: -94, y: -35}
+      - {x: -73, y: -35}
+    - - {x: 98, y: -31}
+      - {x: 98, y: -11}
+      - {x: 97, y: -9}
+      - {x: 73, y: -9}
+      - {x: 69, y: -10}
+      - {x: 68, y: -11}
+      - {x: 68, y: -26}
+      - {x: 75, y: -34}
+      - {x: 94, y: -34}
+    - - {x: 65, y: -27}
+      - {x: 65, y: -13}
+      - {x: 58, y: -10}
+      - {x: 46, y: -10}
+      - {x: 38, y: -13}
+      - {x: 35, y: -18}
+      - {x: 35, y: -25}
+      - {x: 38, y: -30}
+      - {x: 48, y: -34}
+      - {x: 59, y: -34}
+    - - {x: 10, y: -34}
+      - {x: 27, y: -34}
+      - {x: 33, y: -25}
+      - {x: 33, y: -16}
+      - {x: 31, y: -10}
+      - {x: -1, y: -10}
+      - {x: -1, y: -17}
+      - {x: -5, y: -11}
+      - {x: -26, y: -11}
+      - {x: -32, y: -14}
+      - {x: -32, y: -26}
+      - {x: -23, y: -34}
+      - {x: -6, y: -34}
+      - {x: -1, y: -31}
+      - {x: -1, y: -27}
+    - - {x: 25, y: -46}
+      - {x: 23, y: -39}
+      - {x: 10, y: -39}
+      - {x: 3, y: -49}
+      - {x: 3, y: -58}
+      - {x: 12, y: -65}
+      - {x: 17, y: -66}
+      - {x: 25, y: -66}
+    - - {x: -9, y: -65}
+      - {x: -9, y: -49}
+      - {x: -10, y: -45}
+      - {x: -14, y: -41}
+      - {x: -25, y: -41}
+      - {x: -30, y: -52}
+      - {x: -30, y: -61}
+      - {x: -23, y: -66}
+      - {x: -12, y: -66}
+    - - {x: -72, y: -62}
+      - {x: -72, y: -50}
+      - {x: -72.18182, y: -49.72728}
+      - {x: -70, y: -49}
+      - {x: -70, y: -45}
+      - {x: -73, y: -42}
+      - {x: -75, y: -42}
+      - {x: -77, y: -44}
+      - {x: -98, y: -44}
+      - {x: -98, y: -60}
+      - {x: -90, y: -67}
+      - {x: -80, y: -67}
+    - - {x: -43, y: -63}
+      - {x: -38, y: -56}
+      - {x: -38, y: -47}
+      - {x: -46, y: -43}
+      - {x: -62, y: -43}
+      - {x: -64, y: -49}
+      - {x: -64, y: -62}
+      - {x: -55, y: -67}
+      - {x: -48, y: -67}
+    - - {x: 59, y: -65}
+      - {x: 59, y: -51}
+      - {x: 55, y: -46}
+      - {x: 50, y: -45}
+      - {x: 42, y: -45}
+      - {x: 39, y: -46}
+      - {x: 39, y: -53}
+      - {x: 44, y: -64}
+      - {x: 51, y: -66}
+      - {x: 58, y: -66}
+    - - {x: 93, y: -62}
+      - {x: 93, y: -52}
+      - {x: 85, y: -46}
+      - {x: 72, y: -46}
+      - {x: 72, y: -55}
+      - {x: 78, y: -65}
+      - {x: 90, y: -65}
+    - - {x: -74, y: -86}
+      - {x: -78, y: -77}
+      - {x: -94, y: -77}
+      - {x: -96, y: -81}
+      - {x: -96, y: -85}
+      - {x: -90, y: -95}
+      - {x: -87, y: -98}
+      - {x: -74, y: -98}
+    - - {x: -40, y: -93}
+      - {x: -40, y: -89}
+      - {x: -41, y: -86}
+      - {x: -46, y: -81}
+      - {x: -52, y: -81}
+      - {x: -56, y: -86}
+      - {x: -56, y: -94}
+      - {x: -52, y: -97}
+      - {x: -45, y: -97}
+    - - {x: 61, y: -88}
+      - {x: 61, y: -85}
+      - {x: 58, y: -82}
+      - {x: 55, y: -83}
+      - {x: 53, y: -88}
+      - {x: 53, y: -91}
+      - {x: 55, y: -92}
+      - {x: 58, y: -92}
+    - - {x: -6, y: -92}
+      - {x: -6, y: -88}
+      - {x: -7, y: -85}
+      - {x: -11, y: -82}
+      - {x: -13, y: -82}
+      - {x: -24, y: -88}
+      - {x: -24, y: -92}
+      - {x: -22, y: -96}
+      - {x: -10, y: -96}
+    - - {x: 28, y: -91}
+      - {x: 28, y: -87}
+      - {x: 27, y: -83}
+      - {x: 14, y: -83}
+      - {x: 12, y: -84}
+      - {x: 9, y: -89}
+      - {x: 9, y: -95}
+      - {x: 22, y: -95}
+    - - {x: 52, y: -89}
+      - {x: 52, y: -86}
+      - {x: 50, y: -85}
+      - {x: 48, y: -85}
+      - {x: 46, y: -86}
+      - {x: 46, y: -90}
+      - {x: 47, y: -91}
+      - {x: 51, y: -91}
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
-  spritePackingTag: 
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      TX FX Flame_0: 890456407
+      TX FX Flame_1: 514267644
+      TX FX Flame_10: -184988811
+      TX FX Flame_11: 514168736
+      TX FX Flame_12: -1624598292
+      TX FX Flame_13: 1017814758
+      TX FX Flame_14: -216161834
+      TX FX Flame_15: -194625255
+      TX FX Flame_16: -766025453
+      TX FX Flame_17: -2005912575
+      TX FX Flame_18: -1400925470
+      TX FX Flame_19: 1267876705
+      TX FX Flame_2: -1071110481
+      TX FX Flame_20: -213161563
+      TX FX Flame_21: 2120711639
+      TX FX Flame_22: 1316893682
+      TX FX Flame_23: 1930447978
+      TX FX Flame_24: -454088699
+      TX FX Flame_25: -1843995209
+      TX FX Flame_26: 552764403
+      TX FX Flame_27: 1527434458
+      TX FX Flame_28: -306089597
+      TX FX Flame_29: -614441949
+      TX FX Flame_3: -1089382277
+      TX FX Flame_30: 865041046
+      TX FX Flame_31: 2126844695
+      TX FX Flame_32: -1936644550
+      TX FX Flame_33: -72385083
+      TX FX Flame_34: 1857513976
+      TX FX Flame_35: -218759979
+      TX FX Flame_4: 184009083
+      TX FX Flame_5: -139694964
+      TX FX Flame_6: 1308910533
+      TX FX Flame_7: 1045690199
+      TX FX Flame_8: 998379658
+      TX FX Flame_9: -2092223206
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 166114
-  packageName: Pixel Art Platformer - Village Props
-  packageVersion: 2.3.0
-  assetPath: Assets/Cainos/Pixel Art Platformer - Village Props/Texture/TX FX Flame.png
-  uploadId: 584302
