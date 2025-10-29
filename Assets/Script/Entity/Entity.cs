@@ -100,9 +100,11 @@ public class Entity : MonoBehaviour
 
     public void Flip()
     {
-        transform.Rotate(0, 180, 0);
-        facingRight = !facingRight;
         facingDir = facingDir * -1;
+        facingRight = !facingRight;
+        Vector3 newScale = transform.localScale;
+        newScale.x *= -1;
+        transform.localScale = newScale;
     }
 
     protected virtual void HandleCollisionDetection()

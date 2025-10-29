@@ -52,7 +52,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Palling",
+                    "name": "Pary",
                     "type": "Button",
                     "id": "c08b8389-c5e7-4701-bbcf-675819d89971",
                     "expectedControlType": "",
@@ -182,7 +182,7 @@
                 {
                     "name": "",
                     "id": "8890e832-e24c-4271-a4b8-bef68790b51a",
-                    "path": "<DualShockGamepad>/leftShoulder",
+                    "path": "<DualShockGamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -219,7 +219,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Palling",
+                    "action": "Pary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -230,7 +230,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Palling",
+                    "action": "Pary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
