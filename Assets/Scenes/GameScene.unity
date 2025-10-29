@@ -7446,13 +7446,13 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -7581,6 +7581,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4467291543956729858, guid: 83c978175fb756d43a33165b2c731a5c, type: 3}
   m_PrefabInstance: {fileID: 479606497}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &524707553 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7310469827848580997, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
+  m_PrefabInstance: {fileID: 1597090820}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &524707555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524707553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: df43d44a9d883054caa0e0951010355a, type: 2}
 --- !u!4 &531609681 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7471922057008591194, guid: bbde5b0f2fde63f47aab9703a1e8e784, type: 3}
@@ -110005,7 +110027,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7310469827848580997, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 524707555}
   m_SourcePrefab: {fileID: 100100000, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
 --- !u!4 &1600840576 stripped
 Transform:
@@ -117212,6 +117237,9 @@ MonoBehaviour:
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
   groundCheckPositionOffset: {x: 0, y: 0}
+  afterImagePrefab: {fileID: 1741693733180240230, guid: efbc444e690d84a43aebe1480eb39606, type: 3}
+  afterImageDelay: 0.1
+  numberOfAfterImages: 80
   attackVelocity:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}

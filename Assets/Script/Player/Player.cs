@@ -4,6 +4,13 @@ using System.Collections;
 
 public class Player : Entity
 {
+    [Header("After-image Effect")]
+    public GameObject afterImagePrefab;
+    public float afterImageDelay = 0.1f;
+    public int numberOfAfterImages = 4;
+    private SpriteRenderer sr;
+
+
     public PlayerInputSet input { get; private set; }
     public Player_SkillManager skillManager { get; private set; }
 
@@ -103,6 +110,8 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
+        sr = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
+
         if (stateMachine != null && idleState != null)
         {
             stateMachine.Initialize(idleState);
@@ -254,6 +263,21 @@ public class Player : Entity
     public void PlayWalkSound()
     {
         PlaySound(walkSound);
+    }
+
+    public IEnumerator CreateAfterImages()
+    {
+        for (int i = 0; i < numberOfAfterImages; i++)
+        {
+            GameObject afterImage = Instantiate(afterImagePrefab, transform.position, transform.rotation);
+            SpriteRenderer afterImageSr = afterImage.GetComponent<SpriteRenderer>();
+
+            // Copy player's current sprite and flip status
+            afterImageSr.sprite = sr.sprite;
+            afterImageSr.flipX = sr.flipX;
+
+            yield return new WaitForSeconds(afterImageDelay);
+        }
     }
 
     // Removed OnDestroy related to color changes
