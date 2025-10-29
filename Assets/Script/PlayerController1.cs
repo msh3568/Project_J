@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerControls controls;
     private Vector2 moveInput;
+    private Player playerInstance; // Player 인스턴스 참조 추가
 
     // --- 차지 점프(모아뛰기)에 대한 변수들 ---
     private bool isChargingJump = false;
@@ -17,6 +18,12 @@ public class PlayerController : MonoBehaviour
     {
         controls = new PlayerControls();
         controls.Player.Enable();
+
+        playerInstance = FindObjectOfType<Player>(); // Player 인스턴스 찾아서 할당
+        if (playerInstance == null)
+        {
+            Debug.LogError("PlayerController: Player instance not found in scene!");
+        }
 
         // --- Move (이동) ---
         controls.Player.Move.performed += context => moveInput = context.ReadValue<Vector2>();
@@ -30,11 +37,12 @@ public class PlayerController : MonoBehaviour
         controls.Player.Attack.performed += _ => Attack();
         controls.Player.Baldo.performed += _ => Baldo();
         controls.Player.Dash.performed += _ => Dash();
+        controls.Player.checkpoint.performed += _ => Checkpoint();
     }
 
     private void OnDisable()
     {
-        // 게임 오브젝트가 비활성화될 때 확실하게 모든 액션을 비활성화합니다.
+        // 게임 오브젝트가 비활성화될 때 확실하게 모든 액션을 비활성화합니다。
         StopRumble(); // 진동 멈춤
         controls.Player.Disable();
     }
@@ -76,7 +84,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Attack!");
         // (공격 로직 구현)
 
-        // 짧은 진동 (0.1초간 약하게)
+        // --- 진동 조절 가이드 ---
+        // TriggerRumble(low, high, duration)
+        // low: 저주파 모터 세기 (0.0 ~ 1.0)
+        // high: 고주파 모터 세기 (0.0 ~ 1.0) - 이 값들을 바꾸면 "진동 세기"가 조절됩니다.
+        // duration: 진동 지속 시간 (초 단위) - 이 값을 바꾸면 "진동 시간"이 조절됩니다.
         TriggerRumble(0.3f, 0.3f, 0.1f);
     }
 
@@ -130,9 +142,7 @@ public class PlayerController : MonoBehaviour
     private void Checkpoint()
     {
         Debug.Log("Checkpoint (부활)!");
-        // (부활 로직)
-
-        // "페이드 아웃 진동" (1초에 걸쳐 서서히 약해지는 진동)
+        GameManager.Instance.RespawnPlayerAtLastCheckpoint();
         StartCoroutine(RumbleFadeOut(1.0f));
     }
 
@@ -163,9 +173,9 @@ public class PlayerController : MonoBehaviour
         float timer = 0f;
 
         // (시작점 부분)
-        // 페이드아웃은 항상 0.7f 정도의 세기에서 시작합니다.
-        float startLow = 0.7f;
-        float startHigh = 0.7f;
+        // 페이드아웃은 항상 0.3f 정도의 세기에서 시작합니다.
+        float startLow = 0.3f;
+        float startHigh = 0.3f;
 
         while (timer < duration)
         {

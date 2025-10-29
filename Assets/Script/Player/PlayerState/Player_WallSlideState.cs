@@ -51,9 +51,6 @@ public class Player_WallSlideState : PlayerState
             xInput = 0;
         }
 
-        if (player.moveInput.y > 0)
-            player.SetVelocity(xInput, rb.linearVelocity.y);
-        else
-            player.SetVelocity(xInput, rb.linearVelocity.y * player.wallSlideSlowMultiplier);
+        player.SetVelocity(xInput, rb.linearVelocity.y * player.wallSlideSlowMultiplier);
     }
 }
