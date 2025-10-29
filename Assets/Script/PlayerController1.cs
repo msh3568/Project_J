@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         // 이 스크립트는 Player.cs와 별개로 움직임을 처리하므로, 실제 게임에서는 Player.cs의 움직임 로직과 충돌할 수 있습니다.
         // 여기서는 3D 공간에서의 움직임을 가정하고 작성되었습니다.
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
-        transform.Translate(moveDirection * Time.deltaTime * 5.0f);
+        // transform.Translate(moveDirection * Time.deltaTime * 5.0f);
 
 
     }
