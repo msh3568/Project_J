@@ -1,5 +1,6 @@
 using NUnit.Framework.Constraints;
 using UnityEngine;
+using System.Collections;
 
 public class Player : Entity
 {
@@ -25,6 +26,10 @@ public class Player : Entity
     public float attackVelocityDuration = .1f;
     public float comboResetTime = 1;
 
+    [Header("Air Dash Options")]
+    [SerializeField] public bool airDashWithJumpKey = true;
+    [SerializeField] public bool airDashWithDashKey = true;
+
     [Header("Movement details")]
     public float moveSpeed;
     public float jumpForce = 5;
@@ -39,8 +44,16 @@ public class Player : Entity
     public AnimationCurve dashSpeedCurve;
     public float dashCooldown = 1f;
     public float dashCooldownTimer { get; private set; }
+    public bool hasAirDashed { get; set; }
     public bool isTouchingWall { get; private set; }
     public Vector2 moveInput { get; private set; }
+
+    [Header("Charge Jump Details")]
+    [SerializeField] public float minChargeJumpForce = 2f;
+    [SerializeField] public float maxChargeJumpForce = 18f;
+    [SerializeField] public float maxChargeTime = 1f;
+    public float currentChargeTime { get; set; }
+    public bool isChargingJump { get; set; }
 
     [Header("Defensive details")]
     [Range(1, 100)]
@@ -56,13 +69,19 @@ public class Player : Entity
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
 
+    public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+
     protected override void Awake()
     {
         base.Awake();
 
         fxSource = GetComponent<AudioSource>();
         if (fxSource == null)
+        {
             fxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
 
         if (GetComponent<Entity_VFX>() == null)
             gameObject.AddComponent<Entity_VFX>();
@@ -84,15 +103,89 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        stateMachine.Initialize(idleState);
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.Initialize(idleState);
+        }
+        else
+        {
+            Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+        }
     }
+
+    public bool isImmobilized { get; private set; }
 
     protected override void Update()
     {
+        if (isImmobilized)
+            return;
+
         base.Update();
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
+
+        if (transform.position.y < -16f)
+        {
+            GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+        }
     }
+
+    public void Immobilize(float duration)
+    {
+        StartCoroutine(ImmobilizeCoroutine(duration));
+    }
+
+    private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
+    {
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        else
+        {
+            Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+        }
+        isImmobilized = true;
+        yield return new WaitForSeconds(duration);
+        isImmobilized = false;
+    }
+
+    private int activeSlows = 0;
+    private float originalMoveSpeed;
+    private float originalDashSpeed;
+    private float originalJumpForce;
+
+    public void ApplySlow(float duration, float moveSpeedMultiplier)
+    {
+        StartCoroutine(SlowCoroutine(duration, moveSpeedMultiplier));
+    }
+
+    private System.Collections.IEnumerator SlowCoroutine(float duration, float moveSpeedMultiplier)
+    {
+        if (activeSlows == 0)
+        {
+            originalMoveSpeed = moveSpeed;
+            originalDashSpeed = dashSpeed;
+            originalJumpForce = jumpForce;
+        }
+
+        activeSlows++;
+        moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
+        dashSpeed = originalDashSpeed * moveSpeedMultiplier;
+        jumpForce = originalJumpForce * moveSpeedMultiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        activeSlows--;
+        if (activeSlows == 0)
+        {
+            moveSpeed = originalMoveSpeed;
+            dashSpeed = originalDashSpeed;
+            jumpForce = originalJumpForce;
+        }
+    }
+
+    // Removed ApplyTemporaryColor and TemporaryColorCoroutine
 
     private void OnEnable()
     {
@@ -139,12 +232,29 @@ public class Player : Entity
 
     public void PlaySound(SoundEffect _sound)
     {
-        if (_sound.clip != null)
-            fxSource.PlayOneShot(_sound.clip, _sound.volume);
+        if (fxSource == null)
+        {
+            Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+            return;
+        }
+        if (_sound == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+            return;
+        }
+        if (_sound.clip == null)
+        {
+            Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+            return;
+        }
+
+        fxSource.PlayOneShot(_sound.clip, _sound.volume);
     }
 
     public void PlayWalkSound()
     {
         PlaySound(walkSound);
     }
+
+    // Removed OnDestroy related to color changes
 }

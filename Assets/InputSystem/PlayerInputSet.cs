@@ -138,9 +138,27 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CounterAttack"",
+                    ""name"": ""Pary"",
                     ""type"": ""Button"",
                     ""id"": ""c08b8389-c5e7-4701-bbcf-675819d89971"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CounterAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec3f1fd9-9917-4f8a-a01f-f70fb4ed6fb7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Checkpoint"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b19a630-a244-40fe-bd09-f5531ac97fa8"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -183,6 +201,17 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""8463667a-da16-40d5-b2e7-df1e4fe5818b"",
+                    ""path"": ""<DualShockGamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""7919bff0-f761-4357-9b35-b9f49f48e5ab"",
                     ""path"": ""<Keyboard>/leftAlt"",
                     ""interactions"": """",
@@ -194,8 +223,19 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""a874ac6b-9c7f-4352-9d08-0fbffb79ba06"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""71922e54-b7e5-4f4e-95c4-f1a56be94e94"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard & Mouse"",
@@ -205,8 +245,30 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""91af708f-c334-41f3-918d-6fe442087fa7"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""85651397-9502-4e37-95a4-dfaef6b7c44c"",
-                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8890e832-e24c-4271-a4b8-bef68790b51a"",
+                    ""path"": ""<DualShockGamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -217,18 +279,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""62752011-2c4d-42d7-b1ce-102370f863f5"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Baldo"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f0b3c21b-2c6f-4f43-a7cb-669b610c2fe9"",
-                    ""path"": """",
+                    ""path"": ""<DualShockGamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -254,7 +305,62 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
+                    ""action"": ""Pary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b67c5eb0-8f9a-4cd0-bc9d-072310025b24"",
+                    ""path"": ""<DualShockGamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fb2d5c95-80ed-4828-be72-6c237519f13e"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""CounterAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8276ac09-06c7-4a29-9cb3-cd879cfc12ce"",
+                    ""path"": ""<DualShockGamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CounterAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""040b34c3-ea8b-40f2-9f59-58772c3d6414"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Checkpoint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3477cdc-adaa-4a58-80ff-232335bffcc0"",
+                    ""path"": ""<DualShockGamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Checkpoint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -287,7 +393,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Baldo = m_Player.FindAction("Baldo", throwIfNotFound: true);
+        m_Player_Pary = m_Player.FindAction("Pary", throwIfNotFound: true);
         m_Player_CounterAttack = m_Player.FindAction("CounterAttack", throwIfNotFound: true);
+        m_Player_Checkpoint = m_Player.FindAction("Checkpoint", throwIfNotFound: true);
     }
 
     ~@PlayerInputSet()
@@ -373,7 +481,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Baldo;
+    private readonly InputAction m_Player_Pary;
     private readonly InputAction m_Player_CounterAttack;
+    private readonly InputAction m_Player_Checkpoint;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -406,9 +516,17 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Baldo => m_Wrapper.m_Player_Baldo;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Pary".
+        /// </summary>
+        public InputAction @Pary => m_Wrapper.m_Player_Pary;
+        /// <summary>
         /// Provides access to the underlying input action "Player/CounterAttack".
         /// </summary>
         public InputAction @CounterAttack => m_Wrapper.m_Player_CounterAttack;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Checkpoint".
+        /// </summary>
+        public InputAction @Checkpoint => m_Wrapper.m_Player_Checkpoint;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -450,9 +568,15 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @Baldo.started += instance.OnBaldo;
             @Baldo.performed += instance.OnBaldo;
             @Baldo.canceled += instance.OnBaldo;
+            @Pary.started += instance.OnPary;
+            @Pary.performed += instance.OnPary;
+            @Pary.canceled += instance.OnPary;
             @CounterAttack.started += instance.OnCounterAttack;
             @CounterAttack.performed += instance.OnCounterAttack;
             @CounterAttack.canceled += instance.OnCounterAttack;
+            @Checkpoint.started += instance.OnCheckpoint;
+            @Checkpoint.performed += instance.OnCheckpoint;
+            @Checkpoint.canceled += instance.OnCheckpoint;
         }
 
         /// <summary>
@@ -479,9 +603,15 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @Baldo.started -= instance.OnBaldo;
             @Baldo.performed -= instance.OnBaldo;
             @Baldo.canceled -= instance.OnBaldo;
+            @Pary.started -= instance.OnPary;
+            @Pary.performed -= instance.OnPary;
+            @Pary.canceled -= instance.OnPary;
             @CounterAttack.started -= instance.OnCounterAttack;
             @CounterAttack.performed -= instance.OnCounterAttack;
             @CounterAttack.canceled -= instance.OnCounterAttack;
+            @Checkpoint.started -= instance.OnCheckpoint;
+            @Checkpoint.performed -= instance.OnCheckpoint;
+            @Checkpoint.canceled -= instance.OnCheckpoint;
         }
 
         /// <summary>
@@ -571,11 +701,25 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBaldo(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Pary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPary(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "CounterAttack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCounterAttack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Checkpoint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheckpoint(InputAction.CallbackContext context);
     }
 }

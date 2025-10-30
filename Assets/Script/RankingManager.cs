@@ -1,117 +1,152 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
-/// 플레이어의 이름(name)과 클리어 시간(time)을 저장하는 클래스
+/// Firebase Realtime Database를 사용하여 랭킹을 관리하고 UI에 표시하는 클래스.
+/// 데이터 구조: scores -> (Push ID) -> { name: "...", time: ... }
 /// </summary>
-[Serializable]
-public class RankData
-{
-    public string name;
-    public float time;
-
-    public RankData(string name, float time)
-    {
-        this.name = name;
-        this.time = time;
-    }
-}
-
 public class RankingManager : MonoBehaviour
 {
-    DatabaseReference reference;
+    [Header("UI Elements")]
+    public GameObject rankingPanel;
+    public Button showRankingButton;
+    public Button closeRankingButton;
+    public List<TMP_Text> rankUITexts;
+
+    private DatabaseReference databaseReference;
 
     void Start()
     {
-        // Firebase 초기화
+        InitializeFirebase();
+
+        if (showRankingButton != null)
+            showRankingButton.onClick.AddListener(ShowRanking);
+        
+        if (closeRankingButton != null)
+            closeRankingButton.onClick.AddListener(HideRanking);
+
+        if (rankingPanel != null)
+            rankingPanel.SetActive(false);
+    }
+
+    private void InitializeFirebase()
+    {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
-            var dependencyStatus = task.Result;
-            if (dependencyStatus == DependencyStatus.Available)
+            if (task.Result == DependencyStatus.Available)
             {
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                reference = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("Firebase Initialized.");
+                databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+                Debug.Log("Firebase가 성공적으로 초기화되었습니다.");
             }
             else
             {
-                Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
+                Debug.LogError($"Firebase 종속성 해결에 실패했습니다: {task.Result}");
             }
         });
     }
 
-    /// <summary>
-    /// 새로운 랭킹 데이터를 'scores' 경로에 저장합니다.
-    /// </summary>
-    /// <param name="name">플레이어 이름</param>
-    /// <param name="time">클리어 시간</param>
-    public void AddScore(string name, float time)
+    public void ShowRanking()
     {
-        if (reference == null)
+        if (databaseReference == null) return;
+
+        if (rankingPanel != null)
         {
-            Debug.LogError("Firebase not initialized.");
-            return;
+            rankingPanel.SetActive(true);
+            LoadTopScores();
         }
+    }
 
-        RankData rankData = new RankData(name, time);
-        string json = JsonUtility.ToJson(rankData);
-
-        string key = reference.Child("scores").Push().Key;
-        reference.Child("scores").Child(key).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                Debug.Log("Score added successfully.");
-            }
-            else
-            {
-                Debug.LogError("Failed to add score: " + task.Exception);
-            }
-        });
+    public void HideRanking()
+    {
+        if (rankingPanel != null)
+            rankingPanel.SetActive(false);
     }
 
     /// <summary>
-    /// 'scores' 경로에서 시간 순으로 상위 10개의 랭킹 데이터를 불러옵니다.
+    /// "time" 필드를 기준으로 상위 10개의 기록을 가져옵니다.
     /// </summary>
-    /// <param name="onLoaded">데이터 로딩이 완료되면 호출될 콜백 함수</param>
-    public void LoadTopScores(Action<List<RankData>> onLoaded)
+    private void LoadTopScores()
     {
-        if (reference == null)
-        {
-            Debug.LogError("Firebase not initialized.");
-            onLoaded?.Invoke(new List<RankData>()); // 초기화 실패 시 빈 리스트 전달
-            return;
-        }
-
-        reference.Child("scores").OrderByChild("time").LimitToFirst(10).GetValueAsync().ContinueWithOnMainThread(task =>
+        databaseReference.Child("scores").OrderByChild("time").LimitToFirst(10).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to load scores: " + task.Exception);
-                onLoaded?.Invoke(new List<RankData>());
+                Debug.LogError("랭킹 로딩에 실패했습니다: " + task.Exception);
+                return;
             }
-            else if (task.IsCompleted)
+            
+            if (task.IsCompleted)
             {
-                DataSnapshot snapshot = task.Result;
-                List<RankData> topScores = new List<RankData>();
-
-                if (snapshot.Exists)
-                {
-                    foreach (DataSnapshot childSnapshot in snapshot.Children)
-                    {
-                        string json = childSnapshot.GetRawJsonValue();
-                        RankData rankData = JsonUtility.FromJson<RankData>(json);
-                        topScores.Add(rankData);
-                    }
-                }
-                
-                Debug.Log("Top scores loaded successfully.");
-                onLoaded?.Invoke(topScores);
+                UpdateRankingUI(task.Result);
             }
         });
+    }
+
+    private void UpdateRankingUI(DataSnapshot snapshot)
+    {
+        foreach (var txt in rankUITexts)
+        {
+            txt.text = "";
+        }
+
+        if (!snapshot.Exists)
+        {
+            if (rankUITexts.Count > 0)
+                rankUITexts[0].text = "아직 랭킹 데이터가 없습니다.";
+            return;
+        }
+
+        int rank = 1;
+        foreach (DataSnapshot userRecord in snapshot.Children)
+        {
+            if (rank > rankUITexts.Count) break;
+
+            try
+            {
+                string playerName = userRecord.Child("name").Value.ToString();
+                float clearTimeValue = Convert.ToSingle(userRecord.Child("time").Value);
+
+                TimeSpan timeSpan = TimeSpan.FromSeconds(clearTimeValue);
+                string formattedTime = timeSpan.ToString(@"hh\:mm\:ss");
+                
+                rankUITexts[rank - 1].text = $"{rank}. {playerName} - {formattedTime}";
+                rank++;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"랭킹 데이터 파싱 오류: {e.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 데이터베이스에 새로운 기록을 추가합니다.
+    /// </summary>
+    /// <param name="playerName">플레이어 이름</param>
+    /// <param name="clearTime">클리어 시간(초)</param>
+    public void AddScore(string playerName, float clearTime)
+    {
+        if (databaseReference == null)
+        {
+            Debug.LogError("Firebase가 초기화되지 않았습니다.");
+            return;
+        }
+
+        // 저장할 데이터 객체 생성
+        Dictionary<string, object> scoreData = new Dictionary<string, object>();
+        scoreData["name"] = playerName;
+        scoreData["time"] = clearTime;
+
+        // "scores" 경로 아래에 랜덤 키를 생성하며 데이터 저장
+        databaseReference.Child("scores").Push().SetValueAsync(scoreData);
+        
+        Debug.Log($"{playerName}의 기록({clearTime}초)이 추가되었습니다.");
     }
 }

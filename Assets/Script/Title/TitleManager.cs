@@ -1,47 +1,39 @@
 using UnityEngine;
-// ÇÑ ¾À¿¡¼­ ¸ðµç °ÍÀ» °ü¸®ÇÏ¹Ç·Î SceneManagement´Â ÇÊ¿ä ¾ø½À´Ï´Ù.
+using UnityEngine.SceneManagement; //  È¯   Ê¿Õ´Ï´!
 
 public class TitleManager : MonoBehaviour
 {
     [Header("UI Group Objects")]
-    public GameObject titleContentsGroup;    // Å¸ÀÌÆ² È­¸é UI ±×·ì
-    public GameObject settingsContentsGroup; // ¼³Á¤ È­¸é UI ±×·ì
-    public GameObject inGameGroup;           // ÀÎ°ÔÀÓ ÇÃ·¹ÀÌ UI ¹× ¿ä¼Ò ±×·ì
+    public GameObject titleContentsGroup;    // " "  âº» Æ° Ö´ ×·
+    public GameObject settingsContentsGroup; //  UI Òµ Ö´ ×·
 
     /// <summary>
-    /// °ÔÀÓ ½ÃÀÛ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// ' ' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnStartButtonClick()
     {
-        Debug.Log("°ÔÀÓ ½ÃÀÛ ¹öÆ° Å¬¸¯!");
-
-        // Å¸ÀÌÆ² UI´Â ²ô°í
-        if (titleContentsGroup != null)
+        if (AnalyticsManager.Instance != null)
         {
-            titleContentsGroup.SetActive(false);
+            AnalyticsManager.Instance.StartSession();
         }
 
-        // ÀÎ°ÔÀÓ ¿ä¼ÒµéÀº ÄÕ´Ï´Ù.
-        if (inGameGroup != null)
-        {
-            inGameGroup.SetActive(true);
-        }
+        // "GameScene"Ì¶ Ì¸  Ò·É´Ï´.
+        // Æ® Ö´   Ì¸ È® Æ¾ Õ´Ï´.
+        SceneManager.LoadScene("GameScene");
     }
 
     /// <summary>
-    /// ¼³Á¤ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// '' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnSettingsButtonClick()
     {
-        Debug.Log("¼³Á¤ ¹öÆ° Å¬¸¯!");
-
-        // Å¸ÀÌÆ² UI´Â ²ô°í
+        // Å¸Æ² âº» UI 
         if (titleContentsGroup != null)
         {
             titleContentsGroup.SetActive(false);
         }
 
-        // ¼³Á¤ UI´Â ÄÕ´Ï´Ù.
+        //  UI Õ´Ï´.
         if (settingsContentsGroup != null)
         {
             settingsContentsGroup.SetActive(true);
@@ -49,19 +41,17 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼³Á¤ È­¸éÀÇ ´Ý±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    ///  È­ 'Ý±' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnSettingsCloseButtonClick()
     {
-        Debug.Log("¼³Á¤ ´Ý±â ¹öÆ° Å¬¸¯!");
-
-        // ¼³Á¤ UI´Â ²ô°í
+        //  UI 
         if (settingsContentsGroup != null)
         {
             settingsContentsGroup.SetActive(false);
         }
 
-        // Å¸ÀÌÆ² UI´Â ´Ù½Ã ÄÕ´Ï´Ù.
+        // Å¸Æ² âº» UI Ù½ Õ´Ï´.
         if (titleContentsGroup != null)
         {
             titleContentsGroup.SetActive(true);
@@ -69,17 +59,13 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// °ÔÀÓ Á¾·á ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ È£ÃâµË´Ï´Ù.
+    /// ' ' Æ° Å¬  È£Ë´Ï´.
     /// </summary>
     public void OnExitButtonClick()
     {
-        Debug.Log("°ÔÀÓ Á¾·á ¹öÆ° Å¬¸¯!");
-
-        // À¯´ÏÆ¼ ¿¡µðÅÍ¿¡¼­ ½ÇÇà ÁßÀÏ °æ¿ì ÇÃ·¹ÀÌ ¸ðµå¸¦ ÁßÁöÇÕ´Ï´Ù.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        // ºôµåµÈ °ÔÀÓ¿¡¼­´Â ¾îÇÃ¸®ÄÉÀÌ¼ÇÀ» Á¾·áÇÕ´Ï´Ù.
         Application.Quit();
 #endif
     }
