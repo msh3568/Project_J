@@ -10,6 +10,7 @@ public class ActivatingBridge : MonoBehaviour
 
     [Header("Player Interaction")]
     [SerializeField] private float immobilizationDuration = 1f;
+    [SerializeField] private float knockbackForce = 5f;
 
     [Header("Visuals")]
     [SerializeField] private Color activeColor = Color.red;
@@ -87,7 +88,11 @@ public class ActivatingBridge : MonoBehaviour
                 }
 
                 player.PlaySound(immobilizationSound);
-                player.Immobilize(immobilizationDuration);
+                
+                // Calculate knockback direction: away from the bridge's center horizontally
+                Vector2 knockbackDirection = (player.transform.position.x > transform.position.x) ? Vector2.right : Vector2.left;
+                player.ReciveKnockback(knockbackDirection * knockbackForce, immobilizationDuration);
+
                 StatusEffectUIManager.Instance.ShowImmobilizedEffect(immobilizationDuration);
 
                 // Apply temporary color to player

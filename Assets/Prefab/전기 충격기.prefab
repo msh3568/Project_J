@@ -154,6 +154,7 @@ MonoBehaviour:
   activationDuration: 1
   deactivationDuration: 4
   immobilizationDuration: 1
+  knockbackForce: 3
   activeColor: {r: 1, g: 0.821988, b: 0, a: 1}
   playerTemporaryColor: {r: 1, g: 1, b: 0, a: 1}
   activationSound:

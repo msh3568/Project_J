@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections; // 코루틴(IEnumerator)을 사용하기 위해 추가
 
-public class PlayerController : MonoBehaviour
+public class PlayerController1 : MonoBehaviour
 {
-    private PlayerControls controls;
+    private NewPlayerControls controls;
     private Vector2 moveInput;
     private Player playerInstance; // Player 인스턴스 참조 추가
 
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        controls = new PlayerControls();
+        controls = new NewPlayerControls();
         controls.Player.Enable();
 
         playerInstance = FindObjectOfType<Player>(); // Player 인스턴스 찾아서 할당
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Attack.performed += _ => Attack();
         controls.Player.Baldo.performed += _ => Baldo();
         controls.Player.Dash.performed += _ => Dash();
+        controls.Player.CounterAttack.performed += _ => Palling(); // Add this line for parrying
         controls.Player.checkpoint.performed += _ => Checkpoint();
     }
 

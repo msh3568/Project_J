@@ -138,4 +138,4 @@ MonoBehaviour:
   spikeBallPrefab: {fileID: 1358752294138806031, guid: bb88cc22fdf443a4c9d3262ed7d7050b, type: 3}
   firePoint: {fileID: 5448978798787682240}
   fireRate: 3
-  fireForce: 10
+  fireForce: 5

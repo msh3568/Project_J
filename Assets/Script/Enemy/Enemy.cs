@@ -1,7 +1,10 @@
 using UnityEngine;
+using System;
 
 public class Enemy : Entity
 {
+    public static event Action OnEnemyDeath;
+
     [Header("States")]
     public Enemy_IdleState idleState;
     public Enemy_MoveState moveState;
@@ -51,6 +54,7 @@ public class Enemy : Entity
     {
         base.onEntityDeath();
 
+        OnEnemyDeath?.Invoke(); 
         stateMachine.ChangeState(deadState);
     }
 

@@ -4,6 +4,7 @@ public class Enemy_BattleState : EnemyState
 {
     private Transform player;
     private float lastTimeWasInBattle;
+    public bool canFlipAutomatically = true;
 public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) : base(enemy, stateMachine, animBoolName)
     {
     }
@@ -28,6 +29,9 @@ public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBool
     {
         base.Update();
 
+        if(enemy.groundDetected == false)
+            stateMachine.ChangeState(enemy.fallState);
+
         if (enemy.PlayerDetected())
             UpdateBattleTimer();
 
@@ -44,7 +48,14 @@ public Enemy_BattleState(Enemy enemy, StateMachine stateMachine, string animBool
             }
             else
             {
-                enemy.SetVelocity(enemy.battleMoveSpeed * DirectionToPlayer(), rb.linearVelocity.y);
+                if (canFlipAutomatically)
+                {
+                    enemy.SetVelocity(enemy.battleMoveSpeed * DirectionToPlayer(), rb.linearVelocity.y);
+                }
+                else
+                {
+                    enemy.SetVelocity(enemy.battleMoveSpeed * enemy.facingDir, rb.linearVelocity.y);
+                }
             }
         }
     }

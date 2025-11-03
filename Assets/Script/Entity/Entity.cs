@@ -8,6 +8,7 @@ public class Entity : MonoBehaviour
     public Rigidbody2D rb { get; private set; }
 
     protected StateMachine stateMachine;
+    [SerializeField] private Enemy enemyRef; // Reference to the Enemy component
 
     protected virtual void Start()
     {
@@ -32,10 +33,14 @@ public class Entity : MonoBehaviour
     private bool isKnocked;
     private Coroutine knockbackCo;
 
+    private float flipCooldown = 0.1f;
+    private float lastFlipTime;
+
     protected virtual void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        enemyRef = GetComponent<Enemy>(); // Initialize enemyRef
 
         stateMachine = new StateMachine();
         
@@ -92,6 +97,9 @@ public class Entity : MonoBehaviour
 
     public void HandleFlip(float xVelocity)
     {
+        if (Time.time - lastFlipTime < flipCooldown)
+            return;
+
         if (xVelocity > 0 && facingRight == false)
             Flip();
         else if (xVelocity < 0 && facingRight)
@@ -100,11 +108,47 @@ public class Entity : MonoBehaviour
 
     public void Flip()
     {
+        lastFlipTime = Time.time;
         facingDir = facingDir * -1;
         facingRight = !facingRight;
         Vector3 newScale = transform.localScale;
         newScale.x *= -1;
         transform.localScale = newScale;
+    }
+
+    public void TemporarilyDisableBattleStateAutoFlip(float duration)
+    {
+        if (enemyRef == null)
+        {
+            Debug.LogWarning("Enemy reference not found on Entity. Cannot disable battle state auto flip.");
+            return;
+        }
+
+        if (enemyRef.battleState == null)
+        {
+            Debug.LogWarning("Battle state not found on Enemy. Cannot disable battle state auto flip.");
+            return;
+        }
+
+        if (disableBattleStateAutoFlipCo != null)
+            StopCoroutine(disableBattleStateAutoFlipCo);
+
+        disableBattleStateAutoFlipCo = StartCoroutine(DisableBattleStateAutoFlipCo(duration));
+    }
+
+    private Coroutine disableBattleStateAutoFlipCo;
+
+    private IEnumerator DisableBattleStateAutoFlipCo(float duration)
+    {
+        if (enemyRef != null && enemyRef.battleState != null)
+        {
+            enemyRef.battleState.canFlipAutomatically = false;
+        }
+        yield return new WaitForSeconds(duration);
+        if (enemyRef != null && enemyRef.battleState != null)
+        {
+            enemyRef.battleState.canFlipAutomatically = true;
+        }
     }
 
     protected virtual void HandleCollisionDetection()

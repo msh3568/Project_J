@@ -13,8 +13,6 @@ public class Player_DashState : PlayerState
     {
         base.Enter();
 
-        player.StartCoroutine(player.CreateAfterImages()); // Start after-image effect
-
         player.StartDashCooldown();
 
         dashDir = player.facingDir;

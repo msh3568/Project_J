@@ -1,31 +1,51 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
     [Header("UI Groups")]
-    public GameObject pauseGroup;            // ÀÏ½ÃÁ¤Áö UI ÀüÃ¼¸¦ °¨½Î´Â ºÎ¸ğ
-    public GameObject pauseMenuContent;      // ±âº» ¸Ş´º Ã¢ (¹öÆ°µé)
-    public GameObject settingsContentsGroup; // ¼³Á¤ Ã¢
+    public GameObject pauseGroup;            // ì¼ì‹œì •ì§€ UI ì „ì²´ë¥¼ ê°ì‹¸ëŠ” ë¶€ëª¨
+    public GameObject pauseMenuContent;      // ê¸°ë³¸ ë©”ë‰´ ì°½ (ë²„íŠ¼ë“¤)
+    public GameObject settingsContentsGroup; // ì„¤ì • ì°½
+
+    [Header("Volume Settings")]
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
 
     private bool isPaused = false;
 
+    void Start()
+    {
+        // AudioManagerì—ì„œ í˜„ì¬ ë³¼ë¥¨ ê°’ì„ ê°€ì ¸ì™€ ìŠ¬ë¼ì´ë”ì— ì„¤ì •
+        if (AudioManager.Instance != null)
+        {
+            // SetValueWithoutNotifyë¥¼ ì‚¬ìš©í•˜ì—¬ ì´ë²¤íŠ¸ê°€ ë°œìƒí•˜ì§€ ì•Šë„ë¡ ê°’ì„ ì„¤ì •
+            bgmSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("BGMVolume", 0.75f));
+            sfxSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
+        }
+
+        // ìŠ¬ë¼ì´ë” ì´ë²¤íŠ¸ì— ë¦¬ìŠ¤ë„ˆ ì¶”ê°€
+        bgmSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+        sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+    }
+
     void Update()
     {
-        // ESC Å° ÀÔ·Â °¨Áö
+        // ESC í‚¤ ì…ë ¥ ê°ì§€
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // ¼³Á¤ Ã¢ÀÌ ¿­·ÁÀÖÀ¸¸é ¼³Á¤ Ã¢¸¸ ´İÀ½
+            // ì„¤ì • ì°½ì´ í™œì„±í™”ë˜ì–´ ìˆìœ¼ë©´ ì„¤ì • ì°½ì„ ë‹«ìŒ
             if (settingsContentsGroup != null && settingsContentsGroup.activeSelf)
             {
                 CloseSettings();
             }
-            // ÀÏ½ÃÁ¤Áö°¡ ¾Æ´Ï¸é ÀÏ½ÃÁ¤Áö
+            // ì¼ì‹œì •ì§€ ìƒíƒœê°€ ì•„ë‹ˆë©´ ì¼ì‹œì •ì§€
             else if (!isPaused)
             {
                 PauseGame();
             }
-            // ÀÏ½ÃÁ¤Áö »óÅÂ¸é °ÔÀÓ Àç°³
+            // ì¼ì‹œì •ì§€ ìƒíƒœë©´ ê²Œì„ ì¬ê°œ
             else
             {
                 ResumeGame();
@@ -36,44 +56,69 @@ public class PauseManager : MonoBehaviour
     private void PauseGame()
     {
         isPaused = true;
-        Time.timeScale = 0f; // ½Ã°£ Èå¸§À» ¸ØÃã
+        Time.timeScale = 0f; // ì‹œê°„ íë¦„ì„ ë©ˆì¶¤
 
         pauseGroup.SetActive(true);
         pauseMenuContent.SetActive(true);
         settingsContentsGroup.SetActive(false);
     }
 
-    // '°ÔÀÓ Àç°³' ¹öÆ°¿¡ ¿¬°áÇÒ ÇÔ¼ö
+    // 'ê³„ì†í•˜ê¸°' ë²„íŠ¼ì— ì—°ê²°ë  í•¨ìˆ˜
     public void ResumeGame()
     {
         isPaused = false;
-        Time.timeScale = 1f; // ½Ã°£ Èå¸§À» µÇµ¹¸²
+        Time.timeScale = 1f; // ì‹œê°„ íë¦„ì„ ë˜ëŒë¦¼
         pauseGroup.SetActive(false);
     }
 
-    // '¼³Á¤' ¹öÆ°¿¡ ¿¬°áÇÒ ÇÔ¼ö
+    // 'ì„¤ì •' ë²„íŠ¼ì— ì—°ê²°ë  í•¨ìˆ˜
     public void OpenSettings()
     {
         pauseMenuContent.SetActive(false);
         settingsContentsGroup.SetActive(true);
     }
 
-    // ¼³Á¤ Ã¢ÀÇ '´İ±â' ¹öÆ°¿¡ ¿¬°áÇÒ ÇÔ¼ö
+    // ì„¤ì • ì°½ì˜ 'ë‹«ê¸°' ë²„íŠ¼ì— ì—°ê²°ë  í•¨ìˆ˜
     public void CloseSettings()
     {
         settingsContentsGroup.SetActive(false);
         pauseMenuContent.SetActive(true);
     }
 
-    // '°ÔÀÓ Á¾·á' ¹öÆ°¿¡ ¿¬°áÇÒ ÇÔ¼ö
+    // 'ê²Œì„ ì¢…ë£Œ' ë²„íŠ¼ì— ì—°ê²°ë  í•¨ìˆ˜
     public void ExitGame()
     {
-        // À¯´ÏÆ¼ ¿¡µğÅÍ¿¡¼­´Â ÇÃ·¹ÀÌ ¸ğµå¸¦ ÁßÁöÇÏ°í,
-        // ½ÇÁ¦ ºôµåµÈ °ÔÀÓ¿¡¼­´Â ¾îÇÃ¸®ÄÉÀÌ¼ÇÀ» Á¾·áÇÕ´Ï´Ù.
+        // ìœ ë‹ˆí‹° ì—ë””í„°ì—ì„œëŠ” í”Œë ˆì´ ëª¨ë“œë¥¼ ì¤‘ì§€í•˜ê³ ,
+        // ë¹Œë“œëœ ê²Œì„ì—ì„œëŠ” ì• í”Œë¦¬ì¼€ì´ì…˜ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
+    }
+
+    // BGM ìŠ¬ë¼ì´ë” ê°’ì´ ë³€ê²½ë  ë•Œ í˜¸ì¶œë  í•¨ìˆ˜
+    public void OnBGMVolumeChanged(float volume)
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetBGMVolume(volume);
+        }
+    }
+
+    // SFX ìŠ¬ë¼ì´ë” ê°’ì´ ë³€ê²½ë  ë•Œ í˜¸ì¶œë  í•¨ìˆ˜
+    public void OnSFXVolumeChanged(float volume)
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetSFXVolume(volume);
+        }
+    }
+
+    // 'íƒ€ì´í‹€ë¡œ ëŒì•„ê°€ê¸°' ë²„íŠ¼ì— ì—°ê²°ë  í•¨ìˆ˜
+    public void ReturnToTitle()
+    {
+        Time.timeScale = 1f; // ì‹œê°„ íë¦„ì„ ë˜ëŒë¦¼
+        SceneManager.LoadScene("Title"); // "Title" ì”¬ì„ ë¶ˆëŸ¬ì˜´
     }
 }

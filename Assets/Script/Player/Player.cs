@@ -1,16 +1,10 @@
 using NUnit.Framework.Constraints;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class Player : Entity
 {
-    [Header("After-image Effect")]
-    public GameObject afterImagePrefab;
-    public float afterImageDelay = 0.1f;
-    public int numberOfAfterImages = 4;
-    private SpriteRenderer sr;
-
-
     public PlayerInputSet input { get; private set; }
     public Player_SkillManager skillManager { get; private set; }
 
@@ -75,6 +69,7 @@ public class Player : Entity
     public SoundEffect hitSound;
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
 
@@ -87,6 +82,7 @@ public class Player : Entity
         {
             fxSource = gameObject.AddComponent<AudioSource>();
         }
+        fxSource.outputAudioMixerGroup = sfxMixerGroup;
 
         playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
 
@@ -110,8 +106,6 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        sr = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
-
         if (stateMachine != null && idleState != null)
         {
             stateMachine.Initialize(idleState);
@@ -163,6 +157,8 @@ public class Player : Entity
     private float originalMoveSpeed;
     private float originalDashSpeed;
     private float originalJumpForce;
+    private float originalMinChargeJumpForce;
+    private float originalMaxChargeJumpForce;
 
     public void ApplySlow(float duration, float moveSpeedMultiplier)
     {
@@ -176,12 +172,16 @@ public class Player : Entity
             originalMoveSpeed = moveSpeed;
             originalDashSpeed = dashSpeed;
             originalJumpForce = jumpForce;
+            originalMinChargeJumpForce = minChargeJumpForce;
+            originalMaxChargeJumpForce = maxChargeJumpForce;
         }
 
         activeSlows++;
         moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
         dashSpeed = originalDashSpeed * moveSpeedMultiplier;
         jumpForce = originalJumpForce * moveSpeedMultiplier;
+        minChargeJumpForce = originalMinChargeJumpForce * moveSpeedMultiplier;
+        maxChargeJumpForce = originalMaxChargeJumpForce * moveSpeedMultiplier;
 
         yield return new WaitForSeconds(duration);
 
@@ -191,6 +191,8 @@ public class Player : Entity
             moveSpeed = originalMoveSpeed;
             dashSpeed = originalDashSpeed;
             jumpForce = originalJumpForce;
+            minChargeJumpForce = originalMinChargeJumpForce;
+            maxChargeJumpForce = originalMaxChargeJumpForce;
         }
     }
 
@@ -263,21 +265,6 @@ public class Player : Entity
     public void PlayWalkSound()
     {
         PlaySound(walkSound);
-    }
-
-    public IEnumerator CreateAfterImages()
-    {
-        for (int i = 0; i < numberOfAfterImages; i++)
-        {
-            GameObject afterImage = Instantiate(afterImagePrefab, transform.position, transform.rotation);
-            SpriteRenderer afterImageSr = afterImage.GetComponent<SpriteRenderer>();
-
-            // Copy player's current sprite and flip status
-            afterImageSr.sprite = sr.sprite;
-            afterImageSr.flipX = sr.flipX;
-
-            yield return new WaitForSeconds(afterImageDelay);
-        }
     }
 
     // Removed OnDestroy related to color changes

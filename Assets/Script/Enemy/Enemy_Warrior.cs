@@ -14,7 +14,7 @@ public class Enemy_Warrior : Enemy, ICounterable
         moveState = new Enemy_MoveState(this, stateMachine, "move");
         attackState = new Enemy_AttackState(this, stateMachine, "attack");
         battleState = new Enemy_BattleState(this, stateMachine, "move");
-        deadState = new Enemy_DeadState(this, stateMachine, "idle");
+        deadState = new Enemy_DeadState(this, stateMachine, "dead");
         stunnedState = new Enemy_StunnedState(this, stateMachine, "stunned");
         
     }
@@ -31,6 +31,11 @@ public class Enemy_Warrior : Enemy, ICounterable
         stateMachine.Initialize(idleState);
     }
 
+    public override void EntityDeath()
+    {
+        base.EntityDeath();
+        stateMachine.ChangeState(deadState);
+    }
     public void HandleCounter()
     {
         if (CanBeCountered == false)
