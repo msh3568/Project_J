@@ -3679,7 +3679,7 @@ Transform:
   m_GameObject: {fileID: 252985346}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 196.23996, y: 33.954098, z: 10.975195}
+  m_LocalPosition: {x: -12.560033, y: 2.754098, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7922,7 +7922,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 196.23996, y: 33.954098, z: 10.975195}
+  m_LocalPosition: {x: -12.560033, y: 2.754098, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118050,6 +118050,10 @@ MonoBehaviour:
   baldoSkillSound:
     clip: {fileID: 8300000, guid: 4d8c99531e97f9d449cb2dac91b73563, type: 3}
     volume: 1
+  screamSound:
+    clip: {fileID: 8300000, guid: faae4ce2a9ef3a1489f00d2fcf00ff8f, type: 3}
+    volume: 0.63
+  screamTriggerFallDistance: 9.5
   sfxMixerGroup: {fileID: 5105433721476265319, guid: dfd43f9b6a0fe0b45b039d62dded5c7d, type: 2}
 --- !u!4 &2049881624
 Transform:
@@ -118060,7 +118064,7 @@ Transform:
   m_GameObject: {fileID: 2049881622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 197.5, y: 33.9, z: 0}
+  m_LocalPosition: {x: -11.3, y: 2.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

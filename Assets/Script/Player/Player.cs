@@ -69,7 +69,12 @@ public class Player : Entity
     public SoundEffect hitSound;
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
+    public SoundEffect screamSound;
+    public float screamTriggerFallDistance = 12f;
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
+
+    private float lastGroundY;
+    private bool hasScreamed;
 
     public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
 
@@ -130,6 +135,20 @@ public class Player : Entity
         if (transform.position.y < -16f)
         {
             GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+        }
+
+        if (groundDetected || wallDetected)
+        {
+            lastGroundY = transform.position.y;
+            hasScreamed = false;
+        }
+        else
+        {
+            if (transform.position.y < lastGroundY - screamTriggerFallDistance && !hasScreamed)
+            {
+                PlaySound(screamSound);
+                hasScreamed = true;
+            }
         }
     }
 
