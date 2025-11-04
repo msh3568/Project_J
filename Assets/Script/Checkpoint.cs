@@ -17,6 +17,11 @@ public class Checkpoint : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false; // Ensure it doesn't play automatically
         audioSource.loop = false; // Default to not looping
+
+        if (AudioManager.Instance != null)
+        {
+            audioSource.outputAudioMixerGroup = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX")[0];
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)

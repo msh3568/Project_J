@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
 
     [Header("Audio Mixer")]
-    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] public AudioMixer audioMixer;
     [SerializeField] private AudioMixerGroup bgmMixerGroup; // BGM 믹서 그룹을 여기에 할당
 
     // Mixer에 노출된 매개변수 이름 (띄어쓰기 포함)

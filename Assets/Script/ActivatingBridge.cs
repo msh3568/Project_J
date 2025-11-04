@@ -32,6 +32,11 @@ public class ActivatingBridge : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.spatialBlend = 1f; // Set to 3D sound
 
+        if (AudioManager.Instance != null)
+        {
+            audioSource.outputAudioMixerGroup = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX")[0];
+        }
+
         if (spriteRenderer != null)
         {
             inactiveColor = spriteRenderer.color;
