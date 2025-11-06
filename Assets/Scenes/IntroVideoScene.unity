@@ -231,6 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1146444008}
   - component: {fileID: 1146444007}
+  - component: {fileID: 1146444009}
   m_Layer: 0
   m_Name: IntroVideoManager
   m_TagString: Untagged
@@ -250,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c85841517edcce41b9a09603a3d9e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroVideoManager
-  videoPlayer: {fileID: 2079139653}
+  videoPlayer: {fileID: 0}
   nextSceneName: FIXER Title
   skipHoldDuration: 0.5
 --- !u!4 &1146444008
@@ -268,6 +269,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1146444009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146444006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d7a6a915d8cc649ba695c9f19a686d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IntroVideoManager
+  videoPlayer: {fileID: 2079139653}
+  nextSceneName: FIXER Title
+  skipHoldDuration: 3
 --- !u!1 &1420431675
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +759,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079139651}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 5727ad9904f5acc4e8ed0783cf079d34, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 44f32ecdabc4da64cb0a70e977e3fd58, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 1614323983}
