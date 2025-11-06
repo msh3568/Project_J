@@ -138,7 +138,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Palling"",
+                    ""name"": ""Pary"",
                     ""type"": ""Button"",
                     ""id"": ""c08b8389-c5e7-4701-bbcf-675819d89971"",
                     ""expectedControlType"": """",
@@ -268,7 +268,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8890e832-e24c-4271-a4b8-bef68790b51a"",
-                    ""path"": ""<DualShockGamepad>/leftShoulder"",
+                    ""path"": ""<DualShockGamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -305,7 +305,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Palling"",
+                    ""action"": ""Pary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -316,14 +316,14 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Palling"",
+                    ""action"": ""Pary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""fb2d5c95-80ed-4828-be72-6c237519f13e"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -393,7 +393,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Baldo = m_Player.FindAction("Baldo", throwIfNotFound: true);
-        m_Player_Palling = m_Player.FindAction("Palling", throwIfNotFound: true);
+        m_Player_Pary = m_Player.FindAction("Pary", throwIfNotFound: true);
         m_Player_CounterAttack = m_Player.FindAction("CounterAttack", throwIfNotFound: true);
         m_Player_Checkpoint = m_Player.FindAction("Checkpoint", throwIfNotFound: true);
     }
@@ -481,7 +481,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Baldo;
-    private readonly InputAction m_Player_Palling;
+    private readonly InputAction m_Player_Pary;
     private readonly InputAction m_Player_CounterAttack;
     private readonly InputAction m_Player_Checkpoint;
     /// <summary>
@@ -516,9 +516,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Baldo => m_Wrapper.m_Player_Baldo;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Palling".
+        /// Provides access to the underlying input action "Player/Pary".
         /// </summary>
-        public InputAction @Palling => m_Wrapper.m_Player_Palling;
+        public InputAction @Pary => m_Wrapper.m_Player_Pary;
         /// <summary>
         /// Provides access to the underlying input action "Player/CounterAttack".
         /// </summary>
@@ -568,9 +568,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @Baldo.started += instance.OnBaldo;
             @Baldo.performed += instance.OnBaldo;
             @Baldo.canceled += instance.OnBaldo;
-            @Palling.started += instance.OnPalling;
-            @Palling.performed += instance.OnPalling;
-            @Palling.canceled += instance.OnPalling;
+            @Pary.started += instance.OnPary;
+            @Pary.performed += instance.OnPary;
+            @Pary.canceled += instance.OnPary;
             @CounterAttack.started += instance.OnCounterAttack;
             @CounterAttack.performed += instance.OnCounterAttack;
             @CounterAttack.canceled += instance.OnCounterAttack;
@@ -603,9 +603,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @Baldo.started -= instance.OnBaldo;
             @Baldo.performed -= instance.OnBaldo;
             @Baldo.canceled -= instance.OnBaldo;
-            @Palling.started -= instance.OnPalling;
-            @Palling.performed -= instance.OnPalling;
-            @Palling.canceled -= instance.OnPalling;
+            @Pary.started -= instance.OnPary;
+            @Pary.performed -= instance.OnPary;
+            @Pary.canceled -= instance.OnPary;
             @CounterAttack.started -= instance.OnCounterAttack;
             @CounterAttack.performed -= instance.OnCounterAttack;
             @CounterAttack.canceled -= instance.OnCounterAttack;
@@ -701,12 +701,12 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBaldo(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Palling" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Pary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPalling(InputAction.CallbackContext context);
+        void OnPary(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "CounterAttack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

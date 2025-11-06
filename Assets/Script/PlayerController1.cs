@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections; // ÄÚ·çÆ¾(IEnumerator)À» »ç¿ëÇÏ±â À§ÇØ Ãß°¡!
+using System.Collections; // ì½”ë£¨í‹´(IEnumerator)ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì¶”ê°€
 
-public class PlayerController : MonoBehaviour
+public class PlayerController1 : MonoBehaviour
 {
-    private PlayerControls controls;
+    private NewPlayerControls controls;
     private Vector2 moveInput;
+    private Player playerInstance; // Player ì¸ìŠ¤í„´ìŠ¤ ì°¸ì¡° ì¶”ê°€
 
-    // --- Á¡ÇÁ Â÷Áö(²Ú ´©¸£±â)¸¦ À§ÇÑ º¯¼öµé ---
+    // --- ì°¨ì§€ ì í”„(ëª¨ì•„ë›°ê¸°)ì— ëŒ€í•œ ë³€ìˆ˜ë“¤ ---
     private bool isChargingJump = false;
     private float jumpChargeTimer = 0f;
     public float maxChargeTime = 2.0f;
@@ -15,192 +16,191 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        controls = new PlayerControls();
+        controls = new NewPlayerControls();
         controls.Player.Enable();
 
-        // --- Move (ÀÌµ¿) ---
+        playerInstance = FindObjectOfType<Player>(); // Player ì¸ìŠ¤í„´ìŠ¤ ì°¾ì•„ì„œ í• ë‹¹
+        if (playerInstance == null)
+        {
+            Debug.LogError("PlayerController: Player instance not found in scene!");
+        }
+
+        // --- Move (ì´ë™) ---
         controls.Player.Move.performed += context => moveInput = context.ReadValue<Vector2>();
         controls.Player.Move.canceled += context => moveInput = Vector2.zero;
 
-        // --- Jump (Á¡ÇÁ Â÷Áö) ---
+        // --- Jump (ì í”„) ---
         controls.Player.Jump.started += _ => StartJumpCharge();
         controls.Player.Jump.canceled += _ => PerformChargedJump();
 
-        // --- »õ·Î Ãß°¡µÈ ¾×¼Çµé ¿¬°á ---
+        // --- ê¸°íƒ€ ì¶”ê°€ëœ ì•¡ì…˜ë“¤ ì—°ê²° ---
         controls.Player.Attack.performed += _ => Attack();
         controls.Player.Baldo.performed += _ => Baldo();
         controls.Player.Dash.performed += _ => Dash();
-        controls.Player.Palling.performed += _ => Palling();
-        controls.Player.Checkpoint.performed += _ => Checkpoint();
+        controls.Player.CounterAttack.performed += _ => Palling(); // Add this line for parrying
+        controls.Player.checkpoint.performed += _ => Checkpoint();
     }
 
     private void OnDisable()
     {
-        // ¸ğµç Áøµ¿À» È®½ÇÈ÷ ²ô°í ¾×¼ÇÀ» ºñÈ°¼ºÈ­ÇÕ´Ï´Ù.
-        StopRumble();
+        // ê²Œì„ ì˜¤ë¸Œì íŠ¸ê°€ ë¹„í™œì„±í™”ë  ë•Œ í™•ì‹¤í•˜ê²Œ ëª¨ë“  ì•¡ì…˜ì„ ë¹„í™œì„±í™”í•©ë‹ˆë‹¤ã€‚
+        StopRumble(); // ì§„ë™ ë©ˆì¶¤
         controls.Player.Disable();
     }
 
     private void Update()
     {
-        // 1. ÀÌµ¿ Ã³¸®
+        // 1. ì´ë™ ì²˜ë¦¬
+        // ì´ ìŠ¤í¬ë¦½íŠ¸ëŠ” Player.csì™€ ë³„ê°œë¡œ ì›€ì§ì„ì„ ì²˜ë¦¬í•˜ë¯€ë¡œ, ì‹¤ì œ ê²Œì„ì—ì„œëŠ” Player.csì˜ ì›€ì§ì„ ë¡œì§ê³¼ ì¶©ëŒí•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+        // ì—¬ê¸°ì„œëŠ” 3D ê³µê°„ì—ì„œì˜ ì›€ì§ì„ì„ ê°€ì •í•˜ê³  ì‘ì„±ë˜ì—ˆìŠµë‹ˆë‹¤.
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
-        transform.Translate(moveDirection * Time.deltaTime * 5.0f);
+        // transform.Translate(moveDirection * Time.deltaTime * 5.0f);
 
-        // 2. Á¡ÇÁ Â÷Áö ½Ã°£ Àç±â
-        if (isChargingJump)
-        {
-            jumpChargeTimer += Time.deltaTime;
-            jumpChargeTimer = Mathf.Clamp(jumpChargeTimer, 0f, maxChargeTime);
-            Debug.Log($"Â÷Áö Áß... {jumpChargeTimer}ÃÊ");
-        }
+
     }
 
-    // --- Á¡ÇÁ ·ÎÁ÷ ---
+    // --- ì í”„ ê´€ë ¨ ---
     private void StartJumpCharge()
     {
         isChargingJump = true;
         jumpChargeTimer = 0f;
-        Debug.Log("Á¡ÇÁ Â÷Áö ½ÃÀÛ!");
+        TriggerRumble(0.2f, 0.2f, 0.1f); // ì í”„ ì‹œì‘ ì‹œ ì§§ì€ ì§„ë™ ì¶”ê°€
     }
 
     private void PerformChargedJump()
     {
         if (!isChargingJump) return;
 
-        float jumpPower = 5f + (jumpChargeTimer * 10f);
-        Debug.Log($"Á¡ÇÁ ¹ß»ç! (Â÷Áö: {jumpChargeTimer}ÃÊ, ÆÄ¿ö: {jumpPower})");
-        // GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-
-        float rumbleStrength = 0.2f + (jumpChargeTimer / maxChargeTime) * 0.8f;
-        TriggerRumble(rumbleStrength, rumbleStrength, 0.3f);
+        float jumpPower = 5f + (jumpChargeTimer * 10f);;
+        // GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse); // ì‹¤ì œ ì í”„ ë¡œì§ (ì£¼ì„ ì²˜ë¦¬ë¨)
 
         isChargingJump = false;
         jumpChargeTimer = 0f;
     }
 
-    // --- »õ ¾×¼Ç ·ÎÁ÷µé ---
+    // --- ê·¸ ì™¸ ì•¡ì…˜ í•¨ìˆ˜ë“¤ ---
 
     private void Attack()
     {
         Debug.Log("Attack!");
-        // (°ø°İ ·ÎÁ÷)
+        // (ê³µê²© ë¡œì§ êµ¬í˜„)
 
-        // ÂªÀº Áøµ¿ (0.1ÃÊ°£ ¾àÇÏ°Ô)
+        // --- ì§„ë™ ì¡°ì ˆ ê°€ì´ë“œ ---
+        // TriggerRumble(low, high, duration)
+        // low: ì €ì£¼íŒŒ ëª¨í„° ì„¸ê¸° (0.0 ~ 1.0)
+        // high: ê³ ì£¼íŒŒ ëª¨í„° ì„¸ê¸° (0.0 ~ 1.0) - ì´ ê°’ë“¤ì„ ë°”ê¾¸ë©´ "ì§„ë™ ì„¸ê¸°"ê°€ ì¡°ì ˆë©ë‹ˆë‹¤.
+        // duration: ì§„ë™ ì§€ì† ì‹œê°„ (ì´ˆ ë‹¨ìœ„) - ì´ ê°’ì„ ë°”ê¾¸ë©´ "ì§„ë™ ì‹œê°„"ì´ ì¡°ì ˆë©ë‹ˆë‹¤.
         TriggerRumble(0.3f, 0.3f, 0.1f);
     }
 
     private void Baldo()
     {
-        Debug.Log("Baldo (¹ßµµ)!");
-        // (¹ßµµ ÁØºñ ·ÎÁ÷)
+        Debug.Log("Baldo (ë°œë„)!");
+        // (ë°œë„ ì¤€ë¹„ ë¡œì§)
 
-        // "Àá½Ã ½¬¾ú´Ù°¡ °­ÇÑ Áøµ¿"Àº ÄÚ·çÆ¾À¸·Î Ã³¸®
+        // "ì„ ë”œë ˆì´ í›„ ê°•í•œ ì§„ë™"ì„ ì½”ë£¨í‹´ìœ¼ë¡œ ì²˜ë¦¬
         StartCoroutine(BaldoRumbleRoutine());
     }
 
     private IEnumerator BaldoRumbleRoutine()
     {
-        // 0.2ÃÊ°£ Àá½Ã ½¬¾ú´Ù°¡
+        // 0.2ì´ˆê°„ ì„ ë”œë ˆì´
         yield return new WaitForSeconds(0.2f);
 
-        // °­ÇÑ Áøµ¿ (0.4ÃÊ°£ °­ÇÏ°Ô)
+        // ê°•í•œ ì§„ë™ (0.4ì´ˆê°„ ê°•í•˜ê²Œ)
         TriggerRumble(0.8f, 0.8f, 0.4f);
     }
 
     private void Dash()
     {
         Debug.Log("Dash!");
-        // (´ë½Ã ·ÎÁ÷)
+        // (ëŒ€ì‹œ ë¡œì§ êµ¬í˜„)
 
-        // ÂªÀº Áøµ¿ (0.1ÃÊ°£ ¾àÇÏ°Ô)
+        // ì§§ì€ ì§„ë™ (0.1ì´ˆê°„ ì•½í•˜ê²Œ)
         TriggerRumble(0.2f, 0.2f, 0.1f);
     }
 
     private void Palling()
     {
-        Debug.Log("Palling (ÆĞ¸µ ½Ãµµ)!");
-        // (ÆĞ¸µ ÀÚ¼¼ Àâ´Â ·ÎÁ÷)
+        Debug.Log("Palling (íŒ¨ë§ ì‹œë„)!");
+        // (íŒ¨ë§ ìì„¸ ë“± ë¡œì§ êµ¬í˜„)
 
-        // Áß¿ä: ÆĞ¸µÀº '½Ãµµ'ÇÒ ¶§°¡ ¾Æ´Ï¶ó '¼º°ø(È÷Æ®)'ÇßÀ» ¶§ Áøµ¿ÀÌ ¿ï¸³´Ï´Ù.
-        // µû¶ó¼­ ¿©±â¼­´Â Áøµ¿À» ¿ï¸®Áö ¾Ê½À´Ï´Ù.
+        // ì¤‘ìš”: íŒ¨ë§ì€ 'ì‹œë„'ì™€ 'ì„±ê³µ(íŒ¨ë§)'ìœ¼ë¡œ ë‚˜ë‰˜ë©°, ì„±ê³µì€ ë‹¤ë¥¸ ì´ë²¤íŠ¸ì—ì„œ í˜¸ì¶œë  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+        // ë”°ë¼ì„œ ì—¬ê¸°ì„œëŠ” ì‹œë„ì— ëŒ€í•œ ë¡œì§ë§Œ ìˆì–´ì•¼ í•©ë‹ˆë‹¤.
     }
 
-    // ¡Ú¡Ú¡Ú
-    // ÆĞ¸µ ¼º°ø ½Ã(¿¹: ÀûÀÇ °ø°İ°ú ºÎµúÇûÀ» ¶§)
-    // ´Ù¸¥ ½ºÅ©¸³Æ®³ª Ãæµ¹ °¨Áö ÇÔ¼ö(OnCollisionEnter µî)¿¡¼­ ÀÌ ÇÔ¼ö¸¦ 'Á÷Á¢' È£ÃâÇØÁà¾ß ÇÕ´Ï´Ù.
-    // ¡Ú¡Ú¡Ú
+    // ---
+    // íŒ¨ë§ ì„±ê³µ ì‹œ (ì˜ˆ: ì ì˜ ê³µê²©ê³¼ ë¶€ë”ªí˜”ì„ ë•Œ)
+    // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì˜ ì¶©ëŒ ê°ì§€ í•¨ìˆ˜(OnCollisionEnter ë“±)ì—ì„œ ì´ í•¨ìˆ˜ë¥¼ 'ì™¸ë¶€'ì—ì„œ í˜¸ì¶œí•´ì¤˜ì•¼ í•©ë‹ˆë‹¤.
+    // ---
     public void TriggerPallingSuccessRumble()
     {
-        Debug.Log("ÆĞ¸µ ¼º°ø! (È÷Æ®)");
-        // ÆĞ¸µ ¼º°ø ½Ã Áøµ¿ (0.2ÃÊ°£ Áß°£ ¼¼±â)
+        Debug.Log("íŒ¨ë§ ì„±ê³µ! (íŒ¨ë§ë¨)");
+        // íŒ¨ë§ ì„±ê³µ ì‹œ ì§„ë™ (0.2ì´ˆê°„ ì¤‘ê°„ ì„¸ê¸°)
         TriggerRumble(0.6f, 0.6f, 0.2f);
     }
 
     private void Checkpoint()
     {
-        Debug.Log("Checkpoint (±ÍÈ¯)!");
-        // (±ÍÈ¯ ·ÎÁ÷)
-
-        // "ÆäÀÌµå ¾Æ¿ô Áøµ¿" (1ÃÊ¿¡ °ÉÃÄ ¼­¼­È÷ ¾àÇØÁü)
+        Debug.Log("Checkpoint (ë¶€í™œ)!");
+        GameManager.Instance.RespawnPlayerAtLastCheckpoint();
         StartCoroutine(RumbleFadeOut(1.0f));
     }
 
 
-    // --- Áøµ¿(Rumble) ÇÔ¼öµé (¾÷±×·¹ÀÌµå) ---
+    // --- ì§„ë™(Rumble) í•¨ìˆ˜ë“¤ (ì—…ê·¸ë ˆì´ë“œë¨) ---
 
-    // [ÁöÁ¤ÇÑ ½Ã°£ µ¿¾È¸¸ Áøµ¿ ½ÇÇà]
-    // (±âÁ¸ TriggerRumbleÀº ¿©·¯ ¹ø È£Ãâ ½Ã ²¿ÀÏ ¼ö ÀÖ¾î CancelInvoke Ãß°¡)
+    // [ì§€ì •í•œ ì‹œê°„ ë™ì•ˆ ì§„ë™ì„ ì£¼ëŠ” í•¨ìˆ˜]
+    // (ì´ì „ TriggerRumble í˜¸ì¶œì´ ì§„í–‰ ì¤‘ì¼ ë•Œë¥¼ ëŒ€ë¹„í•´ CancelInvoke ì¶”ê°€)
     public void TriggerRumble(float low, float high, float duration)
     {
         if (Gamepad.current == null) return;
 
-        // Áï½Ã Áøµ¿ ¼³Á¤
+        // ì§„ë™ ì„¸ê¸° ì„¤ì •
         SetRumble(low, high);
 
-        // ±âÁ¸¿¡ ¿¹¾àµÈ StopRumbleÀÌ ÀÖ´Ù¸é Ãë¼Ò (Áß¿ä)
+        // ì´ì „ì— ì˜ˆì•½ëœ StopRumbleì´ ìˆë‹¤ë©´ ì·¨ì†Œ (ì¤‘ìš”)
         CancelInvoke(nameof(StopRumble));
 
-        // durationÃÊ µÚ¿¡ StopRumbleÀ» ¿¹¾à
+        // durationì´ˆ ë’¤ì— StopRumbleì„ ì˜ˆì•½
         Invoke(nameof(StopRumble), duration);
     }
 
-    // [ÆäÀÌµå ¾Æ¿ô Áøµ¿ ÄÚ·çÆ¾]
-    // [ÆäÀÌµå ¾Æ¿ô Áøµ¿ ÄÚ·çÆ¾]
+    // [í˜ì´ë“œ ì•„ì›ƒ ì§„ë™ ì½”ë£¨í‹´]
     private IEnumerator RumbleFadeOut(float duration)
     {
         if (Gamepad.current == null) yield break;
 
         float timer = 0f;
 
-        // (¼öÁ¤µÈ ºÎºĞ)
-        // ÆäÀÌµå¾Æ¿ôÀº Ç×»ó 0.7f ¶ó´Â Á¤ÇØÁø ¼¼±â¿¡¼­ ½ÃÀÛÇÕ´Ï´Ù.
-        float startLow = 0.7f;
-        float startHigh = 0.7f;
+        // (ì‹œì‘ì  ë¶€ë¶„)
+        // í˜ì´ë“œì•„ì›ƒì€ í•­ìƒ 0.3f ì •ë„ì˜ ì„¸ê¸°ì—ì„œ ì‹œì‘í•©ë‹ˆë‹¤.
+        float startLow = 0.3f;
+        float startHigh = 0.3f;
 
         while (timer < duration)
         {
-            // ½Ã°£ÀÌ Áö³²¿¡ µû¶ó 1.0 -> 0.0 À¸·Î °ªÀÌ º¯ÇÔ
+            // ì‹œê°„ì— ë”°ë¼ 1.0 -> 0.0 ìœ¼ë¡œ ë³€í•˜ëŠ” ë¹„ìœ¨ ê³„ì‚°
             float t = timer / duration;
 
-            // ¼­¼­È÷ ¼¼±â¸¦ ÁÙÀÓ (Lerp: start ¿¡¼­ 0f ·Î t ¸¸Å­ º¸°£)
+            // ì„œì„œíˆ ì§„ë™ ì„¸ê¸°ë¥¼ ì¤„ì„ (Lerp: start ê°’ì—ì„œ 0f ë¡œ t ë§Œí¼ ë³´ê°„)
             SetRumble(Mathf.Lerp(startLow, 0f, t), Mathf.Lerp(startHigh, 0f, t));
 
             timer += Time.deltaTime;
-            yield return null; // ´ÙÀ½ ÇÁ·¹ÀÓ±îÁö ´ë±â
+            yield return null; // ë‹¤ìŒ í”„ë ˆì„ê¹Œì§€ ëŒ€ê¸°
         }
 
-        StopRumble(); // È®½ÇÇÏ°Ô Á¤Áö
+        StopRumble(); // í™•ì‹¤í•˜ê²Œ ì •ì§€
     }
 
-    // [½ÇÁ¦ Áøµ¿ ¼¼±â ¼³Á¤ ÇÔ¼ö]
+    // [ì§„ë™ ì„¸ê¸° ì§ì ‘ ì„¤ì • í•¨ìˆ˜]
     private void SetRumble(float low, float high)
     {
         if (Gamepad.current == null) return;
         Gamepad.current.SetMotorSpeeds(low, high);
     }
 
-    // [Áøµ¿ Á¤Áö ÇÔ¼ö]
+    // [ì§„ë™ ì •ì§€ í•¨ìˆ˜]
     private void StopRumble()
     {
         if (Gamepad.current == null) return;

@@ -5,6 +5,7 @@ public class SpikeBall : MonoBehaviour
     [Header("Spike Ball Settings")]
     public float lifetime = 5f;
     public float immobilizationDuration = 2f;
+    public float knockbackForce = 10f;
 
     void Start()
     {
@@ -24,13 +25,14 @@ public class SpikeBall : MonoBehaviour
             Player player = other.gameObject.GetComponent<Player>();
 
             if (player != null)
-            {
+            { 
                 if (AnalyticsManager.Instance != null)
                 {
                     AnalyticsManager.Instance.LogTrapEvent("SpikeBall", player.transform.position);
                 }
                 
-                player.Immobilize(immobilizationDuration);
+                Vector2 knockbackDirection = (player.transform.position - transform.position).normalized;
+                player.ReciveKnockback(knockbackDirection * knockbackForce, immobilizationDuration);
                 
                 if (player.hitSound != null && player.hitSound.clip != null)
                 {

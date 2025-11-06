@@ -26,7 +26,7 @@ public class PlayerVisualEffects : MonoBehaviour
 
         if (spriteRenderer != null)
         {
-            originalMaterialColor = spriteRenderer.material.color;
+            originalMaterialColor = spriteRenderer.color;
             Debug.Log($"PlayerVisualEffects: SpriteRenderer found. Original Material Color: {originalMaterialColor}");
         }
         else
@@ -35,49 +35,41 @@ public class PlayerVisualEffects : MonoBehaviour
         }
     }
 
-    private int activeColorEffects = 0;
-
-    public void ApplyTemporaryColor(Color color, float duration)
-    {
-        if (spriteRenderer == null)
+        public void ApplyTemporaryColor(Color color, float duration)
         {
-            Debug.LogWarning("PlayerVisualEffects: SpriteRenderer is null. Cannot apply temporary color.");
-            return;
+            if (spriteRenderer == null)
+            {
+                Debug.LogWarning("PlayerVisualEffects: SpriteRenderer is null. Cannot apply temporary color.");
+                return;
+            }
+    
+            // Stop any existing temporary color application coroutine to prevent conflicts
+            if (currentFadeCoroutine != null)
+            {
+                StopCoroutine(currentFadeCoroutine);
+            }
+    
+            currentFadeCoroutine = StartCoroutine(TemporaryColorCoroutine(color, duration));
         }
-
-        // Stop any existing temporary color application coroutine to prevent conflicts
-        if (currentFadeCoroutine != null)
+    
+        private IEnumerator TemporaryColorCoroutine(Color targetColor, float duration)
         {
-            StopCoroutine(currentFadeCoroutine);
-        }
-
-        currentFadeCoroutine = StartCoroutine(TemporaryColorCoroutine(color, duration));
-    }
-
-    private IEnumerator TemporaryColorCoroutine(Color targetColor, float duration)
-    {
-        activeColorEffects++;
-        spriteRenderer.material.color = targetColor;
-
-        yield return new WaitForSeconds(duration);
-
-        activeColorEffects--;
-        if (activeColorEffects == 0)
-        {
+            spriteRenderer.color = targetColor;
+    
+            yield return new WaitForSeconds(duration);
+    
             // Fade back to original color
             float timer = 0f;
-            Color currentColor = spriteRenderer.material.color;
+            Color currentColor = spriteRenderer.color;
             while (timer < fadeDuration)
             {
                 timer += Time.deltaTime;
-                spriteRenderer.material.color = Color.Lerp(currentColor, originalMaterialColor, timer / fadeDuration);
+                spriteRenderer.color = Color.Lerp(currentColor, originalMaterialColor, timer / fadeDuration);
                 yield return null;
             }
-            spriteRenderer.material.color = originalMaterialColor; // Ensure it snaps to the exact original color
+            spriteRenderer.color = originalMaterialColor; // Ensure it snaps to the exact original color
             currentFadeCoroutine = null; // Clear the coroutine reference
         }
-    }
-
     void OnDestroy()
     {
         // Destroy the material instance created by accessing .material

@@ -332,6 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0b5b3b013b7fc4e89e5ce0ee2f8084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyRef: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -422,8 +423,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.11911464, y: -0.33327773}
-  m_Size: {x: 1.163929, y: 2.2221878}
+  m_Offset: {x: -0.13515258, y: -0.29149586}
+  m_Size: {x: 1.0997777, y: 2.070528}
   m_Direction: 0
 --- !u!114 &7564888813907280232
 MonoBehaviour:
@@ -468,7 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_Health
   currentHp: 0
-  maxHp: 10000
+  maxHp: 100
   isDead: 0
   knockbackPower: {x: 13, y: 4}
   heavyKnockbackPower: {x: 15, y: 6}

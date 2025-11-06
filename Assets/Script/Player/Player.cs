@@ -1,6 +1,7 @@
 using NUnit.Framework.Constraints;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class Player : Entity
 {
@@ -68,6 +69,12 @@ public class Player : Entity
     public SoundEffect hitSound;
     public SoundEffect basicAttackSound;
     public SoundEffect baldoSkillSound;
+    public SoundEffect screamSound;
+    public float screamTriggerFallDistance = 12f;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
+
+    private float lastGroundY;
+    private bool hasScreamed;
 
     public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
 
@@ -80,6 +87,7 @@ public class Player : Entity
         {
             fxSource = gameObject.AddComponent<AudioSource>();
         }
+        fxSource.outputAudioMixerGroup = sfxMixerGroup;
 
         playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
 
@@ -128,6 +136,20 @@ public class Player : Entity
         {
             GameManager.Instance.RespawnPlayerAtLastCheckpoint();
         }
+
+        if (groundDetected || wallDetected)
+        {
+            lastGroundY = transform.position.y;
+            hasScreamed = false;
+        }
+        else
+        {
+            if (transform.position.y < lastGroundY - screamTriggerFallDistance && !hasScreamed)
+            {
+                PlaySound(screamSound);
+                hasScreamed = true;
+            }
+        }
     }
 
     public void Immobilize(float duration)
@@ -154,6 +176,8 @@ public class Player : Entity
     private float originalMoveSpeed;
     private float originalDashSpeed;
     private float originalJumpForce;
+    private float originalMinChargeJumpForce;
+    private float originalMaxChargeJumpForce;
 
     public void ApplySlow(float duration, float moveSpeedMultiplier)
     {
@@ -167,12 +191,16 @@ public class Player : Entity
             originalMoveSpeed = moveSpeed;
             originalDashSpeed = dashSpeed;
             originalJumpForce = jumpForce;
+            originalMinChargeJumpForce = minChargeJumpForce;
+            originalMaxChargeJumpForce = maxChargeJumpForce;
         }
 
         activeSlows++;
         moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
         dashSpeed = originalDashSpeed * moveSpeedMultiplier;
         jumpForce = originalJumpForce * moveSpeedMultiplier;
+        minChargeJumpForce = originalMinChargeJumpForce * moveSpeedMultiplier;
+        maxChargeJumpForce = originalMaxChargeJumpForce * moveSpeedMultiplier;
 
         yield return new WaitForSeconds(duration);
 
@@ -182,6 +210,8 @@ public class Player : Entity
             moveSpeed = originalMoveSpeed;
             dashSpeed = originalDashSpeed;
             jumpForce = originalJumpForce;
+            minChargeJumpForce = originalMinChargeJumpForce;
+            maxChargeJumpForce = originalMaxChargeJumpForce;
         }
     }
 
