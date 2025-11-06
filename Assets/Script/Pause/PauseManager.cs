@@ -17,6 +17,10 @@ public class PauseManager : MonoBehaviour
 
     void Start()
     {
+        // Ensure the game is not paused and the pause menu is hidden at the start
+        Time.timeScale = 1f;
+        pauseGroup.SetActive(false);
+
         // AudioManager에서 현재 볼륨 값을 가져와 슬라이더에 설정
         if (AudioManager.Instance != null)
         {
@@ -119,6 +123,7 @@ public class PauseManager : MonoBehaviour
     public void ReturnToTitle()
     {
         Time.timeScale = 1f; // 시간 흐름을 되돌림
-        SceneManager.LoadScene("Title"); // "Title" 씬을 불러옴
+        TimeManager.elapsedTime = 0f; // 타이머 초기화
+        SceneManager.LoadScene("FIXER Title"); // "FIXER Title" 씬을 불러옴
     }
 }
