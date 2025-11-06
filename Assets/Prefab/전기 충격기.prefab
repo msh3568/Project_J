@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7538522025609885340}
   m_Layer: 6
   m_Name: "\uC804\uAE30 \uCDA9\uACA9\uAE30"
-  m_TagString: Untagged
+  m_TagString: Trap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,6 +154,7 @@ MonoBehaviour:
   activationDuration: 1
   deactivationDuration: 4
   immobilizationDuration: 1
+  knockbackForce: 3
   activeColor: {r: 1, g: 0.821988, b: 0, a: 1}
   playerTemporaryColor: {r: 1, g: 1, b: 0, a: 1}
   activationSound:

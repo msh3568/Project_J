@@ -1,6 +1,7 @@
 using System.Collections; // 코루틴 사용을 위해 추가
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement; // Scene 관리를 위해 추가
 
 public class GameClearUI : MonoBehaviour
 {
@@ -88,10 +89,8 @@ public class GameClearUI : MonoBehaviour
         string playerName = nameInput.text;
         rankingManager.AddScore(playerName, this.clearTime);
 
-        // 점수 등록 후 모든 UI를 다시 숨깁니다.
-        if (gameClearPanel != null) gameClearPanel.SetActive(false);
-        if (goalInTextObject != null) goalInTextObject.SetActive(false);
-
-        Debug.Log("점수 등록 완료! 'R' 키를 눌러 게임을 다시 시작할 수 있습니다.");
+        // 점수 등록 후 타이틀 화면으로 돌아갑니다.
+        // "Title"은 실제 타이틀 씬의 이름으로 가정합니다. 만약 다르다면 수정해야 합니다.
+        SceneManager.LoadScene("Title");
     }
 }

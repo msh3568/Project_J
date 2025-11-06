@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2625141158035150277}
   - component: {fileID: 9086103463446909339}
   - component: {fileID: 2935954651609186442}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: check point
-  m_TagString: Untagged
+  m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -185,7 +185,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 20
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

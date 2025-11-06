@@ -11,6 +11,7 @@ public class EnemyFlipTrigger : MonoBehaviour
             if (enemy != null)
             {
                 enemy.Flip();
+                enemy.TemporarilyDisableBattleStateAutoFlip(0.5f);
             }
         }
     }

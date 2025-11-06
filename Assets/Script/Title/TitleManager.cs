@@ -1,72 +1,50 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; //  ȯ   ʿմϴ!
+using TMPro; // Using TextMeshPro
+using UnityEngine.SceneManagement;
+using System.Collections; // Required for IEnumerator and Coroutines
 
 public class TitleManager : MonoBehaviour
 {
-    [Header("UI Group Objects")]
-    public GameObject titleContentsGroup;    // " "  ⺻ ư ִ ׷
-    public GameObject settingsContentsGroup; //  UI ҵ ִ ׷
+    // The text element that will be displayed
+    public TextMeshProUGUI pressEnterText;
 
-    /// <summary>
-    /// ' ' ư Ŭ  ȣ˴ϴ.
-    /// </summary>
-    public void OnStartButtonClick()
+    // The name of the scene to load when Enter is pressed
+    public string sceneToLoad = "GAMESCENE";
+
+    // Delay before "press enter" text appears
+    public float delayBeforePressEnter = 3.0f;
+
+    void Start()
     {
-        if (AnalyticsManager.Instance != null)
+        // Initially hide the "press enter" text
+        if (pressEnterText != null)
         {
-            AnalyticsManager.Instance.StartSession();
+            pressEnterText.enabled = false;
         }
 
-        // "GameScene"̶ ̸  ҷɴϴ.
-        // Ʈ ִ   ̸ Ȯ ƾ մϴ.
-        SceneManager.LoadScene("GameScene");
+        // Start the coroutine to show the text after a delay
+        StartCoroutine(ShowPressEnterTextAfterDelay());
     }
 
-    /// <summary>
-    /// '' ư Ŭ  ȣ˴ϴ.
-    /// </summary>
-    public void OnSettingsButtonClick()
+    void Update()
     {
-        // ŸƲ ⺻ UI 
-        if (titleContentsGroup != null)
+        // Check if the Enter key is pressed
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            titleContentsGroup.SetActive(false);
-        }
-
-        //  UI մϴ.
-        if (settingsContentsGroup != null)
-        {
-            settingsContentsGroup.SetActive(true);
+            // Load the specified scene
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 
-    /// <summary>
-    ///  ȭ 'ݱ' ư Ŭ  ȣ˴ϴ.
-    /// </summary>
-    public void OnSettingsCloseButtonClick()
+    IEnumerator ShowPressEnterTextAfterDelay()
     {
-        //  UI 
-        if (settingsContentsGroup != null)
-        {
-            settingsContentsGroup.SetActive(false);
-        }
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delayBeforePressEnter);
 
-        // ŸƲ ⺻ UI ٽ մϴ.
-        if (titleContentsGroup != null)
+        // Show the "press enter" text
+        if (pressEnterText != null)
         {
-            titleContentsGroup.SetActive(true);
+            pressEnterText.enabled = true;
         }
-    }
-
-    /// <summary>
-    /// ' ' ư Ŭ  ȣ˴ϴ.
-    /// </summary>
-    public void OnExitButtonClick()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
     }
 }

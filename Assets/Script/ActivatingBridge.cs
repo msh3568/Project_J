@@ -10,6 +10,7 @@ public class ActivatingBridge : MonoBehaviour
 
     [Header("Player Interaction")]
     [SerializeField] private float immobilizationDuration = 1f;
+    [SerializeField] private float knockbackForce = 5f;
 
     [Header("Visuals")]
     [SerializeField] private Color activeColor = Color.red;
@@ -23,6 +24,7 @@ public class ActivatingBridge : MonoBehaviour
     private Collider2D bridgeCollider;
     private AudioSource audioSource;
     private Color inactiveColor;
+    private System.Collections.Generic.List<Player> knockedBackPlayers = new System.Collections.Generic.List<Player>();
 
     void Start()
     {
@@ -30,6 +32,11 @@ public class ActivatingBridge : MonoBehaviour
         bridgeCollider = GetComponent<Collider2D>();
         audioSource = GetComponent<AudioSource>();
         audioSource.spatialBlend = 1f; // Set to 3D sound
+
+        if (AudioManager.Instance != null)
+        {
+            audioSource.outputAudioMixerGroup = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX")[0];
+        }
 
         if (spriteRenderer != null)
         {
@@ -79,7 +86,7 @@ public class ActivatingBridge : MonoBehaviour
         {
             Player player = other.gameObject.GetComponent<Player>();
 
-            if (player != null && !player.isImmobilized)
+            if (player != null && !player.isImmobilized && !knockedBackPlayers.Contains(player))
             {
                 if (AnalyticsManager.Instance != null)
                 {
@@ -87,7 +94,12 @@ public class ActivatingBridge : MonoBehaviour
                 }
 
                 player.PlaySound(immobilizationSound);
-                player.Immobilize(immobilizationDuration);
+                
+                // Calculate knockback direction: away from the bridge's center horizontally
+                Vector2 knockbackDirection = (player.transform.position.x > transform.position.x) ? Vector2.right : Vector2.left;
+                player.ReciveKnockback(knockbackDirection * knockbackForce, immobilizationDuration);
+
+                StatusEffectUIManager.Instance.ShowImmobilizedEffect(immobilizationDuration);
 
                 // Apply temporary color to player
                 if (player.playerVisualEffects != null)
@@ -98,7 +110,19 @@ public class ActivatingBridge : MonoBehaviour
                 {
                     Debug.LogWarning("ActivatingBridge: PlayerVisualEffects component not found on player. Cannot apply temporary color.");
                 }
+                
+                knockedBackPlayers.Add(player);
+                StartCoroutine(ResetKnockback(player, immobilizationDuration));
             }
+        }
+    }
+
+    private IEnumerator ResetKnockback(Player player, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (player != null)
+        {
+            knockedBackPlayers.Remove(player);
         }
     }
 }

@@ -1,7 +1,10 @@
 using UnityEngine;
+using System;
 
 public class Enemy : Entity
 {
+    public static event Action OnEnemyDeath;
+
     [Header("States")]
     public Enemy_IdleState idleState;
     public Enemy_MoveState moveState;
@@ -44,6 +47,7 @@ public class Enemy : Entity
     [SerializeField] private Transform wallCheck;
 
     public Transform player { get; private set; }
+    public EnemyRespawner respawner { get; set; }
 
     public void EnableCounterWindow(bool enable) => canBestunned = enable;
 
@@ -51,7 +55,13 @@ public class Enemy : Entity
     {
         base.onEntityDeath();
 
+        OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
+
+        if (respawner != null)
+        {
+            respawner.Respawn();
+        }
     }
 
     public void TryEnterBattleState(Transform player)
