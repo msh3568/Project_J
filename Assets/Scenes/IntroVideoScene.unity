@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c85841517edcce41b9a09603a3d9e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroVideoManager
-  videoPlayer: {fileID: 0}
+  videoPlayer: {fileID: 2079139653}
   nextSceneName: FIXER Title
   skipHoldDuration: 0.5
 --- !u!4 &1146444008
@@ -281,9 +281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28d7a6a915d8cc649ba695c9f19a686d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroVideoManager
-  videoPlayer: {fileID: 2079139653}
-  nextSceneName: FIXER Title
-  skipHoldDuration: 3
 --- !u!1 &1420431675
 GameObject:
   m_ObjectHideFlags: 0
