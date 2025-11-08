@@ -173,35 +173,61 @@ public class AnalyticsManager : MonoBehaviour
 
     private void EndSession()
     {
+        if (isSessionEnded) return; // Prevent multiple executions
         isSessionEnded = true; // Set flag to true to prevent multiple calls
 
-        DateTime sessionEndTime = DateTime.UtcNow;
-        TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
-        string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
+        DatabaseReference counterRef = reference.Child("session_counter");
 
-        string sessionId = reference.Child("유저_데이터").Push().Key;
-        var sessionData = new System.Collections.Generic.Dictionary<string, object>();
-        sessionData["게임시작_시간"] = sessionStartTime.ToString("o"); // 게임 시작 시간
-        sessionData["게임종료_시간"] = sessionEndTime.ToString("o");     // 종료 시간
-        sessionData["총_플레이_타임"] = formattedDuration;                 // 총 플레이 타임
-        sessionData["리셋_횟수"] = rKeyPressLocations;           // R키 누른 횟수
-        sessionData["함정"] = trapEventsDuringSession;       // 함정에 걸린 로그
-        sessionData["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession; // 활성화한 체크포인트 로그
-        sessionData["골인_?"] = hasReachedGoal;               // 최종 목표 도달 여부
-
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
-            sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
-        }
-
-        reference.Child("sessions").Child(sessionId).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(task => {
-            if (task.IsCompleted) {
-                Debug.Log($"Analytics session ended. Duration: {formattedDuration}. R key presses: {rKeyPressLocations.Count}. Trap events: {trapEventsDuringSession.Count}. Checkpoint activations: {checkpointActivationsDuringSession.Count}. Goal reached: {hasReachedGoal}. Data sent to Firebase.");
-            } else if (task.IsFaulted) {
-                Debug.LogError("Failed to send analytics session data: " + task.Exception);
+        counterRef.RunTransaction(mutableData => {
+            long currentCount = 0;
+            if (mutableData.Value != null)
+            {
+                long.TryParse(mutableData.Value.ToString(), out currentCount);
             }
+            
+            currentCount++;
+            mutableData.Value = currentCount;
+            
+            // This part of the code will execute on the main thread after the transaction completes.
+            // We pass the new sessionId to the continuation task.
+            return TransactionResult.Success(mutableData);
+        }).ContinueWithOnMainThread(task => {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to increment session counter: " + task.Exception);
+                return;
+            }
+
+            long sessionId = (long)task.Result.Value;
+
+            DateTime sessionEndTime = DateTime.UtcNow;
+            TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
+            string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
+
+            var sessionData = new System.Collections.Generic.Dictionary<string, object>();
+            sessionData["게임시작_시간"] = sessionStartTime.ToString("o"); // 게임 시작 시간
+            sessionData["게임종료_시간"] = sessionEndTime.ToString("o");     // 종료 시간
+            sessionData["총_플레이_타임"] = formattedDuration;                 // 총 플레이 타임
+            sessionData["리셋_횟수"] = rKeyPressLocations;           // R키 누른 횟수
+            sessionData["함정"] = trapEventsDuringSession;       // 함정에 걸린 로그
+            sessionData["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession; // 활성화한 체크포인트 로그
+            sessionData["골인_?"] = hasReachedGoal;               // 최종 목표 도달 여부
+
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
+                sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
+            }
+
+            // Save the session data using the new sequential ID
+            reference.Child("sessions").Child(sessionId.ToString()).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(updateTask => {
+                if (updateTask.IsCompleted) {
+                    Debug.Log($"[세션 로그 {sessionId}] 세션 종료. 플레이 타임: {formattedDuration}. R키: {rKeyPressLocations.Count}. 함정: {trapEventsDuringSession.Count}. 체크포인트: {checkpointActivationsDuringSession.Count}. 골인: {hasReachedGoal}. 데이터 전송 완료.");
+                } else if (updateTask.IsFaulted) {
+                    Debug.LogError($"[세션 로그 {sessionId}] 데이터 전송 실패: " + updateTask.Exception);
+                }
+            });
         });
     }
 }
