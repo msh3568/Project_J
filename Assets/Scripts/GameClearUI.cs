@@ -62,7 +62,7 @@ public class GameClearUI : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(clearTime / 60F);
             int seconds = Mathf.FloorToInt(clearTime % 60F);
-            clearTimeText.text = $"Clear Time: {minutes:00}:{seconds:00}";
+            clearTimeText.text = $"Time You Fixed Time: {minutes:00}:{seconds:00}";
         }
 
         // 5. 랭킹을 입력할 수 있는 패널을 활성화합니다.
@@ -91,6 +91,6 @@ public class GameClearUI : MonoBehaviour
 
         // 점수 등록 후 타이틀 화면으로 돌아갑니다.
         // "Title"은 실제 타이틀 씬의 이름으로 가정합니다. 만약 다르다면 수정해야 합니다.
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene("FixerEndding");
     }
 }
