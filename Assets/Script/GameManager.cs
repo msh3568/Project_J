@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI checkpointText;
     private Vector3? activeCheckpointPosition = null;
     private int activatedCheckpointCount = 0; // New counter for activated checkpoints
+    private int respawnCount = 0;
+    private const int maxRespawns = 3;
 
     private GameObject player;
     private TimeManager timeManager;
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         if (bgmSource == null)
         {
@@ -47,6 +51,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Reset counters and find objects when a new scene is loaded
+        respawnCount = 0;
+        activatedCheckpointCount = 0;
+        activeCheckpointPosition = null;
+        player = GameObject.FindWithTag("Player");
+        timeManager = FindObjectOfType<TimeManager>();
+        // The checkpointText might need to be re-assigned if it's not carried over
+    }
+
     void Start()
     {
         player = GameObject.FindWithTag("Player");
@@ -54,14 +74,6 @@ public class GameManager : MonoBehaviour
         if (checkpointText != null)
         {
             checkpointText.gameObject.SetActive(false);
-        }
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RespawnPlayerAtLastCheckpoint();
         }
     }
 
@@ -76,6 +88,19 @@ public class GameManager : MonoBehaviour
         {
             AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
         }
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "GameSceneHardMode")
+        {
+            if (respawnCount >= maxRespawns)
+            {
+                Debug.Log("더 이상 부활할 수 없습니다.");
+                return; // 리스폰 로직 중단
+            }
+            respawnCount++;
+            Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns}");
+        }
+
 
         if (activeCheckpointPosition.HasValue)
         {
@@ -93,6 +118,7 @@ public class GameManager : MonoBehaviour
                 timeManager.ResetTimer();
             }
             activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
+            respawnCount = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
