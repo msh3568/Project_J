@@ -9,7 +9,7 @@ public class TitleManager : MonoBehaviour
     public TextMeshProUGUI pressEnterText;
 
     // The name of the scene to load when Enter is pressed
-    public string sceneToLoad = "GAMESCENE";
+    public string sceneToLoad = "GameScene";
 
     // Delay before "press enter" text appears
     public float delayBeforePressEnter = 3.0f;
