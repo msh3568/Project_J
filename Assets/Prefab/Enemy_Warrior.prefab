@@ -351,6 +351,7 @@ MonoBehaviour:
   stunnedDuration: 1
   stunnedVelocity: {x: 7, y: 1}
   canBestunned: 0
+  mediumFireTracePrefab: {fileID: 5547987548606426003, guid: 4a1687813ef2b714bab88cd7143e06ed, type: 3}
   idleTime: 2
   moveSpeed: 2
   moveAnimMoveSpeedMultiplier: 1

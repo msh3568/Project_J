@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Checkpoint")]
     [SerializeField] private TextMeshProUGUI checkpointText;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI respawnCountText;
+    [SerializeField] private TextMeshProUGUI respawnPointsText;
     private Vector3? activeCheckpointPosition = null;
     private int activatedCheckpointCount = 0; // New counter for activated checkpoints
     private int respawnCount = 0;
@@ -65,6 +69,8 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         timeManager = FindObjectOfType<TimeManager>();
         // The checkpointText might need to be re-assigned if it's not carried over
+
+        UpdateRespawnUI();
     }
 
     void Start()
@@ -75,6 +81,27 @@ public class GameManager : MonoBehaviour
         {
             checkpointText.gameObject.SetActive(false);
         }
+
+        UpdateRespawnUI();
+    }
+
+    private int fireTracePoints = 0;
+    private int extraRespawns = 0;
+    private const int pointsForExtraRespawn = 10;
+
+    public void AddFireTracePoints(int points)
+    {
+        fireTracePoints += points;
+        Debug.Log($"불의 흔적 획득! 현재 점수: {fireTracePoints}/{pointsForExtraRespawn}");
+
+        if (fireTracePoints >= pointsForExtraRespawn)
+        {
+            extraRespawns++;
+            fireTracePoints -= pointsForExtraRespawn; // 점수 차감
+            Debug.Log($"추가 리스폰 기회 획득! 총 추가 리스폰: {extraRespawns}");
+        }
+
+        UpdateRespawnUI();
     }
 
     public void RespawnPlayerAtLastCheckpoint()
@@ -90,15 +117,16 @@ public class GameManager : MonoBehaviour
         }
 
         string currentSceneName = SceneManager.GetActiveScene().name;
-        if (currentSceneName == "GameSceneHardMode")
+        if (currentSceneName == "GameSceneHardMode" || currentSceneName == "GameSceneRespawn")
         {
-            if (respawnCount >= maxRespawns)
+            if (respawnCount >= (maxRespawns + extraRespawns))
             {
                 Debug.Log("더 이상 부활할 수 없습니다.");
                 return; // 리스폰 로직 중단
             }
             respawnCount++;
-            Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns}");
+            Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns + extraRespawns}");
+            UpdateRespawnUI();
         }
 
 
@@ -157,5 +185,19 @@ public class GameManager : MonoBehaviour
     public bool IsCheckpointActive()
     {
         return activeCheckpointPosition.HasValue;
+    }
+
+    private void UpdateRespawnUI()
+    {
+        if (respawnCountText != null)
+        {
+            int totalRespawns = maxRespawns + extraRespawns - respawnCount;
+            respawnCountText.text = "X " + totalRespawns.ToString("D2");
+        }
+
+        if (respawnPointsText != null)
+        {
+            respawnPointsText.text = $"{fireTracePoints} / {pointsForExtraRespawn}";
+        }
     }
 }
