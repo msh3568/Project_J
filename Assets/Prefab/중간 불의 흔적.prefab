@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: points
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 7899549073053632993, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
+      propertyPath: point1Sound
+      value: 
+      objectReference: {fileID: 8300000, guid: 36256050deef11d41901b2e6d1a91d6e, type: 3}
+    - target: {fileID: 7899549073053632993, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
+      propertyPath: point5Sound
+      value: 
+      objectReference: {fileID: 8300000, guid: e74c1684d4665034ab3f3455c44cd42d, type: 3}
     - target: {fileID: 8097434936467958727, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.21

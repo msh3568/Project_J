@@ -373,7 +373,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117718013}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 9e9d8b7201f619445a3ce7b994609427, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: c02cb80efe04e0f44afe601921b60169, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 323831711}
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_text: "SPACE BAR\uB97C \uB20C\uB7EC \uC2A4\uD0B5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
-  m_sharedMaterial: {fileID: 6903868185865974301, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
+  m_sharedMaterial: {fileID: -3238589927661839902, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

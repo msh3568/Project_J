@@ -27,6 +27,12 @@ public class AudioManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        // Ensure this GameObject is a root object before calling DontDestroyOnLoad
+        if (transform.parent != null)
+        {
+            transform.SetParent(null); // Detach from parent to become a root GameObject
+        }
         DontDestroyOnLoad(gameObject);
     }
 

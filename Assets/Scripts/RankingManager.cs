@@ -153,8 +153,21 @@ public class RankingManager : MonoBehaviour
         scoreData["time"] = clearTime;
 
         // "scores" 경로 아래에 랜덤 키를 생성하며 데이터 저장
-        databaseReference.Child("scores").Push().SetValueAsync(scoreData);
-        
-        Debug.Log($"{playerName}의 기록({clearTime}초)이 추가되었습니다.");
+        databaseReference.Child("scores").Push().SetValueAsync(scoreData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                Debug.Log($"{playerName}의 기록({clearTime}초)이 성공적으로 추가되었습니다.");
+                LoadTopScores(); // 점수 추가 후 랭킹 새로고침
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError($"기록 추가 실패: {task.Exception}");
+            }
+            else if (task.IsCanceled)
+            {
+                Debug.LogWarning($"기록 추가 취소됨.");
+            }
+        });
     }
 }
