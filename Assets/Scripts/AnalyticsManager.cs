@@ -18,6 +18,7 @@ public class AnalyticsManager : MonoBehaviour
     private List<object> trapEventsDuringSession = new List<object>(); // To store trap events per session
     private List<object> checkpointActivationsDuringSession = new List<object>(); // New: To store checkpoint activations per session
     private bool hasReachedGoal = false; // New: To track if the goal was reached
+    private bool isQuitting = false; // To handle graceful shutdown
 
     void Awake()
     {
@@ -165,9 +166,11 @@ public class AnalyticsManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        isQuitting = true; // Signal that we are trying to quit
         if (isSessionStarted && !isSessionEnded && reference != null)
         {
-            EndSession();
+            Application.CancelQuit(); // Cancel the quit for now
+            EndSession(); // EndSession will be responsible for quitting
         }
     }
 
@@ -195,6 +198,7 @@ public class AnalyticsManager : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.LogError("Failed to increment session counter: " + task.Exception);
+                if (isQuitting) Application.Quit(); // Still quit if something goes wrong
                 return;
             }
 
@@ -226,6 +230,12 @@ public class AnalyticsManager : MonoBehaviour
                     Debug.Log($"[세션 로그 {sessionId}] 세션 종료. 플레이 타임: {formattedDuration}. R키: {rKeyPressLocations.Count}. 함정: {trapEventsDuringSession.Count}. 체크포인트: {checkpointActivationsDuringSession.Count}. 골인: {hasReachedGoal}. 데이터 전송 완료.");
                 } else if (updateTask.IsFaulted) {
                     Debug.LogError($"[세션 로그 {sessionId}] 데이터 전송 실패: " + updateTask.Exception);
+                }
+
+                // Whether the task succeeded or failed, if we are quitting, we must now quit.
+                if (isQuitting)
+                {
+                    Application.Quit();
                 }
             });
         });
