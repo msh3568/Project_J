@@ -1,0 +1,634 @@
+fileFormatVersion: 2
+guid: 9ddac69acdca89a4fa2bb6d5775101cd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2016255123649909984
+    second: FIXER-1_0
+  - first:
+      213: 3251808337917053201
+    second: FIXER-1_1
+  - first:
+      213: 7864487955458950024
+    second: FIXER-1_2
+  - first:
+      213: -8816472618273495448
+    second: FIXER-1_3
+  - first:
+      213: -6038549690410512464
+    second: FIXER-1_4
+  - first:
+      213: -1707603878284591301
+    second: FIXER-1_5
+  - first:
+      213: -7266825294694411888
+    second: FIXER-1_6
+  - first:
+      213: 7281625390921431822
+    second: FIXER-1_7
+  - first:
+      213: -3754997506951675821
+    second: FIXER-1_8
+  - first:
+      213: 1053894396570425275
+    second: FIXER-1_9
+  - first:
+      213: -3900466375799724842
+    second: FIXER-1_10
+  - first:
+      213: -7065218826305342126
+    second: FIXER-1_11
+  - first:
+      213: -8582161123931239864
+    second: FIXER-1_12
+  - first:
+      213: 8321219692464669167
+    second: FIXER-1_13
+  - first:
+      213: 684795145695884858
+    second: FIXER-1_14
+  - first:
+      213: -1193426829253475036
+    second: FIXER-1_15
+  - first:
+      213: 2034278207757304922
+    second: FIXER-1_16
+  - first:
+      213: 5264267709771813409
+    second: FIXER-1_17
+  - first:
+      213: 3631124278038564925
+    second: FIXER-1_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FIXER-1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 15
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e4d6b53a5d2bfb10800000000000000
+      internalID: 2016255123649909984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_1
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 119033b547eb02d20800000000000000
+      internalID: 3251808337917053201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_2
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 883087da026442d60800000000000000
+      internalID: 7864487955458950024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_3
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 0
+        width: 158
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 866a9d78dd895a580800000000000000
+      internalID: -8816472618273495448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_4
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bf4988dc03c23ca0800000000000000
+      internalID: -6038549690410512464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3f74c9e15f5d48e0800000000000000
+      internalID: -1707603878284591301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_6
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0919ae055ec072b90800000000000000
+      internalID: -7266825294694411888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_7
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0b365d96b78d0560800000000000000
+      internalID: 7281625390921431822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_8
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 161
+        width: 112
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3500ba989a193ebc0800000000000000
+      internalID: -3754997506951675821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_9
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 0
+        width: 223
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb7da52be5f20ae00800000000000000
+      internalID: 1053894396570425275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_10
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 0
+        width: 222
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d42a1c2f72ced9c0800000000000000
+      internalID: -3900466375799724842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_11
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 0
+        width: 223
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 255faad19ec43fd90800000000000000
+      internalID: -7065218826305342126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_12
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 0
+        width: 223
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84a49e29de906e880800000000000000
+      internalID: -8582161123931239864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_13
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 0
+        width: 113
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe1875bf839ea7370800000000000000
+      internalID: 8321219692464669167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_14
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a367d1b8e81e08900800000000000000
+      internalID: 684795145695884858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_15
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4250de03f98107fe0800000000000000
+      internalID: -1193426829253475036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_16
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 0
+        width: 17
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5441bb70453b3c10800000000000000
+      internalID: 2034278207757304922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_17
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 0
+        width: 166
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 122128b379f6e0940800000000000000
+      internalID: 5264267709771813409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_18
+      rect:
+        serializedVersion: 2
+        x: 1041
+        y: 0
+        width: 309
+        height: 324
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3019c7da48546230800000000000000
+      internalID: 3631124278038564925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FIXER-1_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1350
+        height: 324
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cc61f38750d2be42bcc81fc28478b2c
+      internalID: -499041443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: beda53c02bc5fcb42957ce59a2a29b61
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FIXER-1_0: 2016255123649909984
+      FIXER-1_1: 3251808337917053201
+      FIXER-1_10: -3900466375799724842
+      FIXER-1_11: -7065218826305342126
+      FIXER-1_12: -8582161123931239864
+      FIXER-1_13: 8321219692464669167
+      FIXER-1_14: 684795145695884858
+      FIXER-1_15: -1193426829253475036
+      FIXER-1_16: 2034278207757304922
+      FIXER-1_17: 5264267709771813409
+      FIXER-1_18: 3631124278038564925
+      FIXER-1_19: -499041443
+      FIXER-1_2: 7864487955458950024
+      FIXER-1_3: -8816472618273495448
+      FIXER-1_4: -6038549690410512464
+      FIXER-1_5: -1707603878284591301
+      FIXER-1_6: -7266825294694411888
+      FIXER-1_7: 7281625390921431822
+      FIXER-1_8: -3754997506951675821
+      FIXER-1_9: 1053894396570425275
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
