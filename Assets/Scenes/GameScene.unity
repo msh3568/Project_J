@@ -729,7 +729,7 @@ MonoBehaviour:
   goalInTextObject: {fileID: 2145004213}
   nameInput: {fileID: 915118199}
   clearTimeText: {fileID: 846985219}
-  rankingManager: {fileID: 2003159798}
+  rankingManager: {fileID: 0}
   timeManager: {fileID: 1773840259}
   panelAppearDelay: 1.5
 --- !u!60 &31989452
@@ -120408,54 +120408,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2317492783311188507, guid: ed9b63eb6d4c6da4aa6072d86950c741, type: 3}
   m_PrefabInstance: {fileID: 1361110247}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2003159797
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2003159799}
-  - component: {fileID: 2003159798}
-  m_Layer: 0
-  m_Name: RankingManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2003159798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2003159797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f3cabe756561e14e92a7532e4fa995c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RankingManager
-  rankingPanel: {fileID: 0}
-  showRankingButton: {fileID: 0}
-  closeRankingButton: {fileID: 0}
-  rankUITexts: []
---- !u!4 &2003159799
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2003159797}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2005348629
 GameObject:
   m_ObjectHideFlags: 0
@@ -124326,7 +124278,6 @@ SceneRoots:
   - {fileID: 1489618729266296674}
   - {fileID: 1331283483}
   - {fileID: 2049881624}
-  - {fileID: 2003159799}
   - {fileID: 1773840260}
   - {fileID: 60721084}
   - {fileID: 619394802}
