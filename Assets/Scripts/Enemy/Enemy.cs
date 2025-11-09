@@ -26,6 +26,7 @@ public class Enemy : Entity
     public float stunnedDuration = 1;
     public Vector2 stunnedVelocity = new Vector2(7, 7);
     [SerializeField] protected bool canBestunned;
+    [SerializeField] private GameObject mediumFireTracePrefab;
     
 
     [Header("Movement Details")]
@@ -54,6 +55,11 @@ public class Enemy : Entity
     public override void onEntityDeath()
     {
         base.onEntityDeath();
+
+        if (mediumFireTracePrefab != null)
+        {
+            Instantiate(mediumFireTracePrefab, transform.position, Quaternion.identity);
+        }
 
         OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
