@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         }
 
         string currentSceneName = SceneManager.GetActiveScene().name;
-        if (currentSceneName == "GameSceneHardMode")
+        if (currentSceneName == "GameSceneHardMode" || currentSceneName == "GameSceneRespawn")
         {
             if (respawnCount >= maxRespawns)
             {
