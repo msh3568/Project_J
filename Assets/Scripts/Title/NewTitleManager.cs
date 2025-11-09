@@ -17,7 +17,7 @@ public class NewTitleManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene("GameSceneRespawn");
         }
     }
 
