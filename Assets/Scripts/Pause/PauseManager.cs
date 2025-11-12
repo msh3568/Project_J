@@ -123,7 +123,13 @@ public class PauseManager : MonoBehaviour
     public void ReturnToTitle()
     {
         Time.timeScale = 1f; // 시간 흐름을 되돌림
-        TimeManager.elapsedTime = 0f; // 타이머 초기화
+
+        // GameManager의 인스턴스가 있는지 확인하고 게임 상태를 리셋
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ResetGameState();
+        }
+        
         SceneManager.LoadScene("FIXER Title"); // "FIXER Title" 씬을 불러옴
     }
 }

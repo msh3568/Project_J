@@ -13,14 +13,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip bgmClip;
 
     [Header("Checkpoint")]
-    [SerializeField] private TextMeshProUGUI checkpointText;
+    private TextMeshProUGUI checkpointText;
     public AudioClip checkpointSound; // New: Checkpoint sound
     [Range(0f, 4f)]
     public float checkpointSoundVolume = 1f; // New: Volume control for checkpoint sound
 
     [Header("UI")]
-    [SerializeField] private TextMeshProUGUI respawnCountText;
-    [SerializeField] private TextMeshProUGUI respawnPointsText;
+    private TextMeshProUGUI respawnCountText;
+    private TextMeshProUGUI respawnPointsText;
     private Vector3? activeCheckpointPosition = null;
     private int activatedCheckpointCount = 0; // New counter for activated checkpoints
     private int respawnCount = 0;
@@ -29,6 +29,19 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private TimeManager timeManager;
     private AudioSource audioSource; // New: AudioSource for GameManager sounds (effects)
+
+    public void RegisterUI(TextMeshProUGUI respawnText, TextMeshProUGUI pointsText, TextMeshProUGUI checkText)
+    {
+        respawnCountText = respawnText;
+        respawnPointsText = pointsText;
+        checkpointText = checkText;
+
+        Debug.Log("UI Registered with GameManager.");
+
+        // Initialize UI state
+        UpdateRespawnUI();
+        HideCheckpointText();
+    }
 
     void Awake()
     {
@@ -76,14 +89,18 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reset counters and find objects when a new scene is loaded
-        respawnCount = 0;
-        activatedCheckpointCount = 0;
-        activeCheckpointPosition = null;
+        // Reset game state if we are loading into a game scene
+        if (scene.name.Contains("GameScene"))
+        {
+            ResetGameState();
+        }
+
         player = GameObject.FindWithTag("Player");
         timeManager = FindObjectOfType<TimeManager>();
-        // The checkpointText might need to be re-assigned if it's not carried over
-
+        
+        // UI elements are now registered via UIRegistrar.cs
+        // We can call UpdateRespawnUI here to ensure it's updated,
+        // though RegisterUI also calls it. A bit redundant but safe.
         UpdateRespawnUI();
     }
 
@@ -219,5 +236,19 @@ public class GameManager : MonoBehaviour
         {
             respawnPointsText.text = $"{fireTracePoints} / {pointsForExtraRespawn}";
         }
+    }
+
+    public void ResetGameState()
+    {
+        activeCheckpointPosition = null;
+        activatedCheckpointCount = 0;
+        respawnCount = 0;
+        fireTracePoints = 0;
+        extraRespawns = 0;
+        if (timeManager != null)
+        {
+            timeManager.ResetTimer();
+        }
+        UpdateRespawnUI();
     }
 }
