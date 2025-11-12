@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 409673564}
   - component: {fileID: 409673563}
   m_Layer: 0
-  m_Name: ' AnalyticsManager'
+  m_Name: AnalyticsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -721,14 +721,14 @@ RectTransform:
   m_GameObject: {fileID: 1162159998}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.36352, y: 0.36352, z: 0.36352}
+  m_LocalScale: {x: 0.6463022, y: 0.6463022, z: 0.6463022}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1730020087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 875, y: 418}
+  m_AnchoredPosition: {x: 830, y: 440}
   m_SizeDelta: {x: 174.3133, y: 87.6092}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1162160000
@@ -1399,7 +1399,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -130, y: -180}
+  m_AnchoredPosition: {x: -130, y: -356}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1512208384
@@ -1501,64 +1501,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1512208382}
   m_CullTransparentMesh: 1
---- !u!1 &1525793568
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1525793570}
-  - component: {fileID: 1525793569}
-  m_Layer: 0
-  m_Name: RankingManagerObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1525793569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1525793568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f3cabe756561e14e92a7532e4fa995c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RankingManager
-  rankingPanel: {fileID: 2029173629}
-  showRankingButton: {fileID: 2098065591}
-  closeRankingButton: {fileID: 1140528985}
-  rankUITexts:
-  - {fileID: 0}
-  - {fileID: 949557906}
-  - {fileID: 2114824469}
-  - {fileID: 0}
-  - {fileID: 1339127213}
-  - {fileID: 1072452544}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 1316794393}
-  - {fileID: 1204049973}
---- !u!4 &1525793570
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1525793568}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 790.4301, y: 643.2545, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1648706538
 GameObject:
   m_ObjectHideFlags: 0
@@ -2646,7 +2588,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 270393997}
   - {fileID: 409673564}
-  - {fileID: 1525793570}
   - {fileID: 1669807994}
   - {fileID: 1830184839}
   - {fileID: 2080108504}

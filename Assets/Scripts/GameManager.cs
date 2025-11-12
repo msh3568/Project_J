@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 
+// [RequireComponent(typeof(AudioSource))] // Removed to allow multiple AudioSources
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -13,6 +14,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Checkpoint")]
     [SerializeField] private TextMeshProUGUI checkpointText;
+    public AudioClip checkpointSound; // New: Checkpoint sound
+    [Range(0f, 4f)]
+    public float checkpointSoundVolume = 1f; // New: Volume control for checkpoint sound
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI respawnCountText;
@@ -24,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     private GameObject player;
     private TimeManager timeManager;
+    private AudioSource audioSource; // New: AudioSource for GameManager sounds (effects)
 
     void Awake()
     {
@@ -37,14 +42,23 @@ public class GameManager : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
+        // Ensure bgmSource is set up. It's [SerializeField], so ideally assigned in Inspector.
+        // If not assigned, try to get the first AudioSource.
         if (bgmSource == null)
         {
             bgmSource = GetComponent<AudioSource>();
             if (bgmSource == null)
             {
+                // If no AudioSource exists, add one for BGM
                 bgmSource = gameObject.AddComponent<AudioSource>();
             }
         }
+
+        // Ensure audioSource (for effects) is separate.
+        // Always add a new AudioSource component specifically for effects (checkpoint sounds)
+        // to guarantee it's distinct from bgmSource.
+        audioSource = gameObject.AddComponent<AudioSource>();
+
 
         if (bgmClip != null)
         {
@@ -99,6 +113,12 @@ public class GameManager : MonoBehaviour
             extraRespawns++;
             fireTracePoints -= pointsForExtraRespawn; // 점수 차감
             Debug.Log($"추가 리스폰 기회 획득! 총 추가 리스폰: {extraRespawns}");
+
+            // New: Play checkpoint sound
+            if (audioSource != null && checkpointSound != null)
+            {
+                audioSource.PlayOneShot(checkpointSound, checkpointSoundVolume); // Use checkpointSoundVolume
+            }
         }
 
         UpdateRespawnUI();
