@@ -1,26 +1,28 @@
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using Firebase.Analytics;
 using Firebase.Extensions;
 using System;
-using System.Collections; // For Coroutines
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks; // For Task
+using System.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 public class AnalyticsManager : MonoBehaviour
 {
     public static AnalyticsManager Instance { get; private set; }
-
     private DatabaseReference reference;
     private DateTime sessionStartTime;
     private bool isSessionStarted = false;
-    private bool isSessionEnded = false; // Flag to prevent multiple EndSession calls
+    private bool isSessionEnded = false;
+    private bool isQuitting = false;
+
     private List<object> rKeyPressLocations = new List<object>();
-    private List<object> trapEventsDuringSession = new List<object>(); // To store trap events per session
-    private List<object> checkpointActivationsDuringSession = new List<object>(); // New: To store checkpoint activations per session
-    private bool hasReachedGoal = false; // New: To track if the goal was reached
-    private bool isQuitting = false; // To handle graceful shutdown
+    private List<object> trapEventsDuringSession = new List<object>();
+    private List<object> checkpointActivationsDuringSession = new List<object>();
+    private bool hasReachedGoal = false;
 
     void Awake()
     {
@@ -44,8 +46,8 @@ public class AnalyticsManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"OnSceneLoaded: {scene.name}"); // Keep this debug log
-        if (scene.name == "GameSceneRespawn") // Corrected scene name
+        Debug.Log($"OnSceneLoaded: {scene.name}");
+        if (scene.name == "GameSceneRespawn")
         {
             StartSession();
         }
@@ -60,50 +62,70 @@ public class AnalyticsManager : MonoBehaviour
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 reference = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("Firebase Initialized for AnalyticsManager. (reference set)"); // Keep this debug log
+                FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                Debug.Log("Firebase Analytics 디버그 모드 활성화");
+#endif
+
+                Debug.Log("Firebase + Analytics 초기화 완료");
             }
             else
             {
-                Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
+                Debug.LogError($"Firebase 의존성 문제: {dependencyStatus}");
             }
         });
     }
 
     public void StartSession()
     {
-        Debug.Log("Attempting to start session..."); // Keep this debug log
         if (reference == null)
         {
             Debug.LogError("Firebase reference is null. Cannot start session.");
             return;
         }
+
+        if (isSessionStarted) return;
+
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
         isSessionEnded = false;
         rKeyPressLocations.Clear();
         trapEventsDuringSession.Clear();
-        checkpointActivationsDuringSession.Clear(); // New: Clear checkpoint events at session start
-        hasReachedGoal = false; // New: Reset goal reached flag
-        Debug.Log("Analytics session started successfully."); // Keep this debug log
+        checkpointActivationsDuringSession.Clear();
+        hasReachedGoal = false;
+
+        FirebaseAnalytics.LogEvent("session_start", new Parameter[]
+        {
+            new Parameter("level", SceneManager.GetActiveScene().name),
+            new Parameter("start_time_utc", sessionStartTime.ToString("o"))
+        });
+
+        Debug.Log("세션 시작 + Analytics session_start 전송");
     }
 
     public void LogRKeyPress(Vector2 position)
     {
-        var locationData = new Dictionary<string, object>();
-        locationData["x"] = position.x;
-        locationData["y"] = position.y;
+        var locationData = new Dictionary<string, object>
+        {
+            ["x"] = position.x,
+            ["y"] = position.y,
+            ["timestamp"] = ServerValue.Timestamp
+        };
         rKeyPressLocations.Add(locationData);
+
+        FirebaseAnalytics.LogEvent("player_reset", new Parameter[]
+        {
+            new Parameter("x", position.x),
+            new Parameter("y", position.y)
+        });
     }
 
     public void LogTrapEvent(string trapType, Vector3 position)
     {
-        if (reference == null)
-        {
-            Debug.LogError("Firebase not initialized. Cannot log trap event.");
-            return;
-        }
+        if (reference == null) return;
 
-        // Collect the individual event with details for the session
         var trapLog = new Dictionary<string, object>
         {
             ["trap_type"] = trapType,
@@ -117,104 +139,92 @@ public class AnalyticsManager : MonoBehaviour
         };
         trapEventsDuringSession.Add(trapLog);
 
-        // Increment the total count for this trap type (global aggregate, still useful)
         DatabaseReference trapCountRef = reference.Child("trap_counts").Child(trapType);
-        trapCountRef.RunTransaction(mutableData => {
+        trapCountRef.RunTransaction(mutableData =>
+        {
             long count = 0;
             if (mutableData.Value != null)
-            {
                 long.TryParse(mutableData.Value.ToString(), out count);
-            }
-            count++;
-            mutableData.Value = count;
+            mutableData.Value = count + 1;
             return TransactionResult.Success(mutableData);
+        });
+
+        FirebaseAnalytics.LogEvent("trap_hit", new Parameter[]
+        {
+            new Parameter("trap_type", trapType),
+            new Parameter("x", Mathf.RoundToInt(position.x)),
+            new Parameter("y", Mathf.RoundToInt(position.y))
         });
     }
 
     public void LogCheckpointActivation(int count)
     {
-        if (reference == null)
-        {
-            Debug.LogError("Firebase not initialized. Cannot log checkpoint activation.");
-            return;
-        }
+        if (reference == null) return;
 
-        // Collect the individual event with details for the session
         var checkpointLog = new Dictionary<string, object>
         {
             ["timestamp"] = ServerValue.Timestamp,
-            ["활성화한_체크포인트_갯수"] = count // 활성화한 체크포인트 갯수
+            ["활성화한_체크포인트_갯수"] = count
         };
-        checkpointActivationsDuringSession.Add(checkpointLog); // New: Add to session list
+        checkpointActivationsDuringSession.Add(checkpointLog);
 
-        // The direct push to 'checkpoint_activations' is removed as it's now part of the session
-        // If you still want a global aggregate for checkpoints, similar to trap_counts, you'd add it here.
+        FirebaseAnalytics.LogEvent("checkpoint_activated",
+            new Parameter("count", count));
     }
 
     public void SetGoalReached(bool reached)
     {
         hasReachedGoal = reached;
+        if (reached)
+        {
+            FirebaseAnalytics.LogEvent("level_complete", new Parameter[]
+            {
+                new Parameter("success", true ? 1 : 0),  // bool → int 변환
+                new Parameter("duration_seconds", (DateTime.UtcNow - sessionStartTime).TotalSeconds)
+            });
+        }
     }
 
     void OnApplicationPause(bool pauseStatus)
     {
-        if (pauseStatus)
+        if (pauseStatus && isSessionStarted && !isSessionEnded && reference != null)
         {
-            // App is pausing
-            if (isSessionStarted && !isSessionEnded && reference != null)
-            {
-                Debug.Log("OnApplicationPause: Ending session.");
-                EndSession();
-            }
+            EndSession();
         }
     }
 
-    void OnApplicationQuit()
+    [RuntimeInitializeOnLoadMethod]
+    private static void RunOnStart()
     {
-        isQuitting = true; // Signal that we are trying to quit
-        if (isSessionStarted && !isSessionEnded && reference != null)
+        Application.wantsToQuit += () =>
         {
-            Debug.Log("OnApplicationQuit: Ending session and cancelling quit.");
-            Application.CancelQuit(); // Cancel the quit for now
-            StartCoroutine(EndSessionAndQuitRoutine()); // Use coroutine to wait for Firebase
-        } else if (reference == null) {
-            Debug.LogWarning("OnApplicationQuit: Firebase reference is null, cannot end session gracefully.");
-        } else if (!isSessionStarted) {
-            Debug.LogWarning("OnApplicationQuit: Session was not started, no data to send.");
-        }
+            if (Instance != null && Instance.isSessionStarted && !Instance.isSessionEnded && Instance.reference != null)
+            {
+                Instance.isQuitting = true;
+                Instance.StartCoroutine(Instance.EndSessionAndQuitRoutine());
+                return false;
+            }
+            return true;
+        };
     }
 
     private void EndSession()
     {
-        if (isSessionEnded) return; // Prevent multiple executions
-        isSessionEnded = true; // Set flag to true to prevent multiple calls
-        Debug.Log("EndSession called!");
+        if (isSessionEnded || !isSessionStarted) return;
+        isSessionEnded = true;
 
         DatabaseReference counterRef = reference.Child("session_counter");
-
-        counterRef.RunTransaction(mutableData => {
+        counterRef.RunTransaction(mutableData =>
+        {
             long currentCount = 0;
             if (mutableData.Value != null)
-            {
                 long.TryParse(mutableData.Value.ToString(), out currentCount);
-            }
-            
             currentCount++;
             mutableData.Value = currentCount;
-            
-            // This part of the code will execute on the main thread after the transaction completes.
-            // We pass the new sessionId to the continuation task.
             return TransactionResult.Success(mutableData);
-        }).ContinueWithOnMainThread(task => {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Failed to increment session counter: " + task.Exception);
-                // If transaction fails, we still try to save session data, but without a proper sessionId
-                SaveSessionData(0); // Use 0 or some indicator for failed counter increment
-                return;
-            }
-
-            long sessionId = (long)task.Result.Value;
+        }).ContinueWithOnMainThread(task =>
+        {
+            long sessionId = task.IsFaulted ? 0 : (long)task.Result.Value;
             SaveSessionData(sessionId);
         });
     }
@@ -225,49 +235,58 @@ public class AnalyticsManager : MonoBehaviour
         TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
         string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
 
-        var sessionData = new System.Collections.Generic.Dictionary<string, object>();
-        sessionData["게임시작_시간"] = sessionStartTime.ToString("o"); // 게임 시작 시간
-        sessionData["게임종료_시간"] = sessionEndTime.ToString("o");     // 종료 시간
-        sessionData["총_플레이_타임"] = formattedDuration;                 // 총 플레이 타임
-        sessionData["리셋_횟수"] = rKeyPressLocations;           // R키 누른 횟수
-        sessionData["함정"] = trapEventsDuringSession;       // 함정에 걸린 로그
-        sessionData["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession; // 활성화한 체크포인트 로그
-        sessionData["골인_?"] = hasReachedGoal;               // 최종 목표 도달 여부
+        var sessionData = new Dictionary<string, object>
+        {
+            ["게임시작_시간"] = sessionStartTime.ToString("o"),
+            ["게임종료_시간"] = sessionEndTime.ToString("o"),
+            ["총_플레이_타임"] = formattedDuration,
+            ["리셋_횟수"] = rKeyPressLocations,
+            ["함정"] = trapEventsDuringSession,
+            ["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession,
+            ["골인_?"] = hasReachedGoal
+        };
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
-            {
-                sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
-                sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
-            }
-            else
-            {
-                Debug.LogWarning("Player GameObject not found when saving session data.");
-            }
+        {
+            sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
+            sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
+        }
 
-
-        // Save the session data using the new sequential ID
-        reference.Child("sessions").Child(sessionId.ToString()).UpdateChildrenAsync(sessionData).ContinueWithOnMainThread(updateTask => {
-            if (updateTask.IsCompletedSuccessfully) {
-                Debug.Log($"[세션 로그 {sessionId}] 세션 종료. 플레이 타임: {formattedDuration}. R키: {rKeyPressLocations.Count}. 함정: {trapEventsDuringSession.Count}. 체크포인트: {checkpointActivationsDuringSession.Count}. 골인: {hasReachedGoal}. 데이터 전송 완료.");
-            } else if (updateTask.IsFaulted) {
-                Debug.LogError($"[세션 로그 {sessionId}] 데이터 전송 실패: " + updateTask.Exception);
-            } else if (updateTask.IsCanceled) {
-                Debug.LogWarning($"[세션 로그 {sessionId}] 데이터 전송 취소됨.");
-            }
-
-            // If we are quitting, we must now quit.
-            if (isQuitting)
-            {
-                Debug.Log("Application is quitting after Firebase task completion.");
-                Application.Quit();
-            }
+        // 수정: bool → int 변환
+        FirebaseAnalytics.LogEvent("session_end", new Parameter[]
+        {
+            new Parameter("duration_seconds", Mathf.RoundToInt((float)sessionDuration.TotalSeconds)),
+            new Parameter("reset_count", rKeyPressLocations.Count),
+            new Parameter("trap_count", trapEventsDuringSession.Count),
+            new Parameter("checkpoint_count", checkpointActivationsDuringSession.Count),
+            new Parameter("goal_reached", hasReachedGoal ? 1 : 0)  // 여기 수정!
         });
+
+        reference.Child("sessions").Child(sessionId.ToString())
+            .UpdateChildrenAsync(sessionData)
+            .ContinueWithOnMainThread(updateTask =>
+            {
+                if (updateTask.IsCompletedSuccessfully)
+                {
+                    Debug.Log($"[세션 {sessionId}] 저장 완료 | 시간: {formattedDuration} | 리셋: {rKeyPressLocations.Count} | 함정: {trapEventsDuringSession.Count} | 골인: {hasReachedGoal}");
+                }
+                else
+                {
+                    Debug.LogError("세션 데이터 저장 실패: " + updateTask.Exception);
+                }
+
+                if (isQuitting)
+                {
+                    Debug.Log("앱 종료 중...");
+                    Application.Quit();
+                }
+            });
     }
 
     private IEnumerator EndSessionAndQuitRoutine()
     {
-        EndSession(); // Trigger the session end process
-        yield break; // Exit the coroutine, Application.Quit will be called by SaveSessionData
+        EndSession();
+        yield return new WaitUntil(() => isSessionEnded);
     }
 }
