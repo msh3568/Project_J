@@ -23624,53 +23624,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
---- !u!1 &1238127556
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1238127558}
-  - component: {fileID: 1238127557}
-  m_Layer: 0
-  m_Name: UIRegistrar
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1238127557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238127556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61822105c0ef6bb49956b266e2ac86da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIRegistrar
-  respawnCountText: {fileID: 1146349603}
-  respawnPointsText: {fileID: 1707525827}
-  checkpointText: {fileID: 0}
---- !u!4 &1238127558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1238127556}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 207.53963, y: -47.71746, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1244252151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 269917275308073634, guid: a12374f66de8a634888409e109276b47, type: 3}
@@ -117053,8 +117006,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   bgmSource: {fileID: 0}
   bgmClip: {fileID: 0}
+  checkpointText: {fileID: 997695589}
   checkpointSound: {fileID: 8300000, guid: 9e3761d402eef4b419c880faf290dda0, type: 3}
   checkpointSoundVolume: 0.49
+  respawnCountText: {fileID: 1146349603}
+  respawnPointsText: {fileID: 1707525827}
 --- !u!4 &1621857251
 Transform:
   m_ObjectHideFlags: 0
@@ -129153,7 +129109,6 @@ SceneRoots:
   - {fileID: 1461138712}
   - {fileID: 445630253}
   - {fileID: 1957978133}
-  - {fileID: 1238127558}
   - {fileID: 1621857251}
   - {fileID: 1498087976}
   - {fileID: 411115225}
