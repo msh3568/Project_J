@@ -1,0 +1,325 @@
+fileFormatVersion: 2
+guid: 684c57b7a9f046343b065e9dd8cce92e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5315384842251408219
+    second: SwordSlash01-Sheet_0
+  - first:
+      213: 2539461940931714398
+    second: SwordSlash01-Sheet_1
+  - first:
+      213: 5630242998315820357
+    second: SwordSlash01-Sheet_2
+  - first:
+      213: -5066799052330538055
+    second: SwordSlash01-Sheet_3
+  - first:
+      213: 1341188568363868986
+    second: SwordSlash01-Sheet_4
+  - first:
+      213: 7163193234340478414
+    second: SwordSlash01-Sheet_5
+  - first:
+      213: -8752336945291854221
+    second: SwordSlash01-Sheet_6
+  - first:
+      213: -8437616966178800603
+    second: SwordSlash01-Sheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 0
+        width: 27
+        height: 39
+      alignment: 9
+      pivot: {x: 0.4653111, y: 0.47598428}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5314e61a5a04c940800000000000000
+      internalID: 5315384842251408219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 0
+        width: 23
+        height: 42
+      alignment: 9
+      pivot: {x: 0.48981974, y: 0.43867365}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5ddbdd3e2bfd3320800000000000000
+      internalID: 2539461940931714398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 0
+        width: 51
+        height: 53
+      alignment: 9
+      pivot: {x: 0.348488, y: 0.30560702}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 545aeb93d24a22e40800000000000000
+      internalID: 5630242998315820357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 0
+        width: 44
+        height: 53
+      alignment: 9
+      pivot: {x: 0.38824394, y: 0.30560684}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bb6d816b1d1fa9b0800000000000000
+      internalID: -5066799052330538055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 0
+        width: 27
+        height: 31
+      alignment: 9
+      pivot: {x: 0.5173442, y: 0.5377669}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a33a422a5ebdc9210800000000000000
+      internalID: 1341188568363868986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 0
+        width: 30
+        height: 36
+      alignment: 9
+      pivot: {x: 0.4687795, y: 0.49349573}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecd785e5b46c86360800000000000000
+      internalID: 7163193234340478414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 0
+        width: 24
+        height: 39
+      alignment: 9
+      pivot: {x: 0.31462732, y: 0.3979321}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37ef95d8be3798680800000000000000
+      internalID: -8752336945291854221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordSlash01-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 0
+        width: 27
+        height: 39
+      alignment: 9
+      pivot: {x: 0.36991373, y: 0.43395635}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52c7a1cd21097ea80800000000000000
+      internalID: -8437616966178800603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 38afd5aef96effb40b7ee731d68e08a6
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SwordSlash01-Sheet_0: 5315384842251408219
+      SwordSlash01-Sheet_1: 2539461940931714398
+      SwordSlash01-Sheet_2: 5630242998315820357
+      SwordSlash01-Sheet_3: -5066799052330538055
+      SwordSlash01-Sheet_4: 1341188568363868986
+      SwordSlash01-Sheet_5: 7163193234340478414
+      SwordSlash01-Sheet_6: -8752336945291854221
+      SwordSlash01-Sheet_7: -8437616966178800603
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

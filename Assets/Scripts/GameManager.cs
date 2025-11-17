@@ -84,6 +84,26 @@ public class GameManager : MonoBehaviour
         timeManager = FindObjectOfType<TimeManager>();
         // The checkpointText might need to be re-assigned if it's not carried over
 
+        if (scene.name.Contains("GameScene"))
+        {
+            fireTracePoints = 0;
+            extraRespawns = 0;
+
+            var canvas = FindObjectOfType<Canvas>();
+            if (canvas != null)
+            {
+                foreach (var textComponent in canvas.GetComponentsInChildren<TextMeshProUGUI>(true))
+                {
+                    if (textComponent.name == "RespawnCountText")
+                        respawnCountText = textComponent;
+                    else if (textComponent.name == "RespawnPointsText")
+                        respawnPointsText = textComponent;
+                    else if (textComponent.name == "CheckpointText")
+                        checkpointText = textComponent;
+                }
+            }
+        }
+
         UpdateRespawnUI();
     }
 
