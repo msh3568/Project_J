@@ -34,6 +34,10 @@ public class AnalyticsManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // STOVE SDK 초기화
+            STOVEPCSDK3Manager.Instance.Initialize();
+
             InitializeFirebase();
             SceneManager.sceneLoaded += OnSceneLoaded;
         }

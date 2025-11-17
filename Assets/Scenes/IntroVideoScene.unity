@@ -281,6 +281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28d7a6a915d8cc649ba695c9f19a686d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroVideoManager
+  videoPlayer: {fileID: 0}
+  nextSceneName: FIXER Title
+  skipHoldDuration: 0.5
 --- !u!1 &1420431675
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +341,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "SPACE BAR\uB97C \uB20C\uB7EC \uC2A4\uD0B5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  m_text: "SPACE BAR\uB97C \uAFB9 \uB20C\uB7EC \uC2A4\uD0B5\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
   m_sharedMaterial: {fileID: -3238589927661839902, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
@@ -403,7 +406,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -40.633057, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
