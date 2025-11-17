@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "249888973315",
+    "firebase_url": "https://test-be42f-default-rtdb.firebaseio.com",
+    "project_id": "test-be42f",
+    "storage_bucket": "test-be42f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249888973315:android:bd6b28b55d2318ef13e436",
+        "android_client_info": {
+          "package_name": "com.company.ONETAP"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf2WW9QtPBEK2FxOSDpS54RAJci1KaO2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

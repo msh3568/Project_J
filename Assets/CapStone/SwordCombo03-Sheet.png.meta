@@ -1,0 +1,325 @@
+fileFormatVersion: 2
+guid: 5d9dd17a59dd5804aa2a3cd30ae08dad
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 272863158293866870
+    second: SwordCombo03-Sheet_0
+  - first:
+      213: -285953637796814877
+    second: SwordCombo03-Sheet_1
+  - first:
+      213: 2822370558429908298
+    second: SwordCombo03-Sheet_2
+  - first:
+      213: 6531765704135125134
+    second: SwordCombo03-Sheet_3
+  - first:
+      213: -8369727235559021242
+    second: SwordCombo03-Sheet_4
+  - first:
+      213: 3634170495979464568
+    second: SwordCombo03-Sheet_5
+  - first:
+      213: -800134170784625752
+    second: SwordCombo03-Sheet_6
+  - first:
+      213: 2274710540403878925
+    second: SwordCombo03-Sheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 29
+        height: 39
+      alignment: 9
+      pivot: {x: 0.8201552, y: 0.4682582}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 679a566c89769c300800000000000000
+      internalID: 272863158293866870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 0
+        width: 29
+        height: 41
+      alignment: 9
+      pivot: {x: 0.5853748, y: 0.39935493}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3efd3e47ea6180cf0800000000000000
+      internalID: -285953637796814877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 0
+        width: 35
+        height: 40
+      alignment: 9
+      pivot: {x: 0.44105095, y: 0.39683896}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4d4cbfb1131b2720800000000000000
+      internalID: 2822370558429908298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 0
+        width: 66
+        height: 38
+      alignment: 9
+      pivot: {x: 0.59378284, y: 0.41855726}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e88ad071d4e75aa50800000000000000
+      internalID: 6531765704135125134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 0
+        width: 56
+        height: 36
+      alignment: 9
+      pivot: {x: 0.5626335, y: 0.46561295}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 645a7998c61c8db80800000000000000
+      internalID: -8369727235559021242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 41
+        height: 35
+      alignment: 9
+      pivot: {x: 0.79690254, y: 0.44105068}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 877af0abfca2f6230800000000000000
+      internalID: 3634170495979464568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 0
+        width: 41
+        height: 36
+      alignment: 9
+      pivot: {x: 0.6962578, y: 0.4484195}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ab0bb1063a55e4f0800000000000000
+      internalID: -800134170784625752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SwordCombo03-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 0
+        width: 29
+        height: 38
+      alignment: 9
+      pivot: {x: 0.6849786, y: 0.44570467}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0c2c9f3f25619f10800000000000000
+      internalID: 2274710540403878925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f7a61cabaf3f6b34cac18f5955ced0c2
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SwordCombo03-Sheet_0: 272863158293866870
+      SwordCombo03-Sheet_1: -285953637796814877
+      SwordCombo03-Sheet_2: 2822370558429908298
+      SwordCombo03-Sheet_3: 6531765704135125134
+      SwordCombo03-Sheet_4: -8369727235559021242
+      SwordCombo03-Sheet_5: 3634170495979464568
+      SwordCombo03-Sheet_6: -800134170784625752
+      SwordCombo03-Sheet_7: 2274710540403878925
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
