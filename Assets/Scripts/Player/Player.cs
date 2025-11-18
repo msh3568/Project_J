@@ -31,260 +31,530 @@ public class Player : Entity
     [SerializeField] public bool airDashWithJumpKey = true;
     [SerializeField] public bool airDashWithDashKey = true;
 
-    [Header("Movement details")]
-    public float moveSpeed;
-    public float jumpForce = 5;
-    public Vector2 wallJumpForce;
-    [Range(0, 1)]
-    public float inAirMoveMultiPlier = .7f;
-    [Range(0, 1)]
-    public float wallSlideSlowMultiplier = .7f;
-    [Space]
-    public float dashDuration = .25f;
-    public float dashSpeed = 20;
-    public AnimationCurve dashSpeedCurve;
-    public float dashCooldown = 1f;
-    public float dashCooldownTimer { get; private set; }
-    public bool hasAirDashed { get; set; }
-    public bool isTouchingWall { get; private set; }
-    public Vector2 moveInput { get; private set; }
+        [Header("Movement details")]
 
-    [Header("Charge Jump Details")]
-    [SerializeField] public float minChargeJumpForce = 2f;
-    [SerializeField] public float maxChargeJumpForce = 18f;
-    [SerializeField] public float maxChargeTime = 1f;
-    public float currentChargeTime { get; set; }
-    public bool isChargingJump { get; set; }
+        public float moveSpeed;
 
-    [Header("Defensive details")]
-    [Range(1, 100)]
-    public int defense = 1;
+        public float jumpForce = 5;
 
-    [Header("Audio")]
-    public AudioSource fxSource;
-    public SoundEffect dashSound1;
-    public SoundEffect dashSound2;
-    public SoundEffect jumpSound;
-    public SoundEffect walkSound;
-    public SoundEffect hitSound;
-    public SoundEffect basicAttackSound;
-    public SoundEffect baldoSkillSound;
-    public SoundEffect screamSound;
-    public float screamTriggerFallDistance = 12f;
-    [SerializeField] private AudioMixerGroup sfxMixerGroup;
+        public Vector2 wallJumpForce;
 
-    private float lastGroundY;
-    private bool hasScreamed;
+        [Range(0, 1)]
 
-    public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+        public float inAirMoveMultiPlier = .7f;
 
-    protected override void Awake()
-    {
-        base.Awake();
+            [Range(0, 1)]
 
-        fxSource = GetComponent<AudioSource>();
-        if (fxSource == null)
+            public float wallSlideSlowMultiplier = .7f;
+
+        
+
+            [Space]
+
+        public float dashDuration = .25f;
+
+        public float dashSpeed = 20;
+
+        public AnimationCurve dashSpeedCurve;
+
+        public float dashCooldown = 1f;
+
+        public float dashCooldownTimer { get; private set; }
+
+        public bool hasAirDashed { get; set; }
+
+        public bool isTouchingWall { get; private set; }
+
+        public Vector2 moveInput { get; private set; }
+
+    
+
+        [Header("Charge Jump Details")]
+
+        [SerializeField] public float minChargeJumpForce = 2f;
+
+        [SerializeField] public float maxChargeJumpForce = 18f;
+
+        [SerializeField] public float maxChargeTime = 1f;
+
+        public float currentChargeTime { get; set; }
+
+        public bool isChargingJump { get; set; }
+
+    
+
+        [Header("Defensive details")]
+
+        [Range(1, 100)]
+
+        public int defense = 1;
+
+    
+
+        [Header("Audio")]
+
+        public AudioSource fxSource;
+
+        public SoundEffect dashSound1;
+
+        public SoundEffect dashSound2;
+
+        public SoundEffect jumpSound;
+
+        public SoundEffect walkSound;
+
+        public SoundEffect hitSound;
+
+        public SoundEffect basicAttackSound;
+
+        public SoundEffect baldoSkillSound;
+
+        public SoundEffect screamSound;
+
+        public float screamTriggerFallDistance = 12f;
+
+        [SerializeField] private AudioMixerGroup sfxMixerGroup;
+
+    
+
+        private float lastGroundY;
+
+        private bool hasScreamed;
+
+    
+
+        public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+
+    
+
+        protected override void Awake()
+
         {
-            fxSource = gameObject.AddComponent<AudioSource>();
-        }
-        fxSource.outputAudioMixerGroup = sfxMixerGroup;
 
-        playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
+            base.Awake();
 
-        if (GetComponent<Entity_VFX>() == null)
-            gameObject.AddComponent<Entity_VFX>();
-        input = new PlayerInputSet();
-        skillManager = GetComponent<Player_SkillManager>();
-        idleState = new Player_IdleState(this, stateMachine, "idle");
-        moveState = new Player_MoveState(this, stateMachine, "move");
-        airedState = new Player_AiredState(this, stateMachine, "jumpfall");
-        jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
-        fallState = new Player_FallState(this, stateMachine, "jumpfall");
-        wallSlideState = new Player_WallSlideState(this, stateMachine, "wallslide");
-        wallJumpState = new Player_WallJumpState(this, stateMachine, "jumpfall");
-        dashState = new Player_DashState(this, stateMachine, "dash");
-        basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
-        baldoState = new Player_BaldoState(this, stateMachine, "baldo");
-        counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
-    }
+    
 
-    protected override void Start()
-    {
-        base.Start();
-        if (stateMachine != null && idleState != null)
-        {
-            stateMachine.Initialize(idleState);
-        }
-        else
-        {
-            Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
-        }
-    }
+            fxSource = GetComponent<AudioSource>();
 
-    public bool isImmobilized { get; private set; }
+            if (fxSource == null)
 
-    protected override void Update()
-    {
-        if (isImmobilized)
-            return;
-
-        base.Update();
-        if (dashCooldownTimer > 0)
-            dashCooldownTimer -= Time.deltaTime;
-
-        if (transform.position.y < -16f)
-        {
-            GameManager.Instance.RespawnPlayerAtLastCheckpoint();
-        }
-
-        if (groundDetected || wallDetected)
-        {
-            lastGroundY = transform.position.y;
-            hasScreamed = false;
-        }
-        else
-        {
-            if (transform.position.y < lastGroundY - screamTriggerFallDistance && !hasScreamed)
             {
-                PlaySound(screamSound);
-                hasScreamed = true;
+
+                fxSource = gameObject.AddComponent<AudioSource>();
+
             }
+
+            fxSource.outputAudioMixerGroup = sfxMixerGroup;
+
+    
+
+            playerVisualEffects = GetComponent<PlayerVisualEffects>(); // Get reference
+
+    
+
+            if (GetComponent<Entity_VFX>() == null)
+
+                gameObject.AddComponent<Entity_VFX>();
+
+            input = new PlayerInputSet();
+
+            skillManager = GetComponent<Player_SkillManager>();
+
+            idleState = new Player_IdleState(this, stateMachine, "idle");
+
+            moveState = new Player_MoveState(this, stateMachine, "move");
+
+            airedState = new Player_AiredState(this, stateMachine, "jumpfall");
+
+            jumpState = new Player_JumpState(this, stateMachine, "jumpfall");
+
+            fallState = new Player_FallState(this, stateMachine, "jumpfall");
+
+            wallSlideState = new Player_WallSlideState(this, stateMachine, "wallslide");
+
+            wallJumpState = new Player_WallJumpState(this, stateMachine, "jumpfall");
+
+            dashState = new Player_DashState(this, stateMachine, "dash");
+
+            basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
+
+            baldoState = new Player_BaldoState(this, stateMachine, "baldo");
+
+            counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
+
         }
-    }
 
-    public void Immobilize(float duration)
-    {
-        StartCoroutine(ImmobilizeCoroutine(duration));
-    }
+    
 
-    private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
-    {
-        if (stateMachine != null && idleState != null)
+        protected override void Start()
+
         {
-            stateMachine.ChangeState(idleState);
+
+            base.Start();
+
+            if (stateMachine != null && idleState != null)
+
+            {
+
+                stateMachine.Initialize(idleState);
+
+            }
+
+            else
+
+            {
+
+                Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+
+            }
+
         }
-        else
+
+    
+
+        public bool isImmobilized { get; private set; }
+
+    
+
+        protected override void Update()
+
         {
-            Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+
+            if (isImmobilized)
+
+                return;
+
+    
+
+                    base.Update();
+
+    
+
+                    if (dashCooldownTimer > 0)
+
+    
+
+                        dashCooldownTimer -= Time.deltaTime;
+
+    
+
+            if (transform.position.y < -16f)
+
+            {
+
+                GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+
+            }
+
+    
+
+            if (groundDetected || wallDetected)
+
+            {
+
+                lastGroundY = transform.position.y;
+
+                hasScreamed = false;
+
+            }
+
+            else
+
+            {
+
+                if (transform.position.y < lastGroundY - screamTriggerFallDistance && !hasScreamed)
+
+                {
+
+                    PlaySound(screamSound);
+
+                    hasScreamed = true;
+
+                }
+
+            }
+
         }
-        isImmobilized = true;
-        yield return new WaitForSeconds(duration);
-        isImmobilized = false;
-    }
 
-    private int activeSlows = 0;
-    private float originalMoveSpeed;
-    private float originalDashSpeed;
-    private float originalJumpForce;
-    private float originalMinChargeJumpForce;
-    private float originalMaxChargeJumpForce;
+    
 
-    public void ApplySlow(float duration, float moveSpeedMultiplier)
-    {
-        StartCoroutine(SlowCoroutine(duration, moveSpeedMultiplier));
-    }
+        public void Immobilize(float duration)
 
-    private System.Collections.IEnumerator SlowCoroutine(float duration, float moveSpeedMultiplier)
-    {
-        if (activeSlows == 0)
         {
-            originalMoveSpeed = moveSpeed;
-            originalDashSpeed = dashSpeed;
-            originalJumpForce = jumpForce;
-            originalMinChargeJumpForce = minChargeJumpForce;
-            originalMaxChargeJumpForce = maxChargeJumpForce;
+
+            StartCoroutine(ImmobilizeCoroutine(duration));
+
         }
 
-        activeSlows++;
-        moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
-        dashSpeed = originalDashSpeed * moveSpeedMultiplier;
-        jumpForce = originalJumpForce * moveSpeedMultiplier;
-        minChargeJumpForce = originalMinChargeJumpForce * moveSpeedMultiplier;
-        maxChargeJumpForce = originalMaxChargeJumpForce * moveSpeedMultiplier;
+    
 
-        yield return new WaitForSeconds(duration);
+        private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
 
-        activeSlows--;
-        if (activeSlows == 0)
         {
-            moveSpeed = originalMoveSpeed;
-            dashSpeed = originalDashSpeed;
-            jumpForce = originalJumpForce;
-            minChargeJumpForce = originalMinChargeJumpForce;
-            maxChargeJumpForce = originalMaxChargeJumpForce;
+
+            if (stateMachine != null && idleState != null)
+
+            {
+
+                stateMachine.ChangeState(idleState);
+
+            }
+
+            else
+
+            {
+
+                Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+
+            }
+
+            isImmobilized = true;
+
+            yield return new WaitForSeconds(duration);
+
+            isImmobilized = false;
+
         }
-    }
 
-    // Removed ApplyTemporaryColor and TemporaryColorCoroutine
+    
 
-    private void OnEnable()
-    {
-        input.Enable();
-        input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
-    }
+        private int activeSlows = 0;
 
-    private void OnDisable()
-    {
-        if (input != null)
-            input.Disable();
-    }
+        private float originalMoveSpeed;
 
-    public override void EntityDeath()
-    {
-        base.onEntityDeath();
-        stateMachine.ChangeState(new Player_DeadState(this, stateMachine, "die"));
-    }
+        private float originalDashSpeed;
 
-    public bool CanDash()
-    {
-        if (dashCooldownTimer > 0)
-            return false;
-        return true;
-    }
+        private float originalJumpForce;
 
-    public void StartDashCooldown()
-    {
-        dashCooldownTimer = dashCooldown;
-    }
+        private float originalMinChargeJumpForce;
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Wall"))
-            isTouchingWall = true;
-    }
+        private float originalMaxChargeJumpForce;
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Wall"))
-            isTouchingWall = false;
-    }
+    
 
-    public void PlaySound(SoundEffect _sound)
-    {
-        if (fxSource == null)
+        public void ApplySlow(float duration, float moveSpeedMultiplier)
+
         {
-            Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
-            return;
-        }
-        if (_sound == null)
-        {
-            Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
-            return;
-        }
-        if (_sound.clip == null)
-        {
-            Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
-            return;
+
+            StartCoroutine(SlowCoroutine(duration, moveSpeedMultiplier));
+
         }
 
-        fxSource.PlayOneShot(_sound.clip, _sound.volume);
+    
+
+        private System.Collections.IEnumerator SlowCoroutine(float duration, float moveSpeedMultiplier)
+
+        {
+
+            if (activeSlows == 0)
+
+            {
+
+                originalMoveSpeed = moveSpeed;
+
+                originalDashSpeed = dashSpeed;
+
+                originalJumpForce = jumpForce;
+
+                originalMinChargeJumpForce = minChargeJumpForce;
+
+                originalMaxChargeJumpForce = maxChargeJumpForce;
+
+            }
+
+    
+
+            activeSlows++;
+
+            moveSpeed = originalMoveSpeed * moveSpeedMultiplier;
+
+            dashSpeed = originalDashSpeed * moveSpeedMultiplier;
+
+            jumpForce = originalJumpForce * moveSpeedMultiplier;
+
+            minChargeJumpForce = originalMinChargeJumpForce * moveSpeedMultiplier;
+
+            maxChargeJumpForce = originalMaxChargeJumpForce * moveSpeedMultiplier;
+
+    
+
+            yield return new WaitForSeconds(duration);
+
+    
+
+            activeSlows--;
+
+            if (activeSlows == 0)
+
+            {
+
+                moveSpeed = originalMoveSpeed;
+
+                dashSpeed = originalDashSpeed;
+
+                jumpForce = originalJumpForce;
+
+                minChargeJumpForce = originalMinChargeJumpForce;
+
+                maxChargeJumpForce = originalMaxChargeJumpForce;
+
+            }
+
+        }
+
+    
+
+        // Removed ApplyTemporaryColor and TemporaryColorCoroutine
+
+    
+
+        private void OnEnable()
+
+        {
+
+            input.Enable();
+
+            input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+
+            input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
+
+        }
+
+    
+
+        private void OnDisable()
+
+        {
+
+            if (input != null)
+
+                input.Disable();
+
+        }
+
+    
+
+        public override void EntityDeath()
+
+        {
+
+            base.onEntityDeath();
+
+            stateMachine.ChangeState(new Player_DeadState(this, stateMachine, "die"));
+
+        }
+
+    
+
+        public bool CanDash()
+
+        {
+
+            if (dashCooldownTimer > 0)
+
+                return false;
+
+            return true;
+
+        }
+
+    
+
+            public void StartDashCooldown()
+
+    
+
+            {
+
+    
+
+                dashCooldownTimer = dashCooldown;
+
+    
+
+            }
+
+    
+
+        private void OnCollisionEnter2D(Collision2D other)
+
+        {
+
+            if (other.gameObject.CompareTag("Wall"))
+
+                isTouchingWall = true;
+
+        }
+
+    
+
+        private void OnCollisionExit2D(Collision2D other)
+
+        {
+
+            if (other.gameObject.CompareTag("Wall"))
+
+                isTouchingWall = false;
+
+        }
+
+    
+
+        public void PlaySound(SoundEffect _sound)
+
+        {
+
+            if (fxSource == null)
+
+            {
+
+                Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+
+                return;
+
+            }
+
+            if (_sound == null)
+
+            {
+
+                Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+
+                return;
+
+            }
+
+            if (_sound.clip == null)
+
+            {
+
+                Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+
+                return;
+
+            }
+
+    
+
+            fxSource.PlayOneShot(_sound.clip, _sound.volume);
+
+        }
+
+    
+
+        public void PlayWalkSound()
+
+        {
+
+            PlaySound(walkSound);
+
+        }
+
+    
+
+        // Removed OnDestroy related to color changes
+
     }
 
-    public void PlayWalkSound()
-    {
-        PlaySound(walkSound);
-    }
-
-    // Removed OnDestroy related to color changes
-}
+    

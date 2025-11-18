@@ -1,25 +1,34 @@
 fileFormatVersion: 2
-guid: 3e27c340b49842e4a8a0b762499da2b3
+guid: 850dbba344867a7458db2b95b306cb4e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 513410567807571794
-    second: Idle01-Sheet_0
+      213: 7502570302196975515
+    second: Dash01-Sheet_0
   - first:
-      213: 4367669213702909491
-    second: Idle01-Sheet_1
+      213: -565337673715172738
+    second: Dash01-Sheet_1
   - first:
-      213: -8074561131628084135
-    second: Idle01-Sheet_2
+      213: 6233001325596815618
+    second: Dash01-Sheet_2
   - first:
-      213: -4631249294653580186
-    second: Idle01-Sheet_3
+      213: -1720362534310667604
+    second: Dash01-Sheet_3
   - first:
-      213: -3321419355348278946
-    second: Idle01-Sheet_4
+      213: -5490231434474355203
+    second: Dash01-Sheet_4
   - first:
-      213: 7192276508952042507
-    second: Idle01-Sheet_5
+      213: 1852239877420706576
+    second: Dash01-Sheet_5
+  - first:
+      213: 3857756811010217986
+    second: Dash01-Sheet_6
+  - first:
+      213: -6677764634464060214
+    second: Dash01-Sheet_7
+  - first:
+      213: 6650824349707618099
+    second: Dash01-Sheet_8
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,7 +124,7 @@ TextureImporter:
     buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -128,133 +137,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle01-Sheet_0
+      name: Dash01-Sheet_0
       rect:
         serializedVersion: 2
-        x: 25
-        y: 1
-        width: 15
+        x: 24
+        y: 0
+        width: 17
         height: 38
       alignment: 9
-      pivot: {x: 0.63433635, y: 0.4351362}
+      pivot: {x: 0.6072886, y: 0.41067153}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2571a16f030002700800000000000000
-      internalID: 513410567807571794
+      spriteID: b9788d480fb7e1860800000000000000
+      internalID: 7502570302196975515
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle01-Sheet_1
+      name: Dash01-Sheet_1
       rect:
         serializedVersion: 2
-        x: 89
-        y: 1
-        width: 15
-        height: 37
+        x: 84
+        y: 0
+        width: 21
+        height: 35
       alignment: 9
-      pivot: {x: 0.6232249, y: 0.4423631}
+      pivot: {x: 0.5940904, y: 0.4145952}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 33eeb2b42041d9c30800000000000000
-      internalID: 4367669213702909491
+      spriteID: e7abf0c81648728f0800000000000000
+      internalID: -565337673715172738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle01-Sheet_2
+      name: Dash01-Sheet_3
       rect:
         serializedVersion: 2
-        x: 153
-        y: 1
-        width: 15
+        x: 145
+        y: 0
+        width: 35
+        height: 32
+      alignment: 9
+      pivot: {x: 0.576828, y: 0.44597995}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caa9581d36b0028e0800000000000000
+      internalID: -1720362534310667604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dash01-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 0
+        width: 34
+        height: 33
+      alignment: 9
+      pivot: {x: 0.62012976, y: 0.41645497}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5097d4997cec3b0800000000000000
+      internalID: -5490231434474355203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dash01-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 0
+        width: 34
+        height: 33
+      alignment: 9
+      pivot: {x: 0.6215739, y: 0.4102889}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01b697cda5a74b910800000000000000
+      internalID: 1852239877420706576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dash01-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 0
+        width: 23
+        height: 35
+      alignment: 9
+      pivot: {x: 0.54958177, y: 0.40458113}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2089b1e5161898530800000000000000
+      internalID: 3857756811010217986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dash01-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 0
+        width: 23
         height: 36
       alignment: 9
-      pivot: {x: 0.6278452, y: 0.429227}
+      pivot: {x: 0.5106241, y: 0.41175696}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 954c1208e6561ff80800000000000000
-      internalID: -8074561131628084135
+      spriteID: acc7a1df170d353a0800000000000000
+      internalID: -6677764634464060214
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle01-Sheet_3
+      name: Dash01-Sheet_8
       rect:
         serializedVersion: 2
-        x: 217
-        y: 1
-        width: 15
-        height: 36
-      alignment: 9
-      pivot: {x: 0.68921304, y: 0.42501995}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 66c15edcd4f7abfb0800000000000000
-      internalID: -4631249294653580186
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle01-Sheet_4
-      rect:
-        serializedVersion: 2
-        x: 281
-        y: 1
-        width: 16
-        height: 37
-      alignment: 9
-      pivot: {x: 0.5452033, y: 0.44436598}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e51eb56a1b2f7e1d0800000000000000
-      internalID: -3321419355348278946
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle01-Sheet_5
-      rect:
-        serializedVersion: 2
-        x: 345
-        y: 1
-        width: 15
+        x: 472
+        y: 0
+        width: 17
         height: 38
       alignment: 9
-      pivot: {x: 0.6258077, y: 0.43330678}
+      pivot: {x: 0.5766655, y: 0.4164013}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b0c197ae06910d360800000000000000
-      internalID: 7192276508952042507
+      spriteID: 33747db22897c4c50800000000000000
+      internalID: 6650824349707618099
       vertices: []
       indices: 
       edges: []
@@ -263,7 +316,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5dd1cde9b156e90489232ae22f1f7360
+    spriteID: ad2ecb6c0c30fd048996c17a707f41e4
     internalID: 0
     vertices: []
     indices: 
@@ -273,12 +326,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Idle01-Sheet_0: 513410567807571794
-      Idle01-Sheet_1: 4367669213702909491
-      Idle01-Sheet_2: -8074561131628084135
-      Idle01-Sheet_3: -4631249294653580186
-      Idle01-Sheet_4: -3321419355348278946
-      Idle01-Sheet_5: 7192276508952042507
+      Dash01-Sheet_0: 7502570302196975515
+      Dash01-Sheet_1: -565337673715172738
+      Dash01-Sheet_2: 6233001325596815618
+      Dash01-Sheet_3: -1720362534310667604
+      Dash01-Sheet_4: -5490231434474355203
+      Dash01-Sheet_5: 1852239877420706576
+      Dash01-Sheet_6: 3857756811010217986
+      Dash01-Sheet_7: -6677764634464060214
+      Dash01-Sheet_8: 6650824349707618099
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

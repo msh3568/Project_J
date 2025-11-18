@@ -102,6 +102,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -109,12 +122,12 @@ TextureImporter:
       name: Jump-Sheet_0
       rect:
         serializedVersion: 2
-        x: 20
-        y: 0
-        width: 24
-        height: 39
+        x: 21
+        y: 1
+        width: 22
+        height: 37
       alignment: 9
-      pivot: {x: 0.52006453, y: 0.49588388}
+      pivot: {x: 0.6155236, y: 0.4584466}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -131,12 +144,12 @@ TextureImporter:
       name: Jump-Sheet_1
       rect:
         serializedVersion: 2
-        x: 82
-        y: 3
-        width: 28
-        height: 37
+        x: 83
+        y: 4
+        width: 26
+        height: 35
       alignment: 9
-      pivot: {x: 0.49426705, y: 0.43492573}
+      pivot: {x: 0.53894985, y: 0.41449913}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -153,12 +166,12 @@ TextureImporter:
       name: Jump-Sheet_2
       rect:
         serializedVersion: 2
-        x: 146
-        y: 1
-        width: 27
-        height: 38
+        x: 147
+        y: 2
+        width: 25
+        height: 36
       alignment: 9
-      pivot: {x: 0.52972525, y: 0.4831038}
+      pivot: {x: 0.55709255, y: 0.46281874}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
