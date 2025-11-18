@@ -111,6 +111,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -118,12 +131,12 @@ TextureImporter:
       name: SwordCombo02-Sheet_0
       rect:
         serializedVersion: 2
-        x: 17
+        x: 18
         y: 0
-        width: 22
-        height: 39
+        width: 20
+        height: 38
       alignment: 9
-      pivot: {x: 0.4559079, y: 0.44610977}
+      pivot: {x: 0.5118097, y: 0.43434092}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -140,12 +153,12 @@ TextureImporter:
       name: SwordCombo02-Sheet_1
       rect:
         serializedVersion: 2
-        x: 82
+        x: 83
         y: 0
-        width: 24
-        height: 48
+        width: 22
+        height: 47
       alignment: 9
-      pivot: {x: 0.6549342, y: 0.35853863}
+      pivot: {x: 0.5729818, y: 0.34779754}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -162,12 +175,12 @@ TextureImporter:
       name: SwordCombo02-Sheet_2
       rect:
         serializedVersion: 2
-        x: 147
+        x: 148
         y: 0
-        width: 28
-        height: 48
+        width: 26
+        height: 47
       alignment: 9
-      pivot: {x: 0.7309581, y: 0.34843412}
+      pivot: {x: 0.6908925, y: 0.3439267}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -184,10 +197,10 @@ TextureImporter:
       name: SwordCombo02-Sheet_3
       rect:
         serializedVersion: 2
-        x: 216
+        x: 217
         y: 0
-        width: 59
-        height: 57
+        width: 57
+        height: 56
       alignment: 9
       pivot: {x: 0.4123147, y: 0.2816032}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,12 +219,12 @@ TextureImporter:
       name: SwordCombo02-Sheet_4
       rect:
         serializedVersion: 2
-        x: 286
+        x: 299
         y: 0
-        width: 59
-        height: 52
+        width: 22
+        height: 51
       alignment: 9
-      pivot: {x: 0.40409464, y: 0.33832964}
+      pivot: {x: 0.54907507, y: 0.33476353}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -228,12 +241,12 @@ TextureImporter:
       name: SwordCombo02-Sheet_5
       rect:
         serializedVersion: 2
-        x: 368
+        x: 369
         y: 0
-        width: 23
-        height: 52
+        width: 21
+        height: 51
       alignment: 9
-      pivot: {x: 0.52108896, y: 0.33522075}
+      pivot: {x: 0.6112787, y: 0.34290433}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using UnityEngine.InputSystem;
+using Unity.Services.Core;
+using Unity.Services.Analytics;
 
 public class AnalyticsManager : MonoBehaviour
 {
@@ -18,13 +20,14 @@ public class AnalyticsManager : MonoBehaviour
     private bool isSessionStarted = false;
     private bool isSessionEnded = false;
     private bool isQuitting = false;
+    private bool isSessionDataSaved = false; // Flag to confirm data save is complete
 
     private List<object> rKeyPressLocations = new List<object>();
     private List<object> trapEventsDuringSession = new List<object>();
     private List<object> checkpointActivationsDuringSession = new List<object>();
     private bool hasReachedGoal = false;
 
-    void Awake()
+    async void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -39,6 +42,7 @@ public class AnalyticsManager : MonoBehaviour
             STOVEPCSDK3Manager.Instance.Initialize();
 
             InitializeFirebase();
+            await InitializeUgsAsync();
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
     }
@@ -66,20 +70,34 @@ public class AnalyticsManager : MonoBehaviour
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 reference = FirebaseDatabase.DefaultInstance.RootReference;
-                FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
+                LogDualEvent(FirebaseAnalytics.EventLogin);
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
                 Debug.Log("Firebase Analytics 디버그 모드 활성화");
 #endif
 
-                Debug.Log("Firebase + Analytics 초기화 완료");
+                Debug.Log("Firebase 초기화 완료");
             }
             else
             {
                 Debug.LogError($"Firebase 의존성 문제: {dependencyStatus}");
             }
         });
+    }
+
+    private async Task InitializeUgsAsync()
+    {
+        try
+        {
+            await UnityServices.InitializeAsync();
+            AnalyticsService.Instance.StartDataCollection();
+            Debug.Log("UGS Analytics 초기화 및 데이터 수집 시작 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"UGS 초기화 실패: {e}");
+        }
     }
 
     public void StartSession()
@@ -95,18 +113,20 @@ public class AnalyticsManager : MonoBehaviour
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
         isSessionEnded = false;
+        isSessionDataSaved = false; // Reset save flag for new session
         rKeyPressLocations.Clear();
         trapEventsDuringSession.Clear();
         checkpointActivationsDuringSession.Clear();
         hasReachedGoal = false;
 
-        FirebaseAnalytics.LogEvent("session_start", new Parameter[]
+        var parameters = new Dictionary<string, object>
         {
-            new Parameter("level", SceneManager.GetActiveScene().name),
-            new Parameter("start_time_utc", sessionStartTime.ToString("o"))
-        });
+            { "level", SceneManager.GetActiveScene().name },
+            { "start_time_utc", sessionStartTime.ToString("o") }
+        };
+        LogDualEvent("session_start", parameters);
 
-        Debug.Log("세션 시작 + Analytics session_start 전송");
+        Debug.Log("세션 시작 + Analytics session_start 전송 (Firebase & UGS)");
     }
 
     public void LogRKeyPress(Vector2 position)
@@ -119,11 +139,12 @@ public class AnalyticsManager : MonoBehaviour
         };
         rKeyPressLocations.Add(locationData);
 
-        FirebaseAnalytics.LogEvent("player_reset", new Parameter[]
+        var parameters = new Dictionary<string, object>
         {
-            new Parameter("x", position.x),
-            new Parameter("y", position.y)
-        });
+            { "x", position.x },
+            { "y", position.y }
+        };
+        LogDualEvent("player_reset", parameters);
     }
 
     public void LogTrapEvent(string trapType, Vector3 position)
@@ -153,12 +174,13 @@ public class AnalyticsManager : MonoBehaviour
             return TransactionResult.Success(mutableData);
         });
 
-        FirebaseAnalytics.LogEvent("trap_hit", new Parameter[]
+        var parameters = new Dictionary<string, object>
         {
-            new Parameter("trap_type", trapType),
-            new Parameter("x", Mathf.RoundToInt(position.x)),
-            new Parameter("y", Mathf.RoundToInt(position.y))
-        });
+            { "trap_type", trapType },
+            { "x", Mathf.RoundToInt(position.x) },
+            { "y", Mathf.RoundToInt(position.y) }
+        };
+        LogDualEvent("trap_hit", parameters);
     }
 
     public void LogCheckpointActivation(int count)
@@ -172,8 +194,11 @@ public class AnalyticsManager : MonoBehaviour
         };
         checkpointActivationsDuringSession.Add(checkpointLog);
 
-        FirebaseAnalytics.LogEvent("checkpoint_activated",
-            new Parameter("count", count));
+        var parameters = new Dictionary<string, object>
+        {
+            { "count", count }
+        };
+        LogDualEvent("checkpoint_activated", parameters);
     }
 
     public void SetGoalReached(bool reached)
@@ -181,11 +206,12 @@ public class AnalyticsManager : MonoBehaviour
         hasReachedGoal = reached;
         if (reached)
         {
-            FirebaseAnalytics.LogEvent("level_complete", new Parameter[]
+            var parameters = new Dictionary<string, object>
             {
-                new Parameter("success", true ? 1 : 0),  // bool → int 변환
-                new Parameter("duration_seconds", (DateTime.UtcNow - sessionStartTime).TotalSeconds)
-            });
+                { "success", reached },
+                { "duration_seconds", (DateTime.UtcNow - sessionStartTime).TotalSeconds }
+            };
+            LogDualEvent("level_complete", parameters);
         }
     }
 
@@ -204,11 +230,13 @@ public class AnalyticsManager : MonoBehaviour
         {
             if (Instance != null && Instance.isSessionStarted && !Instance.isSessionEnded && Instance.reference != null)
             {
+                if (Instance.isQuitting) return true; // Already handling quit, allow it to proceed
+
                 Instance.isQuitting = true;
                 Instance.StartCoroutine(Instance.EndSessionAndQuitRoutine());
-                return false;
+                return false; // Prevent immediate quit to allow coroutine to run
             }
-            return true;
+            return true; // No active session, allow quit immediately
         };
     }
 
@@ -228,7 +256,13 @@ public class AnalyticsManager : MonoBehaviour
             return TransactionResult.Success(mutableData);
         }).ContinueWithOnMainThread(task =>
         {
-            long sessionId = task.IsFaulted ? 0 : (long)task.Result.Value;
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to get session ID: " + task.Exception);
+                isSessionDataSaved = true; // Unblock quit process even on failure
+                return;
+            }
+            long sessionId = (long)task.Result.Value;
             SaveSessionData(sessionId);
         });
     }
@@ -257,15 +291,15 @@ public class AnalyticsManager : MonoBehaviour
             sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
         }
 
-        // 수정: bool → int 변환
-        FirebaseAnalytics.LogEvent("session_end", new Parameter[]
+        var parameters = new Dictionary<string, object>
         {
-            new Parameter("duration_seconds", Mathf.RoundToInt((float)sessionDuration.TotalSeconds)),
-            new Parameter("reset_count", rKeyPressLocations.Count),
-            new Parameter("trap_count", trapEventsDuringSession.Count),
-            new Parameter("checkpoint_count", checkpointActivationsDuringSession.Count),
-            new Parameter("goal_reached", hasReachedGoal ? 1 : 0)  // 여기 수정!
-        });
+            { "duration_seconds", Mathf.RoundToInt((float)sessionDuration.TotalSeconds) },
+            { "reset_count", rKeyPressLocations.Count },
+            { "trap_count", trapEventsDuringSession.Count },
+            { "checkpoint_count", checkpointActivationsDuringSession.Count },
+            { "goal_reached", hasReachedGoal }
+        };
+        LogDualEvent("session_end", parameters);
 
         reference.Child("sessions").Child(sessionId.ToString())
             .UpdateChildrenAsync(sessionData)
@@ -279,18 +313,73 @@ public class AnalyticsManager : MonoBehaviour
                 {
                     Debug.LogError("세션 데이터 저장 실패: " + updateTask.Exception);
                 }
-
-                if (isQuitting)
-                {
-                    Debug.Log("앱 종료 중...");
-                    Application.Quit();
-                }
+                // Signal that the save process is complete, regardless of success or failure
+                isSessionDataSaved = true;
             });
     }
 
     private IEnumerator EndSessionAndQuitRoutine()
     {
         EndSession();
-        yield return new WaitUntil(() => isSessionEnded);
+        // Wait until the async save operation signals it's done
+        yield return new WaitUntil(() => isSessionDataSaved);
+        
+        Debug.Log("세션 데이터 저장 완료 확인, 앱을 종료합니다.");
+        Application.Quit();
+    }
+
+    private void LogDualEvent(string eventName, Dictionary<string, object> parameters = null)
+    {
+        // 1. Log to UGS
+        try
+        {
+            // Check if services are initialized and we are not in the process of quitting
+            if (UnityServices.State == ServicesInitializationState.Initialized)
+            {
+                if (parameters == null)
+                {
+                    AnalyticsService.Instance.RecordEvent(new CustomEvent(eventName));
+                }
+                else
+                {
+                    CustomEvent customEvent = new CustomEvent(eventName);
+                    foreach (var param in parameters)
+                    {
+                        customEvent.Add(param.Key, param.Value);
+                    }
+                    AnalyticsService.Instance.RecordEvent(customEvent);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to log UGS event '{eventName}': {e.Message}");
+        }
+
+        // 2. Log to Firebase
+        if (parameters != null && parameters.Count > 0)
+        {
+            var firebaseParams = new List<Parameter>();
+            foreach (var param in parameters)
+            {
+                if (param.Value is string s)
+                    firebaseParams.Add(new Parameter(param.Key, s));
+                else if (param.Value is long l)
+                    firebaseParams.Add(new Parameter(param.Key, l));
+                else if (param.Value is double d)
+                    firebaseParams.Add(new Parameter(param.Key, d));
+                else if (param.Value is int i)
+                    firebaseParams.Add(new Parameter(param.Key, (long)i));
+                else if (param.Value is float f)
+                    firebaseParams.Add(new Parameter(param.Key, (double)f));
+                else if (param.Value is bool b)
+                    firebaseParams.Add(new Parameter(param.Key, b ? 1L : 0L));
+            }
+            FirebaseAnalytics.LogEvent(eventName, firebaseParams.ToArray());
+        }
+        else
+        {
+            FirebaseAnalytics.LogEvent(eventName);
+        }
     }
 }

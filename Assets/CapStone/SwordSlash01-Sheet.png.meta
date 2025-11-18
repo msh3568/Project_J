@@ -117,6 +117,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -124,12 +137,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_0
       rect:
         serializedVersion: 2
-        x: 9
+        x: 10
         y: 0
-        width: 27
-        height: 39
+        width: 25
+        height: 38
       alignment: 9
-      pivot: {x: 0.4653111, y: 0.47598428}
+      pivot: {x: 0.38040626, y: 0.45583856}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -146,12 +159,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_1
       rect:
         serializedVersion: 2
-        x: 74
+        x: 75
         y: 0
-        width: 23
-        height: 42
+        width: 21
+        height: 41
       alignment: 9
-      pivot: {x: 0.48981974, y: 0.43867365}
+      pivot: {x: 0.39878955, y: 0.42118925}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -168,12 +181,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_2
       rect:
         serializedVersion: 2
-        x: 138
+        x: 139
         y: 0
-        width: 51
-        height: 53
+        width: 49
+        height: 52
       alignment: 9
-      pivot: {x: 0.348488, y: 0.30560702}
+      pivot: {x: 0.3710075, y: 0.3056071}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -190,12 +203,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_3
       rect:
         serializedVersion: 2
-        x: 203
+        x: 204
         y: 0
-        width: 44
-        height: 53
+        width: 28
+        height: 30
       alignment: 9
-      pivot: {x: 0.38824394, y: 0.30560684}
+      pivot: {x: 0.6498408, y: 0.53674215}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -212,12 +225,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_4
       rect:
         serializedVersion: 2
-        x: 272
+        x: 273
         y: 0
-        width: 27
-        height: 31
+        width: 25
+        height: 30
       alignment: 9
-      pivot: {x: 0.5173442, y: 0.5377669}
+      pivot: {x: 0.59271604, y: 0.5478166}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -234,12 +247,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_5
       rect:
         serializedVersion: 2
-        x: 338
+        x: 339
         y: 0
-        width: 30
-        height: 36
+        width: 28
+        height: 35
       alignment: 9
-      pivot: {x: 0.4687795, y: 0.49349573}
+      pivot: {x: 0.5211541, y: 0.48363674}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -256,12 +269,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_6
       rect:
         serializedVersion: 2
-        x: 413
+        x: 414
         y: 0
-        width: 24
-        height: 39
+        width: 22
+        height: 38
       alignment: 9
-      pivot: {x: 0.31462732, y: 0.3979321}
+      pivot: {x: 0.2607741, y: 0.39793202}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -278,12 +291,12 @@ TextureImporter:
       name: SwordSlash01-Sheet_7
       rect:
         serializedVersion: 2
-        x: 477
+        x: 478
         y: 0
-        width: 27
-        height: 39
+        width: 25
+        height: 38
       alignment: 9
-      pivot: {x: 0.36991373, y: 0.43395635}
+      pivot: {x: 0.40723634, y: 0.43259224}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
