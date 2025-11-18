@@ -118572,7 +118572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 939237914719967839, guid: 2047b2cfde3e65948a771ec903482d02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 218.0168
+      value: 218.18
       objectReference: {fileID: 0}
     - target: {fileID: 939237914719967839, guid: 2047b2cfde3e65948a771ec903482d02, type: 3}
       propertyPath: m_LocalPosition.y
@@ -127279,7 +127279,7 @@ MonoBehaviour:
   airDashWithDashKey: 1
   moveSpeed: 8
   jumpForce: 18
-  wallJumpForce: {x: 4, y: 10}
+  wallJumpForce: {x: 4, y: 13}
   inAirMoveMultiPlier: 0.8
   wallSlideSlowMultiplier: 0.4
   dashDuration: 0.2
