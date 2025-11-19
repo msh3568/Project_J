@@ -20,7 +20,8 @@ public class AnalyticsManager : MonoBehaviour
     private bool isSessionStarted = false;
     private bool isSessionEnded = false;
     private bool isQuitting = false;
-    private bool isSessionDataSaved = false; // Flag to confirm data save is complete
+    private bool isSessionDataSaved = false;
+    private bool ugsInitialized = false; // [추가] UGS 초기화 완료 플래그
 
     private List<object> rKeyPressLocations = new List<object>();
     private List<object> trapEventsDuringSession = new List<object>();
@@ -92,6 +93,7 @@ public class AnalyticsManager : MonoBehaviour
         {
             await UnityServices.InitializeAsync();
             AnalyticsService.Instance.StartDataCollection();
+            ugsInitialized = true; // [수정] 초기화 성공 시 플래그 설정
             Debug.Log("UGS Analytics 초기화 및 데이터 수집 시작 완료");
         }
         catch (Exception e)
@@ -318,10 +320,14 @@ public class AnalyticsManager : MonoBehaviour
             });
     }
 
+    // [수정] 게임 종료 시 UGS 초기화를 기다리는 코루틴
     private IEnumerator EndSessionAndQuitRoutine()
     {
+        // UGS 초기화가 끝날 때까지 대기
+        yield return new WaitUntil(() => ugsInitialized);
+        
         EndSession();
-        // Wait until the async save operation signals it's done
+        // Firebase에 비동기 저장이 끝날 때까지 대기
         yield return new WaitUntil(() => isSessionDataSaved);
         
         Debug.Log("세션 데이터 저장 완료 확인, 앱을 종료합니다.");
@@ -333,7 +339,7 @@ public class AnalyticsManager : MonoBehaviour
         // 1. Log to UGS
         try
         {
-            // Check if services are initialized and we are not in the process of quitting
+            // Check if services are initialized
             if (UnityServices.State == ServicesInitializationState.Initialized)
             {
                 if (parameters == null)
@@ -349,6 +355,11 @@ public class AnalyticsManager : MonoBehaviour
                     }
                     AnalyticsService.Instance.RecordEvent(customEvent);
                 }
+            }
+            else
+            {
+                // [추가] 초기화가 안된 상태면 로그를 남기고 UGS 이벤트 전송을 건너뛴다.
+                Debug.LogWarning($"UGS Analytics not initialized. Skipping event: {eventName}");
             }
         }
         catch (Exception e)

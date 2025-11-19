@@ -1,0 +1,8 @@
+﻿{
+	"Env": "live",
+	"AppKey": "YOUR_APP_KEY",
+	"AppSecret": "YOUR_SECRET_KEY",
+	"GameId": "YOUR_GAME_ID",
+	"LogLevel": 4,
+	"LogPath": ""
+}
