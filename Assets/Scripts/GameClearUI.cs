@@ -11,8 +11,7 @@ public class GameClearUI : MonoBehaviour
     public TMP_InputField nameInput;
     public TextMeshProUGUI clearTimeText;
 
-    [Header("System Components")]
-    public RankingManager rankingManager;
+    private RankingManager rankingManager;
     public TimeManager timeManager;
 
     [Header("Settings")]
@@ -23,6 +22,9 @@ public class GameClearUI : MonoBehaviour
 
     void Start()
     {
+        // 싱글톤 인스턴스를 통해 RankingManager를 자동으로 찾습니다.
+        rankingManager = RankingManager.Instance;
+
         // 시작 시 모든 관련 UI를 비활성화합니다.
         if (gameClearPanel != null) gameClearPanel.SetActive(false);
         if (goalInTextObject != null) goalInTextObject.SetActive(false);
