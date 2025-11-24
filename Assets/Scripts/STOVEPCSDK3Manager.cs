@@ -155,6 +155,8 @@ public class STOVEPCSDK3Manager : MonoBehaviour
                     if (gsInitResult.IsSuccessful())
                     {
                         Debug.Log("STOVE GameSupport SDK initialized successfully.");
+                        // [수정] SDK 초기화 성공 후 유저 정보 요청
+                        RequestUserInfo();
                         UpdateGameStartAchievement();
                     }
                     else
@@ -169,6 +171,42 @@ public class STOVEPCSDK3Manager : MonoBehaviour
             });
         });
     }
+
+    // [추가] 유저 닉네임을 저장할 속성
+    public string UserNickname { get; private set; }
+
+    // [추가] 유저 정보를 요청하는 메서드
+    public void RequestUserInfo()
+    {
+        if (!_isInitialized)
+        {
+            Debug.LogError("SDK not initialized. Cannot request user info.");
+            return;
+        }
+
+        Debug.Log("Requesting user information from STOVE...");
+        
+        // 1. 유저 정보를 채울 객체를 선언합니다. 오류 메시지에 나온 정확한 타입 이름을 사용합니다.
+        Stove.PCSDK.Base.StovePCUser user = new Stove.PCSDK.Base.StovePCUser();
+
+        // 2. 함수를 호출하고, 결과를 받습니다. user 객체를 ref 키워드로 넘겨줍니다.
+        Result result = Base_GetUser(ref user);
+
+        // 3. 반환된 결과값을 확인합니다.
+        Debug.Log("====== Base_GetUser Result ======");
+        PrintResult(result);
+        if (result.IsSuccessful())
+        {
+            UserNickname = user.Nickname;
+            Debug.Log($"유저 정보 획득 성공: Nickname = {UserNickname}, MemberNo = {user.memberNo}, GameUserId = {user.gameUserId}");
+        }
+        else
+        {
+            Debug.LogError("유저 정보 획득 실패.");
+            UserNickname = "StoveUser"; // 실패 시 기본값 설정
+        }
+    }
+
 
     public void UpdateGameStartAchievement()
     {

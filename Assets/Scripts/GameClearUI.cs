@@ -25,6 +25,12 @@ public class GameClearUI : MonoBehaviour
         // 싱글톤 인스턴스를 통해 RankingManager를 자동으로 찾습니다.
         rankingManager = RankingManager.Instance;
 
+        // 스토브 환경에서는 이름 입력 필드를 비활성화합니다.
+        if (nameInput != null)
+        {
+            nameInput.gameObject.SetActive(false);
+        }
+
         // 시작 시 모든 관련 UI를 비활성화합니다.
         if (gameClearPanel != null) gameClearPanel.SetActive(false);
         if (goalInTextObject != null) goalInTextObject.SetActive(false);
@@ -82,13 +88,15 @@ public class GameClearUI : MonoBehaviour
             return;
         }
 
-        if (nameInput == null || string.IsNullOrEmpty(nameInput.text))
+        // STOVE SDK에서 유저 닉네임을 가져옵니다.
+        string playerName = STOVEPCSDK3Manager.Instance.UserNickname;
+
+        if (string.IsNullOrEmpty(playerName))
         {
-            Debug.LogWarning("이름을 입력해주세요.");
+            Debug.LogWarning("아직 STOVE 유저 정보를 가져오지 못했습니다. 잠시 후 다시 시도해주세요.");
             return;
         }
-
-        string playerName = nameInput.text;
+        
         rankingManager.AddScore(playerName, this.clearTime);
 
         // 점수 등록 후 타이틀 화면으로 돌아갑니다.
