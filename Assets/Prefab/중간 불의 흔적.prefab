@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7899549073053632993, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
       propertyPath: points
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7899549073053632993, guid: 35928682cb75ebe4ea0847f530b45b17, type: 3}
       propertyPath: point1Sound

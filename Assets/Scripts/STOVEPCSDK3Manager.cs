@@ -197,8 +197,8 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         PrintResult(result);
         if (result.IsSuccessful())
         {
-            UserNickname = user.Nickname;
-            Debug.Log($"유저 정보 획득 성공: Nickname = {UserNickname}, MemberNo = {user.memberNo}, GameUserId = {user.gameUserId}");
+            UserNickname = user.nickname;
+            //Debug.Log($"유저 정보 획득 성공: Nickname = {UserNickname}, MemberNo = {user.memberNumber}, GameUserId = {user.gameUserId}");
         }
         else
         {
