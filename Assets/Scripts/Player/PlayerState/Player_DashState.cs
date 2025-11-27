@@ -14,9 +14,23 @@ public class Player_DashState : PlayerState
         base.Enter();
 
         player.StartDashCooldown();
-
         dashDir = player.facingDir;
         stateTimer = player.dashDuration;
+
+        float xInput = player.moveInput.x;
+
+        if(Mathf.Abs(xInput) > 0.01f)
+        {
+            if(xInput > 0)
+            {
+                dashDir = 1;
+            }
+            else { dashDir = -1; }
+        }
+        else
+        {
+            dashDir = player.facingDir;
+        }
 
         originalGravityScale = rb.gravityScale;
         rb.gravityScale = 0;

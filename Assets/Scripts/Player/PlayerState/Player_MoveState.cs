@@ -14,5 +14,6 @@ public class Player_MoveState : Player_GroundedState
             stateMachine.ChangeState(player.idleState);
 
         player.SetVelocity(player.moveInput.x * player.moveSpeed, rb.linearVelocity.y);        
+        player.HorizontalMovement(isGrounded: true);
     }
 }

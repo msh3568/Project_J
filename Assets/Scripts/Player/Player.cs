@@ -35,6 +35,12 @@ public class Player : Entity
 
         public float moveSpeed;
 
+        public float groundAccel;
+        public float groundDecel;
+
+        public float airAccel;
+        public float airDecel;
+
         public float jumpForce = 5;
 
         public Vector2 wallJumpForce;
@@ -551,10 +557,54 @@ public class Player : Entity
 
         }
 
+
+    public void HorizontalMovement(bool isGrounded)
+    {
+        float inputX = moveInput.x;
+        float currentSpeed = rb.linearVelocity.x;
+        float targetSpeed = inputX * moveSpeed;
+
+        float accel;
+
+        if (Mathf.Abs(inputX) > 0.01f)
+        {
+            // 입력이 있을 때
+            bool changingDirection = Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed)
+                                     && Mathf.Abs(currentSpeed) > 0.1f;
+
+            if (isGrounded)
+            {
+                // 지상: 방향 전환 시 더 강한 브레이크
+                accel = changingDirection ? groundDecel : groundAccel;
+            }
+            else
+            {
+                // 공중: 방향 전환도 힘이 약함
+                accel = changingDirection ? airDecel : airAccel;
+            }
+        }
+        else
+        {
+            // 입력이 없을 때: 0으로 감속
+            if (isGrounded)
+                accel = groundDecel;
+            else
+                accel = airDecel;
+
+            targetSpeed = 0f;
+        }
+
+        // 일정 속도만큼씩 targetSpeed 에 가까워지게 함 (가속/감속)
+        float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accel * Time.deltaTime);
+
+        SetVelocity(newSpeed, rb.linearVelocity.y);
+
+    }
+
     
 
         // Removed OnDestroy related to color changes
 
-    }
+}
 
     

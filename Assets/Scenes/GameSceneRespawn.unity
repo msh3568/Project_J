@@ -126261,8 +126261,11 @@ MonoBehaviour:
   airDashWithJumpKey: 1
   airDashWithDashKey: 1
   moveSpeed: 8
+  groundAccel: 40
+  groundDecel: 50
+  airAccel: 40
+  airDecel: 50
   jumpForce: 18
-  moveAccelation: 5
   wallJumpForce: {x: 4, y: 13}
   inAirMoveMultiPlier: 0.8
   wallSlideSlowMultiplier: 0.4
