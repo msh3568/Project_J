@@ -243,7 +243,7 @@ public class Player : Entity
 
             {
 
-                GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+                GameManager.Instance.RespawnPlayerAtLastCheckpoint(true);
 
             }
 

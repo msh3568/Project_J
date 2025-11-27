@@ -3946,7 +3946,7 @@ Transform:
   m_GameObject: {fileID: 252985346}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.200033, y: 2.601698, z: 10.975195}
+  m_LocalPosition: {x: -19.100033, y: 2.734098, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8666,7 +8666,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.200033, y: 2.601698, z: 10.975195}
+  m_LocalPosition: {x: -19.100033, y: 2.734098, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -126262,6 +126262,7 @@ MonoBehaviour:
   airDashWithDashKey: 1
   moveSpeed: 8
   jumpForce: 18
+  moveAccelation: 5
   wallJumpForce: {x: 4, y: 13}
   inAirMoveMultiPlier: 0.8
   wallSlideSlowMultiplier: 0.4
@@ -126341,7 +126342,7 @@ Transform:
   m_GameObject: {fileID: 2049881622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.94, y: 2.5476, z: 0}
+  m_LocalPosition: {x: -17.84, y: 2.68, z: 0}
   m_LocalScale: {x: 0.779665, y: 0.779665, z: 0.779665}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -126367,7 +126368,7 @@ CapsuleCollider2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -126657,8 +126658,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 165302815
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -128600,6 +128601,10 @@ PrefabInstance:
     - target: {fileID: 16817957889510421, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 927311680654184967, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1768839569377073060, guid: b7d0d9116144f3d4aba9c68f2793218e, type: 3}
       propertyPath: m_Name
