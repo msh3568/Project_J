@@ -23,7 +23,7 @@ public class Player_AiredState : PlayerState
         }
 
         if (player.moveInput.x != 0)
-            player.SetVelocity(player.moveInput.x * (player.moveSpeed * player.inAirMoveMultiPlier), rb.linearVelocity.y);
+            //player.SetVelocity(player.moveInput.x * (player.moveSpeed * player.inAirMoveMultiPlier), rb.linearVelocity.y);
             player.HorizontalMovement(isGrounded: false);
     }
 }

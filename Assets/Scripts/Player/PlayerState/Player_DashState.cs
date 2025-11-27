@@ -14,7 +14,7 @@ public class Player_DashState : PlayerState
         base.Enter();
 
         player.StartDashCooldown();
-        dashDir = player.facingDir;
+        //dashDir = player.facingDir;
         stateTimer = player.dashDuration;
 
         float xInput = player.moveInput.x;

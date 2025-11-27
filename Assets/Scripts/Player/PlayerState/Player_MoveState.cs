@@ -13,7 +13,7 @@ public class Player_MoveState : Player_GroundedState
         if (player.moveInput.x == 0)
             stateMachine.ChangeState(player.idleState);
 
-        player.SetVelocity(player.moveInput.x * player.moveSpeed, rb.linearVelocity.y);        
+        //player.SetVelocity(player.moveInput.x * player.moveSpeed, rb.linearVelocity.y);        
         player.HorizontalMovement(isGrounded: true);
     }
 }
