@@ -1,13 +1,13 @@
-using System.Collections; // 코루틴 사용을 위해 추가
+using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement; // Scene 관리를 위해 추가
+using UnityEngine.SceneManagement;
 
 public class GameClearUI : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject gameClearPanel;     // 이름 입력, 시간 표시 등을 포함한 전체 패널
-    public GameObject goalInTextObject;   // "Goal In" 텍스트 오브젝트
+    public GameObject gameClearPanel;
+    public GameObject goalInTextObject;
     public TMP_InputField nameInput;
     public TextMeshProUGUI clearTimeText;
 
@@ -15,23 +15,16 @@ public class GameClearUI : MonoBehaviour
     public TimeManager timeManager;
 
     [Header("Settings")]
-    public float panelAppearDelay = 1.5f; // "Goal In" 표시 후 패널이 나타날 때까지의 지연 시간
+    public float panelAppearDelay = 1.5f;
 
     private float clearTime;
     private bool isGameCleared = false;
 
     void Start()
     {
-        // 싱글톤 인스턴스를 통해 RankingManager를 자동으로 찾습니다.
         rankingManager = RankingManager.Instance;
 
-        // 스토브 환경에서는 이름 입력 필드를 비활성화합니다.
-        if (nameInput != null)
-        {
-            nameInput.gameObject.SetActive(false);
-        }
-
-        // 시작 시 모든 관련 UI를 비활성화합니다.
+        // UI elements are now controlled when the game clear sequence starts, not here.
         if (gameClearPanel != null) gameClearPanel.SetActive(false);
         if (goalInTextObject != null) goalInTextObject.SetActive(false);
         Time.timeScale = 1f;
@@ -44,28 +37,28 @@ public class GameClearUI : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isGameCleared = true;
-            StartCoroutine(ProcessGameClearSequence()); // 순차적으로 클리어 이벤트를 처리하는 코루틴 시작
+            StartCoroutine(ProcessGameClearSequence());
         }
     }
 
     private IEnumerator ProcessGameClearSequence()
     {
-        // 1. "Goal In" 텍스트를 먼저 표시합니다.
+        // 1. Show "Goal In" text.
         if (goalInTextObject != null)
         {
             goalInTextObject.SetActive(true);
         }
 
-        // 2. 게임 흐름과 타이머를 정지시킵니다.
+        // 2. Stop the game and timer.
         if (AnalyticsManager.Instance != null) AnalyticsManager.Instance.SetGoalReached(true);
         this.clearTime = TimeManager.elapsedTime;
         if (timeManager != null) timeManager.enabled = false;
-        Time.timeScale = 0f; // 게임 시간을 여기서 멈춥니다.
+        Time.timeScale = 0f;
 
-        // 3. 설정된 시간(panelAppearDelay)만큼 현실 시간 기준으로 대기합니다.
+        // 3. Wait for the specified delay.
         yield return new WaitForSecondsRealtime(panelAppearDelay);
 
-        // 4. 클리어 시간 텍스트를 설정합니다.
+        // 4. Set the clear time text.
         if (clearTimeText != null)
         {
             int minutes = Mathf.FloorToInt(clearTime / 60F);
@@ -73,7 +66,23 @@ public class GameClearUI : MonoBehaviour
             clearTimeText.text = $"Time You Fixed Time: {minutes:00}:{seconds:00}";
         }
 
-        // 5. 랭킹을 입력할 수 있는 패널을 활성화합니다.
+        // Conditionally enable/disable the name input field based on STOVE environment.
+        string stoveNickname = STOVEPCSDK3Manager.Instance.UserNickname;
+        if (nameInput != null)
+        {
+            if (!string.IsNullOrEmpty(stoveNickname))
+            {
+                // If we have a STOVE name, hide the manual input field.
+                nameInput.gameObject.SetActive(false);
+            }
+            else
+            {
+                // Otherwise, make sure it's visible for the user to type in.
+                nameInput.gameObject.SetActive(true);
+            }
+        }
+
+        // 5. Activate the main panel.
         if (gameClearPanel != null)
         {
             gameClearPanel.SetActive(true);
@@ -84,23 +93,34 @@ public class GameClearUI : MonoBehaviour
     {
         if (rankingManager == null)
         {
-            Debug.LogError("RankingManager가 연결되지 않았습니다.");
+            Debug.LogError("RankingManager is not connected.");
             return;
         }
 
-        // STOVE SDK에서 유저 닉네임을 가져옵니다.
         string playerName = STOVEPCSDK3Manager.Instance.UserNickname;
 
+        // If the STOVE nickname is empty, try to get the name from the input field.
         if (string.IsNullOrEmpty(playerName))
         {
-            Debug.LogWarning("아직 STOVE 유저 정보를 가져오지 못했습니다. 잠시 후 다시 시도해주세요.");
-            return;
+            if (nameInput != null && !string.IsNullOrEmpty(nameInput.text))
+            {
+                playerName = nameInput.text;
+            }
+            else
+            {
+                // If both are empty, prompt the user to enter a name and stop.
+                Debug.LogWarning("Please enter a name.");
+                if (nameInput != null)
+                {
+                    nameInput.Select(); // Highlight the input field
+                }
+                return; // Stop here
+            }
         }
         
         rankingManager.AddScore(playerName, this.clearTime);
 
-        // 점수 등록 후 타이틀 화면으로 돌아갑니다.
-        // "Title"은 실제 타이틀 씬의 이름으로 가정합니다. 만약 다르다면 수정해야 합니다.
+        // Proceed to the ending scene.
         SceneManager.LoadScene("FixerEndding");
     }
 }

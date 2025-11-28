@@ -20,7 +20,15 @@ public class Checkpoint : MonoBehaviour
 
         if (AudioManager.Instance != null)
         {
-            audioSource.outputAudioMixerGroup = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX")[0];
+            var sfxGroups = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX");
+            if (sfxGroups.Length > 0)
+            {
+                audioSource.outputAudioMixerGroup = sfxGroups[0];
+            }
+            else
+            {
+                Debug.LogWarning("Audio Mixer Group 'SFX' not found. Checkpoint sound will play without a specific mixer group.");
+            }
         }
     }
 
