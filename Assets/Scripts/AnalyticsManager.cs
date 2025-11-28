@@ -17,11 +17,15 @@ public class AnalyticsManager : MonoBehaviour
     public static AnalyticsManager Instance { get; private set; }
     private DatabaseReference reference;
     private DateTime sessionStartTime;
+
+    // State Flags
+    private bool isInitialized = false;
     private bool isSessionStarted = false;
     private bool isSessionEnded = false;
     private bool isQuitting = false;
-    private bool isSessionDataSaved = false; // Flag to confirm data save is complete
+    private bool isSessionDataSaved = false;
 
+    // Data collection lists
     private List<object> rKeyPressLocations = new List<object>();
     private List<object> trapEventsDuringSession = new List<object>();
     private List<object> checkpointActivationsDuringSession = new List<object>();
@@ -32,19 +36,18 @@ public class AnalyticsManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+        
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-            // STOVE SDK 초기화
-            STOVEPCSDK3Manager.Instance.Initialize();
+        // STOVE SDK is initialized here, assuming it's synchronous or handles its own lifecycle.
+        STOVEPCSDK3Manager.Instance.Initialize();
 
-            InitializeFirebase();
-            await InitializeUgsAsync();
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
+        await InitializeServicesAsync();
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnDestroy()
@@ -52,8 +55,55 @@ public class AnalyticsManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    private async Task InitializeServicesAsync()
+    {
+        try
+        {
+            Debug.Log("Firebase 및 UGS 초기화를 시작합니다...");
+
+            // 1. Initialize Firebase
+            var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
+            if (dependencyStatus == DependencyStatus.Available)
+            {
+                FirebaseApp app = FirebaseApp.DefaultInstance;
+                reference = FirebaseDatabase.DefaultInstance.RootReference;
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                Debug.Log("Firebase 초기화 완료.");
+            }
+            else
+            {
+                Debug.LogError($"Firebase 의존성 문제: {dependencyStatus}");
+                // Initialization failed, do not proceed.
+                return;
+            }
+
+            // 2. Initialize UGS
+            await UnityServices.InitializeAsync();
+            AnalyticsService.Instance.StartDataCollection();
+            Debug.Log("UGS Analytics 초기화 및 데이터 수집 시작 완료.");
+
+            // 3. Set Initialized Flag
+            isInitialized = true;
+            Debug.Log("모든 분석 서비스가 성공적으로 초기화되었습니다.");
+
+            // After initialization, check the current scene and start session if needed.
+            OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"분석 서비스 초기화 중 심각한 오류 발생: {e}");
+            // isInitialized remains false
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (!isInitialized) 
+        {
+            Debug.LogWarning("분석 서비스가 아직 준비되지 않아 OnSceneLoaded 로직을 건너뜁니다.");
+            return;
+        }
+
         Debug.Log($"OnSceneLoaded: {scene.name}");
         if (scene.name == "GameSceneRespawn")
         {
@@ -61,59 +111,16 @@ public class AnalyticsManager : MonoBehaviour
         }
     }
 
-    private void InitializeFirebase()
-    {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            var dependencyStatus = task.Result;
-            if (dependencyStatus == DependencyStatus.Available)
-            {
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                reference = FirebaseDatabase.DefaultInstance.RootReference;
-                LogDualEvent(FirebaseAnalytics.EventLogin);
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                Debug.Log("Firebase Analytics 디버그 모드 활성화");
-#endif
-
-                Debug.Log("Firebase 초기화 완료");
-            }
-            else
-            {
-                Debug.LogError($"Firebase 의존성 문제: {dependencyStatus}");
-            }
-        });
-    }
-
-    private async Task InitializeUgsAsync()
-    {
-        try
-        {
-            await UnityServices.InitializeAsync();
-            AnalyticsService.Instance.StartDataCollection();
-            Debug.Log("UGS Analytics 초기화 및 데이터 수집 시작 완료");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"UGS 초기화 실패: {e}");
-        }
-    }
-
     public void StartSession()
     {
-        if (reference == null)
-        {
-            Debug.LogError("Firebase reference is null. Cannot start session.");
-            return;
-        }
-
-        if (isSessionStarted) return;
+        if (!isInitialized || isSessionStarted) return;
+        
+        Debug.Log("세션 시작 + Analytics session_start 전송 (Firebase & UGS)");
 
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
         isSessionEnded = false;
-        isSessionDataSaved = false; // Reset save flag for new session
+        isSessionDataSaved = false;
         rKeyPressLocations.Clear();
         trapEventsDuringSession.Clear();
         checkpointActivationsDuringSession.Clear();
@@ -125,12 +132,12 @@ public class AnalyticsManager : MonoBehaviour
             { "start_time_utc", sessionStartTime.ToString("o") }
         };
         LogDualEvent("session_start", parameters);
-
-        Debug.Log("세션 시작 + Analytics session_start 전송 (Firebase & UGS)");
     }
 
     public void LogRKeyPress(Vector2 position)
     {
+        if (!isInitialized || !isSessionStarted) return;
+
         var locationData = new Dictionary<string, object>
         {
             ["x"] = position.x,
@@ -149,27 +156,19 @@ public class AnalyticsManager : MonoBehaviour
 
     public void LogTrapEvent(string trapType, Vector3 position)
     {
-        if (reference == null) return;
+        if (!isInitialized || !isSessionStarted) return;
 
         var trapLog = new Dictionary<string, object>
         {
             ["trap_type"] = trapType,
             ["timestamp"] = ServerValue.Timestamp,
-            ["position"] = new Dictionary<string, object>
-            {
-                ["x"] = position.x,
-                ["y"] = position.y,
-                ["z"] = position.z
-            }
+            ["position"] = new Dictionary<string, object> { ["x"] = position.x, ["y"] = position.y, ["z"] = position.z }
         };
         trapEventsDuringSession.Add(trapLog);
 
-        DatabaseReference trapCountRef = reference.Child("trap_counts").Child(trapType);
-        trapCountRef.RunTransaction(mutableData =>
+        reference.Child("trap_counts").Child(trapType).RunTransaction(mutableData =>
         {
-            long count = 0;
-            if (mutableData.Value != null)
-                long.TryParse(mutableData.Value.ToString(), out count);
+            long count = (mutableData.Value != null && long.TryParse(mutableData.Value.ToString(), out long c)) ? c : 0;
             mutableData.Value = count + 1;
             return TransactionResult.Success(mutableData);
         });
@@ -185,7 +184,7 @@ public class AnalyticsManager : MonoBehaviour
 
     public void LogCheckpointActivation(int count)
     {
-        if (reference == null) return;
+        if (!isInitialized || !isSessionStarted) return;
 
         var checkpointLog = new Dictionary<string, object>
         {
@@ -194,15 +193,14 @@ public class AnalyticsManager : MonoBehaviour
         };
         checkpointActivationsDuringSession.Add(checkpointLog);
 
-        var parameters = new Dictionary<string, object>
-        {
-            { "count", count }
-        };
+        var parameters = new Dictionary<string, object> { { "count", count } };
         LogDualEvent("checkpoint_activated", parameters);
     }
 
     public void SetGoalReached(bool reached)
     {
+        if (!isInitialized || !isSessionStarted) return;
+        
         hasReachedGoal = reached;
         if (reached)
         {
@@ -217,48 +215,62 @@ public class AnalyticsManager : MonoBehaviour
 
     void OnApplicationPause(bool pauseStatus)
     {
-        if (pauseStatus && isSessionStarted && !isSessionEnded && reference != null)
+        if (pauseStatus && isSessionStarted && !isSessionEnded)
         {
             EndSession();
         }
     }
-
-    [RuntimeInitializeOnLoadMethod]
+    
+    // This attribute ensures this method is called once when the application starts
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void RunOnStart()
     {
         Application.wantsToQuit += () =>
         {
-            if (Instance != null && Instance.isSessionStarted && !Instance.isSessionEnded && Instance.reference != null)
-            {
-                if (Instance.isQuitting) return true; // Already handling quit, allow it to proceed
+            // If instance is null or no session was ever started, quit immediately.
+            if (Instance == null || !Instance.isSessionStarted) return true;
+            
+            // If already handling quit, let it proceed.
+            if (Instance.isQuitting) return true; 
 
-                Instance.isQuitting = true;
-                Instance.StartCoroutine(Instance.EndSessionAndQuitRoutine());
-                return false; // Prevent immediate quit to allow coroutine to run
-            }
-            return true; // No active session, allow quit immediately
+            // If session ended or already saved, quit.
+            if(Instance.isSessionEnded || Instance.isSessionDataSaved) return true;
+
+            // Start the process to end session and then quit.
+            Instance.isQuitting = true;
+            Instance.StartCoroutine(Instance.EndSessionAndQuitRoutine());
+            
+            // Prevent immediate quit to allow the coroutine to run.
+            return false; 
         };
+    }
+
+    private IEnumerator EndSessionAndQuitRoutine()
+    {
+        Debug.Log("종료 루틴 시작: 세션 데이터를 저장하고 종료합니다.");
+        EndSession();
+        yield return new WaitUntil(() => isSessionDataSaved);
+        
+        Debug.Log("세션 데이터 저장 확인됨. 어플리케이션을 종료합니다.");
+        Application.Quit(); // Now really quit.
     }
 
     private void EndSession()
     {
-        if (isSessionEnded || !isSessionStarted) return;
+        if (!isInitialized || isSessionEnded || !isSessionStarted) return;
+        
         isSessionEnded = true;
 
-        DatabaseReference counterRef = reference.Child("session_counter");
-        counterRef.RunTransaction(mutableData =>
+        reference.Child("session_counter").RunTransaction(mutableData =>
         {
-            long currentCount = 0;
-            if (mutableData.Value != null)
-                long.TryParse(mutableData.Value.ToString(), out currentCount);
-            currentCount++;
-            mutableData.Value = currentCount;
+            long currentCount = (mutableData.Value != null && long.TryParse(mutableData.Value.ToString(), out long c)) ? c : 0;
+            mutableData.Value = currentCount + 1;
             return TransactionResult.Success(mutableData);
         }).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to get session ID: " + task.Exception);
+                Debug.LogError("세션 ID 획득 실패: " + task.Exception);
                 isSessionDataSaved = true; // Unblock quit process even on failure
                 return;
             }
@@ -271,13 +283,12 @@ public class AnalyticsManager : MonoBehaviour
     {
         DateTime sessionEndTime = DateTime.UtcNow;
         TimeSpan sessionDuration = sessionEndTime - sessionStartTime;
-        string formattedDuration = sessionDuration.ToString(@"hh\:mm\:ss");
 
         var sessionData = new Dictionary<string, object>
         {
             ["게임시작_시간"] = sessionStartTime.ToString("o"),
             ["게임종료_시간"] = sessionEndTime.ToString("o"),
-            ["총_플레이_타임"] = formattedDuration,
+            ["총_플레이_타임"] = sessionDuration.ToString(@"hh\:mm\:ss"),
             ["리셋_횟수"] = rKeyPressLocations,
             ["함정"] = trapEventsDuringSession,
             ["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession,
@@ -293,7 +304,7 @@ public class AnalyticsManager : MonoBehaviour
 
         var parameters = new Dictionary<string, object>
         {
-            { "duration_seconds", Mathf.RoundToInt((float)sessionDuration.TotalSeconds) },
+            { "duration_seconds", (float)sessionDuration.TotalSeconds },
             { "reset_count", rKeyPressLocations.Count },
             { "trap_count", trapEventsDuringSession.Count },
             { "checkpoint_count", checkpointActivationsDuringSession.Count },
@@ -307,79 +318,66 @@ public class AnalyticsManager : MonoBehaviour
             {
                 if (updateTask.IsCompletedSuccessfully)
                 {
-                    Debug.Log($"[세션 {sessionId}] 저장 완료 | 시간: {formattedDuration} | 리셋: {rKeyPressLocations.Count} | 함정: {trapEventsDuringSession.Count} | 골인: {hasReachedGoal}");
+                    Debug.Log($"[세션 {sessionId}] 저장 완료.");
                 }
                 else
                 {
                     Debug.LogError("세션 데이터 저장 실패: " + updateTask.Exception);
                 }
-                // Signal that the save process is complete, regardless of success or failure
                 isSessionDataSaved = true;
             });
     }
 
-    private IEnumerator EndSessionAndQuitRoutine()
-    {
-        EndSession();
-        // Wait until the async save operation signals it's done
-        yield return new WaitUntil(() => isSessionDataSaved);
-        
-        Debug.Log("세션 데이터 저장 완료 확인, 앱을 종료합니다.");
-        Application.Quit();
-    }
-
     private void LogDualEvent(string eventName, Dictionary<string, object> parameters = null)
     {
+        if (!isInitialized) {
+            Debug.LogWarning($"분석 서비스가 준비되지 않아 이벤트 전송을 건너뜁니다: {eventName}");
+            return;
+        }
+
         // 1. Log to UGS
         try
         {
-            // Check if services are initialized and we are not in the process of quitting
-            if (UnityServices.State == ServicesInitializationState.Initialized)
+            CustomEvent customEvent = new CustomEvent(eventName);
+            if (parameters != null)
             {
-                if (parameters == null)
+                foreach (var param in parameters)
                 {
-                    AnalyticsService.Instance.RecordEvent(new CustomEvent(eventName));
+                    customEvent.Add(param.Key, param.Value);
                 }
-                else
+            }
+            AnalyticsService.Instance.RecordEvent(customEvent);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"UGS 이벤트 '{eventName}' 로깅 실패: {e.Message}");
+        }
+
+        // 2. Log to Firebase
+        try
+        {
+            if (parameters != null && parameters.Count > 0)
+            {
+                var firebaseParams = new List<Parameter>();
+                foreach (var param in parameters)
                 {
-                    CustomEvent customEvent = new CustomEvent(eventName);
-                    foreach (var param in parameters)
-                    {
-                        customEvent.Add(param.Key, param.Value);
-                    }
-                    AnalyticsService.Instance.RecordEvent(customEvent);
+                    if (param.Value is string s) firebaseParams.Add(new Parameter(param.Key, s));
+                    else if (param.Value is long l) firebaseParams.Add(new Parameter(param.Key, l));
+                    else if (param.Value is double d) firebaseParams.Add(new Parameter(param.Key, d));
+                    else if (param.Value is int i) firebaseParams.Add(new Parameter(param.Key, (long)i));
+                    else if (param.Value is float f) firebaseParams.Add(new Parameter(param.Key, (double)f));
+                    else if (param.Value is bool b) firebaseParams.Add(new Parameter(param.Key, b ? 1L : 0L));
                 }
+                FirebaseAnalytics.LogEvent(eventName, firebaseParams.ToArray());
+            }
+            else
+            {
+                FirebaseAnalytics.LogEvent(eventName);
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to log UGS event '{eventName}': {e.Message}");
-        }
-
-        // 2. Log to Firebase
-        if (parameters != null && parameters.Count > 0)
-        {
-            var firebaseParams = new List<Parameter>();
-            foreach (var param in parameters)
-            {
-                if (param.Value is string s)
-                    firebaseParams.Add(new Parameter(param.Key, s));
-                else if (param.Value is long l)
-                    firebaseParams.Add(new Parameter(param.Key, l));
-                else if (param.Value is double d)
-                    firebaseParams.Add(new Parameter(param.Key, d));
-                else if (param.Value is int i)
-                    firebaseParams.Add(new Parameter(param.Key, (long)i));
-                else if (param.Value is float f)
-                    firebaseParams.Add(new Parameter(param.Key, (double)f));
-                else if (param.Value is bool b)
-                    firebaseParams.Add(new Parameter(param.Key, b ? 1L : 0L));
-            }
-            FirebaseAnalytics.LogEvent(eventName, firebaseParams.ToArray());
-        }
-        else
-        {
-            FirebaseAnalytics.LogEvent(eventName);
+            Debug.LogError($"Firebase 이벤트 '{eventName}' 로깅 실패: {e.Message}");
         }
     }
 }

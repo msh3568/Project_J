@@ -7,6 +7,8 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    private Vector3 firstCheckpointPosition;
+    private bool hasFirstCheckpoint = false;
 
     [Header("BGM")]
     [SerializeField] private AudioSource bgmSource;
@@ -144,7 +146,7 @@ public class GameManager : MonoBehaviour
         UpdateRespawnUI();
     }
 
-    public void RespawnPlayerAtLastCheckpoint()
+    public void RespawnPlayerAtLastCheckpoint(bool isVoidFall = false)
     {
         if (player == null) // Try to find player again if it was null
         {
@@ -162,6 +164,14 @@ public class GameManager : MonoBehaviour
             if (respawnCount >= (maxRespawns + extraRespawns))
             {
                 Debug.Log("더 이상 부활할 수 없습니다.");
+
+                if (isVoidFall)
+                {
+                    if (hasFirstCheckpoint && player != null)
+                    {
+                        player.transform.position = firstCheckpointPosition;
+                    }
+                }
                 return; // 리스폰 로직 중단
             }
             respawnCount++;
@@ -193,6 +203,12 @@ public class GameManager : MonoBehaviour
 
     public void SetActiveCheckpoint(Vector3 position)
     {
+        if (!hasFirstCheckpoint)
+        {
+            firstCheckpointPosition = position;
+            hasFirstCheckpoint = true;
+        }
+
         activeCheckpointPosition = position;
         activatedCheckpointCount++; // Increment count
         ShowCheckpointText();
