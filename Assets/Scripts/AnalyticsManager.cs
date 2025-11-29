@@ -104,11 +104,8 @@ public class AnalyticsManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"OnSceneLoaded: {scene.name}");
-        if (scene.name == "GameSceneRespawn")
-        {
-            StartSession();
-        }
+        Debug.Log($"OnSceneLoaded: {scene.name}, 세션을 시작합니다.");
+        StartSession();
     }
 
     public void StartSession()
@@ -199,17 +196,41 @@ public class AnalyticsManager : MonoBehaviour
 
     public void SetGoalReached(bool reached)
     {
-        if (!isInitialized || !isSessionStarted) return;
+        // 세션이 시작되지 않은 경우, 지금 시작 (예: 테스트 중 직접 씬을 로드했을 때)
+        if (!isSessionStarted)
+        {
+            StartSession();
+        }
         
+        if (!isInitialized || !isSessionStarted) return;
+
         hasReachedGoal = reached;
         if (reached)
         {
+            var clearTime = (DateTime.UtcNow - sessionStartTime).TotalSeconds;
+            
+            // Log level_complete event
             var parameters = new Dictionary<string, object>
             {
                 { "success", reached },
-                { "duration_seconds", (DateTime.UtcNow - sessionStartTime).TotalSeconds }
+                { "duration_seconds", clearTime }
             };
             LogDualEvent("level_complete", parameters);
+
+            // Add score to RankingManager
+            if (RankingManager.Instance != null && STOVEPCSDK3Manager.Instance != null)
+            {
+                string playerName = STOVEPCSDK3Manager.Instance.UserNickname;
+                if (string.IsNullOrEmpty(playerName))
+                {
+                    playerName = "Player"; // Fallback
+                }
+                RankingManager.Instance.AddScore(playerName, (float)clearTime);
+            }
+            else
+            {
+                Debug.LogWarning("RankingManager 또는 STOVEPCSDK3Manager의 인스턴스가 존재하지 않아 랭킹을 기록할 수 없습니다.");
+            }
         }
     }
 

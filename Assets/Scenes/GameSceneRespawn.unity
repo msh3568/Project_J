@@ -128771,7 +128771,7 @@ MonoBehaviour:
   wallJumpForce: {x: 4, y: 13}
   inAirMoveMultiPlier: 0.8
   wallSlideSlowMultiplier: 0.4
-  dashDuration: 0.2
+  dashDuration: 0.24
   dashSpeed: 10
   dashSpeedCurve:
     serializedVersion: 2
