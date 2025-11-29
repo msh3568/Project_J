@@ -8,22 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:715165302113:ios:8fa26a919ea94c47fad920",
+        "mobilesdk_app_id": "1:715165302113:android:4552187a73d7fc5bfad920",
         "android_client_info": {
-          "package_name": "com.PRO.2P"
+          "package_name": "com.orem.fixer_"
         }
       },
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAs2oN1V3WP-BcI0rs_r9S1XWa5TcK_utM"
+          "current_key": "AIzaSyBKW58lPljcJkzY2riEkHZQSZdZkrDmHIA"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1
+          "other_platform_oauth_client": []
         }
       }
     }
