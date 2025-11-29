@@ -78,15 +78,35 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Cancel any pending invokes (like HideCheckpointText) from the previous scene
+        CancelInvoke();
+
+        // --- Music Control ---
+        if (scene.name == "FIXER Title")
+        {
+            if (bgmSource != null && bgmSource.isPlaying)
+            {
+                bgmSource.Stop();
+            }
+        }
+        // Only play music on the specific game scenes
+        else if (scene.name == "GameSceneRespawn" || scene.name == "GameSceneHardMode")
+        {
+            if (bgmSource != null && !bgmSource.isPlaying)
+            {
+                bgmSource.Play();
+            }
+        }
+
         // Reset counters and find objects when a new scene is loaded
         respawnCount = 0;
         activatedCheckpointCount = 0;
         activeCheckpointPosition = null;
         player = GameObject.FindWithTag("Player");
         timeManager = FindObjectOfType<TimeManager>();
-        // The checkpointText might need to be re-assigned if it's not carried over
 
-        if (scene.name.Contains("GameScene"))
+        // Use the more specific check for game scenes
+        if (scene.name == "GameSceneRespawn" || scene.name == "GameSceneHardMode")
         {
             fireTracePoints = 0;
             extraRespawns = 0;
@@ -104,6 +124,12 @@ public class GameManager : MonoBehaviour
                         checkpointText = textComponent;
                 }
             }
+            
+            // Explicitly hide the checkpoint text when a game scene loads.
+            if (checkpointText != null)
+            {
+                checkpointText.gameObject.SetActive(false);
+            }
         }
 
         UpdateRespawnUI();
@@ -111,6 +137,26 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Ensure all audio sources on GameManager are correctly routed to a mixer.
+        if (AudioManager.Instance != null)
+        {
+            var sfxGroups = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX");
+            if (sfxGroups.Length > 0)
+            {
+                var allSources = GetComponents<AudioSource>();
+                foreach (var source in allSources)
+                {
+                    // If a source is not the main BGM source and has no output group,
+                    // assign it to the SFX group. This will catch rogue sounds like FireSound.
+                    if (source != bgmSource && source.outputAudioMixerGroup == null)
+                    {
+                        Debug.Log($"Found unassigned AudioSource with clip '{source.clip?.name}'. Routing to SFX mixer.");
+                        source.outputAudioMixerGroup = sfxGroups[0];
+                    }
+                }
+            }
+        }
+
         player = GameObject.FindWithTag("Player");
         timeManager = FindObjectOfType<TimeManager>();
         if (checkpointText != null)
@@ -170,6 +216,13 @@ public class GameManager : MonoBehaviour
                     if (hasFirstCheckpoint && player != null)
                     {
                         player.transform.position = firstCheckpointPosition;
+                        
+                        // Reset player's velocity to prevent re-triggering the death plane
+                        var playerRigidbody = player.GetComponent<Rigidbody2D>();
+                        if (playerRigidbody != null)
+                        {
+                            playerRigidbody.linearVelocity = Vector2.zero;
+                        }
                     }
                 }
                 return; // 리스폰 로직 중단

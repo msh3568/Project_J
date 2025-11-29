@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.SceneManagement; // 씬 관리를 위해 추가
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Mixer")]
     [SerializeField] public AudioMixer audioMixer;
     [SerializeField] private AudioMixerGroup bgmMixerGroup;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup; // For centralized SFX playback
 
     private const string BGM_MIXER_PARAM = "BGM Volume";
     private const string SFX_MIXER_PARAM = "SFX Volume";
@@ -16,7 +17,8 @@ public class AudioManager : MonoBehaviour
     private const string SFX_PREFS_KEY = "SFXVolume";
 
     private AudioSource bgmSource;
-    private string[] scenesWithoutBGM = { "FixerEndding" }; // BGM을 재생하지 않을 씬 목록
+    private AudioSource sfxSource; // Dedicated source for SFX
+    private string[] scenesWithoutBGM = { "FixerEndding" }; // BGM to not play in these scenes
 
     void Awake()
     {
@@ -33,25 +35,41 @@ public class AudioManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        // 씬 로드 이벤트 구독
+        // Setup SFX Source
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        if (sfxMixerGroup != null)
+        {
+            sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+        }
+        else
+        {
+            var sfxGroups = audioMixer.FindMatchingGroups("SFX");
+            if (sfxGroups.Length > 0)
+            {
+                sfxSource.outputAudioMixerGroup = sfxGroups[0];
+            }
+            else
+            {
+                Debug.LogWarning("AudioManager: SFX mixer group not found or assigned. SFX will play without a mixer group.");
+            }
+        }
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
     {
-        // 저장된 볼륨 값 불러오기 및 적용
         float bgmVolume = PlayerPrefs.GetFloat(BGM_PREFS_KEY, 0.75f);
         float sfxVolume = PlayerPrefs.GetFloat(SFX_PREFS_KEY, 0.75f);
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
         
-        // 현재 씬을 기준으로 BGM 처리
         OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
     void OnDestroy()
     {
-        // 오브젝트 파괴 시 이벤트 구독 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -69,7 +87,6 @@ public class AudioManager : MonoBehaviour
 
         if (playBGM)
         {
-            // BGM을 재생해야 하는 씬
             if (bgmSource == null || !bgmSource.isPlaying)
             {
                 FindAndPlayBgmSource();
@@ -77,28 +94,23 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            // BGM을 정지해야 하는 씬
             StopBGM();
         }
     }
 
     void FindAndPlayBgmSource()
     {
-        // 이미 유효한 소스가 있다면 다시 찾지 않음
         if (bgmSource != null && bgmSource.isPlaying) return;
 
-        // 1. "soundmanager" 이름으로 찾아보기
         GameObject soundManagerObj = GameObject.Find("soundmanager");
         if (soundManagerObj != null) bgmSource = soundManagerObj.GetComponent<AudioSource>();
 
-        // 2. "GameManager" 이름으로 찾아보기
         if (bgmSource == null)
         {
             GameObject gameManagerObj = GameObject.Find("GameManager");
             if (gameManagerObj != null) bgmSource = gameManagerObj.GetComponent<AudioSource>();
         }
         
-        // 3. 씬에서 재생중인 AudioSource를 찾기 (최후의 수단)
         if (bgmSource == null)
         {
             AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
@@ -146,5 +158,18 @@ public class AudioManager : MonoBehaviour
     {
         audioMixer.SetFloat(SFX_MIXER_PARAM, volume > 0.001f ? Mathf.Log10(volume) * 20 : -80f);
         PlayerPrefs.SetFloat(SFX_PREFS_KEY, volume);
+    }
+
+    /// <summary>
+    /// Plays a sound effect one time.
+    /// </summary>
+    /// <param name="clip">The audio clip to play.</param>
+    /// <param name="volume">The volume to play the clip at (0.0 to 1.0).</param>
+    public void PlaySFX(AudioClip clip, float volume = 1.0f)
+    {
+        if (clip != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip, volume);
+        }
     }
 }
