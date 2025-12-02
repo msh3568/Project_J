@@ -50,7 +50,7 @@ public class InputRebindButton : MonoBehaviour
         }
 
         if (keyText != null)
-            keyText.text = "입력 대기중...";
+            keyText.text = "Press Key...";
 
         rebindingManager.StartSetting(userAction, (newKey) =>
         {
