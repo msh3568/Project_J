@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class EntityState
 {
@@ -47,4 +47,5 @@ public abstract class EntityState
     {
 
     }
+
 }

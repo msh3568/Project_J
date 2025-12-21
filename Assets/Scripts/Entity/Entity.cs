@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -169,5 +169,7 @@ public class Entity : MonoBehaviour
         Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
         Gizmos.DrawWireCube(box_origin + Vector2.down * groundCheckDistance, groundCheckSize);
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(wallCheckDistance * facingDir, 0));
-    } 
+    }
+
+    public StateMachine GetStateMachine() => stateMachine;
 }
