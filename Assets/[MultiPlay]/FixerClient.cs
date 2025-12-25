@@ -65,6 +65,7 @@ public class FixerClient : MonoBehaviour
     public event Action<bool, string> LeaveRoomResult;
     public event Action<bool, string> CreateRoomResult;
     public event Action<ResRoomList> RoomListReceived;
+    public event Action<NoticeRoomInfo>NoticeRoomInfoReceived;
 
     public event Action<string, string> ChatReceived;
 
@@ -87,6 +88,8 @@ public class FixerClient : MonoBehaviour
         _playerStateSendAccum = 0f;
         _localPlayerSync = null;
         Debug.Log("FixerClient Initiate");
+
+        NetPlayerManager.Instance.Initiate();
     }
 
     private void Update()
@@ -134,22 +137,33 @@ public class FixerClient : MonoBehaviour
             _localPlayerSync = null;
     }
 
+
+    CharacterState lastState = new CharacterState();
     private void TickSendLocalPlayerState()
     {
-        if (!IsConnected || !IsInRoom) return;
-        if (Service == null) return;
-        if (_localPlayerSync == null) return;
+        if (!IsConnected || !IsInRoom || Service == null || _localPlayerSync == null) return;
 
         float interval = 1f / Mathf.Max(1f, playerStateSendHz);
-
         _playerStateSendAccum += Time.deltaTime;
-        if (_playerStateSendAccum < interval)
-            return;
 
+        if (_playerStateSendAccum < interval) return;
         _playerStateSendAccum -= interval;
 
-        _localPlayerSync.CollectSnapshot(out var pos, out var facingDir, out var actionState);
-        Service.SendPlayerState(pos, facingDir, actionState);
+        var curState = _localPlayerSync.CollectSnapshot();
+
+        // float와 float를 직접 비교하는 것은 정확한 값을 가져오지 못할 수 있음.
+        // Mathf.Approximately는 두 값이 거의 같으면 true를 반환함
+        // 그래서 !를 붙여서 "거의 같지 않으면(변했으면)"으로 체크
+        bool isChanged = !Mathf.Approximately(curState.PosX, lastState.PosX) ||
+                         !Mathf.Approximately(curState.PosY, lastState.PosY) ||
+                         curState.ActionState != lastState.ActionState ||
+                         curState.FacingDir != lastState.FacingDir;
+
+        if (isChanged)
+        {
+            Service.SendPlayerState(new Vector2(curState.PosX, curState.PosY), (sbyte)curState.FacingDir, (byte)curState.ActionState);
+            lastState = curState; // 현재 상태를 마지막 상태로 저장
+        }
     }
 
     // =====================
@@ -431,5 +445,11 @@ public class FixerClient : MonoBehaviour
     public void RaisePlayerStates(IReadOnlyList<Fixer.PlayerStateEntry> states)
     {
         PlayerStatesReceived?.Invoke(states);
+    }
+
+    public void SetPlayerInRoomInfo(NoticeRoomInfo players)
+    {
+        Debug.Log("2. SetPlayerInRoomInfo");
+        NoticeRoomInfoReceived?.Invoke(players);
     }
 }

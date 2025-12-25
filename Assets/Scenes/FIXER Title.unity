@@ -540,8 +540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0a37a96e638bd4d8c1e0d302a84e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameModeSelectCanvas
-  MultiPlayPanel: {fileID: 646363201}
-  MultiPlayButton: {fileID: 1447367355}
 --- !u!114 &41755354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4090,6 +4088,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 990319753}
   m_CullTransparentMesh: 1
+--- !u!1 &1048414346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1048414348}
+  - component: {fileID: 1048414347}
+  m_Layer: 9
+  m_Name: '[MultiPlay]NetPlayerManager'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1048414347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048414346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5b60781d67e6af48bbe8425562e4247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetPlayerManager
+--- !u!4 &1048414348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048414346}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1131769024
 GameObject:
   m_ObjectHideFlags: 0
@@ -8567,3 +8609,4 @@ SceneRoots:
   - {fileID: 1648706541}
   - {fileID: 170735139}
   - {fileID: 2052588678}
+  - {fileID: 1048414348}

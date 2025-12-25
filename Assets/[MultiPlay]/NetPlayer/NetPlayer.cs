@@ -43,6 +43,34 @@ public class NetPlayer : MonoBehaviour
         _duration = 0f;
     }
 
+    public void UpdatePlayerName(string userName)
+    {
+        playerNameTMP.text = userName;
+    }
+
+    private void LateUpdate()
+    {
+        if (playerNameTMP == null) return;
+
+        // 1) 머리 위 위치 (Y 오프셋 하드코딩)
+        var t = playerNameTMP.transform;
+        t.position = transform.position + new Vector3(0f, 1.6f, 0f);
+
+        // 2) 카메라를 바라보게 (빌보드)
+        var cam = Camera.main;
+        if (cam != null)
+            t.forward = cam.transform.forward;
+
+        // 3) 플레이어 flip(localScale.x) 때문에 텍스트가 좌우 반전되는 것 방지
+        // (텍스트는 항상 양수 스케일 유지)
+        var s = t.localScale;
+        if (s.x < 0f) s.x = -s.x;
+        if (s.y < 0f) s.y = -s.y;
+        if (s.z < 0f) s.z = -s.z;
+        t.localScale = s;
+    }
+
+
     /// <summary>
     /// 서버에서 받은 CharacterState를 적용 (위치 + 방향 + 애니메이션)
     /// </summary>

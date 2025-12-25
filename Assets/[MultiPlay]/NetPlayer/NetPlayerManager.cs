@@ -1,18 +1,29 @@
 ﻿using Fixer;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+public struct NetPlayerData
+{
+    public uint id;
+    public string name;
+    public CharacterState state;
+}
 
 public class NetPlayerManager : MonoBehaviour
 {
     public static NetPlayerManager Instance { get; private set; }
 
-    [Header("Remote Player")]
-    public GameObject remotePlayerPrefab;
-    public Transform remotePlayersRoot;
+    public event Action<Dictionary<uint, NetPlayerData>> OnUpdatePlayerState;
+    public event Action<NoticeRoomInfo> OnUpdatePlayerInfo;
+    public event Action OnLeaveRoom;
 
-    private readonly Dictionary<uint, NetPlayer> _players = new();
+    private Dictionary<uint, NetPlayerData> players = new();
 
     private float _lastSnapshotAtUnscaled; // 보간 duration
+
+    private NoticeRoomInfo _lastRoomInfo;
 
     private void Awake()
     {
@@ -28,7 +39,7 @@ public class NetPlayerManager : MonoBehaviour
         _lastSnapshotAtUnscaled = Time.unscaledTime;
     }
 
-    private void OnEnable()
+    public void Initiate()
     {
         SubscribeClientEvents();
     }
@@ -52,6 +63,7 @@ public class NetPlayerManager : MonoBehaviour
         client.PlayerStatesReceived += OnPlayerStatesReceived;
         client.LeaveRoomResult += OnLeaveRoomResult;
         client.Disconnected += OnDisconnected;
+        client.NoticeRoomInfoReceived += OnNoticeRoomInfoReceived;
     }
 
     private void UnsubscribeClientEvents()
@@ -62,94 +74,114 @@ public class NetPlayerManager : MonoBehaviour
         client.PlayerStatesReceived -= OnPlayerStatesReceived;
         client.LeaveRoomResult -= OnLeaveRoomResult;
         client.Disconnected -= OnDisconnected;
+        client.NoticeRoomInfoReceived -= OnNoticeRoomInfoReceived;
     }
+
+    // ===== FixerClient 이벤트 핸들러 =====
 
     private void OnPlayerStatesReceived(IReadOnlyList<PlayerStateEntry> entries)
     {
-        var client = FixerClient.Instance;
-        if (client == null) return;
+        UpdatePlayerState(entries);
+    }
 
-        float now = Time.unscaledTime;
-        float interval = now - _lastSnapshotAtUnscaled;
-        _lastSnapshotAtUnscaled = now;
-
-        interval = Mathf.Clamp(interval, 0.02f, 0.25f);
-
-        ApplyEntries(client.LocalUserId, entries, interval);
+    private void OnNoticeRoomInfoReceived(NoticeRoomInfo info)
+    {
+        UpdatePlayerInfo(info);
     }
 
     private void OnLeaveRoomResult(bool success, string _)
     {
-        if (success) ClearAllRemotePlayers();
+        if (!success) return;
+
+        ClearAllRemotePlayers();
+        OnLeaveRoom?.Invoke();
     }
 
     private void OnDisconnected(string _)
     {
         ClearAllRemotePlayers();
+        OnLeaveRoom?.Invoke();
     }
 
 
-    private void ApplyEntries(uint localUserId, IReadOnlyList<PlayerStateEntry> entries, float snapshotIntervalSeconds)
+    private void UpdatePlayerState(IReadOnlyList<PlayerStateEntry> playerStateEntry)
     {
-        if (remotePlayerPrefab == null)
+        foreach (var entry in playerStateEntry)
         {
-            Debug.LogWarning("NetPlayerManager: remotePlayerPrefab 이 설정되어 있지 않습니다.");
-            return;
+            if (players.TryGetValue(entry.UserId, out var p))
+            {
+                p.id = entry.UserId;
+                p.state = entry.State;
+                players[entry.UserId] = p; 
+            }
+            else
+            {
+                Debug.Log("NetPlayerManager 예외 : 상태 스냅샷에서 받아온 것과 방 접속 유저 리스트가 일치하지 않음");
+            }
         }
 
-        for (int i = 0; i < entries.Count; i++)
+        float now = Time.unscaledTime;
+        float interval = Mathf.Clamp(now - _lastSnapshotAtUnscaled, 0.02f, 0.25f);
+        _lastSnapshotAtUnscaled = now;
+
+        OnUpdatePlayerState?.Invoke(players);
+    }
+
+    private void UpdatePlayerInfo(NoticeRoomInfo info)
+    {
+        
+        uint localId = FixerClient.Instance.LocalUserId;
+        var serverIds = info.Players.Select(p => p.UserId).ToList();
+
+        // 1. 나간 플레이어 제거
+        foreach (var id in players.Keys.ToList())
         {
-            var e = entries[i];
-            if (e == null) continue;
+            if (!serverIds.Contains(id))
+                RemovePlayer(id);
+        }
 
-            uint userId = e.UserId;
-            if (userId == 0) continue;
-            if (userId == localUserId) continue;
+        // 2. 들어온 플레이어 추가 + 이름 갱신
+        foreach (var p in info.Players)
+        {
+            //if (p.UserId == localId) continue;
 
-            CharacterState state = e.State;
-            if (state == null) continue;
-
-            Vector2 pos = new Vector2(state.PosX, state.PosY);
-
-            // NetPlayer가 생성되지 않았다면 생성
-            if (!_players.TryGetValue(userId, out var player) || player == null)
+            if (!players.TryGetValue(p.UserId, out var data))
             {
-                var go = Object.Instantiate(
-                    remotePlayerPrefab,
-                    pos,
-                    Quaternion.identity,
-                    remotePlayersRoot
-                );
-
-                player = go.GetComponent<NetPlayer>();
-                if (player == null) player = go.AddComponent<NetPlayer>();
-
-                player.Init(userId, pos);
-                _players[userId] = player;
+                data = new NetPlayerData();
             }
 
-            player.ApplyNetworkState(state, snapshotIntervalSeconds);
+            data.id = p.UserId;
+            data.name = p.UserName;
+
+            players[p.UserId] = data;
         }
+
+        OnUpdatePlayerInfo?.Invoke(info);
+        _lastRoomInfo = info;
     }
 
     public void RemovePlayer(uint userId)
     {
-        if (_players.TryGetValue(userId, out var player))
-        {
-            if (player != null) Destroy(player.gameObject);
-            _players.Remove(userId);
-        }
+        players.Remove(userId);
     }
 
     public void ClearAllRemotePlayers()
     {
-        foreach (var kv in _players)
-        {
-            if (kv.Value != null) Destroy(kv.Value.gameObject);
-        }
-        _players.Clear();
+        players.Clear();
+    }
+
+    public bool TryGetLastRoomInfo(out NoticeRoomInfo info)
+    {
+        info = _lastRoomInfo;
+        return info != null;
+    }
+
+    public Dictionary<uint, NetPlayerData> GetPlayers()
+    {
+        return players;
     }
 }
+
 
 // 네트워크 action_state 값(프로토콜 상 uint32) → 클라 애니메이션 매핑용
 public enum PlayerStateForNetwork : byte

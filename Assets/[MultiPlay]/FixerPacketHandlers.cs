@@ -30,6 +30,8 @@ public sealed class FixerPacketHandlers
 
             case PacketId.NoticeChat: OnNoticeChat(body); break;
             case PacketId.NoticePlayerState: OnNoticePlayerState(body); break;
+
+            case PacketId.NoticeRoomInfo: OnNoticeRoomInfo(body); break;
             default:
                 break;
         }
@@ -100,6 +102,7 @@ public sealed class FixerPacketHandlers
         }
 
         _client.SetCreateRoomResult(true, "방 생성 성공");
+        _client.SetEnterRoomResult(true, "방 입장 성공");
         SceneManager.LoadScene("[MultiPlay]PlayScene");
     }
 
@@ -117,4 +120,15 @@ public sealed class FixerPacketHandlers
         // 로컬 유저 필터링/적용 여부는 NetPlayerManager에서 처리.
         _client.RaisePlayerStates(msg.Players);
     }
+
+    private void OnNoticeRoomInfo(byte[] body)
+    {
+        var msg = NoticeRoomInfo.Parser.ParseFrom(body);
+        Debug.Log("Packet Received : OnNoticeRoomInfo");
+        // 변환/복사 없이 Protobuf 타입 그대로 전달.
+        // 로컬 유저 필터링/적용 여부는 NetPlayerManager에서 처리.
+        _client.SetPlayerInRoomInfo(msg);
+    }
+
+    
 }
