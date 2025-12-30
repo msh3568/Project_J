@@ -18,6 +18,12 @@ public class Player_WallSlideState : PlayerState
         base.Update();
         HandleWallSlide();
 
+        if (input.Player.Jump.WasPressedThisFrame() && player.moveInput.y > 0.8f && player.CanUseWallAssistJump())
+        {
+            stateMachine.ChangeState(player.wallAssistJumpState);
+            return;
+        }
+
         if (input.Player.Jump.WasPressedThisFrame())
         {
             stateMachine.ChangeState(player.wallJumpState);
@@ -34,7 +40,7 @@ public class Player_WallSlideState : PlayerState
         if(player.wallDetected == false)
             stateMachine.ChangeState(player.fallState);
 
-        if (player.groundDetected)
+        if (player.groundDetected && !player.wallDetected)
         {
             stateMachine.ChangeState(player.idleState);
             player.Flip();
