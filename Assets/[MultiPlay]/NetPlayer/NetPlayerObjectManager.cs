@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// [MultiPlay] PlayScene에 존재.
-/// NetPlayerManager의 데이터를 받아서 원격 플레이어 GameObject를 생성/삭제/갱신한다.
-/// </summary>
 public class NetPlayerObjectManager : MonoBehaviour
 {
     [Header("Remote Player")]
     public GameObject remotePlayerPrefab;
     public Transform remotePlayersRoot;
 
+    [Header("UI - Edge Nicknames")]
+    [SerializeField] private EdgeNameIndicatorManager edgeIndicator;
+
     private readonly Dictionary<uint, NetPlayer> _players = new();
 
-    private float _lastSnapshotAtUnscaled; // 보간 duration (ObjectManager에서 자체 계산)
+    private float _lastSnapshotAtUnscaled;
 
     private void OnEnable()
     {
@@ -25,7 +24,7 @@ public class NetPlayerObjectManager : MonoBehaviour
         var mgr = NetPlayerManager.Instance;
         if (mgr != null && mgr.TryGetLastRoomInfo(out var info))
         {
-            OnUpdatePlayerInfo(info); 
+            OnUpdatePlayerInfo(info);
         }
     }
 
@@ -67,16 +66,6 @@ public class NetPlayerObjectManager : MonoBehaviour
     // 방 입장/퇴장 시: 생성/삭제 + 이름 갱신
     private void OnUpdatePlayerInfo(NoticeRoomInfo info)
     {
-        Debug.Log("OnUpdatePlayerInfo");
-        Debug.Log(info.Players.Count);
-        foreach (var player in info.Players)
-        {
-            Debug.Log("players uid  : " + player.UserId);
-        }
-        Debug.Log("id : " + FixerClient.Instance.LocalUserId);
-
-
-
         if (info == null) return;
 
         uint localId = FixerClient.Instance.LocalUserId;
@@ -92,12 +81,11 @@ public class NetPlayerObjectManager : MonoBehaviour
         // 2) 들어온 플레이어 생성 + 이름 갱신
         foreach (var p in info.Players)
         {
-            
+            // 로컬은 NetPlayerObjectManager에서 스폰 안 한다(로컬은 로컬 캐릭터가 이미 있음)
             if (p.UserId == localId) continue;
 
             if (!_players.TryGetValue(p.UserId, out var player) || player == null)
             {
-                Debug.Log("Genrate");
                 var go = Instantiate(remotePlayerPrefab, Vector3.zero, Quaternion.identity, remotePlayersRoot);
                 player = go.GetComponent<NetPlayer>();
                 if (player == null)
@@ -109,9 +97,16 @@ public class NetPlayerObjectManager : MonoBehaviour
 
                 player.Init(p.UserId, Vector2.zero);
                 _players[p.UserId] = player;
+
+                // ✅ 가장자리 닉네임 UI 등록
+                if (edgeIndicator != null)
+                    edgeIndicator.Register(p.UserId, player.transform, p.UserName);
             }
 
+            // ✅ 이름 갱신
             player.UpdatePlayerName(p.UserName);
+            if (edgeIndicator != null)
+                edgeIndicator.UpdateNickname(p.UserId, p.UserName);
         }
     }
 
@@ -120,7 +115,6 @@ public class NetPlayerObjectManager : MonoBehaviour
     {
         if (players == null) return;
 
-        // NetPlayerManager에서 interval을 넘기지 않으므로 여기서 동일하게 계산해서 적용
         float now = Time.unscaledTime;
         float interval = Mathf.Clamp(now - _lastSnapshotAtUnscaled, 0.02f, 0.25f);
         _lastSnapshotAtUnscaled = now;
@@ -130,10 +124,12 @@ public class NetPlayerObjectManager : MonoBehaviour
             uint userId = kv.Key;
             var data = kv.Value;
 
-            // 오브젝트 생성은 OnUpdatePlayerInfo에서만 한다는 전제
+            // 로컬은 스킵(로컬 캐릭터는 별도 로컬 컨트롤러가 움직임)
+            if (FixerClient.Instance != null && userId == FixerClient.Instance.LocalUserId)
+                continue;
+
             if (_players.TryGetValue(userId, out var player) && player != null)
             {
-                // 기존 NetPlayerManager 코드 기준: player.ApplyNetworkState(entry.State, interval)
                 player.ApplyNetworkState(data.state, interval);
             }
         }
@@ -141,17 +137,23 @@ public class NetPlayerObjectManager : MonoBehaviour
 
     private void RemovePlayer(uint userId)
     {
+        // ✅ UI 해제
+        if (edgeIndicator != null)
+            edgeIndicator.Unregister(userId);
+
         if (_players.TryGetValue(userId, out var player))
         {
             if (player != null)
                 Destroy(player.gameObject);
-
             _players.Remove(userId);
         }
     }
 
     private void ClearAllRemotePlayers()
     {
+        if (edgeIndicator != null)
+            edgeIndicator.ClearAll();
+
         foreach (var kv in _players)
         {
             if (kv.Value != null)

@@ -52,21 +52,22 @@ public class NetPlayer : MonoBehaviour
     {
         if (playerNameTMP == null) return;
 
-        // 1) 머리 위 위치 (Y 오프셋 하드코딩)
         var t = playerNameTMP.transform;
+
+        // 1) 머리 위 위치
         t.position = transform.position + new Vector3(0f, 1.6f, 0f);
 
-        // 2) 카메라를 바라보게 (빌보드)
+        // 2) 카메라 빌보드(회전)
         var cam = Camera.main;
         if (cam != null)
-            t.forward = cam.transform.forward;
+            t.rotation = Quaternion.LookRotation(cam.transform.forward, cam.transform.up);
 
-        // 3) 플레이어 flip(localScale.x) 때문에 텍스트가 좌우 반전되는 것 방지
-        // (텍스트는 항상 양수 스케일 유지)
+        // 3) 부모(NetPlayer)의 flip(-scale) 상쇄
+        // 부모가 x<0이면, 자식 로컬 x를 음수로 만들어 lossyScale.x를 양수로 맞춘다.
+        float parentSign = transform.lossyScale.x < 0f ? -1f : 1f;
+
         var s = t.localScale;
-        if (s.x < 0f) s.x = -s.x;
-        if (s.y < 0f) s.y = -s.y;
-        if (s.z < 0f) s.z = -s.z;
+        s.x = Mathf.Abs(s.x) * parentSign;  // parent -1이면 local도 -로 -> 최종(월드) +가 됨
         t.localScale = s;
     }
 
