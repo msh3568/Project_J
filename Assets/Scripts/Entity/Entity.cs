@@ -17,10 +17,10 @@ public class Entity : MonoBehaviour
 
     private bool facingRight = true;
     public int facingDir { get; private set; } = 1;
-
+    public bool canFlip = true; // New: Control flipping
 
     [Header("Collision detection")]
-    [SerializeField] public LayerMask whatIsGround;
+    [SerializeField] protected LayerMask whatIsGround;
     [SerializeField] protected LayerMask whatIsWall;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.2f);
@@ -98,6 +98,8 @@ public class Entity : MonoBehaviour
 
     public void HandleFlip(float xVelocity)
     {
+        if (!canFlip) return; // New: Check canFlip
+
         if (Time.time - lastFlipTime < flipCooldown)
             return;
 

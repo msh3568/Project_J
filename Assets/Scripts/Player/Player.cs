@@ -32,6 +32,11 @@ public class Player : Entity
     [SerializeField] public bool airDashWithJumpKey = true;
     [SerializeField] public bool airDashWithDashKey = true;
 
+        [Header("Dash details")]
+        [SerializeField] public float dashSpeed = 25f;
+        [SerializeField] public float dashDuration = 0.2f;
+        [SerializeField] public AnimationCurve dashSpeedCurve;
+
         [Header("Movement details")]
 
         public float moveSpeed;
@@ -48,30 +53,19 @@ public class Player : Entity
 
         [Range(0, 1)]
 
-        public float inAirMoveMultiPlier = .7f;
-
-            [Range(0, 1)]
-
-            public float wallSlideSlowMultiplier = .7f;
-
-        
-
-            [Space]
-
-        public float dashDuration = .25f;
-
-        public float dashSpeed = 20;
-
-        public AnimationCurve dashSpeedCurve;
-
         public float dashCooldown = 1f;
 
         public float dashCooldownTimer { get; private set; }
 
 
         [Header("Wall Assist Jump Details")]
+        [SerializeField] public float wallSlideSlowMultiplier = 0.5f;
+        [SerializeField] public float wallAssistJumpKickOffForce = 10f;
+        [SerializeField] public float wallAssistJumpUpForce = 15f;
+        [SerializeField] public float wallAssistJumpDuration = 0.2f;
+        [SerializeField] public float wallAssistJumpReturnForce = 10f;
         [SerializeField] public float wallAssistJumpSpeed = 16f;
-        [SerializeField] public float wallAssistJumpCooldown = 0.2f;
+        [SerializeField] public float wallAssistJumpCooldown = 0.5f;
         [SerializeField] public float wallAssistJumpReductionFactor = 0.3f;
         [SerializeField] private Transform ceilingCheck;
         [SerializeField] private float ceilingCheckDistance = 0.5f;

@@ -6,36 +6,68 @@ public class Player_WallAssistJumpState : PlayerState
     {
     }
 
+    private float stateTimer;
+    private bool isReturning;
+
     public override void Enter()
     {
         base.Enter();
+        player.canFlip = false; // Disable flipping
         player.IncrementConsecutiveWallJumps();
         player.StartWallAssistJumpCooldown();
-        player.SetVelocity(0, player.GetWallAssistJumpSpeed());
+
+        // Kick off away from wall and jump up
+        // Note: facingDir is towards the wall. We want to move AWAY (-facingDir)
+        player.SetVelocity(-player.facingDir * player.wallAssistJumpKickOffForce, player.wallAssistJumpUpForce);
+        
+        stateTimer = player.wallAssistJumpDuration;
+        isReturning = false;
     }
 
     public override void Update()
     {
         base.Update();
+        stateTimer -= Time.deltaTime;
 
-        // 천장 충돌 감지
-        if (player.IsCeilingDetected())
+        // Phase 2: Return to wall
+        // After half duration (or some condition), start moving back
+        if (stateTimer < player.wallAssistJumpDuration * 0.5f && !isReturning)
         {
-            // 상승을 즉시 멈추고 약간 아래로 밀어냅니다.
-            player.SetVelocity(0, -1f);
+            isReturning = true;
+        }
+
+        if (isReturning)
+        {
+            // Move towards the wall
+            player.SetVelocity(player.facingDir * player.wallAssistJumpReturnForce, rb.linearVelocity.y);
+        }
+
+        // Phase 3: Re-attach
+        if (player.wallDetected && rb.linearVelocity.y <= 0) // Only grab wall if falling or at peak
+        {
+            stateMachine.ChangeState(player.wallSlideState);
+            return;
+        }
+
+        // Safety: If timer runs out and we haven't grabbed a wall, fall
+        if (stateTimer <= 0)
+        {
             stateMachine.ChangeState(player.fallState);
             return;
         }
 
-        // 속도가 떨어지기 시작하면 Fall 상태로 전환
-        if (rb.linearVelocity.y <= 0)
+        // Ceiling check
+        if (player.IsCeilingDetected())
         {
+            player.SetVelocity(0, -1f);
             stateMachine.ChangeState(player.fallState);
+            return;
         }
     }
 
     public override void Exit()
     {
         base.Exit();
+        player.canFlip = true; // Re-enable flipping
     }
 }
