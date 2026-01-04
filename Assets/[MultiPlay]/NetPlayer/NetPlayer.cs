@@ -1,6 +1,7 @@
 ﻿using Fixer;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class NetPlayer : MonoBehaviour
 {
@@ -161,5 +162,21 @@ public class NetPlayer : MonoBehaviour
     {
         Vector2 next = Vector2.SmoothDamp(transform.position, targetPos, ref smoothVelocity, smoothTime, Mathf.Infinity, Time.deltaTime);
         transform.position = next;
+    }
+
+    public void AttackToPlayer(float damage)
+    {
+        //damage는 임시로 적어둠
+        //int targetPlayerId = UserId;
+        uint localUserId = FixerClient.Instance.LocalUserId;
+        FixerClient.Instance.Service.SendPlayerInteract(1, localUserId, UserId);
+        Debug.Log("[MultiPlay] AttackToPlayer");
+    }
+
+    public void ParyToPlayer()
+    {
+        uint localUserId = FixerClient.Instance.LocalUserId;
+        FixerClient.Instance.Service.SendPlayerInteract(2, localUserId, UserId);
+        Debug.Log("[MultiPlay] AttackToPlayer");
     }
 }

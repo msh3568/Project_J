@@ -141,5 +141,38 @@ namespace Fixer
 
             _ = _client.SendProtoAsync(PacketId.ReqPlayerState, req);
         }
+
+        public void SendPlayerInteract(int type, uint triggerPlayerId, uint targetPlayerId )
+        {
+            if (!_client.IsConnected) return;
+            if (!_client.IsInRoom) return;
+
+            var req = new ReqPlayerInteract
+            {
+                Type = type,
+                TriggerUserId = triggerPlayerId,
+                TargetUserId = targetPlayerId
+            };
+
+            _ = _client.SendProtoAsync(PacketId.ReqPlayerInteract, req);
+        }
+
+        public void OnInteractAttack(uint triggerUserId, uint targetUserId)
+        {
+            if (targetUserId == _client.LocalUserId) // 내가 맞은 경우
+            {
+                // 내 캐릭터가 넉백
+                _client.RaisePlayerKnockback(triggerUserId);
+            }
+        }
+
+        public void OnInteractPary(uint triggerUserId, uint targetUserId)
+        {
+            if (targetUserId == _client.LocalUserId) // 내가 맞은 경우
+            {
+                // 내 캐릭터가 넉백
+                _client.RaisePlayerKnockback(triggerUserId);
+            }
+        }
     }
 }

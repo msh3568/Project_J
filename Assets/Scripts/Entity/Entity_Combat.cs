@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Entity_Combat : MonoBehaviour
 {
@@ -20,6 +20,14 @@ public class Entity_Combat : MonoBehaviour
     {
         foreach (var target in GetDetectedColliders())
         {
+            // 멀티플레 전용 로직. 공격 감지 -> 서버로 전송
+            if (target.TryGetComponent<NetPlayer>(out var netPlayer))
+            {
+                netPlayer.AttackToPlayer(damage);
+                continue;
+            }
+
+
             IDamagable damagable = target.GetComponent<IDamagable>();
 
             if(damagable == null)

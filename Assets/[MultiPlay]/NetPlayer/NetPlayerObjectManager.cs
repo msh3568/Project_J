@@ -17,6 +17,8 @@ public class NetPlayerObjectManager : MonoBehaviour
 
     private readonly Dictionary<uint, NetPlayer> _players = new();
 
+    public Dictionary<uint, NetPlayer> GetPlayers() {  return _players; }
+
     private void OnEnable()
     {
         Bind();

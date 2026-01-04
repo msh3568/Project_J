@@ -70,6 +70,8 @@ public class FixerClient : MonoBehaviour
 
     public event Action<string, string> ChatReceived;
 
+    public event Action<uint> PlayerKnockback;
+
     public event Action<IReadOnlyList<Fixer.PlayerStateEntry>> PlayerStatesReceived;
 
     private void Awake()
@@ -453,5 +455,10 @@ public class FixerClient : MonoBehaviour
     {
         Debug.Log("2. SetPlayerInRoomInfo");
         NoticeRoomInfoReceived?.Invoke(players);
+    }
+
+    public void RaisePlayerKnockback(uint triggerPlayerId)
+    {
+        PlayerKnockback?.Invoke(triggerPlayerId);
     }
 }

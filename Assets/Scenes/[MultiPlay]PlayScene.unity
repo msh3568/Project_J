@@ -130710,6 +130710,7 @@ GameObject:
   - component: {fileID: 2049881638}
   - component: {fileID: 2049881641}
   - component: {fileID: 2049881642}
+  - component: {fileID: 2049881643}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -131247,6 +131248,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e270bf6205e1134ea578d8edc8619ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNetworkSync
+--- !u!114 &2049881643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049881622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2b29d84d42b6c4e8403b4a3a916c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPvPController
+  playerObjectManager: {fileID: 637019323}
 --- !u!4 &2052061920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6553441442515390054, guid: c912388ec771a514ba5f0501dd8ff3e1, type: 3}

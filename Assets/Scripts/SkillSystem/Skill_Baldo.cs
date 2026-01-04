@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Skill_Baldo : Skill_Base
 {
@@ -35,11 +35,24 @@ public class Skill_Baldo : Skill_Base
 
             // Apply damage in an area in front of the player
             Vector2 damageOrigin = (Vector2)transform.position + new Vector2(effectOffset.x * direction, effectOffset.y);
+            
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(damageOrigin, range, enemyLayer);
 
             foreach (Collider2D enemy in hitEnemies)
             {
-                enemy.GetComponent<Entity_Health>()?.TakeDamage(damage, transform);
+                // 몬스터확인
+                if (enemy.TryGetComponent<Entity_Health>(out var hp))
+                {
+                    hp.TakeDamage(damage, transform);
+                    continue;
+                }
+
+                // 플레이어 확인
+                if (enemy.TryGetComponent<NetPlayer>(out var netPlayer)) 
+                {
+                    netPlayer.ParyToPlayer();
+                    continue;
+                }
             }
         }
     }
