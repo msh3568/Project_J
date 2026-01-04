@@ -327,6 +327,7 @@ GameObject:
   - component: {fileID: 2143691106010392253}
   - component: {fileID: 1177862271601416547}
   - component: {fileID: 8613626245292148285}
+  - component: {fileID: 4970563461835398012}
   m_Layer: 0
   m_Name: NetPlayer
   m_TagString: Untagged
@@ -425,6 +426,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetPlayer
   _anim: {fileID: 2061169556774081753}
   playerNameTMP: {fileID: 2231036948793356845}
+--- !u!70 &4970563461835398012
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959720316763062562}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.5, y: 1}
+  m_Direction: 0
 --- !u!1 &6827254891053475055
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,9 @@ public class NetPlayerObjectManager : MonoBehaviour
     [Header("UI - Edge Nicknames")]
     [SerializeField] private EdgeNameIndicatorManager edgeIndicator;
 
+    [Header("UI - PlayerList")]
+    [SerializeField] private PlayerList playerList;
+
     private readonly Dictionary<uint, NetPlayer> _players = new();
 
     private void OnEnable()
@@ -64,6 +67,7 @@ public class NetPlayerObjectManager : MonoBehaviour
     private void OnUpdatePlayerInfo(NoticeRoomInfo info)
     {
         if (info == null) return;
+        playerList.UpdatePlayerList(info);
 
         uint localId = FixerClient.Instance.LocalUserId;
         var serverIds = info.Players.Select(p => p.UserId).ToList();
