@@ -18,6 +18,18 @@ namespace Assets.InputSystem
 
         private InputActionRebindingExtensions.RebindingOperation currentRebind;
 
+        private bool inputLock = false;
+
+        public void ApplyGameInputLock(bool flag)
+        {
+            if (InputSet == null) return;
+
+            inputLock = flag;
+
+            if (inputLock) InputSet.Player.Disable();
+            else InputSet.Player.Enable();
+        }
+
         private void Start()
         {
             if (player == null)
@@ -190,7 +202,7 @@ namespace Assets.InputSystem
                 .WithCancelingThrough("<Keyboard>/escape")
                 .OnComplete(op =>
                 {
-                    action.Enable();
+                    if (!inputLock) action.Enable();
                     op.Dispose();
                     currentRebind = null;
 
@@ -201,7 +213,7 @@ namespace Assets.InputSystem
                 })
                 .OnCancel(op =>
                 {
-                    action.Enable();
+                    if (!inputLock) action.Enable();
                     op.Dispose();
                     currentRebind = null;
 

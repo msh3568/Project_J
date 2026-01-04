@@ -14,12 +14,9 @@ public class NetPlayerObjectManager : MonoBehaviour
 
     private readonly Dictionary<uint, NetPlayer> _players = new();
 
-    private float _lastSnapshotAtUnscaled;
-
     private void OnEnable()
     {
         Bind();
-        _lastSnapshotAtUnscaled = Time.unscaledTime;
 
         var mgr = NetPlayerManager.Instance;
         if (mgr != null && mgr.TryGetLastRoomInfo(out var info))
@@ -98,12 +95,12 @@ public class NetPlayerObjectManager : MonoBehaviour
                 player.Init(p.UserId, Vector2.zero);
                 _players[p.UserId] = player;
 
-                // ✅ 가장자리 닉네임 UI 등록
+                // 가장자리 닉네임 UI 등록
                 if (edgeIndicator != null)
                     edgeIndicator.Register(p.UserId, player.transform, p.UserName);
             }
 
-            // ✅ 이름 갱신
+            // 이름 갱신
             player.UpdatePlayerName(p.UserName);
             if (edgeIndicator != null)
                 edgeIndicator.UpdateNickname(p.UserId, p.UserName);
@@ -114,10 +111,6 @@ public class NetPlayerObjectManager : MonoBehaviour
     private void OnUpdatePlayerState(Dictionary<uint, NetPlayerData> players)
     {
         if (players == null) return;
-
-        float now = Time.unscaledTime;
-        float interval = Mathf.Clamp(now - _lastSnapshotAtUnscaled, 0.02f, 0.25f);
-        _lastSnapshotAtUnscaled = now;
 
         foreach (var kv in players)
         {
@@ -130,14 +123,13 @@ public class NetPlayerObjectManager : MonoBehaviour
 
             if (_players.TryGetValue(userId, out var player) && player != null)
             {
-                player.ApplyNetworkState(data.state, interval);
+                player.ApplyNetworkState(data.state);
             }
         }
     }
 
     private void RemovePlayer(uint userId)
     {
-        // ✅ UI 해제
         if (edgeIndicator != null)
             edgeIndicator.Unregister(userId);
 

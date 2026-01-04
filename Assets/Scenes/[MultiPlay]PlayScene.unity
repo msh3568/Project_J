@@ -6566,6 +6566,8 @@ MonoBehaviour:
   scrollRect: {fileID: 187596444}
   content: {fileID: 1500761656}
   chatLinePrefab: {fileID: 6057723903101462988, guid: 509d338d0f521044fb056ce8f7f6b5a5, type: 3}
+  inputBinding: {fileID: 1621857253}
+  gameManager: {fileID: 1621857250}
   chatInputField: {fileID: 86323562}
   chatInputRoot: {fileID: 729197605}
   enableChat: 0
@@ -8811,7 +8813,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FixerClient
   serverIp: 127.0.0.1
   serverPort: 31452
-  playerStateSendHz: 20
+  playerStateSendHz: 30
 --- !u!224 &467700653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -120651,6 +120653,7 @@ MonoBehaviour:
   checkpointSoundVolume: 0.49
   respawnCountText: {fileID: 1146349603}
   respawnPointsText: {fileID: 1707525827}
+  inputLock: 0
 --- !u!4 &1621857251
 Transform:
   m_ObjectHideFlags: 0
@@ -130621,6 +130624,7 @@ MonoBehaviour:
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
   groundCheckPositionOffset: {x: 0, y: 0}
+  blockInput: 0
   attackVelocity:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Assets.InputSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,6 +11,10 @@ public class MultiPlayUI : MonoBehaviour
     public Transform content;
     public GameObject chatLinePrefab;
 
+    //채팅중 LockInput을 위한 참조 클래스
+    [SerializeField] private InputBinding inputBinding; // R키를 제외한 나머지 조작 Lock
+    [SerializeField] private GameManager gameManager; // R키 조작 Lock
+
     [Header("Input (Optional)")]
     public TMP_InputField chatInputField;
     [SerializeField] private GameObject chatInputRoot;
@@ -19,8 +24,16 @@ public class MultiPlayUI : MonoBehaviour
 
     private bool _hookedClientEvents;
 
-    public void EnableChat(bool enable) => enableChat = enable;
+    public void EnableChat(bool enable)
+    {
+        enableChat = enable;
+    }
 
+    private void Start()
+    {
+        SetChatMode(false);
+        gameManager.inputLock = false;
+    }
 
     private void Update()
     {
@@ -114,6 +127,7 @@ public class MultiPlayUI : MonoBehaviour
     void SetChatMode(bool chatting)
     {
         isChatInputMode = chatting;
+
         if (chatInputRoot != null) chatInputRoot.SetActive(chatting);
 
         if (chatting)
@@ -124,10 +138,15 @@ public class MultiPlayUI : MonoBehaviour
             EventSystem.current?.SetSelectedGameObject(chatInputField.gameObject);
             chatInputField.ActivateInputField();
             chatInputField.MoveTextEnd(false);
+
+            inputBinding.ApplyGameInputLock(true);
+            gameManager.inputLock = true;
         }
         else
         {
             EventSystem.current?.SetSelectedGameObject(null);
+            inputBinding.ApplyGameInputLock(false);
+            gameManager.inputLock = false;
         }
     }
 

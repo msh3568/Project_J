@@ -21,8 +21,6 @@ public class NetPlayerManager : MonoBehaviour
 
     private Dictionary<uint, NetPlayerData> players = new();
 
-    private float _lastSnapshotAtUnscaled; // 보간 duration
-
     private NoticeRoomInfo _lastRoomInfo;
 
     private void Awake()
@@ -35,8 +33,6 @@ public class NetPlayerManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        _lastSnapshotAtUnscaled = Time.unscaledTime;
     }
 
     public void Initiate()
@@ -119,10 +115,6 @@ public class NetPlayerManager : MonoBehaviour
                 Debug.Log("NetPlayerManager 예외 : 상태 스냅샷에서 받아온 것과 방 접속 유저 리스트가 일치하지 않음");
             }
         }
-
-        float now = Time.unscaledTime;
-        float interval = Mathf.Clamp(now - _lastSnapshotAtUnscaled, 0.02f, 0.25f);
-        _lastSnapshotAtUnscaled = now;
 
         OnUpdatePlayerState?.Invoke(players);
     }

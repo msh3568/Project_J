@@ -22,10 +22,11 @@ public class FixerClient : MonoBehaviour
 
     [Header("Server Config")]
     public string serverIp = "127.0.0.1";
+    //public string serverIp = "3.107.112.58";
     public int serverPort = 31452;
 
     [Header("Player State Send")]
-    [SerializeField] private float playerStateSendHz = 20f;
+    [SerializeField] private float playerStateSendHz = 30f;
 
     [Header("Network")]
     private TcpClient _client;
@@ -220,6 +221,7 @@ public class FixerClient : MonoBehaviour
             await _client.ConnectAsync(serverIp, serverPort);
 
             // 연결 성공
+            _client.NoDelay = true;
             _stream = _client.GetStream();
             _cts = new CancellationTokenSource();
 

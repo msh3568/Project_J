@@ -1,4 +1,4 @@
-using NUnit.Framework.Constraints;
+ï»¿using NUnit.Framework.Constraints;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
@@ -21,6 +21,9 @@ public class Player : Entity
     public Player_BaldoState baldoState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
     #endregion
+
+    [Header("Input Blocking")]
+    public bool blockInput = false; // ë©€í‹°í”Œë ˆì´ì—ì„œ ì±„íŒ… ì…ë ¥ ì¤‘ì¼ ë•Œ ë‹¤ë¥¸ ì¡°ì‘ blocking
 
     [Header("AttackDetails")]
     public Vector2[] attackVelocity;
@@ -227,9 +230,9 @@ public class Player : Entity
 
         {
 
-            if (isImmobilized)
+            if (isImmobilized || isImmobilized)
 
-                return;
+            return;
 
     
 
@@ -421,7 +424,16 @@ public class Player : Entity
 
             input.Enable();
 
-            input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+            input.Player.Movement.performed += ctx =>
+            {
+                if (blockInput) // blockInputìœ¼ë¡œ ì…ë ¥ ì°¨ë‹¨ í•˜ë„ë¡ ë¦¬ìŠ¤ë„ˆ ìˆ˜ì •
+                {
+                    moveInput = Vector2.zero;
+                    return;
+                }
+
+                moveInput = ctx.ReadValue<Vector2>();
+            };
 
             input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
 
@@ -568,24 +580,24 @@ public class Player : Entity
 
         if (Mathf.Abs(inputX) > 0.01f)
         {
-            // ÀÔ·ÂÀÌ ÀÖÀ» ¶§
+            // ì…ë ¥ì´ ìˆì„ ë•Œ
             bool changingDirection = Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed)
                                      && Mathf.Abs(currentSpeed) > 0.1f;
 
             if (isGrounded)
             {
-                // Áö»ó: ¹æÇâ ÀüÈ¯ ½Ã ´õ °­ÇÑ ºê·¹ÀÌÅ©
+                // ì§€ìƒ: ë°©í–¥ ì „í™˜ ì‹œ ë” ê°•í•œ ë¸Œë ˆì´í¬
                 accel = changingDirection ? groundDecel : groundAccel;
             }
             else
             {
-                // °øÁß: ¹æÇâ ÀüÈ¯µµ ÈûÀÌ ¾àÇÔ
+                // ê³µì¤‘: ë°©í–¥ ì „í™˜ë„ í˜ì´ ì•½í•¨
                 accel = changingDirection ? airDecel : airAccel;
             }
         }
         else
         {
-            // ÀÔ·ÂÀÌ ¾øÀ» ¶§: 0À¸·Î °¨¼Ó
+            // ì…ë ¥ì´ ì—†ì„ ë•Œ: 0ìœ¼ë¡œ ê°ì†
             if (isGrounded)
                 accel = groundDecel;
             else
@@ -594,7 +606,7 @@ public class Player : Entity
             targetSpeed = 0f;
         }
 
-        // ÀÏÁ¤ ¼Óµµ¸¸Å­¾¿ targetSpeed ¿¡ °¡±î¿öÁö°Ô ÇÔ (°¡¼Ó/°¨¼Ó)
+        // ì¼ì • ì†ë„ë§Œí¼ì”© targetSpeed ì— ê°€ê¹Œì›Œì§€ê²Œ í•¨ (ê°€ì†/ê°ì†)
         float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accel * Time.deltaTime);
 
         SetVelocity(newSpeed, rb.linearVelocity.y);

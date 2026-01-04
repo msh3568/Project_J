@@ -6730,9 +6730,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fa29e565f9900a4f84e89c8590cd77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleManager
-  pressEnterText: {fileID: 0}
-  sceneToLoad: GameSceneRespawn
-  delayBeforePressEnter: 3
 --- !u!4 &1669807994
 Transform:
   m_ObjectHideFlags: 0
@@ -7483,9 +7480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fa29e565f9900a4f84e89c8590cd77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleManager
-  pressEnterText: {fileID: 0}
-  sceneToLoad: GameSceneRespawn
-  delayBeforePressEnter: 3
 --- !u!4 &1830184839
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
@@ -192,6 +192,8 @@ public class GameManager : MonoBehaviour
         UpdateRespawnUI();
     }
 
+    public bool inputLock = false; // 채팅 충 R키 방지를 위한 플래그 변수
+
     public void RespawnPlayerAtLastCheckpoint(bool isVoidFall = false)
     {
         if (player == null) // Try to find player again if it was null
@@ -199,58 +201,62 @@ public class GameManager : MonoBehaviour
             player = GameObject.FindWithTag("Player");
         }
 
-        if (AnalyticsManager.Instance != null && player != null)
+        if (inputLock) return;
         {
-            AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
-        }
 
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        if (currentSceneName == "GameSceneHardMode" || currentSceneName == "GameSceneRespawn")
-        {
-            if (respawnCount >= (maxRespawns + extraRespawns))
+            if (AnalyticsManager.Instance != null && player != null)
             {
-                Debug.Log("더 이상 부활할 수 없습니다.");
+                AnalyticsManager.Instance.LogRKeyPress(player.transform.position);
+            }
 
-                if (isVoidFall)
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            if (currentSceneName == "GameSceneHardMode" || currentSceneName == "GameSceneRespawn")
+            {
+                if (respawnCount >= (maxRespawns + extraRespawns))
                 {
-                    if (hasFirstCheckpoint && player != null)
+                    Debug.Log("더 이상 부활할 수 없습니다.");
+
+                    if (isVoidFall)
                     {
-                        player.transform.position = firstCheckpointPosition;
-                        
-                        // Reset player's velocity to prevent re-triggering the death plane
-                        var playerRigidbody = player.GetComponent<Rigidbody2D>();
-                        if (playerRigidbody != null)
+                        if (hasFirstCheckpoint && player != null)
                         {
-                            playerRigidbody.linearVelocity = Vector2.zero;
+                            player.transform.position = firstCheckpointPosition;
+
+                            // Reset player's velocity to prevent re-triggering the death plane
+                            var playerRigidbody = player.GetComponent<Rigidbody2D>();
+                            if (playerRigidbody != null)
+                            {
+                                playerRigidbody.linearVelocity = Vector2.zero;
+                            }
                         }
                     }
+                    return; // 리스폰 로직 중단
                 }
-                return; // 리스폰 로직 중단
+                respawnCount++;
+                Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns + extraRespawns}");
+                UpdateRespawnUI();
             }
-            respawnCount++;
-            Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns + extraRespawns}");
-            UpdateRespawnUI();
-        }
 
 
-        if (activeCheckpointPosition.HasValue)
-        {
-            // Respawn at checkpoint
-            if (player != null)
+            if (activeCheckpointPosition.HasValue)
             {
-                player.transform.position = activeCheckpointPosition.Value;
+                // Respawn at checkpoint
+                if (player != null)
+                {
+                    player.transform.position = activeCheckpointPosition.Value;
+                }
             }
-        }
-        else
-        {
-            // Reset scene
-            if (timeManager != null)
+            else
             {
-                timeManager.ResetTimer();
+                // Reset scene
+                if (timeManager != null)
+                {
+                    timeManager.ResetTimer();
+                }
+                activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
+                respawnCount = 0;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
-            activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
-            respawnCount = 0;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

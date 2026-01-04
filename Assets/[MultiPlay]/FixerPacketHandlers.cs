@@ -115,7 +115,7 @@ public sealed class FixerPacketHandlers
     private void OnNoticePlayerState(byte[] body)
     {
         var msg = NoticePlayerState.Parser.ParseFrom(body);
-
+        Debug.Log("Packet Received : OnNoticePlayerState");
         // 변환/복사 없이 Protobuf 타입 그대로 전달.
         // 로컬 유저 필터링/적용 여부는 NetPlayerManager에서 처리.
         _client.RaisePlayerStates(msg.Players);

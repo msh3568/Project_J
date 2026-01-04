@@ -325,8 +325,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2143691106010392253}
-  - component: {fileID: 8376766396105719336}
-  - component: {fileID: 1401082990111205996}
   - component: {fileID: 1177862271601416547}
   - component: {fileID: 8613626245292148285}
   m_Layer: 0
@@ -355,70 +353,6 @@ Transform:
   - {fileID: 5037457066254557147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &8376766396105719336
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5959720316763062562}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 3.5
-  m_Material: {fileID: 6200000, guid: 917c073611655ed489106865590dff90, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!70 &1401082990111205996
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5959720316763062562}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 1
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.285}
-  m_Size: {x: 0.77, y: 2.09}
-  m_Direction: 0
 --- !u!212 &1177862271601416547
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -489,7 +423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51360988699fbcc4985b3e0cbf6fa953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetPlayer
-  defaultInterpDuration: 0.06
   _anim: {fileID: 2061169556774081753}
   playerNameTMP: {fileID: 2231036948793356845}
 --- !u!1 &6827254891053475055

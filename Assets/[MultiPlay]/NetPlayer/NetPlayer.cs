@@ -6,13 +6,12 @@ public class NetPlayer : MonoBehaviour
 {
     public uint UserId { get; private set; }
 
-    public float defaultInterpDuration = 0.06f;
+    // NetPlayer Move
+    float smoothTime = 0.08f; // 0.05 ~ 0.12 적정
+    Vector2 smoothVelocity;
+    Vector2 targetPos;
 
-    private Vector2 _from;
-    private Vector2 _to;
-    private float _elapsed;
-    private float _duration;
-
+    // NetPlayer Animation
     public Animator _anim;
 
     // 플레이어 이름 띄우기
@@ -35,12 +34,11 @@ public class NetPlayer : MonoBehaviour
     public void Init(uint userId, Vector2 startPos)
     {
         UserId = userId;
+        
         transform.position = startPos;
 
-        _from = startPos;
-        _to = startPos;
-        _elapsed = 0f;
-        _duration = 0f;
+        targetPos = startPos;
+        smoothVelocity = Vector2.zero;
     }
 
     public void UpdatePlayerName(string userName)
@@ -50,44 +48,42 @@ public class NetPlayer : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (playerNameTMP == null) return;
-
-        var t = playerNameTMP.transform;
-
-        // 1) 머리 위 위치
-        t.position = transform.position + new Vector3(0f, 1.6f, 0f);
-
-        // 2) 카메라 빌보드(회전)
-        var cam = Camera.main;
-        if (cam != null)
-            t.rotation = Quaternion.LookRotation(cam.transform.forward, cam.transform.up);
-
-        // 3) 부모(NetPlayer)의 flip(-scale) 상쇄
-        // 부모가 x<0이면, 자식 로컬 x를 음수로 만들어 lossyScale.x를 양수로 맞춘다.
-        float parentSign = transform.lossyScale.x < 0f ? -1f : 1f;
-
-        var s = t.localScale;
-        s.x = Mathf.Abs(s.x) * parentSign;  // parent -1이면 local도 -로 -> 최종(월드) +가 됨
-        t.localScale = s;
+        ShowNickName();
     }
 
-
-    /// <summary>
-    /// 서버에서 받은 CharacterState를 적용 (위치 + 방향 + 애니메이션)
-    /// </summary>
-    public void ApplyNetworkState(CharacterState state, float snapshotDuration)
+    // NetPlayer 머리 위 이름 표시
+    public void ShowNickName()
     {
-        ApplyPosition(new Vector2(state.PosX, state.PosY), snapshotDuration);
+        if (playerNameTMP != null)
+        {
+            var t = playerNameTMP.transform;
+            t.position = transform.position + new Vector3(0f, 1.6f, 0f);
+
+            var cam = Camera.main;
+            if (cam != null)
+                t.rotation = Quaternion.LookRotation(cam.transform.forward, cam.transform.up);
+
+            float parentSign = transform.lossyScale.x < 0f ? -1f : 1f;
+
+            var s = t.localScale;
+            s.x = Mathf.Abs(s.x) * parentSign;
+            t.localScale = s;
+        }
+    }
+
+    // 서버에서 받은 CharacterState를 적용 (위치 + 방향 + 애니메이션)
+    public void ApplyNetworkState(CharacterState state)
+    {
+        Vector2 newPos = new Vector2(state.PosX, state.PosY);
+        ApplyPosition(newPos);
         ApplyFacing((sbyte)state.FacingDir);
         ApplyAnimation((byte)state.ActionState);
     }
 
-    private void ApplyPosition(Vector2 target, float duration)
+    // 최근에 들어온 상태 패킷의 pos를 저장. (지터 방지를 위해 바로 반영 X) 
+    private void ApplyPosition(Vector2 newPos)
     {
-        _from = transform.position;
-        _to = target;
-        _elapsed = 0f;
-        _duration = Mathf.Max(duration, 0.0001f);
+        targetPos = newPos;
     }
 
     private void ApplyFacing(sbyte facingDir)
@@ -158,12 +154,12 @@ public class NetPlayer : MonoBehaviour
 
     private void Update()
     {
-        if (_duration <= 0f)
-            return;
+        UpdateInterpolation();
+    }
 
-        _elapsed += Time.deltaTime;
-        float t = Mathf.Clamp01(_elapsed / _duration);
-
-        transform.position = Vector2.Lerp(_from, _to, t);
+    private void UpdateInterpolation()
+    {
+        Vector2 next = Vector2.SmoothDamp(transform.position, targetPos, ref smoothVelocity, smoothTime, Mathf.Infinity, Time.deltaTime);
+        transform.position = next;
     }
 }
