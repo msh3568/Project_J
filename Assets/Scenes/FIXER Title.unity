@@ -8120,7 +8120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d1fabf6c8f340b43a3040c0b52f1560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FixerClient
-  serverIp: 127.0.0.1
+  serverIp: 3.107.112.58
   serverPort: 31452
   playerStateSendHz: 30
 --- !u!224 &2052588678
