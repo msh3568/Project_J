@@ -20,6 +20,12 @@ public class Player_IdleState : Player_GroundedState
     {
         base.Update();
 
+        if (input.Player.CounterAttack.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.counterAttackState);
+            return;
+        }
+
         if (player.moveInput.x != 0)
             stateMachine.ChangeState(player.moveState);
 

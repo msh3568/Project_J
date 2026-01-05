@@ -32,6 +32,41 @@ public class GameManager : MonoBehaviour
     private TimeManager timeManager;
     private AudioSource audioSource; // New: AudioSource for GameManager sounds (effects)
 
+    private Coroutine slowMoCoroutine;
+
+    public void RequestSlowMotion(float scale, float duration)
+    {
+        if (slowMoCoroutine != null)
+        {
+            StopCoroutine(slowMoCoroutine);
+        }
+        slowMoCoroutine = StartCoroutine(SlowMotionCoroutine(scale, duration));
+    }
+
+    private IEnumerator SlowMotionCoroutine(float scale, float duration)
+    {
+        Time.timeScale = scale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f; // Adjust fixedDeltaTime accordingly
+
+        yield return new WaitForSecondsRealtime(duration);
+
+        Time.timeScale = 1.0f;
+        Time.fixedDeltaTime = 0.02f; // Reset to default
+        slowMoCoroutine = null;
+    }
+
+    public void EndSlowMotion()
+    {
+        if (slowMoCoroutine != null)
+        {
+            StopCoroutine(slowMoCoroutine);
+            slowMoCoroutine = null;
+        }
+        Time.timeScale = 1.0f;
+        Time.fixedDeltaTime = 0.02f;
+    }
+
+
     void Awake()
     {
         if (Instance != null && Instance != this)
