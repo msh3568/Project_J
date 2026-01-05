@@ -10,6 +10,12 @@ public class Player_AiredState : PlayerState
     {
         base.Update();
 
+        if (input.Player.CounterAttack.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.counterAttackState);
+            return;
+        }
+
         bool jumpDash = player.airDashWithJumpKey && input.Player.Jump.WasPressedThisFrame();
         bool dashDash = player.airDashWithDashKey && input.Player.Dash.WasPressedThisFrame();
 
@@ -23,6 +29,7 @@ public class Player_AiredState : PlayerState
         }
 
         if (player.moveInput.x != 0)
-            player.SetVelocity(player.moveInput.x * (player.moveSpeed * player.inAirMoveMultiPlier), rb.linearVelocity.y);
+            //player.SetVelocity(player.moveInput.x * (player.moveSpeed * player.inAirMoveMultiPlier), rb.linearVelocity.y);
+            player.HorizontalMovement(isGrounded: false);
     }
 }

@@ -18,6 +18,12 @@ public class Enemy_StunnedState : EnemyState
 
         stateTimer = enemy.stunnedDuration;
         rb.linearVelocity = new Vector2(enemy.stunnedVelocity.x * -enemy.facingDir, enemy.stunnedVelocity.y);
+
+        // Play stun sound
+        if (enemy.audioSource != null && enemy.stunSound != null)
+        {
+            enemy.audioSource.PlayOneShot(enemy.stunSound, enemy.stunSoundVolume);
+        }
     }
 
     public override void Update()

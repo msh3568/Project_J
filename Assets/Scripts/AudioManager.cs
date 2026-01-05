@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -7,17 +8,17 @@ public class AudioManager : MonoBehaviour
 
     [Header("Audio Mixer")]
     [SerializeField] public AudioMixer audioMixer;
-    [SerializeField] private AudioMixerGroup bgmMixerGroup; // BGM 믹서 그룹을 여기에 할당
+    [SerializeField] private AudioMixerGroup bgmMixerGroup;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup; // For centralized SFX playback
 
-    // Mixer에 노출된 매개변수 이름 (띄어쓰기 포함)
     private const string BGM_MIXER_PARAM = "BGM Volume";
     private const string SFX_MIXER_PARAM = "SFX Volume";
-
-    // PlayerPrefs에 저장될 키 이름 (띄어쓰기 없음)
     private const string BGM_PREFS_KEY = "BGMVolume";
     private const string SFX_PREFS_KEY = "SFXVolume";
 
     private AudioSource bgmSource;
+    private AudioSource sfxSource; // Dedicated source for SFX
+    private string[] scenesWithoutBGM = { "FixerEndding" }; // BGM to not play in these scenes
 
     void Awake()
     {
@@ -27,67 +28,125 @@ public class AudioManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        if (transform.parent != null)
+        {
+            transform.SetParent(null);
+        }
         DontDestroyOnLoad(gameObject);
+
+        // Setup SFX Source
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        if (sfxMixerGroup != null)
+        {
+            sfxSource.outputAudioMixerGroup = sfxMixerGroup;
+        }
+        else
+        {
+            var sfxGroups = audioMixer.FindMatchingGroups("SFX");
+            if (sfxGroups.Length > 0)
+            {
+                sfxSource.outputAudioMixerGroup = sfxGroups[0];
+            }
+            else
+            {
+                Debug.LogWarning("AudioManager: SFX mixer group not found or assigned. SFX will play without a mixer group.");
+            }
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
     {
-        // BGM AudioSource 찾기 및 믹서 그룹 할당
-        FindAndAssignBgmSource();
-
-        // 저장된 볼륨 값 불러오기
         float bgmVolume = PlayerPrefs.GetFloat(BGM_PREFS_KEY, 0.75f);
         float sfxVolume = PlayerPrefs.GetFloat(SFX_PREFS_KEY, 0.75f);
-
-        // 믹서 볼륨 초기 설정
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
+        
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
-    void FindAndAssignBgmSource()
+    void OnDestroy()
     {
-        // 1. "soundmanager" 이름으로 찾아보기
-        GameObject soundManagerObj = GameObject.Find("soundmanager");
-        if (soundManagerObj != null)
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        bool playBGM = true;
+        foreach (var sceneName in scenesWithoutBGM)
         {
-            bgmSource = soundManagerObj.GetComponent<AudioSource>();
-            if (bgmSource != null)
+            if (scene.name == sceneName)
             {
-                bgmSource.outputAudioMixerGroup = bgmMixerGroup;
-                Debug.Log("BGM source found on 'soundmanager' and assigned to mixer group.");
-                return;
+                playBGM = false;
+                break;
             }
         }
 
-        // 2. "GameManager" 이름으로 찾아보기
-        GameObject gameManagerObj = GameObject.Find("GameManager");
-        if (gameManagerObj != null)
+        if (playBGM)
         {
-            bgmSource = gameManagerObj.GetComponent<AudioSource>();
-            if (bgmSource != null)
+            if (bgmSource == null || !bgmSource.isPlaying)
             {
-                bgmSource.outputAudioMixerGroup = bgmMixerGroup;
-                Debug.Log("BGM source found on 'GameManager' and assigned to mixer group.");
-                return;
+                FindAndPlayBgmSource();
             }
+        }
+        else
+        {
+            StopBGM();
+        }
+    }
+
+    void FindAndPlayBgmSource()
+    {
+        if (bgmSource != null && bgmSource.isPlaying) return;
+
+        GameObject soundManagerObj = GameObject.Find("soundmanager");
+        if (soundManagerObj != null) bgmSource = soundManagerObj.GetComponent<AudioSource>();
+
+        if (bgmSource == null)
+        {
+            GameObject gameManagerObj = GameObject.Find("GameManager");
+            if (gameManagerObj != null) bgmSource = gameManagerObj.GetComponent<AudioSource>();
         }
         
-        // 3. 씬에서 재생중인 AudioSource를 찾기 (최후의 수단)
-        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
-        foreach (AudioSource source in allAudioSources)
+        if (bgmSource == null)
         {
-            if (source.isPlaying && source.loop)
+            AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+            foreach (AudioSource source in allAudioSources)
             {
-                bgmSource = source;
-                bgmSource.outputAudioMixerGroup = bgmMixerGroup;
-                Debug.Log($"Looping BGM source found on '{source.gameObject.name}' and assigned to mixer group.");
-                return;
+                if (source.isPlaying && source.loop)
+                {
+                    bgmSource = source;
+                    break;
+                }
             }
         }
 
-        Debug.LogWarning("Could not find BGM AudioSource.");
+        if (bgmSource != null)
+        {
+            bgmSource.outputAudioMixerGroup = bgmMixerGroup;
+            if (!bgmSource.isPlaying)
+            {
+                bgmSource.Play();
+            }
+            Debug.Log($"BGM source is now '{bgmSource.gameObject.name}'. Playing: {bgmSource.isPlaying}");
+        }
+        else
+        {
+            Debug.LogWarning("Could not find BGM AudioSource to play.");
+        }
     }
 
+    public void StopBGM()
+    {
+        if (bgmSource != null && bgmSource.isPlaying)
+        {
+            bgmSource.Stop();
+            Debug.Log($"BGM stopped on '{bgmSource.gameObject.name}'.");
+        }
+    }
 
     public void SetBGMVolume(float volume)
     {
@@ -99,5 +158,18 @@ public class AudioManager : MonoBehaviour
     {
         audioMixer.SetFloat(SFX_MIXER_PARAM, volume > 0.001f ? Mathf.Log10(volume) * 20 : -80f);
         PlayerPrefs.SetFloat(SFX_PREFS_KEY, volume);
+    }
+
+    /// <summary>
+    /// Plays a sound effect one time.
+    /// </summary>
+    /// <param name="clip">The audio clip to play.</param>
+    /// <param name="volume">The volume to play the clip at (0.0 to 1.0).</param>
+    public void PlaySFX(AudioClip clip, float volume = 1.0f)
+    {
+        if (clip != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip, volume);
+        }
     }
 }

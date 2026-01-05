@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(AudioSource))] // Add AudioSource requirement
 public class Enemy : Entity
 {
     public static event Action OnEnemyDeath;
@@ -28,6 +29,12 @@ public class Enemy : Entity
     [SerializeField] protected bool canBestunned;
     [SerializeField] private GameObject mediumFireTracePrefab;
     
+    [Header("Sound Effects")] // New: Stun sound fields
+    public AudioClip stunSound;
+    [Range(0f, 4f)]
+    public float stunSoundVolume = 1f;
+
+    public AudioSource audioSource { get; private set; } // Make audioSource public getter for states
 
     [Header("Movement Details")]
     public float idleTime = 2;
@@ -109,6 +116,8 @@ public class Enemy : Entity
     protected override void Awake()
     {
         base.Awake();
+
+        audioSource = GetComponent<AudioSource>(); // Initialize AudioSource
 
         idleState = new Enemy_IdleState(this, stateMachine, "Idle");
         moveState = new Enemy_MoveState(this, stateMachine, "Move");

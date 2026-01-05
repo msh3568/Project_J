@@ -1,4 +1,3 @@
-
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
@@ -8,12 +7,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Firebase Realtime Database를 사용하여 랭킹을 관리하고 UI에 표시하는 클래스.
-/// 데이터 구조: scores -> (Push ID) -> { name: "...", time: ... }
-/// </summary>
 public class RankingManager : MonoBehaviour
 {
+    public static RankingManager Instance { get; private set; }
+
     [Header("UI Elements")]
     public GameObject rankingPanel;
     public Button showRankingButton;
@@ -22,10 +19,20 @@ public class RankingManager : MonoBehaviour
 
     private DatabaseReference databaseReference;
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitializeFirebase();
+    }
+
     void Start()
     {
-        InitializeFirebase();
-
+        // UI 버튼들은 Start에서 계속 처리 (씬이 로드될 때마다 다시 찾아야 할 수 있으므로)
         if (showRankingButton != null)
             showRankingButton.onClick.AddListener(ShowRanking);
         
@@ -145,8 +152,21 @@ public class RankingManager : MonoBehaviour
         scoreData["time"] = clearTime;
 
         // "scores" 경로 아래에 랜덤 키를 생성하며 데이터 저장
-        databaseReference.Child("scores").Push().SetValueAsync(scoreData);
-        
-        Debug.Log($"{playerName}의 기록({clearTime}초)이 추가되었습니다.");
+        databaseReference.Child("scores").Push().SetValueAsync(scoreData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                Debug.Log($"{playerName}의 기록({clearTime}초)이 성공적으로 추가되었습니다.");
+                LoadTopScores(); // 점수 추가 후 랭킹 새로고침
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError($"기록 추가 실패: {task.Exception}");
+            }
+            else if (task.IsCanceled)
+            {
+                Debug.LogWarning($"기록 추가 취소됨.");
+            }
+        });
     }
 }
