@@ -10,6 +10,13 @@ public class Player_GroundedState : PlayerState
     {
         base.Enter();
         player.hasAirDashed = false;
+
+        // Reset wall jump counter only if we land on a flat floor and are not against a wall.
+        if (!player.wallDetected && player.groundDetected && player.groundHit.normal.y > 0.7f)
+        {
+            Debug.Log($"[RESET SUCCESS] Conditions met. Resetting wall jumps at frame {Time.frameCount}.");
+            player.ResetConsecutiveWallJumps();
+        }
     }
 
     public override void Update()

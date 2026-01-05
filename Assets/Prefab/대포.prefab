@@ -139,3 +139,6 @@ MonoBehaviour:
   firePoint: {fileID: 5448978798787682240}
   fireRate: 3
   fireForce: 5
+  fragmentPrefab: {fileID: 9157686852220618747, guid: 709107ae80bfe1c46a4fc2e66104d378, type: 3}
+  explosionFragmentCount: 15
+  explosionFragmentForce: 80

@@ -17,7 +17,7 @@ public class Entity : MonoBehaviour
 
     private bool facingRight = true;
     public int facingDir { get; private set; } = 1;
-
+    public bool canFlip = true; // New: Control flipping
 
     [Header("Collision detection")]
     [SerializeField] protected LayerMask whatIsGround;
@@ -27,7 +27,8 @@ public class Entity : MonoBehaviour
     [SerializeField] protected float wallCheckDistance;
     [SerializeField] private Vector2 groundCheckPositionOffset;
 
-    public bool groundDetected { get; private set; }
+    public RaycastHit2D groundHit { get; private set; }
+    public bool groundDetected => groundHit.collider != null;
     public bool wallDetected { get; protected set; }
 
     private bool isKnocked;
@@ -97,6 +98,8 @@ public class Entity : MonoBehaviour
 
     public void HandleFlip(float xVelocity)
     {
+        if (!canFlip) return; // New: Check canFlip
+
         if (Time.time - lastFlipTime < flipCooldown)
             return;
 
@@ -154,7 +157,7 @@ public class Entity : MonoBehaviour
     protected virtual void HandleCollisionDetection()
     {
         Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
-        groundDetected = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
+        groundHit = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
         wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsWall);
     }
 
