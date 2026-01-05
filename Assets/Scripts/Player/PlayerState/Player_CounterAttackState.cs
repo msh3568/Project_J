@@ -21,7 +21,7 @@ public class Player_CounterAttackState : PlayerState
         player.SetVelocity(0, 0); // Stay still while attempting to parry
 
         // DEBUG: Log the timer to see if it's counting down
-        Debug.Log("Counter Attack State Timer: " + stateTimer);
+        // Debug.Log("Counter Attack State Timer: " + stateTimer);
 
         // Continuously check if we can parry something within the window
         if (combat.CounterAttackPerformed())

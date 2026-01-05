@@ -11,6 +11,7 @@ public class ActivatingBridge : MonoBehaviour
     [Header("Player Interaction")]
     [SerializeField] private float immobilizationDuration = 1f;
     [SerializeField] private float knockbackForce = 5f;
+    [SerializeField] private float damage = 1f;
 
     [Header("Visuals")]
     [SerializeField] private Color activeColor = Color.red;
@@ -88,6 +89,12 @@ public class ActivatingBridge : MonoBehaviour
 
             if (player != null && !player.isImmobilized && !knockedBackPlayers.Contains(player))
             {
+                Player_Health playerHealth = player.GetComponent<Player_Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damage, transform);
+                }
+
                 if (AnalyticsManager.Instance != null)
                 {
                     AnalyticsManager.Instance.LogTrapEvent("ActivatingBridge", player.transform.position);

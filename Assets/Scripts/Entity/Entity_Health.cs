@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class Entity_Health : MonoBehaviour, IDamagable
 {
-    private Entity_VFX entityVfx;
-    private Entity entity;
+    protected Entity_VFX entityVfx;
+    protected Entity entity;
 
     public event System.Action<float, float> onHealthChanged;
 
@@ -73,13 +73,18 @@ public class Entity_Health : MonoBehaviour, IDamagable
        
     }
 
+    protected void InvokeOnHealthChanged(float current, float max)
+    {
+        onHealthChanged?.Invoke(current, max);
+    }
+
     protected virtual void Die()
     {
         isDead = true;
         entity.onEntityDeath();
     }
 
-    private Vector2 CalculateKnockback(float damage, Transform damagedealer)
+    protected virtual Vector2 CalculateKnockback(float damage, Transform damagedealer)
     {
         int direction = transform.position.x > damagedealer.position.x ? 1 : -1;
         Vector2 knockback = IsHeavyDamage(damage) ? heavyKnockbackPower : knockbackPower;
@@ -88,7 +93,7 @@ public class Entity_Health : MonoBehaviour, IDamagable
 
         return knockback;
     }
-    private float CalculateDuration(float damage) => IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;
-    private bool IsHeavyDamage(float damage) => damage / maxHp > heavyDamageThreshold;
+    protected virtual float CalculateDuration(float damage) => IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;
+    protected virtual bool IsHeavyDamage(float damage) => damage / maxHp > heavyDamageThreshold;
     
 }

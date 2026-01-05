@@ -1,13 +1,23 @@
 
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Player_UI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI hpText;
-    [SerializeField] private Entity_Health playerHealth;
+    [SerializeField] private Player_Health playerHealth;
     [SerializeField] private TextMeshProUGUI dashCooldownText;
     [SerializeField] private TextMeshProUGUI baldoCooldownText;
+
+    [Header("Shield UI")]
+    [SerializeField] private Transform shieldContainer;
+    [SerializeField] private GameObject shieldIconPrefab;
+    [SerializeField] private Vector2 shieldOffset;
+    [SerializeField] private float shieldVisibilityDuration = 3f;
+
+    private List<Image> shieldIcons = new List<Image>();
+    private float shieldVisibilityTimer;
 
     private Player player;
     private Player_SkillManager skillManager;
@@ -19,13 +29,32 @@ public class Player_UI : MonoBehaviour
 
         if (playerHealth == null)
         {
-            playerHealth = player.GetComponent<Entity_Health>();
+            playerHealth = player.GetComponent<Player_Health>();
         }
 
         if (playerHealth != null)
         {
-            playerHealth.onHealthChanged += UpdateHpText;
-            UpdateHpText(playerHealth.currentHp, playerHealth.maxHp); // Initial update
+            playerHealth.onHealthChanged += UpdateShieldUI;
+            SetupShieldIcons((int)playerHealth.maxShield);
+            
+            // Start with shield UI hidden
+            if (shieldContainer != null)
+                shieldContainer.gameObject.SetActive(false);
+        }
+    }
+
+    private void SetupShieldIcons(int maxShields)
+    {
+        if (shieldContainer == null || shieldIconPrefab == null)
+        {
+            Debug.LogWarning("Shield UI is not setup in Player_UI. Please assign shieldContainer and shieldIconPrefab.");
+            return;
+        }
+
+        for (int i = 0; i < maxShields; i++)
+        {
+            GameObject newIcon = Instantiate(shieldIconPrefab, shieldContainer);
+            shieldIcons.Add(newIcon.GetComponent<Image>());
         }
     }
 
@@ -33,6 +62,24 @@ public class Player_UI : MonoBehaviour
     {
         UpdateDashCooldownUI();
         UpdateBaldoCooldownUI();
+
+        if (player != null && shieldContainer != null)
+        {
+            // Follow player
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(player.transform.position);
+            shieldContainer.position = screenPos + new Vector3(shieldOffset.x, shieldOffset.y, 0);
+
+            // Visibility Logic
+            if (shieldVisibilityTimer > 0)
+            {
+                shieldVisibilityTimer -= Time.deltaTime;
+            }
+
+            bool shouldBeVisible = shieldVisibilityTimer > 0 || (playerHealth != null && playerHealth.CanRegenerate);
+            
+            if(shieldContainer.gameObject.activeSelf != shouldBeVisible)
+                shieldContainer.gameObject.SetActive(shouldBeVisible);
+        }
     }
 
     private void UpdateDashCooldownUI()
@@ -71,15 +118,28 @@ public class Player_UI : MonoBehaviour
     {
         if (playerHealth != null)
         {
-            playerHealth.onHealthChanged -= UpdateHpText;
+            playerHealth.onHealthChanged -= UpdateShieldUI;
         }
     }
 
-    private void UpdateHpText(float currentHp, float maxHp)
+    private void UpdateShieldUI(float currentShield, float maxShield)
     {
-        if (hpText != null)
+        if (shieldContainer != null)
         {
-            hpText.text = "HP: " + currentHp + " / " + maxHp;
+            shieldContainer.gameObject.SetActive(true);
+            shieldVisibilityTimer = shieldVisibilityDuration;
+        }
+
+        for (int i = 0; i < shieldIcons.Count; i++)
+        {
+            if (i >= (maxShield - currentShield))
+            {
+                shieldIcons[i].enabled = true;
+            }
+            else
+            {
+                shieldIcons[i].enabled = false;
+            }
         }
     }
 }

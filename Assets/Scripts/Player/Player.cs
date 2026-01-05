@@ -220,7 +220,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+
 
             }
 
@@ -332,7 +332,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+
 
             }
 
@@ -838,7 +838,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+
 
                 return;
 
@@ -848,7 +848,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+
 
                 return;
 
@@ -858,7 +858,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+
 
                 return;
 

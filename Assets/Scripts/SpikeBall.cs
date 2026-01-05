@@ -6,6 +6,7 @@ public class SpikeBall : MonoBehaviour
     public float lifetime = 5f;
     public float immobilizationDuration = 2f;
     public float knockbackForce = 10f;
+    public float damage = 1f;
     public bool wasParried = false; // Flag to check if parried
 
     void Start()
@@ -29,6 +30,12 @@ public class SpikeBall : MonoBehaviour
 
             if (player != null)
             { 
+                Player_Health playerHealth = player.GetComponent<Player_Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damage, transform);
+                }
+
                 if (AnalyticsManager.Instance != null)
                 {
                     AnalyticsManager.Instance.LogTrapEvent("SpikeBall", player.transform.position);
