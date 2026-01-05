@@ -6,6 +6,7 @@ public class SpikeBall : MonoBehaviour
     public float lifetime = 5f;
     public float immobilizationDuration = 2f;
     public float knockbackForce = 10f;
+    public bool wasParried = false; // Flag to check if parried
 
     void Start()
     {
@@ -20,6 +21,8 @@ public class SpikeBall : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (wasParried) return; // If parried, do not execute collision logic
+
         if (other.gameObject.CompareTag("Player"))
         {
             Player player = other.gameObject.GetComponent<Player>();

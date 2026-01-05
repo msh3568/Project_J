@@ -21,6 +21,7 @@ public class Player : Entity
     public Player_BasicAttackState basicAttackState { get; private set; }
     public Player_BaldoState baldoState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
+    public Player_ParryAimState parryAimState { get; private set; }
     #endregion
 
     [Header("AttackDetails")]
@@ -196,7 +197,7 @@ public class Player : Entity
             baldoState = new Player_BaldoState(this, stateMachine, "baldo");
 
             counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
-
+            parryAimState = new Player_ParryAimState(this, stateMachine, "counterAttack");
         }
 
     
@@ -871,19 +872,59 @@ public class Player : Entity
 
     
 
-        public void PlayWalkSound()
+                public void PlayWalkSound()
 
-        {
+    
 
-            PlaySound(walkSound);
+                {
 
-        }
+    
 
+                    PlaySound(walkSound);
 
-    public void HorizontalMovement(bool isGrounded)
-    {
-        float inputX = moveInput.x;
-        float currentSpeed = rb.linearVelocity.x;
+    
+
+                }
+
+    
+
+        
+
+    
+
+            public bool WasCounterAttackPressedThisFrame() => input.Player.CounterAttack.WasPressedThisFrame();
+
+    
+
+            public bool IsCounterAttackBeingHeld() => input.Player.CounterAttack.IsPressed();
+
+    
+
+            public bool WasCounterAttackReleasedThisFrame() => input.Player.CounterAttack.WasReleasedThisFrame();
+
+    
+
+        
+
+    
+
+        
+
+    
+
+            public void HorizontalMovement(bool isGrounded)
+
+    
+
+            {
+
+    
+
+                float inputX = moveInput.x;
+
+    
+
+                float currentSpeed = rb.linearVelocity.x;
         float targetSpeed = inputX * moveSpeed;
 
         float accel;
