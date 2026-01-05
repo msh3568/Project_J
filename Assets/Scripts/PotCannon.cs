@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PotCannon : MonoBehaviour, IDamagable
+public class PotCannon : MonoBehaviour, IDamageable
 {
     [Header("Cannon Settings")]
     public GameObject spikeBallPrefab;

@@ -13,26 +13,49 @@ public class Player_Combat : Entity_Combat
     {
         bool hasPerformedCounter = false;
         
-        // --- 1. Check for Parriable Projectiles (New Logic) ---
-        Collider2D[] projectileColliders = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
-        foreach (var target in projectileColliders)
+        // --- 1. Check for Parriable Entities ---
+        Collider2D[] parryTargets = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
+        foreach (var target in parryTargets)
         {
-            ICounterable counterable = target.GetComponent<ICounterable>();
-            if(counterable != null && counterable.CanBeCountered)
+            // FIRST, try to get IParryable (for drone projectiles and similar)
+            IParryable parryable = target.GetComponent<IParryable>();
+            if (parryable != null)
             {
-                counterable.HandleCounter(); // This initiates the slow-mo and projectile return
+                // Calculate reflectDirection. A simple reverse of its current velocity is good for reflection.
+                Vector2 reflectDirection = Vector2.zero;
+                Rigidbody2D targetRb = target.GetComponent<Rigidbody2D>();
+                if (targetRb != null)
+                {
+                    reflectDirection = -targetRb.linearVelocity.normalized; // Reflect opposite to current direction
+                }
+                else
+                {
+                    // Fallback: If no Rigidbody, reflect simply away from player's center
+                    reflectDirection = (target.transform.position - transform.position).normalized;
+                }
+                
+                parryable.OnParried(reflectDirection); // Call the specific parry method for IParryable objects
+                hasPerformedCounter = true;
+                continue; // Go to next target in loop, already handled this one
+            }
+
+            // THEN, if not IParryable, try to get ICounterable (for SpikeBall or other enemies)
+            ICounterable counterable = target.GetComponent<ICounterable>();
+            if (counterable != null && counterable.CanBeCountered)
+            {
+                counterable.HandleCounter(); // This initiates the slow-mo and projectile return (for SpikeBall)
                 hasPerformedCounter = true;
                 // We don't break here, allowing for multiple projectile parries if designed
             }
         }
 
-        // If we successfully parried one or more projectiles, we're done.
+        // If we successfully parried one or more parryable/counterable entities, we're done with this pass.
         if (hasPerformedCounter)
         {
             return true;
         }
-
-        // --- 2. If no projectile parry, check for Melee-Range Enemies (Original Logic) ---
+        
+        // --- 2. Original Logic for Melee-Range Enemies (if no parriable/counterable was hit) ---
         // GetDetectedColliders() uses Entity_Combat's targetCheck, targetCheckRadius, whatIsTarget
         Collider2D[] meleeTargets = GetDetectedColliders();
         foreach (var target in meleeTargets)

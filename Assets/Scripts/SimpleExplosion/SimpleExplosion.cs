@@ -13,9 +13,10 @@ public class SimpleExplosion : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("[SimpleExplosion] Start called. Instantiating fragments.");
         if (fragmentPrefab == null)
         {
-            Debug.LogError("Fragment Prefab is not assigned in SimpleExplosion component!");
+            Debug.LogError("[SimpleExplosion] Fragment Prefab is not assigned in SimpleExplosion component! Destroying explosion effect.");
             Destroy(gameObject);
             return;
         }
@@ -27,12 +28,15 @@ public class SimpleExplosion : MonoBehaviour
         {
             CreateFragment();
         }
+        Debug.Log($"[SimpleExplosion] Created {fragmentCount} fragments.");
     }
 
     void CreateFragment()
     {
+        Debug.Log("[SimpleExplosion] Creating a fragment.");
         // Instantiate the user-created prefab
         GameObject fragmentGO = Instantiate(fragmentPrefab, transform.position, Quaternion.identity);
+        fragmentGO.name = "ExplosionFragment (Clone)"; // Rename for easier identification in Hierarchy
 
         // Get components from the prefab instance
         Rigidbody2D rb = fragmentGO.GetComponent<Rigidbody2D>();
@@ -40,16 +44,26 @@ public class SimpleExplosion : MonoBehaviour
 
         if (rb != null)
         {
+            Debug.Log("[SimpleExplosion] Applying force to fragment Rigidbody.");
             // Apply initial explosion force
             Vector2 randomDirection = Random.insideUnitCircle.normalized;
             rb.AddForce(randomDirection * explosionForce * Random.Range(0.7f, 1.2f), ForceMode2D.Impulse);
             rb.AddTorque(Random.Range(-fragmentAngularVelocity, fragmentAngularVelocity));
         }
+        else
+        {
+            Debug.LogWarning("[SimpleExplosion] Fragment Rigidbody2D not found on fragment prefab!");
+        }
 
         if (fragmentScript != null)
         {
+            Debug.Log($"[SimpleExplosion] Initializing Fragment script on {fragmentGO.name}. Lifetime: {fragmentLifetime}, FadeDelay: {fragmentFadeDelay}");
             // Initialize the fragment's fade-out logic
             fragmentScript.Initialize(fragmentColor, fragmentLifetime, fragmentFadeDelay);
+        }
+        else
+        {
+            Debug.LogWarning("[SimpleExplosion] Fragment script not found on fragment prefab!");
         }
     }
 }

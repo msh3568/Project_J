@@ -1,252 +1,231 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections; // For Coroutines
 
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(CircleCollider2D))]
-[RequireComponent(typeof(Rigidbody2D))]
 public class LatencyDroneWeak : MonoBehaviour, IDamageable
 {
     [Header("Drone Settings")]
-    [SerializeField] private int currentHP = 1;
+    [SerializeField] private float health = 1f; // Drone HP: 1
+    [SerializeField] private float movementSpeed = 3f;
+    [SerializeField] private float detectionRange = 10f; // Default 10 units if camera based calculation is hard
+    [SerializeField] private float stopDistance = 3f; // Distance from player to stop moving and start firing
 
-    [Header("Detection & Movement")]
-    [SerializeField] private float detectionRange = 10f; // Default from user request
-    [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private LayerMask groundLayer; // To prevent passing through ground
-    [SerializeField] private float hoverHeight = 1f; // How high above the ground it tries to hover
-    [SerializeField] private float hoverForce = 10f; // Force to maintain hover
-    [SerializeField] private float playerFollowHeightOffset = 1f; // Offset from player's y position
+    [Header("Hovering Effect")]
+    [SerializeField] private float hoverAmplitude = 0.2f; // How high it floats up and down
+    [SerializeField] private float hoverFrequency = 1f; // How fast it floats up and down
+    [SerializeField] private float hoverOffset = 0f; // A random offset to make multiple drones hover asynchronously
 
-    [Header("Shooting Settings - Pattern A")]
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 1.6f; // Default from user request
-    [SerializeField] private float projectileSpeed = 12f; // Default from user request
-    [SerializeField] private SpriteRenderer muzzleFlashSprite; // For pre-fire visual
-    [SerializeField] private Color muzzleFlashColor = Color.white;
-    [SerializeField] private float muzzleFlashDuration = 0.05f; // Short flash
-    [SerializeField] private Vector3 muzzleFlashScale = new Vector3(1.5f, 1.5f, 1f);
+    [Header("Firing Settings (Pattern A - Single Shot)")]
+    [SerializeField] private LatencyCapsuleProjectile projectilePrefab;
+    [SerializeField] private Transform firePoint; // Where projectiles are spawned
+    [SerializeField] private float fireCooldown = 1.6f;
+    [SerializeField] private float projectileSpawnOffset = 0.5f; // Offset from firePoint to prevent self-collision
+    [SerializeField] private float recoilForce = 5f; // Force of recoil when firing
+    [SerializeField] private float recoilDuration = 0.1f; // How long the recoil force is applied
 
-    [Header("Feedback")]
-    [SerializeField] private ParticleSystem hitFeedbackParticles; // Noise/glitch particles
-    [SerializeField] private AudioSource hitFeedbackSFX; // Short "삐-" SFX hook
-
-    [Header("Destruction")]
-    [SerializeField] private DroneBreakEffectAdapter breakEffectAdapter; // Reference to adapter
+    [Header("Destruction Settings")]
+    [SerializeField] private GameObject fragmentPrefab; // This prefab should have Fragment.cs attached
+    [SerializeField] private int explosionFragmentCount = 30;
+    [SerializeField] private float explosionFragmentForce = 150f;
+    [SerializeField] private float explosionFragmentLifetime = 1.5f; // Default from SimpleExplosion
+    [SerializeField] private float explosionFragmentFadeDelay = 1.0f; // Default from SimpleExplosion
 
     private Transform playerTransform;
     private Rigidbody2D rb;
+    private SpriteRenderer sr; // Reference to the SpriteRenderer for flipping
     private float nextFireTime;
-    private bool playerDetected = false;
-    private Vector3 initialMuzzleScale;
+    private bool isDead = false;
+    private float hoverBaseY; // Store the base Y position for hovering
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        // Ensure gravity is off for a hovering drone
-        if (rb != null)
+        if (rb == null)
         {
-            rb.gravityScale = 0;
-            rb.linearDamping = 5f; // Add some drag for smoother movement
+            rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0; // Drones usually float
+            rb.freezeRotation = true;
         }
 
-        // Setup for drone visual (circle)
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
+        // Setup for Circle Sprite representation
+        sr = GetComponent<SpriteRenderer>(); // Assign sr in Awake
+        if (sr == null)
         {
-            sr.color = Color.gray; // Default drone color
-            sr.drawMode = SpriteDrawMode.Simple;
-            sr.size = new Vector2(1f, 1f); // Circle size
+            sr = gameObject.AddComponent<SpriteRenderer>();
+            // Assign a circular sprite in the editor. A default white circle sprite can be used.
+            sr.color = Color.gray; // Example drone color
         }
 
-        CircleCollider2D cc = GetComponent<CircleCollider2D>();
-        if (cc != null)
+        CircleCollider2D collider = GetComponent<CircleCollider2D>();
+        if (collider == null)
         {
-            cc.isTrigger = false; // Collides with player/world
-            cc.radius = 0.5f; // Matches circle size
+            collider = gameObject.AddComponent<CircleCollider2D>();
+            collider.radius = 0.5f; // Adjust as needed
+            collider.isTrigger = false; // Solid collider for drone
         }
 
-        if (muzzleFlashSprite != null)
-        {
-            initialMuzzleScale = muzzleFlashSprite.transform.localScale;
-            muzzleFlashSprite.enabled = false;
-        }
+        // Ensure SimpleExplosion script is present in project for destruction to work
+        // It's not added here, but referenced later.
+        // It expects a fragmentPrefab which itself needs Fragment.cs
+    }
 
-        // Find the player (assuming player has "Player" tag)
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
+    void Start()
+    {
+        // Find player. In a real game, this would likely be managed by a GameManager or ObjectPool.
+        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+        if (playerGO != null)
         {
-            playerTransform = player.transform;
+            playerTransform = playerGO.transform;
         }
         else
         {
-            Debug.LogWarning("Player not found! Ensure player GameObject has 'Player' tag.", this);
-        }
-    }
-
-    private void Update()
-    {
-        if (playerTransform == null) return;
-
-        DetectPlayer();
-
-        if (playerDetected)
-        {
-            MoveTowardsPlayer();
-            AttemptFire();
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        ApplyHoverForce();
-    }
-
-    private void DetectPlayer()
-    {
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-        playerDetected = distanceToPlayer <= detectionRange;
-    }
-
-    private void MoveTowardsPlayer()
-    {
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        
-        // Horizontal movement
-        rb.linearVelocity = new Vector2(directionToPlayer.x * moveSpeed, rb.linearVelocity.y);
-
-        // Vertical movement to follow player's height with an offset
-        float targetY = playerTransform.position.y + playerFollowHeightOffset;
-        float currentY = transform.position.y;
-        float verticalDifference = targetY - currentY;
-        
-        // Simple proportional control for vertical movement
-        float verticalForce = verticalDifference * hoverForce * 0.1f; // Reduced force for smoother follow
-        rb.AddForce(new Vector2(0, verticalForce), ForceMode2D.Force);
-    }
-
-    private void ApplyHoverForce()
-    {
-        // Raycast downwards to find ground
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, hoverHeight + 0.1f, groundLayer);
-
-        if (hit.collider != null)
-        {
-            // If too close to ground, push up
-            float distance = Mathf.Abs(hit.point.y - transform.position.y);
-            float hoverError = hoverHeight - distance;
-            if (hoverError > 0) // If below desired hover height
-            {
-                rb.AddForce(Vector2.up * hoverForce * hoverError, ForceMode2D.Force);
-            }
-        }
-        else // No ground below, prevent falling too much, but allow some descent
-        {
-             // Add a slight upward force to counteract natural descent/gravity if there's no ground
-             // or to maintain hovering altitude when player is high up.
-             rb.AddForce(Vector2.up * hoverForce * 0.1f, ForceMode2D.Force);
-        }
-    }
-
-    private void AttemptFire()
-    {
-        if (Time.time > nextFireTime)
-        {
-            nextFireTime = Time.time + fireRate;
-            StartCoroutine(PreFireEffectAndShoot());
-        }
-    }
-
-    private IEnumerator PreFireEffectAndShoot()
-    {
-        // Muzzle Flash
-        if (muzzleFlashSprite != null)
-        {
-            muzzleFlashSprite.enabled = true;
-            muzzleFlashSprite.color = muzzleFlashColor;
-            muzzleFlashSprite.transform.localScale = muzzleFlashScale;
-        }
-
-        yield return new WaitForSeconds(muzzleFlashDuration);
-
-        if (muzzleFlashSprite != null)
-        {
-            muzzleFlashSprite.enabled = false;
-            muzzleFlashSprite.transform.localScale = initialMuzzleScale;
-        }
-
-        ShootProjectile();
-    }
-
-    private void ShootProjectile()
-    {
-        if (projectilePrefab == null || firePoint == null)
-        {
-            Debug.LogWarning("Projectile Prefab or Fire Point is not set on LatencyDroneWeak.", this);
+            Debug.LogWarning("Player not found with tag 'Player'. LatencyDroneWeak will not move or fire.");
+            enabled = false; // Disable script if no player
             return;
         }
 
-        GameObject projectileGO = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        LatencyCapsuleProjectile projectile = projectileGO.GetComponent<LatencyCapsuleProjectile>();
+        hoverBaseY = transform.position.y; // Initialize hoverBaseY
+        hoverOffset = Random.Range(0f, 2f * Mathf.PI); // Randomize hover start for asynchronous movement
+        nextFireTime = Time.time + fireCooldown; // Initial delay before first shot
+    }
 
-        if (projectile != null)
+    void Update()
+    {
+        if (isDead || playerTransform == null) return;
+
+        // Player Detection and Movement
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        if (distanceToPlayer < detectionRange)
         {
-            Vector2 directionToPlayer = (playerTransform.position - firePoint.position).normalized;
-            projectile.Initialize(directionToPlayer, gameObject); // Pass drone itself as owner
+            Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+
+            // --- Flipping Logic ---
+            Vector3 currentScale = transform.localScale;
+            if (directionToPlayer.x < 0) // Player is to the left
+            {
+                transform.localScale = new Vector3(Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face right (positive scale)
+            }
+            else if (directionToPlayer.x > 0) // Player is to the right
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face left (negative scale)
+            }
+            // --- End Flipping Logic ---
+
+            if (distanceToPlayer > stopDistance)
+            {
+                // Move towards player
+                rb.linearVelocity = directionToPlayer * movementSpeed;
+                // Update hoverBaseY to follow drone's actual Y position while moving
+                hoverBaseY = transform.position.y;
+            }
+            else // Drone is stationary (within stopDistance)
+            {
+                // Stop moving
+                rb.linearVelocity = Vector2.zero;
+            }
+
+            // --- Hovering Effect (Simplified and applied only when stationary) ---
+            // Only apply hovering if not moving actively
+            if (rb.linearVelocity == Vector2.zero && !isDead)
+            {
+                float targetHoverY = hoverBaseY + Mathf.Sin(Time.time * hoverFrequency + hoverOffset) * hoverAmplitude;
+                transform.position = new Vector3(transform.position.x, targetHoverY, transform.position.z);
+            }
+            // --- End Hovering Effect ---
+
+            // Firing Logic
+            if (Time.time >= nextFireTime)
+            {
+                FireProjectile(directionToPlayer);
+                nextFireTime = Time.time + fireCooldown;
+            }
         }
-        else
+        else // Player out of detection range
         {
-            Debug.LogError("Projectile prefab does not have LatencyCapsuleProjectile component!", projectileGO);
+            rb.linearVelocity = Vector2.zero; // Stop moving
+            // Apply hovering when out of range and stationary
+            if (!isDead)
+            {
+                float targetHoverY = hoverBaseY + Mathf.Sin(Time.time * hoverFrequency + hoverOffset) * hoverAmplitude;
+                transform.position = new Vector3(transform.position.x, targetHoverY, transform.position.z);
+            }
         }
     }
 
-    public void TakeDamage(int damage)
+    void FireProjectile(Vector2 direction)
     {
-        currentHP -= damage;
-        Debug.Log($"Drone took {damage} damage. Current HP: {currentHP}");
-
-        // Hit feedback on the drone itself if needed (optional)
-        // e.g., brief flash, sound
-
-        if (currentHP <= 0)
+        if (projectilePrefab == null || firePoint == null)
         {
+            Debug.LogError("Projectile Prefab or Fire Point is not assigned for LatencyDroneWeak.");
+            return;
+        }
+
+        // Calculate spawn position slightly offset from firePoint in the firing direction
+        Vector3 spawnPosition = firePoint.position + (Vector3)direction.normalized * projectileSpawnOffset;
+
+        LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+        newProjectile.Initialize(direction, transform);
+
+        // --- Recoil Effect ---
+        StartCoroutine(ApplyRecoil(-direction.normalized));
+        // --- End Recoil Effect ---
+    }
+
+    private IEnumerator ApplyRecoil(Vector2 recoilDirection)
+    {
+        float timer = 0f;
+        while (timer < recoilDuration)
+        {
+            // Apply recoil force continuously over the duration
+            rb.AddForce(recoilDirection * recoilForce * Time.deltaTime, ForceMode2D.Force);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public void TakeDamage(float damage, Transform damageSource)
+    {
+        if (isDead) return;
+
+        health -= damage;
+        Debug.Log($"[Drone Damage] Drone took {damage} damage from {damageSource.name}. Remaining HP: {health}");
+
+        if (health <= 0)
+        {
+            isDead = true;
             Die();
         }
     }
 
     private void Die()
     {
-        Debug.Log("Drone destroyed!");
-        // Play destruction effect via adapter
-        if (breakEffectAdapter != null)
+        Debug.Log("[Drone Destruction] Latency Drone is dying!");
+        // Stop all movement and firing
+        rb.linearVelocity = Vector2.zero;
+        enabled = false; // Disable this script to stop further updates
+
+        // --- Explosion Effect Integration (reusing SimpleExplosion logic) ---
+        // Create an empty GameObject to host the explosion effect
+        GameObject explosionEffect = new GameObject("DroneExplosionEffect");
+        explosionEffect.transform.position = transform.position;
+
+        // Add the SimpleExplosion script and configure it
+        // Ensure SimpleExplosion.cs is in your project and compiled.
+        SimpleExplosion explosion = explosionEffect.AddComponent<SimpleExplosion>();
+        if (explosion != null)
         {
-            breakEffectAdapter.transform.position = transform.position; // Ensure effect plays at drone's position
-            breakEffectAdapter.PlayBreakEffect();
+            explosion.fragmentPrefab = this.fragmentPrefab; // This prefab should have Fragment.cs
+            explosion.fragmentCount = explosionFragmentCount;
+            explosion.explosionForce = explosionFragmentForce;
+            explosion.fragmentColor = Color.grey; // Default color for drone fragments
+            explosion.fragmentLifetime = explosionFragmentLifetime;
+            explosion.fragmentFadeDelay = explosionFragmentFadeDelay;
         }
         else
         {
-            Debug.LogWarning("DroneBreakEffectAdapter not assigned to LatencyDroneWeak. No destruction effect will play.", this);
+            Debug.LogError("SimpleExplosion component not found on ExplosionEffect GameObject! Make sure SimpleExplosion.cs is in a compiled folder (e.g., Assets/Scripts).");
         }
-        Destroy(gameObject);
-    }
 
-    // Player hit feedback - called by projectile when it hits player
-    public void OnPlayerHitFeedback()
-    {
-        if (hitFeedbackParticles != null)
-        {
-            hitFeedbackParticles.Play();
-        }
-        if (hitFeedbackSFX != null)
-        {
-            hitFeedbackSFX.Play();
-        }
-    }
-
-    // Helper for visualising detection range in editor
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Destroy(gameObject); // Destroy the drone itself
     }
 }
