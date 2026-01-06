@@ -75,6 +75,11 @@ public class Player_UI : MonoBehaviour
                 shieldVisibilityTimer -= Time.deltaTime;
             }
 
+            if (PauseManager.IsGamePaused)
+            {
+                shieldContainer.gameObject.SetActive(false);
+                return;
+            }
             bool shouldBeVisible = shieldVisibilityTimer > 0 || (playerHealth != null && playerHealth.CanRegenerate);
             
             if(shieldContainer.gameObject.activeSelf != shouldBeVisible)

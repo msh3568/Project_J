@@ -6,9 +6,11 @@ public class Player_ParryAimState : PlayerState
     private IParryable parriedProjectile;
     private Vector2 lastAimDirection;
     private LineRenderer lineRenderer;
+    private readonly Player_Health _playerHealth;
 
     public Player_ParryAimState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
+        _playerHealth = player.GetComponent<Player_Health>();
     }
 
     public void SetParriedProjectile(IParryable projectile)
@@ -19,6 +21,13 @@ public class Player_ParryAimState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        if (player.ParryInvincibilityCoroutineHandle != null)
+        {
+            player.StopCoroutine(player.ParryInvincibilityCoroutineHandle);
+        }
+
+        _playerHealth.IsInvincible = true;
 
         if (parriedProjectile == null)
         {
@@ -145,6 +154,7 @@ public class Player_ParryAimState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        player.ParryInvincibilityCoroutineHandle = player.StartCoroutine(player.ParryInvincibilityCoroutine(_playerHealth));
         anim.SetBool("IsParryHold", false);
 
         // Don't destroy the linerenderer, just disable it in case it's still active.

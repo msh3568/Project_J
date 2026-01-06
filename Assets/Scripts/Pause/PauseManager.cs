@@ -13,13 +13,14 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
-    private bool isPaused = false;
+    public static bool IsGamePaused { get; private set; } = false;
 
     void Start()
     {
         // Ensure the game is not paused and the pause menu is hidden at the start
         Time.timeScale = 1f;
         pauseGroup.SetActive(false);
+        IsGamePaused = false;
 
         // AudioManager에서 현재 볼륨 값을 가져와 슬라이더에 설정
         if (AudioManager.Instance != null)
@@ -45,7 +46,7 @@ public class PauseManager : MonoBehaviour
                 CloseSettings();
             }
             // 일시정지 상태가 아니면 일시정지
-            else if (!isPaused)
+            else if (!IsGamePaused)
             {
                 PauseGame();
             }
@@ -59,7 +60,7 @@ public class PauseManager : MonoBehaviour
 
     private void PauseGame()
     {
-        isPaused = true;
+        IsGamePaused = true;
         Time.timeScale = 0f; // 시간 흐름을 멈춤
 
         pauseGroup.SetActive(true);
@@ -70,7 +71,7 @@ public class PauseManager : MonoBehaviour
     // '계속하기' 버튼에 연결될 함수
     public void ResumeGame()
     {
-        isPaused = false;
+        IsGamePaused = false;
         Time.timeScale = 1f; // 시간 흐름을 되돌림
         pauseGroup.SetActive(false);
     }

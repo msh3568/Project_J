@@ -140,10 +140,12 @@ public class Player : Entity
         [SerializeField] public int trajectoryPointCount = 50;
         [SerializeField] public float trajectoryPointSpacing = 0.1f;
         [SerializeField] public Material trajectoryLineMaterial;
+        [SerializeField] public float parryInvincibilityDuration = 0.25f;
 
         [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     
+        public Coroutine ParryInvincibilityCoroutineHandle { get; set; }
 
         private float lastGroundY;
 
@@ -152,6 +154,12 @@ public class Player : Entity
     
 
         public PlayerVisualEffects playerVisualEffects { get; private set; } // New reference
+
+        public IEnumerator ParryInvincibilityCoroutine(Player_Health playerHealth)
+        {
+            yield return new WaitForSeconds(parryInvincibilityDuration);
+            playerHealth.IsInvincible = false;
+        }
 
     
 
