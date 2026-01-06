@@ -7,7 +7,7 @@ public class Entity : MonoBehaviour
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
 
-    protected StateMachine stateMachine;
+    public StateMachine stateMachine;
     [SerializeField] private Enemy enemyRef; // Reference to the Enemy component
 
     protected virtual void Start()

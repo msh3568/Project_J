@@ -2,6 +2,9 @@ using UnityEngine;
 
 public interface IParryable
 {
-    void OnParried(Vector2 reflectDirection);
-    GameObject GetGameObject(); // To get the GameObject of the parryable entity
+    void SetParriedState(bool isParried);
+    void LaunchParried(Vector2 direction);
+    GameObject GetGameObject();
+    float GetProjectileSpeed();
+    float GetParriedSpeedMultiplier();
 }

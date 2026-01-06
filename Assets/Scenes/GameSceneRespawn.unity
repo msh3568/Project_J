@@ -130855,6 +130855,16 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: faae4ce2a9ef3a1489f00d2fcf00ff8f, type: 3}
     volume: 0.63
   screamTriggerFallDistance: 9.5
+  slowMotionSound: {fileID: 8300000, guid: 59dd3ac3f96ec74438e065ad5977248e, type: 3}
+  slowMotionVolume: 1.473
+  parryFireSound: {fileID: 8300000, guid: 601e28c018095404cb35192c3d4a265c, type: 3}
+  parryFireVolume: 0.915
+  slow_duration: 5
+  slow_scale: 0.3
+  aimSweepSpeed: 2
+  trajectoryPointCount: 50
+  trajectoryPointSpacing: 0.1
+  trajectoryLineMaterial: {fileID: 2100000, guid: 46c78a8fac930a443be8f4c51d2dab25, type: 2}
   sfxMixerGroup: {fileID: 5105433721476265319, guid: dfd43f9b6a0fe0b45b039d62dded5c7d, type: 2}
 --- !u!4 &2049881624
 Transform:

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections; // For Coroutines
+using UnityEngine.Audio;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable
 {
@@ -51,6 +52,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     [SerializeField, Range(0f, 2f)] private float fireVolume = 0.5f;    // 발사 시 사운드 볼륨
     [SerializeField, Range(0f, 2f)] private float idleVolume = 0.5f;    // 평상시 사운드 볼륨
     [SerializeField, Range(0f, 2f)] private float deathVolume = 0.5f;   // 파괴 시 사운드 볼륨
+
+    [Header("Mixer Settings")]
+    [SerializeField] private AudioMixerGroup sfxMixerGroup; // SFX 믹서 그룹
 
     private AudioSource audioSource;                 // 사운드 재생을 위한 AudioSource
 
@@ -344,36 +348,29 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
 
-        // 파괴 시 사운드 재생 (PlayClipAtPoint 사용)
+        // 파괴 시 사운드 재생 (새로운 코루틴 사용)
         if (deathSound != null)
         {
-            AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume);
+            StartCoroutine(PlaySoundAndDestroy(deathSound, transform.position, deathVolume));
         }
 
-        // Stop all movement and firing
+        // Stop all movement
         rb.linearVelocity = Vector2.zero;
-        enabled = false; // Disable this script to stop further updates
+        rb.isKinematic = true; // 물리적 상호작용을 완전히 멈춤
+        enabled = false; 
 
-        // --- Explosion Effect Integration (reusing SimpleExplosion logic) ---
-        // Create an empty GameObject to host the explosion effect
+        // --- Explosion Effect ---
         GameObject explosionEffect = new GameObject("DroneExplosionEffect");
         explosionEffect.transform.position = transform.position;
-
-        // Add the SimpleExplosion script and configure it
-        // Ensure SimpleExplosion.cs is in your project and compiled.
         SimpleExplosion explosion = explosionEffect.AddComponent<SimpleExplosion>();
         if (explosion != null)
         {
-            explosion.fragmentPrefab = this.fragmentPrefab; // This prefab should have Fragment.cs
+            explosion.fragmentPrefab = this.fragmentPrefab;
             explosion.fragmentCount = explosionFragmentCount;
             explosion.explosionForce = explosionFragmentForce;
-            explosion.fragmentColor = Color.grey; // Default color for drone fragments
+            explosion.fragmentColor = Color.grey;
             explosion.fragmentLifetime = explosionFragmentLifetime;
             explosion.fragmentFadeDelay = explosionFragmentFadeDelay;
-        }
-        else
-        {
-            Debug.LogError("SimpleExplosion component not found on ExplosionEffect GameObject! Make sure SimpleExplosion.cs is in a compiled folder (e.g., Assets/Scripts).");
         }
 
         // 즉시 드론을 보이지 않게 하고 충돌을 비활성화
@@ -381,8 +378,30 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
         
-        // 사운드와 이펙트가 재생될 시간을 확보한 후 오브젝트 파괴
-        Destroy(gameObject, 2f);
+        // 이 오브젝트 자체는 즉시 파괴하지 않고, 사운드 코루틴이 독립적으로 실행되도록 함
+        // 필요한 모든 컴포넌트(스프라이트, 콜라이더)를 비활성화했으므로 보이지 않고 상호작용하지 않음
+        Destroy(gameObject, 3f); // 사운드와 이펙트가 끝날 시간을 충분히 줌
+    }
+
+    private IEnumerator PlaySoundAndDestroy(AudioClip clip, Vector3 position, float volume)
+    {
+        // 1. 임시 게임오브젝트 생성
+        GameObject audioObject = new GameObject("TempAudio");
+        audioObject.transform.position = position;
+
+        // 2. AudioSource 컴포넌트 추가 및 설정
+        AudioSource tempAudioSource = audioObject.AddComponent<AudioSource>();
+        tempAudioSource.clip = clip;
+        tempAudioSource.volume = volume;
+        tempAudioSource.spatialBlend = 1.0f; // 3D 사운드로 설정
+        tempAudioSource.outputAudioMixerGroup = sfxMixerGroup; // 믹서 그룹 할당
+
+        // 3. 사운드 재생
+        tempAudioSource.Play();
+
+        // 4. 사운드 클립의 길이만큼 기다린 후 임시 오브젝트 파괴
+        yield return new WaitForSeconds(clip.length);
+        Destroy(audioObject);
     }
 
     // 새로운 코루틴 추가

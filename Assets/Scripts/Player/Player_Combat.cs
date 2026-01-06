@@ -8,6 +8,17 @@ public class Player_Combat : Entity_Combat
     [Header("Parry details")]
     [SerializeField] private float parryCheckRadius = 1.5f;
     [SerializeField] private LayerMask whatIsParriable;
+
+    private Player player;
+
+    private void Awake()
+    {
+        player = GetComponent<Player>();
+        if (player == null)
+        {
+            Debug.LogError("Player_Combat script requires a Player script on the same GameObject.", this);
+        }
+    }
     
     public bool CounterAttackPerformed()
     {
@@ -21,22 +32,13 @@ public class Player_Combat : Entity_Combat
             IParryable parryable = target.GetComponent<IParryable>();
             if (parryable != null)
             {
-                // Calculate reflectDirection. A simple reverse of its current velocity is good for reflection.
-                Vector2 reflectDirection = Vector2.zero;
-                Rigidbody2D targetRb = target.GetComponent<Rigidbody2D>();
-                if (targetRb != null)
-                {
-                    reflectDirection = -targetRb.linearVelocity.normalized; // Reflect opposite to current direction
-                }
-                else
-                {
-                    // Fallback: If no Rigidbody, reflect simply away from player's center
-                    reflectDirection = (target.transform.position - transform.position).normalized;
-                }
+                // Set the parried projectile in the player's ParryAimState
+                player.parryAimState.SetParriedProjectile(parryable);
+                // Transition to the ParryAimState
+                player.stateMachine.ChangeState(player.parryAimState);
                 
-                parryable.OnParried(reflectDirection); // Call the specific parry method for IParryable objects
                 hasPerformedCounter = true;
-                continue; // Go to next target in loop, already handled this one
+                return true; // Exit immediately after a parriable is found and handled
             }
 
             // THEN, if not IParryable, try to get ICounterable (for SpikeBall or other enemies)

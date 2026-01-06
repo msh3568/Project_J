@@ -127,6 +127,20 @@ public class Player : Entity
 
         public float screamTriggerFallDistance = 12f;
 
+        [Header("Parry Audio")]
+        [SerializeField] public AudioClip slowMotionSound;
+        [SerializeField, Range(0f, 2f)] public float slowMotionVolume = 1f;
+        [SerializeField] public AudioClip parryFireSound;
+        [SerializeField, Range(0f, 2f)] public float parryFireVolume = 1f;
+
+        [Header("Parry Aiming Settings")]
+        [SerializeField] public float slow_duration = 5.0f;
+        [SerializeField] public float slow_scale = 0.3f;
+        [SerializeField] public float aimSweepSpeed = 2.0f;
+        [SerializeField] public int trajectoryPointCount = 50;
+        [SerializeField] public float trajectoryPointSpacing = 0.1f;
+        [SerializeField] public Material trajectoryLineMaterial;
+
         [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     
