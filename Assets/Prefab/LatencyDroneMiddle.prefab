@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1486717537877274078}
   - component: {fileID: 4431569971952825006}
   m_Layer: 8
-  m_Name: LatencyDroneWeak
+  m_Name: LatencyDroneMiddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -4991669075272947769, guid: f61f404a53ead9046985d39e976f0cac, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -216,6 +216,9 @@ MonoBehaviour:
   projectileSpawnOffset: 0.5
   recoilForce: 5
   recoilDuration: 0.1
+  capsulesPerBurst: 3
+  timeBetweenCapsules: 0.1
+  burstCooldown: 2
   fragmentPrefab: {fileID: 9157686852220618747, guid: e532fa09356fa554180398984055e3ef, type: 3}
   explosionFragmentCount: 30
   explosionFragmentForce: 150

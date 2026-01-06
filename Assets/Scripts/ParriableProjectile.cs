@@ -49,6 +49,7 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
         if (originalScript != null)
         {
             originalScript.wasParried = true;
+            Destroy(originalScript); // Destroy the SpikeBall component to prevent its OnCollisionEnter2D from interfering
         }
 
         rb.linearVelocity = Vector2.zero;
@@ -133,27 +134,10 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
 
         gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
 
-        var damager = gameObject.AddComponent<ProjectileDamager>();
+        ProjectileDamager damager = gameObject.AddComponent<ProjectileDamager>();
         damager.damage = 20;
+        damager.enabled = true; // Ensure the damager is enabled
 
         Destroy(gameObject, 5f);
-    }
-    
-    public class ProjectileDamager : MonoBehaviour
-    {
-        public float damage;
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            IDamagable enemy = other.gameObject.GetComponent<IDamagable>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage, transform);
-                Destroy(gameObject);
-            }
-            else if (other.gameObject.CompareTag("Ground"))
-            {
-                Destroy(gameObject);
-            }
-        }
     }
 }

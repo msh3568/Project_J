@@ -4,7 +4,8 @@ using System.Collections; // For IEnumerator
 public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
 {
     [Header("Projectile Settings")]
-    [SerializeField] private float projectileSpeed = 12f;
+    [SerializeField] private float damageToPlayer = 1f; // 플레이어에게 입힐 데미지
+    public float projectileSpeed = 12f;
     [SerializeField] private float parriedSpeedMultiplier = 1.5f; // Faster when parried
     [SerializeField] private Color projectileColor = Color.red;
     [SerializeField] private float trailTime = 0.5f;
@@ -175,7 +176,13 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
             }
             else // If NOT parried, then it's a regular drone shot hitting the player
             {
-                // Apply debuff and reduce armor
+                Player_Health playerHealth = other.GetComponent<Player_Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damageToPlayer, transform); // 플레이어 쉴드/체력 감소
+                }
+
+                // Apply debuff and reduce armor (기존 로직 유지)
                 LatencyDebuffReceiver debuffReceiver = other.GetComponent<LatencyDebuffReceiver>();
                 if (debuffReceiver != null)
                 {
