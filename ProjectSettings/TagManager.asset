@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Enemy
   - Trap
+  - Fragment
   layers:
   - Default
   - TransparentFX
@@ -21,8 +22,8 @@ TagManager:
   - BackGround
   - Draggable
   - Trap
-  - 
-  - 
+  - Parriable
+  - PlayerProjectile
   - 
   - 
   - 

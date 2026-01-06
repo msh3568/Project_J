@@ -16,10 +16,12 @@ public class Player : Entity
     public Player_FallState fallState { get; private set; }
     public Player_WallSlideState wallSlideState { get; private set; }
     public Player_WallJumpState wallJumpState { get; private set; }
+    public Player_WallAssistJumpState wallAssistJumpState { get; private set; }
     public Player_DashState dashState { get; private set; }
     public Player_BasicAttackState basicAttackState { get; private set; }
     public Player_BaldoState baldoState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
+    public Player_ParryAimState parryAimState { get; private set; }
     #endregion
 
     [Header("AttackDetails")]
@@ -30,6 +32,11 @@ public class Player : Entity
     [Header("Air Dash Options")]
     [SerializeField] public bool airDashWithJumpKey = true;
     [SerializeField] public bool airDashWithDashKey = true;
+
+        [Header("Dash details")]
+        [SerializeField] public float dashSpeed = 25f;
+        [SerializeField] public float dashDuration = 0.2f;
+        [SerializeField] public AnimationCurve dashSpeedCurve;
 
         [Header("Movement details")]
 
@@ -47,25 +54,26 @@ public class Player : Entity
 
         [Range(0, 1)]
 
-        public float inAirMoveMultiPlier = .7f;
-
-            [Range(0, 1)]
-
-            public float wallSlideSlowMultiplier = .7f;
-
-        
-
-            [Space]
-
-        public float dashDuration = .25f;
-
-        public float dashSpeed = 20;
-
-        public AnimationCurve dashSpeedCurve;
-
         public float dashCooldown = 1f;
 
         public float dashCooldownTimer { get; private set; }
+
+
+        [Header("Wall Assist Jump Details")]
+        [SerializeField] public float wallSlideSlowMultiplier = 0.5f;
+        [SerializeField] public float wallAssistJumpKickOffForce = 10f;
+        [SerializeField] public float wallAssistJumpUpForce = 15f;
+        [SerializeField] public float wallAssistJumpDuration = 0.2f;
+        [SerializeField] public float wallAssistJumpReturnForce = 10f;
+        [SerializeField] public float wallAssistJumpSpeed = 16f;
+        [SerializeField] public float wallAssistJumpCooldown = 0.5f;
+        [SerializeField] public float wallAssistJumpReductionFactor = 0.3f;
+        [SerializeField] private Transform ceilingCheck;
+        [SerializeField] private float ceilingCheckDistance = 0.5f;
+        public float wallAssistJumpCooldownTimer { get; private set; }
+        private int consecutiveWallJumps = 0;
+
+
 
         public bool hasAirDashed { get; set; }
 
@@ -180,6 +188,7 @@ public class Player : Entity
             wallSlideState = new Player_WallSlideState(this, stateMachine, "wallslide");
 
             wallJumpState = new Player_WallJumpState(this, stateMachine, "jumpfall");
+            wallAssistJumpState = new Player_WallAssistJumpState(this, stateMachine, "jumpfall");
 
             dashState = new Player_DashState(this, stateMachine, "dash");
 
@@ -188,7 +197,7 @@ public class Player : Entity
             baldoState = new Player_BaldoState(this, stateMachine, "baldo");
 
             counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
-
+            parryAimState = new Player_ParryAimState(this, stateMachine, "counterAttack");
         }
 
     
@@ -211,7 +220,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError($"Player.Start: stateMachine or idleState is null. stateMachine: {stateMachine == null}, idleState: {idleState == null}");
+
 
             }
 
@@ -237,11 +246,23 @@ public class Player : Entity
 
     
 
-                    if (dashCooldownTimer > 0)
+                                if (dashCooldownTimer > 0)
 
     
 
-                        dashCooldownTimer -= Time.deltaTime;
+                                    dashCooldownTimer -= Time.deltaTime;
+
+    
+
+                    
+
+    
+
+                                if (wallAssistJumpCooldownTimer > 0)
+
+    
+
+                                    wallAssistJumpCooldownTimer -= Time.deltaTime;
 
     
 
@@ -311,7 +332,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("ImmobilizeCoroutine: Cannot change state because stateMachine or idleState is null.");
+
 
             }
 
@@ -453,17 +474,319 @@ public class Player : Entity
 
     
 
-        public bool CanDash()
+                public bool CanDash()
 
-        {
+    
 
-            if (dashCooldownTimer > 0)
+                {
 
-                return false;
+    
 
-            return true;
+                    if (dashCooldownTimer > 0)
 
-        }
+    
+
+                        return false;
+
+    
+
+                    return true;
+
+    
+
+                }
+
+    
+
+        
+
+    
+
+                public bool CanUseWallAssistJump()
+
+    
+
+                {
+
+    
+
+                    return wallAssistJumpCooldownTimer <= 0;
+
+    
+
+                }
+
+    
+
+        
+
+    
+
+                public void StartWallAssistJumpCooldown()
+
+    
+
+                {
+
+    
+
+                    wallAssistJumpCooldownTimer = wallAssistJumpCooldown;
+
+    
+
+                }
+
+    
+
+        
+
+    
+
+                                public bool IsCeilingDetected()
+
+    
+
+        
+
+    
+
+                                {
+
+    
+
+        
+
+    
+
+                                    return Physics2D.Raycast(ceilingCheck.position, Vector2.up, ceilingCheckDistance, whatIsWall);
+
+    
+
+        
+
+    
+
+                                }
+
+    
+
+        
+
+    
+
+                        
+
+    
+
+        
+
+    
+
+                                public void IncrementConsecutiveWallJumps()
+
+    
+
+        
+
+    
+
+                                {
+
+    
+
+        
+
+    
+
+                                    consecutiveWallJumps++;
+
+    
+
+        
+
+    
+
+                                }
+
+    
+
+        
+
+    
+
+                        
+
+    
+
+        
+
+    
+
+                                public void ResetConsecutiveWallJumps()
+
+    
+
+        
+
+    
+
+                                {
+
+    
+
+        
+
+    
+
+                                    consecutiveWallJumps = 0;
+
+    
+
+        
+
+    
+
+                                }
+
+    
+
+        
+
+    
+
+                        
+
+    
+
+        
+
+    
+
+                                public float GetWallAssistJumpSpeed()
+
+    
+
+        
+
+    
+
+                                {
+
+    
+
+        
+
+    
+
+                                    float reduction = 1.0f + (consecutiveWallJumps * wallAssistJumpReductionFactor);
+
+    
+
+        
+
+    
+
+                                    // Ensure reduction doesn't make speed too low, maybe cap it. For now, it's fine.
+
+    
+
+        
+
+    
+
+                                    return wallAssistJumpSpeed / reduction;
+
+    
+
+        
+
+    
+
+                                }
+
+    
+
+        
+
+    
+
+                                
+
+    
+
+        
+
+    
+
+                                protected override void OnDrawGizmos()
+
+    
+
+        
+
+    
+
+                        {
+
+    
+
+        
+
+    
+
+                            base.OnDrawGizmos();
+
+    
+
+        
+
+    
+
+                            if (ceilingCheck != null)
+
+    
+
+        
+
+    
+
+                            {
+
+    
+
+        
+
+    
+
+                                Gizmos.color = Color.blue;
+
+    
+
+        
+
+    
+
+                                Gizmos.DrawLine(ceilingCheck.position, ceilingCheck.position + new Vector3(0, ceilingCheckDistance));
+
+    
+
+        
+
+    
+
+                            }
+
+    
+
+        
+
+    
+
+                        }
+
+    
+
+        
 
     
 
@@ -515,7 +838,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: fxSource is null! Cannot play sound.");
+
 
                 return;
 
@@ -525,7 +848,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: _sound (SoundEffect) is null! Cannot play sound.");
+
 
                 return;
 
@@ -535,7 +858,7 @@ public class Player : Entity
 
             {
 
-                Debug.LogError("Player.PlaySound: _sound.clip (AudioClip) is null! Cannot play sound.");
+
 
                 return;
 
@@ -549,43 +872,83 @@ public class Player : Entity
 
     
 
-        public void PlayWalkSound()
+                public void PlayWalkSound()
 
-        {
+    
 
-            PlaySound(walkSound);
+                {
 
-        }
+    
 
+                    PlaySound(walkSound);
 
-    public void HorizontalMovement(bool isGrounded)
-    {
-        float inputX = moveInput.x;
-        float currentSpeed = rb.linearVelocity.x;
+    
+
+                }
+
+    
+
+        
+
+    
+
+            public bool WasCounterAttackPressedThisFrame() => input.Player.CounterAttack.WasPressedThisFrame();
+
+    
+
+            public bool IsCounterAttackBeingHeld() => input.Player.CounterAttack.IsPressed();
+
+    
+
+            public bool WasCounterAttackReleasedThisFrame() => input.Player.CounterAttack.WasReleasedThisFrame();
+
+    
+
+        
+
+    
+
+        
+
+    
+
+            public void HorizontalMovement(bool isGrounded)
+
+    
+
+            {
+
+    
+
+                float inputX = moveInput.x;
+
+    
+
+                float currentSpeed = rb.linearVelocity.x;
         float targetSpeed = inputX * moveSpeed;
 
         float accel;
 
         if (Mathf.Abs(inputX) > 0.01f)
         {
-            // ÀÔ·ÂÀÌ ÀÖÀ» ¶§
+            // ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             bool changingDirection = Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed)
                                      && Mathf.Abs(currentSpeed) > 0.1f;
 
             if (isGrounded)
             {
-                // Áö»ó: ¹æÇâ ÀüÈ¯ ½Ã ´õ °­ÇÑ ºê·¹ÀÌÅ©
+                // ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ê·¹ï¿½ï¿½Å©
                 accel = changingDirection ? groundDecel : groundAccel;
             }
             else
             {
-                // °øÁß: ¹æÇâ ÀüÈ¯µµ ÈûÀÌ ¾àÇÔ
+                // ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 accel = changingDirection ? airDecel : airAccel;
             }
         }
         else
         {
-            // ÀÔ·ÂÀÌ ¾øÀ» ¶§: 0À¸·Î °¨¼Ó
+            // ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (isGrounded)
                 accel = groundDecel;
             else
@@ -594,7 +957,7 @@ public class Player : Entity
             targetSpeed = 0f;
         }
 
-        // ÀÏÁ¤ ¼Óµµ¸¸Å­¾¿ targetSpeed ¿¡ °¡±î¿öÁö°Ô ÇÔ (°¡¼Ó/°¨¼Ó)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½Å­ï¿½ï¿½ targetSpeed ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½)
         float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accel * Time.deltaTime);
 
         SetVelocity(newSpeed, rb.linearVelocity.y);

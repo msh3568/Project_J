@@ -38,7 +38,7 @@ public class Entity_Combat : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(targetCheck.position, targetCheckRadius);
     }

@@ -6,16 +6,25 @@ public class Player_IdleState : Player_GroundedState
     {
     }
 
-    public override void Enter()
-    {
-        base.Enter();
+            public override void Enter()
 
-        player.SetVelocity(0, rb.linearVelocity.y);
-    }
+            {
+
+                base.Enter();
+
+                player.SetVelocity(0, rb.linearVelocity.y);
+
+            }
 
     public override void Update()
     {
         base.Update();
+
+        if (input.Player.CounterAttack.WasPressedThisFrame())
+        {
+            stateMachine.ChangeState(player.counterAttackState);
+            return;
+        }
 
         if (player.moveInput.x != 0)
             stateMachine.ChangeState(player.moveState);

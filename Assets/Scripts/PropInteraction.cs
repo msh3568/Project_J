@@ -17,6 +17,7 @@ public class PropInteraction : MonoBehaviour
 
     [Header("Respawn")]
     public float respawnTime = 8f;
+    public float damage = 1f;
 
     [Header("Gas Effect")]
     public GameObject gasPrefab;
@@ -41,6 +42,12 @@ public class PropInteraction : MonoBehaviour
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
+                Player_Health playerHealth = player.GetComponent<Player_Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damage, transform);
+                }
+
                 if (AnalyticsManager.Instance != null)
                 {
                     AnalyticsManager.Instance.LogTrapEvent("SlowingPot", player.transform.position);
