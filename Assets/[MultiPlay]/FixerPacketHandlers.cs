@@ -48,7 +48,7 @@ public sealed class FixerPacketHandlers
             _client.SetLoginResult(false, 0, "로그인 실패");
             return;
         }
-
+        _client.LocalUserName = res.UserName;
         _client.SetLoginResult(true, res.UserId, "로그인 성공");
         _client.Service.RequestRoomList(); // 로그인 완료 후 연속으로 리스트 출력
     }

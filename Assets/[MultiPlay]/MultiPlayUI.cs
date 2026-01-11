@@ -74,6 +74,19 @@ public class MultiPlayUI : MonoBehaviour
         TMP_Text tmp = lineObj.GetComponent<TMP_Text>();
         if (tmp != null) tmp.text = finalText;
 
+        if(tmp != null)
+        {
+            if (FixerClient.Instance.LocalUserName == userName)
+            {
+                tmp.text = "<color=yellow>" + finalText + "</color>";
+            }
+            else
+            {
+                tmp.text = finalText;
+            }
+           
+        }
+
         if (content.childCount > 10) // maxChatLines
         {
             Destroy(content.GetChild(0).gameObject);

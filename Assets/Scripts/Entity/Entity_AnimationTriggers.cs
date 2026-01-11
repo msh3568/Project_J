@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Entity_AnimationTriggers : MonoBehaviour
 {
@@ -18,5 +18,10 @@ public class Entity_AnimationTriggers : MonoBehaviour
     private void AttackTrigger()
     {
         entityCombat.PerformAttack();
+    }
+
+    private void AttackStart()
+    {
+        entityCombat.PerformMultiAttack();
     }
 }

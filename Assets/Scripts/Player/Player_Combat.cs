@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Player_Combat : Entity_Combat
 {
@@ -13,7 +13,7 @@ public class Player_Combat : Entity_Combat
             ICounterable counterable = target.GetComponent<ICounterable>();
 
             if(counterable == null)
-                continue;//ÀÌ ¹Ýº¹ °Ç³Ê¶Ù°í ´ã ¹Ýº¹À¸·Î 
+                continue;//ì´ ë°˜ë³µ ê±´ë„ˆë›°ê³  ë‹´ ë°˜ë³µìœ¼ë¡œ 
 
             if (counterable.CanBeCountered)
             {
@@ -24,5 +24,6 @@ public class Player_Combat : Entity_Combat
         return hasPerformedCounter;
     }
 
+    
     public float GetCounterRecoveryDuration() => counterRecovery;
 }

@@ -28,50 +28,50 @@ namespace Fixer {
             "c194GAEgASgCEg0KBXBvc195GAIgASgCEhIKCmZhY2luZ19kaXIYAyABKBES",
             "FAoMYWN0aW9uX3N0YXRlGAQgASgNIi0KCFJlcUxvZ2luEg8KB3VzZXJfaWQY",
             "ASABKAkSEAoIcGFzc3dvcmQYAiABKAkiIQoNUmVxR3Vlc3RMb2dpbhIQCghu",
-            "aWNrbmFtZRgBIAEoCSIvCghSZXNMb2dpbhIPCgd1c2VyX2lkGAEgASgNEhIK",
-            "CmlzX3N1Y2Nlc3MYAiABKAgiHAoJUmVxTG9nb3V0Eg8KB3VzZXJfaWQYASAB",
-            "KAkiHwoJUmVzTG9nb3V0EhIKCmlzX3N1Y2Nlc3MYASABKAgiSQoNUmVxQ3Jl",
-            "YXRlUm9vbRIRCglyb29tX25hbWUYASABKAkSFQoNcm9vbV9wYXNzd29yZBgC",
-            "IAEoCRIOCgZpc19wdnAYAyABKAgiNAoNUmVzQ3JlYXRlUm9vbRISCgppc19z",
-            "dWNjZXNzGAEgASgIEg8KB3Jvb21faWQYAiABKA0iMQoMUmVxRW50ZXJSb29t",
-            "Eg8KB3Jvb21faWQYASABKA0SEAoIcGFzc3dvcmQYAiABKAkiIgoMUmVzRW50",
-            "ZXJSb29tEhIKCmlzX3N1Y2Nlc3MYASABKAgiIQoMUmVxTGVhdmVSb29tEhEK",
-            "CXJvb21fbmFtZRgBIAEoCSIiCgxSZXNMZWF2ZVJvb20SEgoKaXNfc3VjY2Vz",
-            "cxgBIAEoCCJ1Cg5Ob3RpY2VSb29tSW5mbxIxCgdwbGF5ZXJzGAEgAygLMiAu",
-            "Zml4ZXIuTm90aWNlUm9vbUluZm8uUGxheWVySW5mbxowCgpQbGF5ZXJJbmZv",
-            "Eg8KB3VzZXJfaWQYASABKA0SEQoJdXNlcl9uYW1lGAIgASgJIg0KC1JlcVJv",
-            "b21MaXN0In8KC1Jlc1Jvb21MaXN0EioKBXJvb21zGAEgAygLMhsuZml4ZXIu",
-            "UmVzUm9vbUxpc3QuUm9vbUluZm8aRAoIUm9vbUluZm8SEQoJcm9vbV9uYW1l",
-            "GAEgASgJEg8KB3Jvb21faWQYAiABKA0SFAoMcGxheWVyX2NvdW50GAMgASgN",
-            "IhoKB1JlcUNoYXQSDwoHbWVzc2FnZRgBIAEoCSIyCgpOb3RpY2VDaGF0EhMK",
-            "C3NlbmRlcl9uYW1lGAEgASgJEg8KB21lc3NhZ2UYAiABKAkiNgoOUmVxUGxh",
-            "eWVyU3RhdGUSJAoFc3RhdGUYASABKAsyFS5maXhlci5DaGFyYWN0ZXJTdGF0",
-            "ZSJJChBQbGF5ZXJTdGF0ZUVudHJ5Eg8KB3VzZXJfaWQYASABKA0SJAoFc3Rh",
-            "dGUYAiABKAsyFS5maXhlci5DaGFyYWN0ZXJTdGF0ZSI9ChFOb3RpY2VQbGF5",
-            "ZXJTdGF0ZRIoCgdwbGF5ZXJzGAEgAygLMhcuZml4ZXIuUGxheWVyU3RhdGVF",
-            "bnRyeSImCg9Ob3RpY2VHYW1lQ2xlYXISEwoLd2lubmVyX25hbWUYASABKAki",
-            "UgoRUmVxUGxheWVySW50ZXJhY3QSDAoEdHlwZRgBIAEoERIXCg90cmlnZ2Vy",
-            "X3VzZXJfaWQYAiABKA0SFgoOdGFyZ2V0X3VzZXJfaWQYAyABKA0iVQoUTm90",
-            "aWNlUGxheWVySW50ZXJhY3QSDAoEdHlwZRgBIAEoERIXCg90cmlnZ2VyX3Vz",
-            "ZXJfaWQYAiABKA0SFgoOdGFyZ2V0X3VzZXJfaWQYAyABKA0qxAMKCFBhY2tl",
-            "dElkEhUKEVBBQ0tFVF9JRF9JTlZBTElEEAASDQoJUkVRX0xPR0lOEAoSDQoJ",
-            "UkVTX0xPR0lOEAsSDgoKUkVRX0xPR09VVBAMEg4KClJFU19MT0dPVVQQDRIT",
-            "Cg9SRVFfR1VFU1RfTE9HSU4QDhITCg9SRVFfQ1JFQVRFX1JPT00QFBITCg9S",
-            "RVNfQ1JFQVRFX1JPT00QFRISCg5SRVFfRU5URVJfUk9PTRAWEhIKDlJFU19F",
-            "TlRFUl9ST09NEBcSEgoOUkVRX0xFQVZFX1JPT00QGBISCg5SRVNfTEVBVkVf",
-            "Uk9PTRAZEhQKEE5PVElDRV9ST09NX0lORk8QGhIRCg1SRVNfUk9PTV9MSVNU",
-            "EBsSEQoNUkVRX1JPT01fTElTVBAcEgwKCFJFUV9DSEFUEB4SDwoLTk9USUNF",
-            "X0NIQVQQHxIUChBSRVFfUExBWUVSX1NUQVRFECgSFwoTTk9USUNFX1BMQVlF",
-            "Ul9TVEFURRApEhUKEU5PVElDRV9HQU1FX0NMRUFSEDISFwoTUkVRX1BMQVlF",
-            "Ul9JTlRFUkFDVBA8EhoKFk5PVElDRV9QTEFZRVJfSU5URVJBQ1QQPWIGcHJv",
-            "dG8z"));
+            "aWNrbmFtZRgBIAEoCSJCCghSZXNMb2dpbhIPCgd1c2VyX2lkGAEgASgNEhEK",
+            "CXVzZXJfbmFtZRgCIAEoCRISCgppc19zdWNjZXNzGAMgASgIIhwKCVJlcUxv",
+            "Z291dBIPCgd1c2VyX2lkGAEgASgJIh8KCVJlc0xvZ291dBISCgppc19zdWNj",
+            "ZXNzGAEgASgIIkkKDVJlcUNyZWF0ZVJvb20SEQoJcm9vbV9uYW1lGAEgASgJ",
+            "EhUKDXJvb21fcGFzc3dvcmQYAiABKAkSDgoGaXNfcHZwGAMgASgIIjQKDVJl",
+            "c0NyZWF0ZVJvb20SEgoKaXNfc3VjY2VzcxgBIAEoCBIPCgdyb29tX2lkGAIg",
+            "ASgNIjEKDFJlcUVudGVyUm9vbRIPCgdyb29tX2lkGAEgASgNEhAKCHBhc3N3",
+            "b3JkGAIgASgJIiIKDFJlc0VudGVyUm9vbRISCgppc19zdWNjZXNzGAEgASgI",
+            "IiEKDFJlcUxlYXZlUm9vbRIRCglyb29tX25hbWUYASABKAkiIgoMUmVzTGVh",
+            "dmVSb29tEhIKCmlzX3N1Y2Nlc3MYASABKAgidQoOTm90aWNlUm9vbUluZm8S",
+            "MQoHcGxheWVycxgBIAMoCzIgLmZpeGVyLk5vdGljZVJvb21JbmZvLlBsYXll",
+            "ckluZm8aMAoKUGxheWVySW5mbxIPCgd1c2VyX2lkGAEgASgNEhEKCXVzZXJf",
+            "bmFtZRgCIAEoCSINCgtSZXFSb29tTGlzdCJ/CgtSZXNSb29tTGlzdBIqCgVy",
+            "b29tcxgBIAMoCzIbLmZpeGVyLlJlc1Jvb21MaXN0LlJvb21JbmZvGkQKCFJv",
+            "b21JbmZvEhEKCXJvb21fbmFtZRgBIAEoCRIPCgdyb29tX2lkGAIgASgNEhQK",
+            "DHBsYXllcl9jb3VudBgDIAEoDSIaCgdSZXFDaGF0Eg8KB21lc3NhZ2UYASAB",
+            "KAkiMgoKTm90aWNlQ2hhdBITCgtzZW5kZXJfbmFtZRgBIAEoCRIPCgdtZXNz",
+            "YWdlGAIgASgJIjYKDlJlcVBsYXllclN0YXRlEiQKBXN0YXRlGAEgASgLMhUu",
+            "Zml4ZXIuQ2hhcmFjdGVyU3RhdGUiSQoQUGxheWVyU3RhdGVFbnRyeRIPCgd1",
+            "c2VyX2lkGAEgASgNEiQKBXN0YXRlGAIgASgLMhUuZml4ZXIuQ2hhcmFjdGVy",
+            "U3RhdGUiPQoRTm90aWNlUGxheWVyU3RhdGUSKAoHcGxheWVycxgBIAMoCzIX",
+            "LmZpeGVyLlBsYXllclN0YXRlRW50cnkiJgoPTm90aWNlR2FtZUNsZWFyEhMK",
+            "C3dpbm5lcl9uYW1lGAEgASgJIlIKEVJlcVBsYXllckludGVyYWN0EgwKBHR5",
+            "cGUYASABKBESFwoPdHJpZ2dlcl91c2VyX2lkGAIgASgNEhYKDnRhcmdldF91",
+            "c2VyX2lkGAMgASgNIlUKFE5vdGljZVBsYXllckludGVyYWN0EgwKBHR5cGUY",
+            "ASABKBESFwoPdHJpZ2dlcl91c2VyX2lkGAIgASgNEhYKDnRhcmdldF91c2Vy",
+            "X2lkGAMgASgNKsQDCghQYWNrZXRJZBIVChFQQUNLRVRfSURfSU5WQUxJRBAA",
+            "Eg0KCVJFUV9MT0dJThAKEg0KCVJFU19MT0dJThALEg4KClJFUV9MT0dPVVQQ",
+            "DBIOCgpSRVNfTE9HT1VUEA0SEwoPUkVRX0dVRVNUX0xPR0lOEA4SEwoPUkVR",
+            "X0NSRUFURV9ST09NEBQSEwoPUkVTX0NSRUFURV9ST09NEBUSEgoOUkVRX0VO",
+            "VEVSX1JPT00QFhISCg5SRVNfRU5URVJfUk9PTRAXEhIKDlJFUV9MRUFWRV9S",
+            "T09NEBgSEgoOUkVTX0xFQVZFX1JPT00QGRIUChBOT1RJQ0VfUk9PTV9JTkZP",
+            "EBoSEQoNUkVTX1JPT01fTElTVBAbEhEKDVJFUV9ST09NX0xJU1QQHBIMCghS",
+            "RVFfQ0hBVBAeEg8KC05PVElDRV9DSEFUEB8SFAoQUkVRX1BMQVlFUl9TVEFU",
+            "RRAoEhcKE05PVElDRV9QTEFZRVJfU1RBVEUQKRIVChFOT1RJQ0VfR0FNRV9D",
+            "TEVBUhAyEhcKE1JFUV9QTEFZRVJfSU5URVJBQ1QQPBIaChZOT1RJQ0VfUExB",
+            "WUVSX0lOVEVSQUNUED1iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Fixer.PacketId), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.CharacterState), global::Fixer.CharacterState.Parser, new[]{ "PosX", "PosY", "FacingDir", "ActionState" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ReqLogin), global::Fixer.ReqLogin.Parser, new[]{ "UserId", "Password" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ReqGuestLogin), global::Fixer.ReqGuestLogin.Parser, new[]{ "Nickname" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ResLogin), global::Fixer.ResLogin.Parser, new[]{ "UserId", "IsSuccess" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ResLogin), global::Fixer.ResLogin.Parser, new[]{ "UserId", "UserName", "IsSuccess" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ReqLogout), global::Fixer.ReqLogout.Parser, new[]{ "UserId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ResLogout), global::Fixer.ResLogout.Parser, new[]{ "IsSuccess" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Fixer.ReqCreateRoom), global::Fixer.ReqCreateRoom.Parser, new[]{ "RoomName", "RoomPassword", "IsPvp" }, null, null, null, null),
@@ -918,6 +918,7 @@ namespace Fixer {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ResLogin(ResLogin other) : this() {
       userId_ = other.userId_;
+      userName_ = other.userName_;
       isSuccess_ = other.isSuccess_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -940,8 +941,20 @@ namespace Fixer {
       }
     }
 
+    /// <summary>Field number for the "user_name" field.</summary>
+    public const int UserNameFieldNumber = 2;
+    private string userName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UserName {
+      get { return userName_; }
+      set {
+        userName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     /// <summary>Field number for the "is_success" field.</summary>
-    public const int IsSuccessFieldNumber = 2;
+    public const int IsSuccessFieldNumber = 3;
     private bool isSuccess_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -968,6 +981,7 @@ namespace Fixer {
         return true;
       }
       if (UserId != other.UserId) return false;
+      if (UserName != other.UserName) return false;
       if (IsSuccess != other.IsSuccess) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -977,6 +991,7 @@ namespace Fixer {
     public override int GetHashCode() {
       int hash = 1;
       if (UserId != 0) hash ^= UserId.GetHashCode();
+      if (UserName.Length != 0) hash ^= UserName.GetHashCode();
       if (IsSuccess != false) hash ^= IsSuccess.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1000,8 +1015,12 @@ namespace Fixer {
         output.WriteRawTag(8);
         output.WriteUInt32(UserId);
       }
+      if (UserName.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(UserName);
+      }
       if (IsSuccess != false) {
-        output.WriteRawTag(16);
+        output.WriteRawTag(24);
         output.WriteBool(IsSuccess);
       }
       if (_unknownFields != null) {
@@ -1018,8 +1037,12 @@ namespace Fixer {
         output.WriteRawTag(8);
         output.WriteUInt32(UserId);
       }
+      if (UserName.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(UserName);
+      }
       if (IsSuccess != false) {
-        output.WriteRawTag(16);
+        output.WriteRawTag(24);
         output.WriteBool(IsSuccess);
       }
       if (_unknownFields != null) {
@@ -1034,6 +1057,9 @@ namespace Fixer {
       int size = 0;
       if (UserId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(UserId);
+      }
+      if (UserName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserName);
       }
       if (IsSuccess != false) {
         size += 1 + 1;
@@ -1052,6 +1078,9 @@ namespace Fixer {
       }
       if (other.UserId != 0) {
         UserId = other.UserId;
+      }
+      if (other.UserName.Length != 0) {
+        UserName = other.UserName;
       }
       if (other.IsSuccess != false) {
         IsSuccess = other.IsSuccess;
@@ -1079,7 +1108,11 @@ namespace Fixer {
             UserId = input.ReadUInt32();
             break;
           }
-          case 16: {
+          case 18: {
+            UserName = input.ReadString();
+            break;
+          }
+          case 24: {
             IsSuccess = input.ReadBool();
             break;
           }
@@ -1106,7 +1139,11 @@ namespace Fixer {
             UserId = input.ReadUInt32();
             break;
           }
-          case 16: {
+          case 18: {
+            UserName = input.ReadString();
+            break;
+          }
+          case 24: {
             IsSuccess = input.ReadBool();
             break;
           }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections; // 코루틴(IEnumerator)을 사용하기 위해 추가
 
@@ -81,9 +81,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("Attack!");
         // (공격 로직 구현)
-
         // --- 진동 조절 가이드 ---
         // TriggerRumble(low, high, duration)
         // low: 저주파 모터 세기 (0.0 ~ 1.0)

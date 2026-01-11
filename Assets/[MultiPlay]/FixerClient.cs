@@ -41,6 +41,7 @@ public class FixerClient : MonoBehaviour
 
     [Header("State")]
     public uint LocalUserId { get; private set; }
+    public string LocalUserName;
     public bool IsInRoom { get; private set; }
     public bool IsConnected { get; private set; }
 

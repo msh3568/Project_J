@@ -46,7 +46,7 @@ public class PlayerPvPController : MonoBehaviour
             Player player = GetComponent<Player>();
 
             int dir = (transform.position.x >= triggerPlayerPos.x) ? 1 : -1;
-            Vector2 knockback = new Vector2(dir * 10f, 0f);
+            Vector2 knockback = new Vector2(dir * 15f, 0f);
 
             player.ReciveKnockback(knockback, 0.2f);
         }

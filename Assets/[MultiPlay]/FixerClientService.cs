@@ -153,7 +153,7 @@ namespace Fixer
                 TriggerUserId = triggerPlayerId,
                 TargetUserId = targetPlayerId
             };
-
+            Debug.Log("Send SendPlayerInteract" + triggerPlayerId + " " + targetPlayerId);
             _ = _client.SendProtoAsync(PacketId.ReqPlayerInteract, req);
         }
 

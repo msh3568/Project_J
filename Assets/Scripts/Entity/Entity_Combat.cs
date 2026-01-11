@@ -15,8 +15,7 @@ public class Entity_Combat : MonoBehaviour
         vfx = GetComponent<Entity_VFX>();
     }
 
-
-    public void PerformAttack()
+    public void PerformMultiAttack()
     {
         foreach (var target in GetDetectedColliders())
         {
@@ -27,7 +26,22 @@ public class Entity_Combat : MonoBehaviour
                 continue;
             }
 
+            /*IDamagable damagable = target.GetComponent<IDamagable>();
 
+            if (damagable == null)
+                continue;
+
+            damagable.TakeDamage(damage, transform);*/
+            vfx.CreateOnHitVFX(target.transform);
+        }
+
+    }
+
+
+    public void PerformAttack()
+    {
+        foreach (var target in GetDetectedColliders())
+        {
             IDamagable damagable = target.GetComponent<IDamagable>();
 
             if(damagable == null)
