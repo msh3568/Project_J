@@ -44,6 +44,10 @@ public class PotCannon : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage, Transform damageSource)
     {
+        if (damageSource != null && damageSource.GetComponentInParent<Player>() != null)
+        {
+            DamagePopup.Spawn(transform.position, damage);
+        }
         Debug.Log("PotCannon took damage and is being destroyed!");
 
         // Create an empty GameObject to host the explosion effect

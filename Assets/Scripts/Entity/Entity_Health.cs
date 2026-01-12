@@ -50,6 +50,11 @@ public class Entity_Health : MonoBehaviour, IDamageable
             damage *= (1 - damageReduction);
         }
 
+        if (ShouldShowDamagePopup(damagedealer))
+        {
+            DamagePopup.Spawn(transform.position, damage);
+        }
+
         ReduceHp(damage);
 
         // If damage was lethal, Die() is called inside ReduceHp and isDead becomes true.
@@ -97,6 +102,12 @@ public class Entity_Health : MonoBehaviour, IDamageable
         Debug.Log($"[Die] {gameObject.name} Die() method called.");
         isDead = true;
         entity.onEntityDeath();
+    }
+
+    private bool ShouldShowDamagePopup(Transform damageDealer)
+    {
+        if (damageDealer == null) return false;
+        return damageDealer.GetComponentInParent<Player>() != null;
     }
 
     protected virtual Vector2 CalculateKnockback(float damage, Transform damagedealer)

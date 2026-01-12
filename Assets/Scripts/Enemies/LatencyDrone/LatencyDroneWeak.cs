@@ -334,6 +334,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     {
         if (isDead) return;
 
+        if (damageSource != null && damageSource.GetComponentInParent<Player>() != null)
+        {
+            DamagePopup.Spawn(transform.position, damage);
+        }
+
         health -= damage;
         Debug.Log($"[Drone Damage] Drone took {damage} damage from {damageSource.name}. Remaining HP: {health}");
 
