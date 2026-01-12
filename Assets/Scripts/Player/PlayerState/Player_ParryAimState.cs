@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class Player_ParryAimState : PlayerState
@@ -34,6 +34,8 @@ public class Player_ParryAimState : PlayerState
             stateMachine.ChangeState(player.idleState);
             return;
         }
+
+        ParryCameraZoom.Instance?.BeginParryZoom();
 
         // Ensure we have a LineRenderer component, and get a reference to it.
         GetOrAddLineRenderer();
@@ -156,6 +158,8 @@ public class Player_ParryAimState : PlayerState
         base.Exit();
         player.ParryInvincibilityCoroutineHandle = player.StartCoroutine(player.ParryInvincibilityCoroutine(_playerHealth));
         anim.SetBool("IsParryHold", false);
+
+        ParryCameraZoom.Instance?.EndParryZoom();
 
         // Don't destroy the linerenderer, just disable it in case it's still active.
         if (lineRenderer != null)

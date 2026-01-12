@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro; // Using TextMeshPro
 using UnityEngine.SceneManagement;
 using System.Collections; // Required for IEnumerator and Coroutines

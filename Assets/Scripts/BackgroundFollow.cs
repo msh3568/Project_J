@@ -1,16 +1,16 @@
-// Gemini, please fix the background follow script. It should follow both X and Y axes and maintain the initial offset from the player.
+﻿// Gemini, please fix the background follow script. It should follow both X and Y axes and maintain the initial offset from the player.
 using UnityEngine;
 
 public class BackgroundFollow : MonoBehaviour
 {
-    // 따라갈 대상 (플레이어)
+    // ?곕씪媛????(?뚮젅?댁뼱)
     public Transform playerTarget;
 
-    // 배경이 플레이어를 따라가는 정도 (0~1 사이)
+    // 諛곌꼍???뚮젅?댁뼱瑜??곕씪媛???뺣룄 (0~1 ?ъ씠)
     [Range(0f, 1f)]
     public float parallaxEffect = 0.5f;
 
-    // 플레이어의 시작 위치와 배경의 시작 위치를 저장할 변수
+    // ?뚮젅?댁뼱???쒖옉 ?꾩튂? 諛곌꼍???쒖옉 ?꾩튂瑜???ν븷 蹂??
     private Vector3 playerStartPosition;
     private Vector3 backgroundStartPosition;
 
@@ -18,14 +18,14 @@ public class BackgroundFollow : MonoBehaviour
     {
         if (playerTarget != null)
         {
-            // 게임 시작 시 플레이어와 배경의 초기 위치를 각각 저장합니다.
+            // 寃뚯엫 ?쒖옉 ???뚮젅?댁뼱? 諛곌꼍??珥덇린 ?꾩튂瑜?媛곴컖 ??ν빀?덈떎.
             playerStartPosition = playerTarget.position;
             backgroundStartPosition = transform.position;
         }
         else
         {
-            // 혹시 플레이어가 연결되지 않았을 경우를 대비한 경고 메시지입니다.
-            Debug.LogError("Player Target이 설정되지 않았습니다! Background 오브젝트의 Inspector 창에서 Player를 연결해주세요.");
+            // ?뱀떆 ?뚮젅?댁뼱媛 ?곌껐?섏? ?딆븯??寃쎌슦瑜??鍮꾪븳 寃쎄퀬 硫붿떆吏?낅땲??
+            Debug.LogError("Player Target???ㅼ젙?섏? ?딆븯?듬땲?? Background ?ㅻ툕?앺듃??Inspector 李쎌뿉??Player瑜??곌껐?댁＜?몄슂.");
         }
     }
 
@@ -33,17 +33,17 @@ public class BackgroundFollow : MonoBehaviour
     {
         if (playerTarget != null)
         {
-            // 1. 플레이어가 '시작 위치로부터' 얼마나 이동했는지(거리)를 계산합니다.
+            // 1. ?뚮젅?댁뼱媛 '?쒖옉 ?꾩튂濡쒕??? ?쇰쭏???대룞?덈뒗吏(嫄곕━)瑜?怨꾩궛?⑸땲??
             Vector3 distanceMoved = playerTarget.position - playerStartPosition;
 
-            // 2. 배경의 새로운 위치를 계산합니다.
-            //    (배경의 원래 시작 위치) + (플레이어의 이동 거리 * 패럴랙스 효과)
+            // 2. 諛곌꼍???덈줈???꾩튂瑜?怨꾩궛?⑸땲??
+            //    (諛곌꼍???먮옒 ?쒖옉 ?꾩튂) + (?뚮젅?댁뼱???대룞 嫄곕━ * ?⑤윺?숈뒪 ?④낵)
             Vector3 newBackgroundPosition = backgroundStartPosition + distanceMoved * parallaxEffect;
 
-            // 3. Z축 위치는 원래 위치를 유지하여 렌더링 순서가 바뀌지 않도록 합니다. (매우 중요!)
+            // 3. Z異??꾩튂???먮옒 ?꾩튂瑜??좎??섏뿬 ?뚮뜑留??쒖꽌媛 諛붾뚯? ?딅룄濡??⑸땲?? (留ㅼ슦 以묒슂!)
             newBackgroundPosition.z = backgroundStartPosition.z;
 
-            // 4. 계산된 새 위치로 배경을 이동시킵니다.
+            // 4. 怨꾩궛?????꾩튂濡?諛곌꼍???대룞?쒗궢?덈떎.
             transform.position = newBackgroundPosition;
         }
     }

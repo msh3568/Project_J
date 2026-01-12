@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +8,8 @@ public class StatusEffectUIManager : MonoBehaviour
     public static StatusEffectUIManager Instance { get; private set; }
 
     [Header("Status Effect Icons")]
-    [SerializeField] private Image slowEffectIcon; // 여기에 '느려짐' 아이콘 이미지를 연결합니다.
-    [SerializeField] private Image immobilizedEffectIcon; // 여기에 '이동 불가' 아이콘 이미지를 연결합니다.
+    [SerializeField] private Image slowEffectIcon; // ?ш린??'?먮젮吏? ?꾩씠肄??대?吏瑜??곌껐?⑸땲??
+    [SerializeField] private Image immobilizedEffectIcon; // ?ш린??'?대룞 遺덇?' ?꾩씠肄??대?吏瑜??곌껐?⑸땲??
 
     private void Awake()
     {
@@ -23,28 +23,28 @@ public class StatusEffectUIManager : MonoBehaviour
             Instance = this;
         }
 
-        // 게임 시작 시 모든 아이콘을 숨깁니다.
+        // 寃뚯엫 ?쒖옉 ??紐⑤뱺 ?꾩씠肄섏쓣 ?④퉩?덈떎.
         if (slowEffectIcon != null) slowEffectIcon.gameObject.SetActive(false);
         if (immobilizedEffectIcon != null) immobilizedEffectIcon.gameObject.SetActive(false);
     }
 
-    // '느려짐' 효과를 표시하는 함수
+    // '?먮젮吏? ?④낵瑜??쒖떆?섎뒗 ?⑥닔
     public void ShowSlowEffect(float duration)
     {
         if (slowEffectIcon != null)
         {
-            // 이미 효과가 활성화된 코루틴이 있다면 중지하고 새로 시작합니다.
+            // ?대? ?④낵媛 ?쒖꽦?붾맂 肄붾（?댁씠 ?덈떎硫?以묒??섍퀬 ?덈줈 ?쒖옉?⑸땲??
             StopCoroutine("SlowEffectCoroutine"); // Coroutine name changed for clarity
             StartCoroutine("SlowEffectCoroutine", new EffectData(slowEffectIcon, duration));
         }
     }
 
-    // '이동 불가' 효과를 표시하는 함수
+    // '?대룞 遺덇?' ?④낵瑜??쒖떆?섎뒗 ?⑥닔
     public void ShowImmobilizedEffect(float duration)
     {
         if (immobilizedEffectIcon != null)
         {
-            // 이미 효과가 활성화된 코루틴이 있다면 중지하고 새로 시작합니다.
+            // ?대? ?④낵媛 ?쒖꽦?붾맂 肄붾（?댁씠 ?덈떎硫?以묒??섍퀬 ?덈줈 ?쒖옉?⑸땲??
             StopCoroutine("ImmobilizedEffectCoroutine"); // Coroutine name changed for clarity
             StartCoroutine("ImmobilizedEffectCoroutine", new EffectData(immobilizedEffectIcon, duration));
         }

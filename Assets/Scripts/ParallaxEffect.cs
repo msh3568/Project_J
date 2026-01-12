@@ -1,19 +1,19 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ParallaxEffect : MonoBehaviour
 {
-    // 카메라 Transform. 메인 카메라를 여기에 연결합니다.
+    // 移대찓??Transform. 硫붿씤 移대찓?쇰? ?ш린???곌껐?⑸땲??
     public Transform cameraTransform;
     
-    // 이 레이어가 카메라보다 얼마나 느리게 움직일지 결정하는 값.
-    // 0이면 전혀 움직이지 않고, 1이면 카메라와 똑같이 움직입니다.
-    // 배경(먼 곳)일수록 0에 가깝게, 전경(가까운 곳)일수록 1에 가깝게 설정합니다.
+    // ???덉씠?닿? 移대찓?쇰낫???쇰쭏???먮━寃??吏곸씪吏 寃곗젙?섎뒗 媛?
+    // 0?대㈃ ?꾪? ?吏곸씠吏 ?딄퀬, 1?대㈃ 移대찓?쇱? ?묎컳???吏곸엯?덈떎.
+    // 諛곌꼍(癒?怨??쇱닔濡?0??媛源앷쾶, ?꾧꼍(媛源뚯슫 怨??쇱닔濡?1??媛源앷쾶 ?ㅼ젙?⑸땲??
     [Range(0f, 1f)]
-    public float parallaxEffectX; // X축(좌우) 이동 비율
+    public float parallaxEffectX; // X異?醫뚯슦) ?대룞 鍮꾩쑉
     [Range(0f, 1f)]
-    public float parallaxEffectY; // Y축(상하) 이동 비율
+    public float parallaxEffectY; // Y異??곹븯) ?대룞 鍮꾩쑉
 
-    private Vector3 lastCameraPosition; // 이전 프레임의 카메라 위치
+    private Vector3 lastCameraPosition; // ?댁쟾 ?꾨젅?꾩쓽 移대찓???꾩튂
 
     void Start()
     {
@@ -24,22 +24,22 @@ public class ParallaxEffect : MonoBehaviour
         lastCameraPosition = cameraTransform.position;
     }
 
-    // LateUpdate는 모든 Update가 끝난 후, 특히 카메라가 움직인 후에 호출되어
-    // 카메라의 최종 위치를 기준으로 배경을 이동시키기에 적합합니다.
+    // LateUpdate??紐⑤뱺 Update媛 ?앸궃 ?? ?뱁엳 移대찓?쇨? ?吏곸씤 ?꾩뿉 ?몄텧?섏뼱
+    // 移대찓?쇱쓽 理쒖쥌 ?꾩튂瑜?湲곗??쇰줈 諛곌꼍???대룞?쒗궎湲곗뿉 ?곹빀?⑸땲??
     void LateUpdate()
     {
-        // 카메라가 이번 프레임에 얼마나 움직였는지 계산 (델타 값)
+        // 移대찓?쇨? ?대쾲 ?꾨젅?꾩뿉 ?쇰쭏???吏곸??붿? 怨꾩궛 (?명? 媛?
         Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
 
-        // 패럴랙스 효과 적용
-        // 델타 값에 비율을 곱해서 이 배경 레이어가 움직일 거리를 계산
+        // ?⑤윺?숈뒪 ?④낵 ?곸슜
+        // ?명? 媛믪뿉 鍮꾩쑉??怨깊빐????諛곌꼍 ?덉씠?닿? ?吏곸씪 嫄곕━瑜?怨꾩궛
         float parallaxX = deltaMovement.x * parallaxEffectX;
         float parallaxY = deltaMovement.y * parallaxEffectY;
 
-        // 배경 레이어의 위치를 계산된 값만큼 이동시킵니다.
+        // 諛곌꼍 ?덉씠?댁쓽 ?꾩튂瑜?怨꾩궛??媛믩쭔???대룞?쒗궢?덈떎.
         transform.position += new Vector3(parallaxX, parallaxY, 0);
 
-        // 현재 카메라 위치를 다음 프레임을 위해 저장
+        // ?꾩옱 移대찓???꾩튂瑜??ㅼ쓬 ?꾨젅?꾩쓣 ?꾪빐 ???
         lastCameraPosition = cameraTransform.position;
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Analytics;
@@ -59,7 +59,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("Firebase 및 UGS 초기화를 시작합니다...");
+            Debug.Log("Firebase 諛?UGS 珥덇린?붾? ?쒖옉?⑸땲??..");
 
             // 1. Initialize Firebase
             var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
@@ -68,11 +68,11 @@ public class AnalyticsManager : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 reference = FirebaseDatabase.DefaultInstance.RootReference;
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                Debug.Log("Firebase 초기화 완료.");
+                Debug.Log("Firebase 珥덇린???꾨즺.");
             }
             else
             {
-                Debug.LogError($"Firebase 의존성 문제: {dependencyStatus}");
+                Debug.LogError($"Firebase ?섏〈??臾몄젣: {dependencyStatus}");
                 // Initialization failed, do not proceed.
                 return;
             }
@@ -80,18 +80,18 @@ public class AnalyticsManager : MonoBehaviour
             // 2. Initialize UGS
             await UnityServices.InitializeAsync();
             AnalyticsService.Instance.StartDataCollection();
-            Debug.Log("UGS Analytics 초기화 및 데이터 수집 시작 완료.");
+            Debug.Log("UGS Analytics 珥덇린??諛??곗씠???섏쭛 ?쒖옉 ?꾨즺.");
 
             // 3. Set Initialized Flag
             isInitialized = true;
-            Debug.Log("모든 분석 서비스가 성공적으로 초기화되었습니다.");
+            Debug.Log("紐⑤뱺 遺꾩꽍 ?쒕퉬?ㅺ? ?깃났?곸쑝濡?珥덇린?붾릺?덉뒿?덈떎.");
 
             // After initialization, check the current scene and start session if needed.
             OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
         catch (Exception e)
         {
-            Debug.LogError($"분석 서비스 초기화 중 심각한 오류 발생: {e}");
+            Debug.LogError($"遺꾩꽍 ?쒕퉬??珥덇린??以??ш컖???ㅻ쪟 諛쒖깮: {e}");
             // isInitialized remains false
         }
     }
@@ -100,11 +100,11 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (!isInitialized) 
         {
-            Debug.LogWarning("분석 서비스가 아직 준비되지 않아 OnSceneLoaded 로직을 건너뜁니다.");
+            Debug.LogWarning("遺꾩꽍 ?쒕퉬?ㅺ? ?꾩쭅 以鍮꾨릺吏 ?딆븘 OnSceneLoaded 濡쒖쭅??嫄대꼫?곷땲??");
             return;
         }
 
-        Debug.Log($"OnSceneLoaded: {scene.name}, 세션을 시작합니다.");
+        Debug.Log($"OnSceneLoaded: {scene.name}, ?몄뀡???쒖옉?⑸땲??");
         StartSession();
     }
 
@@ -112,7 +112,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (!isInitialized || isSessionStarted) return;
         
-        Debug.Log("세션 시작 + Analytics session_start 전송 (Firebase & UGS)");
+        Debug.Log("?몄뀡 ?쒖옉 + Analytics session_start ?꾩넚 (Firebase & UGS)");
 
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
@@ -186,7 +186,7 @@ public class AnalyticsManager : MonoBehaviour
         var checkpointLog = new Dictionary<string, object>
         {
             ["timestamp"] = ServerValue.Timestamp,
-            ["활성화한_체크포인트_갯수"] = count
+            ["?쒖꽦?뷀븳_泥댄겕?ъ씤??媛?닔"] = count
         };
         checkpointActivationsDuringSession.Add(checkpointLog);
 
@@ -196,7 +196,7 @@ public class AnalyticsManager : MonoBehaviour
 
     public void SetGoalReached(bool reached)
     {
-        // 세션이 시작되지 않은 경우, 지금 시작 (예: 테스트 중 직접 씬을 로드했을 때)
+        // ?몄뀡???쒖옉?섏? ?딆? 寃쎌슦, 吏湲??쒖옉 (?? ?뚯뒪??以?吏곸젒 ?ъ쓣 濡쒕뱶?덉쓣 ??
         if (!isSessionStarted)
         {
             StartSession();
@@ -229,7 +229,7 @@ public class AnalyticsManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("RankingManager 또는 STOVEPCSDK3Manager의 인스턴스가 존재하지 않아 랭킹을 기록할 수 없습니다.");
+                Debug.LogWarning("RankingManager ?먮뒗 STOVEPCSDK3Manager???몄뒪?댁뒪媛 議댁옱?섏? ?딆븘 ??궧??湲곕줉?????놁뒿?덈떎.");
             }
         }
     }
@@ -268,11 +268,11 @@ public class AnalyticsManager : MonoBehaviour
 
     private IEnumerator EndSessionAndQuitRoutine()
     {
-        Debug.Log("종료 루틴 시작: 세션 데이터를 저장하고 종료합니다.");
+        Debug.Log("醫낅즺 猷⑦떞 ?쒖옉: ?몄뀡 ?곗씠?곕? ??ν븯怨?醫낅즺?⑸땲??");
         EndSession();
         yield return new WaitUntil(() => isSessionDataSaved);
         
-        Debug.Log("세션 데이터 저장 확인됨. 어플리케이션을 종료합니다.");
+        Debug.Log("?몄뀡 ?곗씠??????뺤씤?? ?댄뵆由ъ??댁뀡??醫낅즺?⑸땲??");
         Application.Quit(); // Now really quit.
     }
 
@@ -291,7 +291,7 @@ public class AnalyticsManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("세션 ID 획득 실패: " + task.Exception);
+                Debug.LogError("?몄뀡 ID ?띾뱷 ?ㅽ뙣: " + task.Exception);
                 isSessionDataSaved = true; // Unblock quit process even on failure
                 return;
             }
@@ -307,20 +307,20 @@ public class AnalyticsManager : MonoBehaviour
 
         var sessionData = new Dictionary<string, object>
         {
-            ["게임시작_시간"] = sessionStartTime.ToString("o"),
-            ["게임종료_시간"] = sessionEndTime.ToString("o"),
-            ["총_플레이_타임"] = sessionDuration.ToString(@"hh\:mm\:ss"),
-            ["리셋_횟수"] = rKeyPressLocations,
-            ["함정"] = trapEventsDuringSession,
-            ["활성화_된_체크포인트_갯수"] = checkpointActivationsDuringSession,
-            ["골인_?"] = hasReachedGoal
+            ["game_start_time_utc"] = sessionStartTime.ToString("o"),
+            ["game_end_time_utc"] = sessionEndTime.ToString("o"),
+            ["play_time"] = sessionDuration.ToString(@"hh\:mm\:ss"),
+            ["reset_locations"] = rKeyPressLocations,
+            ["trap_events"] = trapEventsDuringSession,
+            ["checkpoint_activations"] = checkpointActivationsDuringSession,
+            ["goal_reached"] = hasReachedGoal
         };
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            sessionData["유저가_종료한_x좌표"] = player.transform.position.x;
-            sessionData["유저가_종료한_y좌표"] = player.transform.position.y;
+            sessionData["player_end_x"] = player.transform.position.x;
+            sessionData["player_end_y"] = player.transform.position.y;
         }
 
         var parameters = new Dictionary<string, object>
@@ -339,11 +339,11 @@ public class AnalyticsManager : MonoBehaviour
             {
                 if (updateTask.IsCompletedSuccessfully)
                 {
-                    Debug.Log($"[세션 {sessionId}] 저장 완료.");
+                    Debug.Log($"[?몄뀡 {sessionId}] ????꾨즺.");
                 }
                 else
                 {
-                    Debug.LogError("세션 데이터 저장 실패: " + updateTask.Exception);
+                    Debug.LogError("?몄뀡 ?곗씠??????ㅽ뙣: " + updateTask.Exception);
                 }
                 isSessionDataSaved = true;
             });
@@ -352,7 +352,7 @@ public class AnalyticsManager : MonoBehaviour
     private void LogDualEvent(string eventName, Dictionary<string, object> parameters = null)
     {
         if (!isInitialized) {
-            Debug.LogWarning($"분석 서비스가 준비되지 않아 이벤트 전송을 건너뜁니다: {eventName}");
+            Debug.LogWarning($"遺꾩꽍 ?쒕퉬?ㅺ? 以鍮꾨릺吏 ?딆븘 ?대깽???꾩넚??嫄대꼫?곷땲?? {eventName}");
             return;
         }
 
@@ -371,7 +371,7 @@ public class AnalyticsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"UGS 이벤트 '{eventName}' 로깅 실패: {e.Message}");
+            Debug.LogError($"UGS ?대깽??'{eventName}' 濡쒓퉭 ?ㅽ뙣: {e.Message}");
         }
 
         // 2. Log to Firebase
@@ -398,7 +398,7 @@ public class AnalyticsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"Firebase 이벤트 '{eventName}' 로깅 실패: {e.Message}");
+            Debug.LogError($"Firebase ?대깽??'{eventName}' 濡쒓퉭 ?ㅽ뙣: {e.Message}");
         }
     }
 }

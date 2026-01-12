@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Player_WallSlideState : PlayerState
@@ -51,7 +51,7 @@ public class Player_WallSlideState : PlayerState
     {
         float xInput = player.moveInput.x;
 
-        // 플레이어가 벽쪽으로 키를 누르고 있다면, 수평 입력을 0으로 처리하여 떨림 현상을 방지합니다.
+        // ?뚮젅?댁뼱媛 踰쎌そ?쇰줈 ?ㅻ? ?꾨Ⅴ怨??덈떎硫? ?섑룊 ?낅젰??0?쇰줈 泥섎━?섏뿬 ?⑤┝ ?꾩긽??諛⑹??⑸땲??
         if (xInput != 0 && player.facingDir == xInput)
         {
             xInput = 0;

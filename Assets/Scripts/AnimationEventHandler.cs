@@ -1,26 +1,26 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AnimationEventHandler : MonoBehaviour
 {
-    // 부모에 있는 스크립트를 참조하기 위한 변수
+    // 遺紐⑥뿉 ?덈뒗 ?ㅽ겕由쏀듃瑜?李몄“?섍린 ?꾪븳 蹂??
     private Enemy_Warrior warrior;
     private Player player; 
 
     void Awake()
     {
-        // 부모 오브젝트에서 컴포넌트를 찾아서 할당합니다.
+        // 遺紐??ㅻ툕?앺듃?먯꽌 而댄룷?뚰듃瑜?李얠븘???좊떦?⑸땲??
         warrior = GetComponentInParent<Enemy_Warrior>();
         player = GetComponentInParent<Player>();
     }
 
-    // 애니메이션 이벤트에서 호출할 함수입니다.
+    // ?좊땲硫붿씠???대깽?몄뿉???몄텧???⑥닔?낅땲??
     public void TriggerAttackEvent()
     {
-        // 부모의 Attack 함수를 호출합니다.
+        // 遺紐⑥쓽 Attack ?⑥닔瑜??몄텧?⑸땲??
         warrior?.Attack();
     }
 
-    // 플레이어 걷는 소리를 위한 애니메이션 이벤트 함수
+    // ?뚮젅?댁뼱 嫄룸뒗 ?뚮━瑜??꾪븳 ?좊땲硫붿씠???대깽???⑥닔
     public void PlayWalkSound()
     {
         player?.PlayWalkSound();
