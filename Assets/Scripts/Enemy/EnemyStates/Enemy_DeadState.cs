@@ -9,6 +9,7 @@ public class Enemy_DeadState : EnemyState
 
     public override void Enter()
     {
+        Debug.Log($"[Enemy_DeadState] {enemy.name} has entered DeadState.");
         base.Enter();
         stateTimer = 5f;
     }

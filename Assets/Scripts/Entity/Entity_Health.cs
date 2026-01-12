@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Entity_Health : MonoBehaviour, IDamagable
+public class Entity_Health : MonoBehaviour, IDamagable, IDamageable
 {
     protected Entity_VFX entityVfx;
     protected Entity entity;
@@ -39,6 +39,8 @@ public class Entity_Health : MonoBehaviour, IDamagable
         if (isDead)
             return;
 
+        Debug.Log($"[TakeDamage] {gameObject.name} received {damage} damage from {damagedealer.name}.");
+
         Player player = GetComponent<Player>();
         if (player != null)
         {
@@ -48,29 +50,41 @@ public class Entity_Health : MonoBehaviour, IDamagable
             damage *= (1 - damageReduction);
         }
 
+        ReduceHp(damage);
+
+        // If damage was lethal, Die() is called inside ReduceHp and isDead becomes true.
+        // We must not apply knockback to a dead entity.
+        if (isDead)
+        {
+            Debug.Log($"[TakeDamage] {gameObject.name} is dead. Halting TakeDamage execution.");
+            return;
+        }
+
         Vector2 knockback = CalculateKnockback(damage, damagedealer);
         float duration = CalculateDuration(damage);
 
+        Debug.Log($"[TakeDamage] Applying knockback to {gameObject.name}.");
         entity?.ReciveKnockback(knockback, duration);
 
         if (entityVfx != null)
         {
             entityVfx?.PlayOnDamageVfx();
         }
-
-        ReduceHp(damage);
     }
 
 
     protected void ReduceHp(float damage)
     {
+        float oldHp = currentHp;
         currentHp -= damage;
+        Debug.Log($"[ReduceHp] {gameObject.name}'s HP reduced from {oldHp} to {currentHp}.");
         onHealthChanged?.Invoke(currentHp, maxHp);
 
         if (currentHp <= 0)
+        {
+            Debug.Log($"[ReduceHp] {gameObject.name}'s HP is at or below zero. Calling Die().");
             Die();
-
-       
+        }
     }
 
     protected void InvokeOnHealthChanged(float current, float max)
@@ -80,6 +94,7 @@ public class Entity_Health : MonoBehaviour, IDamagable
 
     protected virtual void Die()
     {
+        Debug.Log($"[Die] {gameObject.name} Die() method called.");
         isDead = true;
         entity.onEntityDeath();
     }

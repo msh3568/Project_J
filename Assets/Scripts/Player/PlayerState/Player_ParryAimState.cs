@@ -79,7 +79,7 @@ public class Player_ParryAimState : PlayerState
             AudioManager.Instance.PlaySFX(player.parryFireSound, player.parryFireVolume);
         }
         
-        parriedProjectile.LaunchParried(lastAimDirection);
+        parriedProjectile.LaunchParried(lastAimDirection, player.transform);
         GameManager.Instance.EndSlowMotion();
 
         // 4. Exit State

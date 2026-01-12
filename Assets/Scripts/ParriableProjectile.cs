@@ -48,7 +48,7 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
 
         if (originalScript != null)
         {
-            originalScript.wasParried = true;
+            originalScript.isParried = true; // Changed from wasParried to isParried
             Destroy(originalScript); // Destroy the SpikeBall component to prevent its OnCollisionEnter2D from interfering
         }
 

@@ -20,20 +20,30 @@ public class Player_CounterAttackState : PlayerState
         base.Update();
         player.SetVelocity(0, 0); // Stay still while attempting to parry
 
-        // DEBUG: Log the timer to see if it's counting down
-        // Debug.Log("Counter Attack State Timer: " + stateTimer);
-
         // Continuously check if we can parry something within the window
-        if (combat.CounterAttackPerformed())
+        Collider2D parriedObject = combat.CounterAttackPerformed();
+        
+        if (parriedObject != null)
         {
-            // Success! Play the strike animation and transition to the aim state.
-            player.anim.SetTrigger("counterAttackPerformed");
-            stateMachine.ChangeState(player.parryAimState);
-            return;
+            // A parry was successful. Now, decide what to do based on the type of object parried.
+            if (parriedObject.GetComponent<IParryable>() != null)
+            {
+                // This was a projectile that can be aimed and returned. Go to the slow-mo aim state.
+                // The projectile itself was already set inside CounterAttackPerformed.
+                stateMachine.ChangeState(player.parryAimState);
+            }
+            else
+            {
+                // This was a simple parry (melee attack, spikeball, etc.).
+                // The counter-effect (knockback/stun) was already handled in CounterAttackPerformed.
+                // We don't want to slow time, so just return to idle.
+                player.anim.SetTrigger("counterAttackPerformed"); // Play a success feedback animation/effect if you have one
+                stateMachine.ChangeState(player.idleState);
+            }
+            return; // Exit the state logic
         }
 
         // If the parry window timer runs out, the attempt has failed. Return to idle.
-        stateTimer -= Time.deltaTime;
         if (stateTimer < 0)
         {
             stateMachine.ChangeState(player.idleState);

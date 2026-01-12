@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 250183603332628446}
   - component: {fileID: -1622880498123267898}
   - component: {fileID: 5991943194609097291}
-  - component: {fileID: -4712933333035814510}
   - component: {fileID: 6427686214265571886}
   m_Layer: 12
   m_Name: PF Village Props - Spike Ball
@@ -173,7 +172,15 @@ MonoBehaviour:
   lifetime: 5
   immobilizationDuration: 2
   knockbackForce: 3
-  wasParried: 0
+  damage: 1
+  speed: 10
+  parriedSpeedMultiplier: 4
+  parriedDamage: 1000
+  hitRadius: 0.5
+  whatIsTarget:
+    serializedVersion: 2
+    m_Bits: 256
+  isParried: 0
 --- !u!50 &5991943194609097291
 Rigidbody2D:
   serializedVersion: 5
@@ -201,26 +208,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-4712933333035814510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358752294138806031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3857b0385083ab74296f061a46b887d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParriableProjectile
-  slow_duration: 5
-  slow_scale: 0.3
-  return_delay: 1.5
-  returnSpeedMultiplier: 9
-  trajectoryPreviewLength: 5
-  aimSweepSpeed: 6
-  trajectoryPointCount: 50
-  trajectoryPointSpacing: 0.1
 --- !u!120 &6427686214265571886
 LineRenderer:
   serializedVersion: 2

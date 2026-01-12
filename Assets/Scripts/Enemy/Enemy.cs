@@ -61,6 +61,7 @@ public class Enemy : Entity
 
     public override void onEntityDeath()
     {
+        Debug.Log($"[Enemy] {gameObject.name} onEntityDeath() called. Changing to DeadState.");
         base.onEntityDeath();
 
         if (mediumFireTracePrefab != null)

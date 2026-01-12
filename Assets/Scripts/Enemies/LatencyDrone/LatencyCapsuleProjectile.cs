@@ -6,7 +6,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     [Header("Projectile Settings")]
     [SerializeField] private float damageToPlayer = 1f;
     [SerializeField] public float projectileSpeed = 12f;
-    [SerializeField] private float parriedSpeedMultiplier = 1.5f;
+    [SerializeField] private float parriedSpeedMultiplier = 4f;
     [SerializeField] private Color projectileColor = Color.red;
     [SerializeField] private float trailTime = 0.5f;
     [SerializeField] private float trailStartWidth = 0.1f;
@@ -17,11 +17,48 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     [SerializeField] private Color flashColor = Color.white;
     [SerializeField] private Vector3 flashScaleMultiplier = new Vector3(1.5f, 1.5f, 1f);
 
+    [Header("Parry Hit Detection")]
+    [SerializeField] private float hitRadius = 0.5f; // Keep hitRadius for OverlapCircle
+    [SerializeField] private LayerMask whatIsTarget; // NEW: LayerMask for OverlapCircle
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private TrailRenderer trailRenderer;
+    
+    void Update()
+    {
+        if (isParried && GetComponent<Collider2D>().enabled)
+        {
+            // Active hit detection using whatIsTarget LayerMask
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, hitRadius, whatIsTarget); // Using whatIsTarget
+            foreach (var hit in hits)
+            {
+                // Only damage if it's not the player and it's damageable
+                if (!hit.CompareTag("Player"))
+                {
+                    IDamageable damageable = hit.GetComponent<IDamageable>();
+                    if (damageable != null && damageSource != null)
+                    {
+                        Debug.Log($"[LatencyCapsule Active] Parried projectile hitting '{hit.name}'. Dealing 1000 damage from source '{damageSource.name}'.");
+                        damageable.TakeDamage(1000f, damageSource);
+                        
+                        // Disable own collider to prevent hitting multiple times
+                        GetComponent<Collider2D>().enabled = false;
+                        
+                        // Destroy after a delay
+                        Destroy(gameObject, 0.5f);
+
+                        // Stop checking after the first hit
+                        return; 
+                    }
+                }
+            }
+        }
+    }
+
     private bool isParried = false;
     private Transform originalDroneTransform;
+    private Transform damageSource; // To store who parried us
 
     public GameObject GetGameObject() => gameObject;
     public float GetProjectileSpeed() => projectileSpeed;
@@ -66,7 +103,8 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
             }
             else
             {
-                trailRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            // This is a common pattern for default material if none is assigned
+                trailRenderer.material = new Material(Shader.Find("Sprites/Default")); 
             }
             trailRenderer.startColor = projectileColor;
             trailRenderer.endColor = new Color(projectileColor.r, projectileColor.g, projectileColor.b, 0);
@@ -105,49 +143,44 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     {
         if (other == null) return;
 
-        if (!isParried && originalDroneTransform != null && other.gameObject == originalDroneTransform.gameObject)
+        // If parried, only care about hitting the ground
+        if (isParried)
+        {
+            if (other.CompareTag("Ground"))
+            {
+                Destroy(gameObject);
+            }
+            return;
+        }
+
+        // --- Original logic for when not parried ---
+
+        // Don't collide with the drone that fired it
+        if (originalDroneTransform != null && other.gameObject == originalDroneTransform.gameObject)
         {
             Destroy(gameObject);
             return;
         }
-
-        if (other.CompareTag("Ground"))
+        
+        if (other.CompareTag("Player"))
         {
+            Player_Health playerHealth = other.GetComponent<Player_Health>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damageToPlayer, transform);
+            }
+
+            LatencyDebuffReceiver debuffReceiver = other.GetComponent<LatencyDebuffReceiver>();
+            if (debuffReceiver != null)
+            {
+                    debuffReceiver.ApplyDebuff();
+                IArmor playerArmor = other.GetComponent<IArmor>();
+                debuffReceiver.OnHitReduceArmor(playerArmor);
+            }
             Destroy(gameObject);
         }
-        else if (other.CompareTag("Player"))
+        else if (other.CompareTag("Ground"))
         {
-            if (isParried)
-            {
-                return; 
-            }
-            else
-            {
-                Player_Health playerHealth = other.GetComponent<Player_Health>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damageToPlayer, transform);
-                }
-
-                LatencyDebuffReceiver debuffReceiver = other.GetComponent<LatencyDebuffReceiver>();
-                if (debuffReceiver != null)
-                {
-                    debuffReceiver.ApplyDebuff();
-                    IArmor playerArmor = other.GetComponent<IArmor>();
-                    debuffReceiver.OnHitReduceArmor(playerArmor);
-                }
-                Destroy(gameObject);
-            }
-        }
-        else if (isParried)
-        {
-            IDamageable damagableObject = other.GetComponent<IDamageable>();
-            if (damagableObject != null && !other.CompareTag("Player"))
-            {
-                damagableObject.TakeDamage(1000f, transform);
-                Destroy(gameObject);
-                return;
-            }
             Destroy(gameObject);
         }
     }
@@ -165,12 +198,15 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         }
     }
 
-    public void LaunchParried(Vector2 direction)
+    public void LaunchParried(Vector2 direction, Transform playerTransform)
     {
         if (!isParried) return;
         
+        this.damageSource = playerTransform; // Store the player as the damage source
+
         rb.isKinematic = false;
         rb.linearVelocity = direction.normalized * projectileSpeed * parriedSpeedMultiplier;
+        gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
         Debug.Log($"Projectile LAUNCHED by player in direction {direction}.");
 
         Destroy(gameObject, 5f);

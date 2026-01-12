@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 9082116018110743269}
   - component: {fileID: 6487138611206206000}
   - component: {fileID: -4058225587342450042}
-  - component: {fileID: 5932203325583410767}
   m_Layer: 12
   m_Name: LatencyCapsuleProjectile
   m_TagString: Enemy
@@ -295,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b571e56231ce1b4ebdd4fc7e4534811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LatencyCapsuleProjectile
+  damageToPlayer: 1
   projectileSpeed: 12
   parriedSpeedMultiplier: 1.5
   projectileColor: {r: 1, g: 0, b: 0, a: 1}
@@ -304,6 +304,10 @@ MonoBehaviour:
   flashDuration: 0.05
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashScaleMultiplier: {x: 1.5, y: 1.5, z: 1}
+  hitRadius: 0.5
+  whatIsTarget:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!120 &-4058225587342450042
 LineRenderer:
   serializedVersion: 2
@@ -414,23 +418,3 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &5932203325583410767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6219541328269694413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3857b0385083ab74296f061a46b887d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParriableProjectile
-  slow_duration: 5
-  slow_scale: 0.3
-  return_delay: 1.5
-  returnSpeedMultiplier: 9
-  trajectoryPreviewLength: 5
-  aimSweepSpeed: 2
-  trajectoryPointCount: 50
-  trajectoryPointSpacing: 0.1
