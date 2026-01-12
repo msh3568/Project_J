@@ -26,7 +26,9 @@ public class Entity_Combat : MonoBehaviour
                 continue;
 
             damagable.TakeDamage(damage, transform);
-            vfx.CreateOnHitVFX(target.transform);
+            
+            if (vfx != null)
+                vfx.CreateOnHitVFX(target.transform);
         }
         
     }

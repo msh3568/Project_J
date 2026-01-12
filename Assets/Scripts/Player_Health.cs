@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using Unity.Cinemachine;
 
 public class Player_Health : Entity_Health
 {
@@ -13,22 +15,36 @@ public class Player_Health : Entity_Health
     private float regenerationTimer;
     private int lastLoggedSecond; // New field to track last logged second
 
+    private CinemachineImpulseSource impulseSource;
+
     public bool IsInvincible { get; set; }
     public bool CanRegenerate { get; private set; }
+
+    private CameraShake cameraShake;
+    private SpriteRenderer spriteRenderer;
 
     protected override void Awake()
     {
         entity = GetComponent<Entity>();
         entityVfx = GetComponent<Entity_VFX>();
+        cameraShake = GetComponent<CameraShake>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         currentShield = maxShield;
         IsInvincible = false;
         CanRegenerate = false; // Initialize
+
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("Player_Health: SpriteRenderer component not found on child objects!");
+        }
     }
 
+   
     private void Start()
     {
         InvokeOnHealthChanged(currentShield, maxShield);
         Debug.Log($"초기 보호막: {currentShield}개");
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     private void Update()
@@ -71,6 +87,8 @@ public class Player_Health : Entity_Health
     {
         if (isDead || IsInvincible) return;
 
+        CameraShakeManager.instance.CamerShake(impulseSource);
+
         timeSinceLastHit = 0f;
         regenerationTimer = 0f;
 
@@ -78,6 +96,13 @@ public class Player_Health : Entity_Health
         {
             currentShield--;
             InvokeOnHealthChanged(currentShield, maxShield);
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = Color.white;
+            }
+            
+            entityVfx?.PlayOnDamageVfx();
 
             if (currentShield > 0)
             {
@@ -97,14 +122,12 @@ public class Player_Health : Entity_Health
             Vector2 knockback = CalculateKnockback(damage, damageDealer);
             float duration = CalculateDuration(damage);
             entity?.ReciveKnockback(knockback, duration);
-            entityVfx?.PlayOnDamageVfx();
         }
         else
         {
             Die();
         }
     }
-
 
     protected override bool IsHeavyDamage(float damage)
     {
@@ -119,5 +142,4 @@ public class Player_Health : Entity_Health
             base.Die();
         }
     }
-
 }

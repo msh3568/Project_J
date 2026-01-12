@@ -40,7 +40,10 @@ public class Entity_VFX : MonoBehaviour
 
     private IEnumerator OnDamageVfxco()
     {
-        sr.material = onDamageMaterial;
+        if (onDamageMaterial != null)
+        {
+            sr.material = onDamageMaterial;
+        }
 
         yield return new WaitForSeconds(onDamageVfxDuration);
         

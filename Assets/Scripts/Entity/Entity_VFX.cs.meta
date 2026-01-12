@@ -5,6 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
+  - hitVfx: {fileID: 1345081126871789188, guid: 2b326e96230651545b7370ddcf2a86e5, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
