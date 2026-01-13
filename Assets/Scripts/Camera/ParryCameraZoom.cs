@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -6,18 +6,18 @@ public class ParryCameraZoom : MonoBehaviour
 {
     public static ParryCameraZoom Instance { get; private set; }
 
-    [SerializeField, InspectorName("Cinemachine 카메라"), Tooltip("줌을 적용할 활성 Cinemachine 카메라")] private CinemachineCamera cinemachineCamera;
+    [SerializeField, InspectorName("Cinemachine 카메라"), Tooltip("줌을 적용할 대상 Cinemachine 카메라")] private CinemachineCamera cinemachineCamera;
 
-    [Header("줌 목표값 (0이면 배율 사용)")]
-    [SerializeField, InspectorName("줌인 Ortho Size"), Tooltip("Orthographic 모드 줌인 크기. 0이면 배율 사용")] private float zoomInOrthoSize = 0f;
-    [SerializeField, InspectorName("줌인 FOV"), Tooltip("Perspective 모드 줌인 FOV. 0이면 배율 사용")] private float zoomInFov = 0f;
-    [SerializeField, Range(0.1f, 1f), InspectorName("줌 배율"), Tooltip("기본값에 곱하는 줌 배율 (작을수록 더 줌인)")] private float zoomInMultiplier = 0.8f;
+    [Header("줌 목표값(0이면 배율 적용)")]
+    [SerializeField, InspectorName("줌인 Ortho Size(작을수록 더 줌인)"), Tooltip("Orthographic 모드 줌인 크기. 0이면 배율 적용")] private float zoomInOrthoSize = 0f;
+    [SerializeField, InspectorName("줌인 FOV(작을수록 더 줌인)"), Tooltip("Perspective 모드 줌인 FOV. 0이면 배율 적용")] private float zoomInFov = 0f;
+    [SerializeField, Range(0.1f, 1f), InspectorName("줌인 배율(작을수록 더 줌인)"), Tooltip("기본값에 곱하는 줌 배율")] private float zoomInMultiplier = 0.8f;
 
     [Header("타이밍")]
-    [SerializeField, InspectorName("줌인 시간(초)"), Tooltip("줌인 걸리는 시간(초)")] private float zoomInDuration = 0.12f;
-    [SerializeField, InspectorName("줌아웃 시간(초)"), Tooltip("줌아웃 걸리는 시간(초)")] private float zoomOutDuration = 0.18f;
-    [SerializeField, InspectorName("펄스 유지(초)"), Tooltip("펄스 줌 유지 시간(초)")] private float pulseHoldTime = 0.08f;
-    [SerializeField, InspectorName("언스케일 시간"), Tooltip("슬로모션에 영향받지 않게 할지")] private bool useUnscaledTime = true;
+    [SerializeField, InspectorName("줌인 시간(초)"), Tooltip("줌인에 걸리는 시간(초)")] private float zoomInDuration = 0.12f;
+    [SerializeField, InspectorName("줌아웃 시간(초)"), Tooltip("줌아웃에 걸리는 시간(초)")] private float zoomOutDuration = 0.18f;
+    [SerializeField, InspectorName("펄스 유지(초)"), Tooltip("펄스 중간 유지 시간(초)")] private float pulseHoldTime = 0.08f;
+    [SerializeField, InspectorName("언스케일 시간 사용"), Tooltip("슬로모션 영향 없이 진행")] private bool useUnscaledTime = true;
 
     private float baseOrthoSize;
     private float baseFov;
@@ -161,6 +161,4 @@ public class ParryCameraZoom : MonoBehaviour
         }
         cinemachineCamera.Lens = lens;
     }
-
-    
 }

@@ -35,8 +35,6 @@ public class Player_ParryAimState : PlayerState
             return;
         }
 
-        ParryCameraZoom.Instance?.BeginParryZoom();
-
         // Ensure we have a LineRenderer component, and get a reference to it.
         GetOrAddLineRenderer();
 
@@ -170,3 +168,4 @@ public class Player_ParryAimState : PlayerState
         GameManager.Instance.EndSlowMotion();
     }
 }
+

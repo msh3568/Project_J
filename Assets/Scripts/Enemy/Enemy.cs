@@ -69,6 +69,7 @@ public class Enemy : Entity
             Instantiate(mediumFireTracePrefab, transform.position, Quaternion.identity);
         }
 
+        CameraShakeManager.instance?.Shake();
         OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
 

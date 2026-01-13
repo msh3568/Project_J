@@ -30,6 +30,7 @@ public class Player_CounterAttackState : PlayerState
             {
                 // This was a projectile that can be aimed and returned. Go to the slow-mo aim state.
                 // The projectile itself was already set inside CounterAttackPerformed.
+                ParryCameraZoom.Instance?.BeginParryZoom();
                 stateMachine.ChangeState(player.parryAimState);
             }
             else
@@ -56,3 +57,6 @@ public class Player_CounterAttackState : PlayerState
         base.Exit();
     }
 }
+
+
+
