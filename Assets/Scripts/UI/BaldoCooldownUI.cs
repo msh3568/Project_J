@@ -1,12 +1,12 @@
-
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 
-// 이 스크립트는 BALDO 스킬의 쿨타임을 표시할 오버레이 이미지에 직접 추가해야 합니다.
+// ???ㅽ겕由쏀듃??BALDO ?ㅽ궗??荑⑦??꾩쓣 ?쒖떆???ㅻ쾭?덉씠 ?대?吏??吏곸젒 異붽??댁빞 ?⑸땲??
 [RequireComponent(typeof(Image))]
 public class BaldoCooldownUI : MonoBehaviour
 {
-    // Inspector에서 Player 오브젝트를 이 필드로 드래그하세요.
+    // Inspector?먯꽌 Player ?ㅻ툕?앺듃瑜????꾨뱶濡??쒕옒洹명븯?몄슂.
     [SerializeField] private Player player;
 
     private Image cooldownImage;
@@ -21,7 +21,7 @@ public class BaldoCooldownUI : MonoBehaviour
 
     void Start()
     {
-        // Player로부터 Baldo 스킬 참조를 찾습니다.
+        // Player濡쒕???Baldo ?ㅽ궗 李몄“瑜?李얠뒿?덈떎.
         if (player != null)
         {
             baldoSkill = player.skillManager.baldo;
@@ -40,17 +40,17 @@ public class BaldoCooldownUI : MonoBehaviour
                 cooldownProgress = baldoSkill.GetCooldownTimer() / totalCooldown;
             }
 
-            // 원래 색상의 RGB 값은 유지하고 알파(투명도) 값만 변경합니다.
+            // ?먮옒 ?됱긽??RGB 媛믪? ?좎??섍퀬 ?뚰뙆(?щ챸?? 媛믩쭔 蹂寃쏀빀?덈떎.
             Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * cooldownProgress);
             cooldownImage.color = newColor;
         }
         else
         {
-            // 스킬 참조가 없으면 오버레이를 완전히 투명하게 만듭니다.
+            // ?ㅽ궗 李몄“媛 ?놁쑝硫??ㅻ쾭?덉씠瑜??꾩쟾???щ챸?섍쾶 留뚮벊?덈떎.
             Color transparentColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
             cooldownImage.color = transparentColor;
 
-            // 스킬 참조를 다시 얻으려고 시도합니다.
+            // ?ㅽ궗 李몄“瑜??ㅼ떆 ?살쑝?ㅺ퀬 ?쒕룄?⑸땲??
             if (player != null)
             {
                 baldoSkill = player.skillManager.baldo;

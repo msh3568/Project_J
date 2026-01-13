@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using Unity.Cinemachine;
 
@@ -43,7 +43,7 @@ public class Player_Health : Entity_Health
     private void Start()
     {
         InvokeOnHealthChanged(currentShield, maxShield);
-        Debug.Log($"초기 보호막: {currentShield}개");
+        Debug.Log($"Initial shield: {currentShield}");
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
@@ -56,7 +56,7 @@ public class Player_Health : Entity_Health
 
         if (CanRegenerate && !wasCanRegenerate)
         {
-            Debug.Log($"보호막 재생 지연 ({regenerationDelayAfterHit:F2}초) 완료! 보호막 재생을 시작합니다.");
+            Debug.Log($"Shield regen ready after {regenerationDelayAfterHit:F2}s. Starting regen.");
             regenerationTimer = 0f; // Reset timer when regeneration starts
             lastLoggedSecond = -1; // Reset for new regeneration cycle
         }
@@ -68,7 +68,7 @@ public class Player_Health : Entity_Health
             int currentSecond = Mathf.FloorToInt(regenerationTimer);
             if (currentSecond > lastLoggedSecond && currentSecond > 0)
             {
-                Debug.Log($"보호막 재생 중... 다음 보호막까지 {regenerationTime - regenerationTimer:F2}초 남음. (현재 진행: {regenerationTimer:F2}초 / {regenerationTime:F2}초)");
+                Debug.Log($"Shield regen ticking. Next shield in {regenerationTime - regenerationTimer:F2}s (elapsed {regenerationTimer:F2}s/{regenerationTime:F2}s).");
                 lastLoggedSecond = currentSecond;
             }
 
@@ -76,7 +76,7 @@ public class Player_Health : Entity_Health
             {
                 currentShield++;
                 InvokeOnHealthChanged(currentShield, maxShield);
-                Debug.Log($"보호막 재생! 현재 보호막: {currentShield}개");
+                Debug.Log($"Shield regenerated. Current shield: {currentShield}");
                 regenerationTimer = 0f;
                 lastLoggedSecond = -1; // Reset for next shield point regeneration
             }
@@ -106,11 +106,11 @@ public class Player_Health : Entity_Health
 
             if (currentShield > 0)
             {
-                Debug.Log($"피격! 남은 보호막: {currentShield}개");
+                Debug.Log($"Hit! Shield remaining: {currentShield}");
             }
             else
             {
-                Debug.Log("보호막 소진! 다음 공격은 치명적입니다.");
+                Debug.Log("Shield broken! Next hit will be lethal.");
             }
             
             Player player = GetComponent<Player>();
@@ -138,7 +138,7 @@ public class Player_Health : Entity_Health
     {
         if (!isDead)
         {
-            Debug.Log("플레이어가 사망했습니다!");
+            Debug.Log("Player has died!");
             base.Die();
         }
     }

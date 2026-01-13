@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 #if CINEMACHINE_PRESENT
 using Cinemachine;
 #endif

@@ -1,27 +1,27 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// PC SDK 3.0 모듈 별 Using 구문이 필요합니다.
+// PC SDK 3.0 紐⑤뱢 蹂?Using 援щЦ???꾩슂?⑸땲??
 using static Stove.PCSDK.Base;
 using static Stove.PCSDK.GameSupport;
 
 public class STOVEPCSDK3Manager : MonoBehaviour
 {
-    // 클래스 상단에 필요한 변수를 선언합니다.
+    // ?대옒???곷떒???꾩슂??蹂?섎? ?좎뼵?⑸땲??
 
-    // 초기화 여부를 저장하기 위한 변수
+    // 珥덇린???щ?瑜???ν븯湲??꾪븳 蹂??
     private bool _isInitialized;
 
-    // 코루틴 실행 주기를 저장하기 위한 변수
+    // 肄붾（???ㅽ뻾 二쇨린瑜???ν븯湲??꾪븳 蹂??
     private float _runCallbackInternval = 1.0f;
 
-    // RunCallbackLoop 코루틴을 저장하기 위한 변수
+    // RunCallbackLoop 肄붾（?댁쓣 ??ν븯湲??꾪븳 蹂??
     private Coroutine _runCallbackCoroutine;
 
-    // 오브젝트를 Singleton 형태로 사용히가 위한 정적 변수
+    // ?ㅻ툕?앺듃瑜?Singleton ?뺥깭濡??ъ슜?덇? ?꾪븳 ?뺤쟻 蹂??
     private static STOVEPCSDK3Manager _instance;
     private static object _lockObject = new object();
 
@@ -49,13 +49,13 @@ public class STOVEPCSDK3Manager : MonoBehaviour
 
     #region Unity Methods
 
-    // DontDestroyOnLoad 처리를 진행
+    // DontDestroyOnLoad 泥섎━瑜?吏꾪뻾
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
 
-    // OnDestroy 에서 UnInitialize 호출
+    // OnDestroy ?먯꽌 UnInitialize ?몄텧
     private void OnDestroy()
     {
         if (_isInitialized)
@@ -68,7 +68,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
 
     #region Coroutine
 
-    // RunCallback을 처리하기 위한 코루틴을 작성
+    // RunCallback??泥섎━?섍린 ?꾪븳 肄붾（?댁쓣 ?묒꽦
     private IEnumerator RunCallbackCoroutine()
     {
         var wfs = new WaitForSeconds(_runCallbackInternval);
@@ -84,7 +84,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
 
     #region STOVEPCSDK3Manager public methods
 
-    // Result 구조체 출력 메서드
+    // Result 援ъ“泥?異쒕젰 硫붿꽌??
     public void PrintResult(Result r)
     {
         StringBuilder sb = new StringBuilder();
@@ -98,7 +98,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         Debug.Log(sb.ToString());
     }
 
-    // CallbackResult 구조체 출력 메서드
+    // CallbackResult 援ъ“泥?異쒕젰 硫붿꽌??
     public void PrintCallbackResult(CallbackResult cr)
     {
         StringBuilder sb = new StringBuilder();
@@ -113,7 +113,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         Debug.Log(sb.ToString());
     }
 
-    // [수정] 공식 문서의 절차에 따라 초기화 로직 변경
+    // [?섏젙] 怨듭떇 臾몄꽌???덉감???곕씪 珥덇린??濡쒖쭅 蹂寃?
     public void Initialize()
     {
         StartRunCallbackLoop();
@@ -134,7 +134,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
             if (restartNeeded)
             {
                 Debug.LogError("Execution via STOVE Launcher is required. Please exit the application.");
-                // Application.Quit(); // 실제 빌드에서는 런처를 통해 실행되지 않았으므로 종료해야 합니다.
+                // Application.Quit(); // ?ㅼ젣 鍮뚮뱶?먯꽌???곗쿂瑜??듯빐 ?ㅽ뻾?섏? ?딆븯?쇰?濡?醫낅즺?댁빞 ?⑸땲??
                 return;
             }
 
@@ -155,7 +155,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
                     if (gsInitResult.IsSuccessful())
                     {
                         Debug.Log("STOVE GameSupport SDK initialized successfully.");
-                        // [수정] SDK 초기화 성공 후 유저 정보 요청
+                        // [?섏젙] SDK 珥덇린???깃났 ???좎? ?뺣낫 ?붿껌
                         RequestUserInfo();
                         UpdateGameStartAchievement();
                     }
@@ -172,10 +172,10 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         });
     }
 
-    // [추가] 유저 닉네임을 저장할 속성
+    // [異붽?] ?좎? ?됰꽕?꾩쓣 ??ν븷 ?띿꽦
     public string UserNickname { get; private set; }
 
-    // [추가] 유저 정보를 요청하는 메서드
+    // [異붽?] ?좎? ?뺣낫瑜??붿껌?섎뒗 硫붿꽌??
     public void RequestUserInfo()
     {
         if (!_isInitialized)
@@ -186,24 +186,24 @@ public class STOVEPCSDK3Manager : MonoBehaviour
 
         Debug.Log("Requesting user information from STOVE...");
         
-        // 1. 유저 정보를 채울 객체를 선언합니다. 오류 메시지에 나온 정확한 타입 이름을 사용합니다.
+        // 1. ?좎? ?뺣낫瑜?梨꾩슱 媛앹껜瑜??좎뼵?⑸땲?? ?ㅻ쪟 硫붿떆吏???섏삩 ?뺥솗??????대쫫???ъ슜?⑸땲??
         Stove.PCSDK.Base.StovePCUser user = new Stove.PCSDK.Base.StovePCUser();
 
-        // 2. 함수를 호출하고, 결과를 받습니다. user 객체를 ref 키워드로 넘겨줍니다.
+        // 2. ?⑥닔瑜??몄텧?섍퀬, 寃곌낵瑜?諛쏆뒿?덈떎. user 媛앹껜瑜?ref ?ㅼ썙?쒕줈 ?섍꺼以띾땲??
         Result result = Base_GetUser(ref user);
 
-        // 3. 반환된 결과값을 확인합니다.
+        // 3. 諛섑솚??寃곌낵媛믪쓣 ?뺤씤?⑸땲??
         Debug.Log("====== Base_GetUser Result ======");
         PrintResult(result);
         if (result.IsSuccessful())
         {
             UserNickname = user.nickname;
-            //Debug.Log($"유저 정보 획득 성공: Nickname = {UserNickname}, MemberNo = {user.memberNumber}, GameUserId = {user.gameUserId}");
+            //Debug.Log($"?좎? ?뺣낫 ?띾뱷 ?깃났: Nickname = {UserNickname}, MemberNo = {user.memberNumber}, GameUserId = {user.gameUserId}");
         }
         else
         {
-            Debug.LogError("유저 정보 획득 실패.");
-            UserNickname = "StoveUser"; // 실패 시 기본값 설정
+            Debug.LogError("?좎? ?뺣낫 ?띾뱷 ?ㅽ뙣.");
+            UserNickname = "StoveUser"; // ?ㅽ뙣 ??湲곕낯媛??ㅼ젙
         }
     }
 
@@ -221,16 +221,16 @@ public class STOVEPCSDK3Manager : MonoBehaviour
             PrintCallbackResult(cr);
             if (cr.result.IsSuccessful())
             {
-                Debug.Log($"도전과제 '{statId}' 스탯 업데이트 성공!");
+                Debug.Log($"?꾩쟾怨쇱젣 '{statId}' ?ㅽ꺈 ?낅뜲?댄듃 ?깃났!");
             }
             else
             {
-                Debug.LogError($"도전과제 '{statId}' 스탯 업데이트 실패.");
+                Debug.LogError($"?꾩쟾怨쇱젣 '{statId}' ?ㅽ꺈 ?낅뜲?댄듃 ?ㅽ뙣.");
             }
         });
     }
 
-    // 모듈 통합 정리를 위한 UnInitialize 메소드 작성
+    // 紐⑤뱢 ?듯빀 ?뺣━瑜??꾪븳 UnInitialize 硫붿냼???묒꽦
     public void UnInitialize()
     {
         Result result;
@@ -247,7 +247,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         Debug.Log("All STOVE SDK modules uninitialized.");
     }
 
-    // RunCallback을 주기적으로 호출하기 위한 메소드 작성
+    // RunCallback??二쇨린?곸쑝濡??몄텧?섍린 ?꾪븳 硫붿냼???묒꽦
     public void StartRunCallbackLoop()
     {
         if (_runCallbackCoroutine == null)
@@ -258,7 +258,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
         }
     }
 
-    // Coroutine을 중지하기 위한 메소드 작성
+    // Coroutine??以묒??섍린 ?꾪븳 硫붿냼???묒꽦
     public void StopRunCallbackLoop()
     {
         if (_runCallbackCoroutine != null)

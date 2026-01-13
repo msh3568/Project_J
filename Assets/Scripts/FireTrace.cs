@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class FireTrace : MonoBehaviour
 {
-    [Tooltip("획득할 수 있는 점수 (작은 것: 1, 중간: 5, 큰 것: 10)")]
+    [Tooltip("?띾뱷?????덈뒗 ?먯닔 (?묒? 寃? 1, 以묎컙: 5, ??寃? 10)")]
     public int points = 1;
 
     [Header("Sound Effects")]
@@ -22,13 +22,13 @@ public class FireTrace : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    // 2D 충돌 감지 함수
+    // 2D 異⑸룎 媛먯? ?⑥닔
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 충돌한 오브젝트가 "Player" 태그를 가지고 있는지 확인합니다.
+        // 異⑸룎???ㅻ툕?앺듃媛 "Player" ?쒓렇瑜?媛吏怨??덈뒗吏 ?뺤씤?⑸땲??
         if (other.CompareTag("Player"))
         {
-            // GameManager를 찾아 점수를 추가하고, 이 오브젝트를 파괴(수집)합니다.
+            // GameManager瑜?李얠븘 ?먯닔瑜?異붽??섍퀬, ???ㅻ툕?앺듃瑜??뚭눼(?섏쭛)?⑸땲??
             GameManager.Instance?.AddFireTracePoints(points);
 
             // Play sound based on points
@@ -49,7 +49,7 @@ public class FireTrace : MonoBehaviour
         }
     }
 
-    // 3D 게임인 경우 사용되는 함수이므로 2D 게임에서는 필요 없습니다.
+    // 3D 寃뚯엫??寃쎌슦 ?ъ슜?섎뒗 ?⑥닔?대?濡?2D 寃뚯엫?먯꽌???꾩슂 ?놁뒿?덈떎.
     /*
     private void OnTriggerEnter(Collider other)
     {

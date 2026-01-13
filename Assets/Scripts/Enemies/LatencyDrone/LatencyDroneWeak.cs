@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
 
@@ -10,18 +10,18 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     [SerializeField] private float stopDistance = 3f; // Distance from player to stop moving and start firing
 
     [Header("Chase Speed Curve Settings")]
-    [SerializeField] private AnimationCurve chaseSpeedCurve; // 플레이어와의 거리에 따른 추적 속도 곡선 (0: 가까움, 1: detectionRange)
-    [SerializeField] private float maxChaseSpeed = 5f; // AnimationCurve의 1.0f에 매핑될 최대 추적 속도
+    [SerializeField] private AnimationCurve chaseSpeedCurve; // ?뚮젅?댁뼱???嫄곕━???곕Ⅸ 異붿쟻 ?띾룄 怨≪꽑 (0: 媛源뚯?, 1: detectionRange)
+    [SerializeField] private float maxChaseSpeed = 5f; // AnimationCurve??1.0f??留ㅽ븨??理쒕? 異붿쟻 ?띾룄
 
     [Header("Retreat Settings")]
-    [SerializeField] private float retreatForce = 10f; // 너무 가까워졌을 때 뒤로 물러나는 힘
-    [SerializeField] private float retreatDistance = 1.5f; // 이 거리 안으로 들어오면 뒤로 물러나는 기준
-    [SerializeField] private float retreatDuration = 0.2f; // 뒤로 물러나는 반동 지속 시간
-    private bool isRetreating = false; // 뒤로 물러나는 중인지 체크
+    [SerializeField] private float retreatForce = 10f; // ?덈Т 媛源뚯썙議뚯쓣 ???ㅻ줈 臾쇰윭?섎뒗 ??
+    [SerializeField] private float retreatDistance = 1.5f; // ??嫄곕━ ?덉쑝濡??ㅼ뼱?ㅻ㈃ ?ㅻ줈 臾쇰윭?섎뒗 湲곗?
+    [SerializeField] private float retreatDuration = 0.2f; // ?ㅻ줈 臾쇰윭?섎뒗 諛섎룞 吏???쒓컙
+    private bool isRetreating = false; // ?ㅻ줈 臾쇰윭?섎뒗 以묒씤吏 泥댄겕
 
     [Header("Firing Range Settings")]
-    [SerializeField] private float idealFiringDistance = 3f; // 이 거리 안으로 들어오면 발사 시작
-    [SerializeField] private float maxFiringDistance = 6f; // 이 거리 밖에서는 발사하지 않음
+    [SerializeField] private float idealFiringDistance = 3f; // ??嫄곕━ ?덉쑝濡??ㅼ뼱?ㅻ㈃ 諛쒖궗 ?쒖옉
+    [SerializeField] private float maxFiringDistance = 6f; // ??嫄곕━ 諛뽰뿉?쒕뒗 諛쒖궗?섏? ?딆쓬
 
     [Header("Hovering Effect")]
     [SerializeField] private float hoverAmplitude = 0.2f; // How high it floats up and down
@@ -37,26 +37,26 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     [SerializeField] private float recoilDuration = 0.1f; // How long the recoil force is applied
 
     [Header("Burst Fire Settings")]
-    [SerializeField] private int capsulesPerBurst = 3; // 한 번에 발사할 캡슐 수
-    [SerializeField] private float timeBetweenCapsules = 0.1f; // 연발 시 캡슐당 간격
-    [SerializeField] private float burstCooldown = 2.0f; // 연발 전체가 끝난 후 다음 연발까지의 대기 시간
-    private bool isFiringBurst = false; // 연발 발사 중인지 체크
+    [SerializeField] private int capsulesPerBurst = 3; // ??踰덉뿉 諛쒖궗??罹≪뒓 ??
+    [SerializeField] private float timeBetweenCapsules = 0.1f; // ?곕컻 ??罹≪뒓??媛꾧꺽
+    [SerializeField] private float burstCooldown = 2.0f; // ?곕컻 ?꾩껜媛 ?앸궃 ???ㅼ쓬 ?곕컻源뚯????湲??쒓컙
+    private bool isFiringBurst = false; // ?곕컻 諛쒖궗 以묒씤吏 泥댄겕
 
     [Header("Sound Settings")]
-    [SerializeField] private AudioClip preFireSound; // 발사 전 사운드 클립
-    [SerializeField] private AudioClip fireSound;    // 발사 시 사운드 클립
-    [SerializeField] private AudioClip idleSound;    // 평상시 재생될 사운드 클립 (루프)
-    [SerializeField] private AudioClip deathSound;   // 파괴 시 사운드 클립
+    [SerializeField] private AudioClip preFireSound; // 諛쒖궗 ???ъ슫???대┰
+    [SerializeField] private AudioClip fireSound;    // 諛쒖궗 ???ъ슫???대┰
+    [SerializeField] private AudioClip idleSound;    // ?됱긽???ъ깮???ъ슫???대┰ (猷⑦봽)
+    [SerializeField] private AudioClip deathSound;   // ?뚭눼 ???ъ슫???대┰
 
-    [SerializeField, Range(0f, 2f)] private float preFireVolume = 0.5f; // 발사 전 사운드 볼륨
-    [SerializeField, Range(0f, 2f)] private float fireVolume = 0.5f;    // 발사 시 사운드 볼륨
-    [SerializeField, Range(0f, 2f)] private float idleVolume = 0.5f;    // 평상시 사운드 볼륨
-    [SerializeField, Range(0f, 2f)] private float deathVolume = 0.5f;   // 파괴 시 사운드 볼륨
+    [SerializeField, Range(0f, 2f)] private float preFireVolume = 0.5f; // 諛쒖궗 ???ъ슫??蹂쇰ⅷ
+    [SerializeField, Range(0f, 2f)] private float fireVolume = 0.5f;    // 諛쒖궗 ???ъ슫??蹂쇰ⅷ
+    [SerializeField, Range(0f, 2f)] private float idleVolume = 0.5f;    // ?됱긽???ъ슫??蹂쇰ⅷ
+    [SerializeField, Range(0f, 2f)] private float deathVolume = 0.5f;   // ?뚭눼 ???ъ슫??蹂쇰ⅷ
 
     [Header("Mixer Settings")]
-    [SerializeField] private AudioMixerGroup sfxMixerGroup; // SFX 믹서 그룹
+    [SerializeField] private AudioMixerGroup sfxMixerGroup; // SFX 誘뱀꽌 洹몃９
 
-    private AudioSource audioSource;                 // 사운드 재생을 위한 AudioSource
+    private AudioSource audioSource;                 // ?ъ슫???ъ깮???꾪븳 AudioSource
 
     [Header("Destruction Settings")]
     [SerializeField] private GameObject fragmentPrefab; // This prefab should have Fragment.cs attached
@@ -73,15 +73,15 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     private float hoverBaseY; // Store the base Y position for hovering
 
     [Header("Patrol Settings")]
-    [SerializeField] private float patrolMoveRangeX = 5f; // X축으로 이동할 최대 범위
-    [SerializeField] private float patrolSpeed = 1.5f; // 순찰 이동 속도
-    private Vector2 initialPatrolPosition; // 드론이 생성될 때의 초기 위치 저장
-    private int patrolDirection = 1; // 1: 오른쪽, -1: 왼쪽
+    [SerializeField] private float patrolMoveRangeX = 5f; // X異뺤쑝濡??대룞??理쒕? 踰붿쐞
+    [SerializeField] private float patrolSpeed = 1.5f; // ?쒖같 ?대룞 ?띾룄
+    private Vector2 initialPatrolPosition; // ?쒕줎???앹꽦???뚯쓽 珥덇린 ?꾩튂 ???
+    private int patrolDirection = 1; // 1: ?ㅻⅨ履? -1: ?쇱そ
 
     [Header("Drone Chase Settings")]
-    [SerializeField] private float minHorizontalDistance = 2f; // 플레이어와의 최소 X축 거리
-    [SerializeField] private float followHeightOffset = 3f; // 플레이어 머리 위에서 유지할 높이 (플레이어 Y + followHeightOffset)
-    [SerializeField] private float verticalAdjustSpeed = 2f; // Y축 조정 속도
+    [SerializeField] private float minHorizontalDistance = 2f; // ?뚮젅?댁뼱???理쒖냼 X異?嫄곕━
+    [SerializeField] private float followHeightOffset = 3f; // ?뚮젅?댁뼱 癒몃━ ?꾩뿉???좎????믪씠 (?뚮젅?댁뼱 Y + followHeightOffset)
+    [SerializeField] private float verticalAdjustSpeed = 2f; // Y異?議곗젙 ?띾룄
 
     void Awake()
     {
@@ -114,18 +114,18 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false; // 시작 시 바로 재생되지 않도록 설정
-            audioSource.spatialBlend = 1f; // 3D 사운드로 설정 (거리감)
-            audioSource.volume = 1.0f; // 개별 사운드 볼륨이 있으므로 AudioSource 자체 볼륨은 최대
+            audioSource.playOnAwake = false; // ?쒖옉 ??諛붾줈 ?ъ깮?섏? ?딅룄濡??ㅼ젙
+            audioSource.spatialBlend = 1f; // 3D ?ъ슫?쒕줈 ?ㅼ젙 (嫄곕━媛?
+            audioSource.volume = 1.0f; // 媛쒕퀎 ?ъ슫??蹂쇰ⅷ???덉쑝誘濡?AudioSource ?먯껜 蹂쇰ⅷ? 理쒕?
         }
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false; // 시작 시 바로 재생되지 않도록 설정
-            audioSource.spatialBlend = 1f; // 3D 사운드로 설정 (거리감)
-            audioSource.volume = 0.5f; // 기본 볼륨
+            audioSource.playOnAwake = false; // ?쒖옉 ??諛붾줈 ?ъ깮?섏? ?딅룄濡??ㅼ젙
+            audioSource.spatialBlend = 1f; // 3D ?ъ슫?쒕줈 ?ㅼ젙 (嫄곕━媛?
+            audioSource.volume = 0.5f; // 湲곕낯 蹂쇰ⅷ
         }
 
         // Ensure SimpleExplosion script is present in project for destruction to work
@@ -153,12 +153,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         nextFireTime = Time.time + fireCooldown; // Initial delay before first shot
         initialPatrolPosition = transform.position; // Store the initial position for patrolling
 
-        // 평상시 사운드 재생
+        // ?됱긽???ъ슫???ъ깮
         if (audioSource != null && idleSound != null)
         {
             audioSource.clip = idleSound;
-            audioSource.loop = true; // 반복 재생
-            audioSource.volume = idleVolume; // 평상시 사운드 볼륨 적용
+            audioSource.loop = true; // 諛섎났 ?ъ깮
+            audioSource.volume = idleVolume; // ?됱긽???ъ슫??蹂쇰ⅷ ?곸슜
             audioSource.Play();
         }
     }
@@ -170,10 +170,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         // Player Detection and Movement
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
 
-        if (distanceToPlayer < detectionRange && !isRetreating) // 플레이어가 감지 범위 내에 있고, 뒤로 물러나는 중이 아닐 때
+        if (distanceToPlayer < detectionRange && !isRetreating) // ?뚮젅?댁뼱媛 媛먯? 踰붿쐞 ?댁뿉 ?덇퀬, ?ㅻ줈 臾쇰윭?섎뒗 以묒씠 ?꾨땺 ??
         {
             Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-            Vector2 currentVelocity = Vector2.zero; // 새로운 속도를 계산하여 여기에 저장
+            Vector2 currentVelocity = Vector2.zero; // ?덈줈???띾룄瑜?怨꾩궛?섏뿬 ?ш린?????
 
             // --- Flipping Logic ---
             Vector3 currentScale = transform.localScale;
@@ -187,98 +187,98 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
             }
             // --- End Flipping Logic ---
 
-            // --- X축 이동 ---
+            // --- X異??대룞 ---
             float targetX = playerTransform.position.x;
             float currentX = transform.position.x;
             float xDifference = targetX - currentX;
-            float absoluteXDistance = Mathf.Abs(xDifference); // 플레이어와의 X축 절대 거리 (양수 값)
+            float absoluteXDistance = Mathf.Abs(xDifference); // ?뚮젅?댁뼱???X異??덈? 嫄곕━ (?묒닔 媛?
 
-            // chaseSpeedCurve를 사용하여 현재 추적 속도 계산
-            // curve의 0-1 입력에 플레이어와의 거리를 정규화하여 사용
+            // chaseSpeedCurve瑜??ъ슜?섏뿬 ?꾩옱 異붿쟻 ?띾룄 怨꾩궛
+            // curve??0-1 ?낅젰???뚮젅?댁뼱???嫄곕━瑜??뺢퇋?뷀븯???ъ슜
             float normalizedDistance = Mathf.InverseLerp(0, detectionRange, absoluteXDistance);
             float evaluatedSpeed = chaseSpeedCurve.Evaluate(normalizedDistance) * maxChaseSpeed;
 
-            // 뒤로 물러나는 반동 처리
+            // ?ㅻ줈 臾쇰윭?섎뒗 諛섎룞 泥섎━
             if (absoluteXDistance < retreatDistance && !isRetreating)
             {
-                StartCoroutine(ApplyRetreat(Mathf.Sign(xDifference) * -1)); // 플레이어 반대 방향으로 밀어냄
+                StartCoroutine(ApplyRetreat(Mathf.Sign(xDifference) * -1)); // ?뚮젅?댁뼱 諛섎? 諛⑺뼢?쇰줈 諛?대깂
             }
 
-            if (!isRetreating) // 뒤로 물러나는 중이 아닐 때만 X축 추적 이동
+            if (!isRetreating) // ?ㅻ줈 臾쇰윭?섎뒗 以묒씠 ?꾨땺 ?뚮쭔 X異?異붿쟻 ?대룞
             {
-                if (absoluteXDistance > minHorizontalDistance) // 최소 수평 거리보다 멀리 있을 경우 X축 이동
+                if (absoluteXDistance > minHorizontalDistance) // 理쒖냼 ?섑룊 嫄곕━蹂대떎 硫由??덉쓣 寃쎌슦 X異??대룞
                 {
-                    currentVelocity.x = Mathf.Sign(xDifference) * evaluatedSpeed; // 계산된 속도 사용
+                    currentVelocity.x = Mathf.Sign(xDifference) * evaluatedSpeed; // 怨꾩궛???띾룄 ?ъ슜
                 }
                 else
                 {
-                    currentVelocity.x = 0; // 최소 수평 거리 내에 있으면 X축 이동 정지
+                    currentVelocity.x = 0; // 理쒖냼 ?섑룊 嫄곕━ ?댁뿉 ?덉쑝硫?X異??대룞 ?뺤?
                 }
             }
             else
             {
-                currentVelocity.x = 0; // 뒤로 물러나는 중에는 X축 추적 정지 (반동 힘에 맡김)
+                currentVelocity.x = 0; // ?ㅻ줈 臾쇰윭?섎뒗 以묒뿉??X異?異붿쟻 ?뺤? (諛섎룞 ?섏뿉 留↔?)
             }
 
-            // --- Y축 이동 (유저 머리 위 유지) ---
+            // --- Y異??대룞 (?좎? 癒몃━ ???좎?) ---
             float targetY = playerTransform.position.y + followHeightOffset;
             float currentY = transform.position.y;
             float yDifference = targetY - currentY;
 
-            if (Mathf.Abs(yDifference) > 0.1f) // 미세한 차이는 무시하고 Y축 이동
+            if (Mathf.Abs(yDifference) > 0.1f) // 誘몄꽭??李⑥씠??臾댁떆?섍퀬 Y異??대룞
             {
                 currentVelocity.y = Mathf.Sign(yDifference) * verticalAdjustSpeed;
             }
             else
             {
-                currentVelocity.y = 0; // 목표 Y 위치에 도달하면 Y축 이동 정지
+                currentVelocity.y = 0; // 紐⑺몴 Y ?꾩튂???꾨떖?섎㈃ Y異??대룞 ?뺤?
             }
 
-            rb.linearVelocity = currentVelocity; // 최종 계산된 속도 적용
-            hoverBaseY = transform.position.y; // 호버링을 위해 현재 Y 위치 업데이트
+            rb.linearVelocity = currentVelocity; // 理쒖쥌 怨꾩궛???띾룄 ?곸슜
+            hoverBaseY = transform.position.y; // ?몃쾭留곸쓣 ?꾪빐 ?꾩옱 Y ?꾩튂 ?낅뜲?댄듃
 
             // Firing Logic
-            if (Time.time >= nextFireTime && !isFiringBurst) // 연발 발사 중이 아닐 때만 다음 연발 시작
+            if (Time.time >= nextFireTime && !isFiringBurst) // ?곕컻 諛쒖궗 以묒씠 ?꾨땺 ?뚮쭔 ?ㅼ쓬 ?곕컻 ?쒖옉
             {
-                // 플레이어와의 X축 절대 거리 (발사 조건 확인용)
+                // ?뚮젅?댁뼱???X異??덈? 嫄곕━ (諛쒖궗 議곌굔 ?뺤씤??
                 if (absoluteXDistance >= idealFiringDistance && absoluteXDistance <= maxFiringDistance)
                 {
-                    // 발사 전 사운드 재생
+                    // 諛쒖궗 ???ъ슫???ъ깮
                     if (audioSource != null && preFireSound != null)
                     {
-                        audioSource.PlayOneShot(preFireSound, preFireVolume); // 발사 전 사운드 볼륨 적용
+                        audioSource.PlayOneShot(preFireSound, preFireVolume); // 諛쒖궗 ???ъ슫??蹂쇰ⅷ ?곸슜
                     }
                     StartCoroutine(FireBurstCoroutine());
                 }
             }
         }
-        else if (isRetreating) // 뒤로 물러나는 중이라면 다른 행동을 하지 않음
+        else if (isRetreating) // ?ㅻ줈 臾쇰윭?섎뒗 以묒씠?쇰㈃ ?ㅻⅨ ?됰룞???섏? ?딆쓬
         {
-            // 리트릿 코루틴이 끝날 때까지 대기
+            // 由ы듃由?肄붾（?댁씠 ?앸궇 ?뚭퉴吏 ?湲?
         }
         else // Player out of detection range
         {
-            // 새로운 순찰(Patrol) 로직
-            // 현재 위치와 초기 순찰 위치를 기준으로 이동 방향 결정
+            // ?덈줈???쒖같(Patrol) 濡쒖쭅
+            // ?꾩옱 ?꾩튂? 珥덇린 ?쒖같 ?꾩튂瑜?湲곗??쇰줈 ?대룞 諛⑺뼢 寃곗젙
             if (transform.position.x >= initialPatrolPosition.x + patrolMoveRangeX)
             {
-                patrolDirection = -1; // 오른쪽 끝에 도달하면 왼쪽으로 이동
+                patrolDirection = -1; // ?ㅻⅨ履??앹뿉 ?꾨떖?섎㈃ ?쇱そ?쇰줈 ?대룞
             }
             else if (transform.position.x <= initialPatrolPosition.x - patrolMoveRangeX)
             {
-                patrolDirection = 1; // 왼쪽 끝에 도달하면 오른쪽으로 이동
+                patrolDirection = 1; // ?쇱そ ?앹뿉 ?꾨떖?섎㈃ ?ㅻⅨ履쎌쑝濡??대룞
             }
 
-            // X축 순찰 이동
+            // X異??쒖같 ?대룞
             rb.linearVelocity = new Vector2(patrolDirection * patrolSpeed, rb.linearVelocity.y);
 
-            // Flipping Logic (순찰 시에도 드론의 방향을 뒤집어야 함)
+            // Flipping Logic (?쒖같 ?쒖뿉???쒕줎??諛⑺뼢???ㅼ쭛?댁빞 ??
             Vector3 currentScale = transform.localScale;
-            if (patrolDirection < 0) // 왼쪽으로 이동 중
+            if (patrolDirection < 0) // ?쇱そ?쇰줈 ?대룞 以?
             {
                 transform.localScale = new Vector3(Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face right (positive scale)
             }
-            else if (patrolDirection > 0) // 오른쪽으로 이동 중
+            else if (patrolDirection > 0) // ?ㅻⅨ履쎌쑝濡??대룞 以?
             {
                 transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face left (negative scale)
             }
@@ -306,10 +306,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
         newProjectile.Initialize(direction, transform);
 
-        // 캡슐 발사 시 사운드 재생
+        // 罹≪뒓 諛쒖궗 ???ъ슫???ъ깮
         if (audioSource != null && fireSound != null)
         {
-            audioSource.PlayOneShot(fireSound, fireVolume); // 발사 시 사운드 볼륨 적용
+            audioSource.PlayOneShot(fireSound, fireVolume); // 諛쒖궗 ???ъ슫??蹂쇰ⅷ ?곸슜
         }
 
         // --- Recoil Effect ---
@@ -348,7 +348,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
 
-        // 파괴 시 사운드 재생 (새로운 코루틴 사용)
+        // ?뚭눼 ???ъ슫???ъ깮 (?덈줈??肄붾（???ъ슜)
         if (deathSound != null)
         {
             StartCoroutine(PlaySoundAndDestroy(deathSound, transform.position, deathVolume));
@@ -356,7 +356,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
 
         // Stop all movement
         rb.linearVelocity = Vector2.zero;
-        rb.isKinematic = true; // 물리적 상호작용을 완전히 멈춤
+        rb.isKinematic = true; // 臾쇰━???곹샇?묒슜???꾩쟾??硫덉땄
         enabled = false; 
 
         // --- Explosion Effect ---
@@ -373,45 +373,45 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
             explosion.fragmentFadeDelay = explosionFragmentFadeDelay;
         }
 
-        // 즉시 드론을 보이지 않게 하고 충돌을 비활성화
+        // 利됱떆 ?쒕줎??蹂댁씠吏 ?딄쾶 ?섍퀬 異⑸룎??鍮꾪솢?깊솕
         if (sr != null) sr.enabled = false;
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
         
-        // 이 오브젝트 자체는 즉시 파괴하지 않고, 사운드 코루틴이 독립적으로 실행되도록 함
-        // 필요한 모든 컴포넌트(스프라이트, 콜라이더)를 비활성화했으므로 보이지 않고 상호작용하지 않음
-        Destroy(gameObject, 3f); // 사운드와 이펙트가 끝날 시간을 충분히 줌
+        // ???ㅻ툕?앺듃 ?먯껜??利됱떆 ?뚭눼?섏? ?딄퀬, ?ъ슫??肄붾（?댁씠 ?낅┰?곸쑝濡??ㅽ뻾?섎룄濡???
+        // ?꾩슂??紐⑤뱺 而댄룷?뚰듃(?ㅽ봽?쇱씠?? 肄쒕씪?대뜑)瑜?鍮꾪솢?깊솕?덉쑝誘濡?蹂댁씠吏 ?딄퀬 ?곹샇?묒슜?섏? ?딆쓬
+        Destroy(gameObject, 3f); // ?ъ슫?쒖? ?댄럺?멸? ?앸궇 ?쒓컙??異⑸텇??以?
     }
 
     private IEnumerator PlaySoundAndDestroy(AudioClip clip, Vector3 position, float volume)
     {
-        // 1. 임시 게임오브젝트 생성
+        // 1. ?꾩떆 寃뚯엫?ㅻ툕?앺듃 ?앹꽦
         GameObject audioObject = new GameObject("TempAudio");
         audioObject.transform.position = position;
 
-        // 2. AudioSource 컴포넌트 추가 및 설정
+        // 2. AudioSource 而댄룷?뚰듃 異붽? 諛??ㅼ젙
         AudioSource tempAudioSource = audioObject.AddComponent<AudioSource>();
         tempAudioSource.clip = clip;
         tempAudioSource.volume = volume;
-        tempAudioSource.spatialBlend = 1.0f; // 3D 사운드로 설정
-        tempAudioSource.outputAudioMixerGroup = sfxMixerGroup; // 믹서 그룹 할당
+        tempAudioSource.spatialBlend = 1.0f; // 3D ?ъ슫?쒕줈 ?ㅼ젙
+        tempAudioSource.outputAudioMixerGroup = sfxMixerGroup; // 誘뱀꽌 洹몃９ ?좊떦
 
-        // 3. 사운드 재생
+        // 3. ?ъ슫???ъ깮
         tempAudioSource.Play();
 
-        // 4. 사운드 클립의 길이만큼 기다린 후 임시 오브젝트 파괴
+        // 4. ?ъ슫???대┰??湲몄씠留뚰겮 湲곕떎由????꾩떆 ?ㅻ툕?앺듃 ?뚭눼
         yield return new WaitForSeconds(clip.length);
         Destroy(audioObject);
     }
 
-    // 새로운 코루틴 추가
-    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (플레이어 반대 방향)
+    // ?덈줈??肄붾（??異붽?
+    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?뚮젅?댁뼱 諛섎? 諛⑺뼢)
     {
         isRetreating = true;
         float timer = 0f;
         while (timer < retreatDuration)
         {
-            // AddForce는 프레임마다 적용되므로 Time.deltaTime 곱해줌
+            // AddForce???꾨젅?꾨쭏???곸슜?섎?濡?Time.deltaTime 怨깊빐以?
             rb.AddForce(new Vector2(directionSign * retreatForce * Time.deltaTime, 0), ForceMode2D.Force);
             timer += Time.deltaTime;
             yield return null;
@@ -424,12 +424,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         isFiringBurst = true;
         for (int i = 0; i < capsulesPerBurst; i++)
         {
-            if (playerTransform == null) break; // 플레이어가 사라졌으면 발사 중지
+            if (playerTransform == null) break; // ?뚮젅?댁뼱媛 ?щ씪議뚯쑝硫?諛쒖궗 以묒?
             Vector2 direction = (playerTransform.position - transform.position).normalized;
-            FireProjectile(direction); // 다시 계산된 방향으로 발사
+            FireProjectile(direction); // ?ㅼ떆 怨꾩궛??諛⑺뼢?쇰줈 諛쒖궗
             yield return new WaitForSeconds(timeBetweenCapsules);
         }
         isFiringBurst = false;
-        nextFireTime = Time.time + burstCooldown; // 연발 종료 후 쿨다운 적용
+        nextFireTime = Time.time + burstCooldown; // ?곕컻 醫낅즺 ??荑⑤떎???곸슜
     }
 }
