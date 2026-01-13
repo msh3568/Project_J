@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
     [Header("UI Groups")]
-    public GameObject pauseGroup;            // ?쇱떆?뺤? UI ?꾩껜瑜?媛먯떥??遺紐?
-    public GameObject pauseMenuContent;      // 湲곕낯 硫붾돱 李?(踰꾪듉??
-    public GameObject settingsContentsGroup; // ?ㅼ젙 李?
+    public GameObject pauseGroup;            // 일시정지 UI 전체를 감싸는 부모
+    public GameObject pauseMenuContent;      // 기본 메뉴 창 (버튼들)
+    public GameObject settingsContentsGroup; // 설정 창
 
     [Header("Volume Settings")]
     [SerializeField] private Slider bgmSlider;
@@ -22,35 +22,35 @@ public class PauseManager : MonoBehaviour
         pauseGroup.SetActive(false);
         IsGamePaused = false;
 
-        // AudioManager?먯꽌 ?꾩옱 蹂쇰ⅷ 媛믪쓣 媛?몄? ?щ씪?대뜑???ㅼ젙
+        // AudioManager에서 현재 볼륨 값을 가져와 슬라이더에 설정
         if (AudioManager.Instance != null)
         {
-            // SetValueWithoutNotify瑜??ъ슜?섏뿬 ?대깽?멸? 諛쒖깮?섏? ?딅룄濡?媛믪쓣 ?ㅼ젙
+            // SetValueWithoutNotify를 사용하여 이벤트가 발생하지 않도록 값을 설정
             bgmSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("BGMVolume", 0.75f));
             sfxSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
         }
 
-        // ?щ씪?대뜑 ?대깽?몄뿉 由ъ뒪??異붽?
+        // 슬라이더 이벤트에 리스너 추가
         bgmSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
         sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
     }
 
     void Update()
     {
-        // ESC ???낅젰 媛먯?
+        // ESC 키 입력 감지
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // ?ㅼ젙 李쎌씠 ?쒖꽦?붾릺???덉쑝硫??ㅼ젙 李쎌쓣 ?レ쓬
+            // 설정 창이 활성화되어 있으면 설정 창을 닫음
             if (settingsContentsGroup != null && settingsContentsGroup.activeSelf)
             {
                 CloseSettings();
             }
-            // ?쇱떆?뺤? ?곹깭媛 ?꾨땲硫??쇱떆?뺤?
+            // 일시정지 상태가 아니면 일시정지
             else if (!IsGamePaused)
             {
                 PauseGame();
             }
-            // ?쇱떆?뺤? ?곹깭硫?寃뚯엫 ?ш컻
+            // 일시정지 상태면 게임 재개
             else
             {
                 ResumeGame();
@@ -61,40 +61,40 @@ public class PauseManager : MonoBehaviour
     private void PauseGame()
     {
         IsGamePaused = true;
-        Time.timeScale = 0f; // ?쒓컙 ?먮쫫??硫덉땄
+        Time.timeScale = 0f; // 시간 흐름을 멈춤
 
         pauseGroup.SetActive(true);
         pauseMenuContent.SetActive(true);
         settingsContentsGroup.SetActive(false);
     }
 
-    // '怨꾩냽?섍린' 踰꾪듉???곌껐???⑥닔
+    // '계속하기' 버튼에 연결될 함수
     public void ResumeGame()
     {
         IsGamePaused = false;
-        Time.timeScale = 1f; // ?쒓컙 ?먮쫫???섎룎由?
+        Time.timeScale = 1f; // 시간 흐름을 되돌림
         pauseGroup.SetActive(false);
     }
 
-    // '?ㅼ젙' 踰꾪듉???곌껐???⑥닔
+    // '설정' 버튼에 연결될 함수
     public void OpenSettings()
     {
         pauseMenuContent.SetActive(false);
         settingsContentsGroup.SetActive(true);
     }
 
-    // ?ㅼ젙 李쎌쓽 '?リ린' 踰꾪듉???곌껐???⑥닔
+    // 설정 창의 '닫기' 버튼에 연결될 함수
     public void CloseSettings()
     {
         settingsContentsGroup.SetActive(false);
         pauseMenuContent.SetActive(true);
     }
 
-    // '寃뚯엫 醫낅즺' 踰꾪듉???곌껐???⑥닔
+    // '게임 종료' 버튼에 연결될 함수
     public void ExitGame()
     {
-        // ?좊땲???먮뵒?곗뿉?쒕뒗 ?뚮젅??紐⑤뱶瑜?以묒??섍퀬,
-        // 鍮뚮뱶??寃뚯엫?먯꽌???좏뵆由ъ??댁뀡??醫낅즺?⑸땲??
+        // 유니티 에디터에서는 플레이 모드를 중지하고,
+        // 빌드된 게임에서는 애플리케이션을 종료합니다.
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -102,7 +102,7 @@ public class PauseManager : MonoBehaviour
 #endif
     }
 
-    // BGM ?щ씪?대뜑 媛믪씠 蹂寃쎈맆 ???몄텧???⑥닔
+    // BGM 슬라이더 값이 변경될 때 호출될 함수
     public void OnBGMVolumeChanged(float volume)
     {
         if (AudioManager.Instance != null)
@@ -111,7 +111,7 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // SFX ?щ씪?대뜑 媛믪씠 蹂寃쎈맆 ???몄텧???⑥닔
+    // SFX 슬라이더 값이 변경될 때 호출될 함수
     public void OnSFXVolumeChanged(float volume)
     {
         if (AudioManager.Instance != null)
@@ -120,11 +120,11 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // '??댄?濡??뚯븘媛湲? 踰꾪듉???곌껐???⑥닔
+    // '타이틀로 돌아가기' 버튼에 연결될 함수
     public void ReturnToTitle()
     {
-        Time.timeScale = 1f; // ?쒓컙 ?먮쫫???섎룎由?
-        TimeManager.elapsedTime = 0f; // ??대㉧ 珥덇린??
-        SceneManager.LoadScene("FIXER Title"); // "FIXER Title" ?ъ쓣 遺덈윭??
+        Time.timeScale = 1f; // 시간 흐름을 되돌림
+        TimeManager.elapsedTime = 0f; // 타이머 초기화
+        SceneManager.LoadScene("FIXER Title"); // "FIXER Title" 씬을 불러옴
     }
 }

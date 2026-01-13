@@ -1,4 +1,4 @@
-﻿using Firebase;
+using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using System;
@@ -32,7 +32,7 @@ public class RankingManager : MonoBehaviour
 
     void Start()
     {
-        // UI 踰꾪듉?ㅼ? Start?먯꽌 怨꾩냽 泥섎━ (?ъ씠 濡쒕뱶???뚮쭏???ㅼ떆 李얠븘???????덉쑝誘濡?
+        // UI 버튼들은 Start에서 계속 처리 (씬이 로드될 때마다 다시 찾아야 할 수 있으므로)
         if (showRankingButton != null)
             showRankingButton.onClick.AddListener(ShowRanking);
         
@@ -50,11 +50,11 @@ public class RankingManager : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("Firebase媛 ?깃났?곸쑝濡?珥덇린?붾릺?덉뒿?덈떎.");
+                Debug.Log("Firebase가 성공적으로 초기화되었습니다.");
             }
             else
             {
-                Debug.LogError($"Firebase 醫낆냽???닿껐???ㅽ뙣?덉뒿?덈떎: {task.Result}");
+                Debug.LogError($"Firebase 종속성 해결에 실패했습니다: {task.Result}");
             }
         });
     }
@@ -77,7 +77,7 @@ public class RankingManager : MonoBehaviour
     }
 
     /// <summary>
-    /// "time" ?꾨뱶瑜?湲곗??쇰줈 ?곸쐞 10媛쒖쓽 湲곕줉??媛?몄샃?덈떎.
+    /// "time" 필드를 기준으로 상위 10개의 기록을 가져옵니다.
     /// </summary>
     private void LoadTopScores()
     {
@@ -85,7 +85,7 @@ public class RankingManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("??궧 濡쒕뵫???ㅽ뙣?덉뒿?덈떎: " + task.Exception);
+                Debug.LogError("랭킹 로딩에 실패했습니다: " + task.Exception);
                 return;
             }
             
@@ -106,7 +106,7 @@ public class RankingManager : MonoBehaviour
         if (!snapshot.Exists)
         {
             if (rankUITexts.Count > 0)
-                rankUITexts[0].text = "?꾩쭅 ??궧 ?곗씠?곌? ?놁뒿?덈떎.";
+                rankUITexts[0].text = "아직 랭킹 데이터가 없습니다.";
             return;
         }
 
@@ -128,44 +128,44 @@ public class RankingManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"??궧 ?곗씠???뚯떛 ?ㅻ쪟: {e.Message}");
+                Debug.LogError($"랭킹 데이터 파싱 오류: {e.Message}");
             }
         }
     }
 
     /// <summary>
-    /// ?곗씠?곕쿋?댁뒪???덈줈??湲곕줉??異붽??⑸땲??
+    /// 데이터베이스에 새로운 기록을 추가합니다.
     /// </summary>
-    /// <param name="playerName">?뚮젅?댁뼱 ?대쫫</param>
-    /// <param name="clearTime">?대━???쒓컙(珥?</param>
+    /// <param name="playerName">플레이어 이름</param>
+    /// <param name="clearTime">클리어 시간(초)</param>
     public void AddScore(string playerName, float clearTime)
     {
         if (databaseReference == null)
         {
-            Debug.LogError("Firebase媛 珥덇린?붾릺吏 ?딆븯?듬땲??");
+            Debug.LogError("Firebase가 초기화되지 않았습니다.");
             return;
         }
 
-        // ??ν븷 ?곗씠??媛앹껜 ?앹꽦
+        // 저장할 데이터 객체 생성
         Dictionary<string, object> scoreData = new Dictionary<string, object>();
         scoreData["name"] = playerName;
         scoreData["time"] = clearTime;
 
-        // "scores" 寃쎈줈 ?꾨옒???쒕뜡 ?ㅻ? ?앹꽦?섎ŉ ?곗씠?????
+        // "scores" 경로 아래에 랜덤 키를 생성하며 데이터 저장
         databaseReference.Child("scores").Push().SetValueAsync(scoreData).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
             {
-                Debug.Log($"{playerName}??湲곕줉({clearTime}珥????깃났?곸쑝濡?異붽??섏뿀?듬땲??");
-                LoadTopScores(); // ?먯닔 異붽? ????궧 ?덈줈怨좎묠
+                Debug.Log($"{playerName}의 기록({clearTime}초)이 성공적으로 추가되었습니다.");
+                LoadTopScores(); // 점수 추가 후 랭킹 새로고침
             }
             else if (task.IsFaulted)
             {
-                Debug.LogError($"湲곕줉 異붽? ?ㅽ뙣: {task.Exception}");
+                Debug.LogError($"기록 추가 실패: {task.Exception}");
             }
             else if (task.IsCanceled)
             {
-                Debug.LogWarning($"湲곕줉 異붽? 痍⑥냼??");
+                Debug.LogWarning($"기록 추가 취소됨.");
             }
         });
     }

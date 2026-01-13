@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Entity_Health : MonoBehaviour, IDamageable
+public class Entity_Health : MonoBehaviour, IDamagable, IDamageable
 {
     protected Entity_VFX entityVfx;
     protected Entity entity;

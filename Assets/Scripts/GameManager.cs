@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
@@ -209,13 +209,13 @@ public class GameManager : MonoBehaviour
     public void AddFireTracePoints(int points)
     {
         fireTracePoints += points;
-        Debug.Log($"遺덉쓽 ?붿쟻 ?띾뱷! ?꾩옱 ?먯닔: {fireTracePoints}/{pointsForExtraRespawn}");
+        Debug.Log($"불의 흔적 획득! 현재 점수: {fireTracePoints}/{pointsForExtraRespawn}");
 
         if (fireTracePoints >= pointsForExtraRespawn)
         {
             extraRespawns++;
-            fireTracePoints -= pointsForExtraRespawn; // ?먯닔 李④컧
-            Debug.Log($"異붽? 由ъ뒪??湲고쉶 ?띾뱷! 珥?異붽? 由ъ뒪?? {extraRespawns}");
+            fireTracePoints -= pointsForExtraRespawn; // 점수 차감
+            Debug.Log($"추가 리스폰 기회 획득! 총 추가 리스폰: {extraRespawns}");
 
             // New: Play checkpoint sound
             if (audioSource != null && checkpointSound != null)
@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour
         {
             if (respawnCount >= (maxRespawns + extraRespawns))
             {
-                Debug.Log("???댁긽 遺?쒗븷 ???놁뒿?덈떎.");
+                Debug.Log("더 이상 부활할 수 없습니다.");
 
                 if (isVoidFall)
                 {
@@ -260,10 +260,10 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
-                return; // 由ъ뒪??濡쒖쭅 以묐떒
+                return; // 리스폰 로직 중단
             }
             respawnCount++;
-            Debug.Log($"遺???잛닔: {respawnCount}/{maxRespawns + extraRespawns}");
+            Debug.Log($"부활 횟수: {respawnCount}/{maxRespawns + extraRespawns}");
             UpdateRespawnUI();
         }
 
@@ -312,7 +312,7 @@ public class GameManager : MonoBehaviour
     {
         if (checkpointText != null)
         {
-            checkpointText.text = "泥댄겕?ъ씤???쒖꽦?붾맖";
+            checkpointText.text = "체크포인트 활성화됨";
             checkpointText.gameObject.SetActive(true);
             Invoke("HideCheckpointText", 2f); // Hide after 2 seconds
         }

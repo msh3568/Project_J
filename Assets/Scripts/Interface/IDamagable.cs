@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public interface IDamageable
+public interface IDamagable
 {
     public void TakeDamage(float damage, Transform damageDealer);
 }

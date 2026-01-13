@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
-// ???ㅽ겕由쏀듃??荑⑦??꾩쓣 ?쒖떆???ㅻ쾭?덉씠 ?대?吏??吏곸젒 異붽??댁빞 ?⑸땲??
+// 이 스크립트는 쿨타임을 표시할 오버레이 이미지에 직접 추가해야 합니다.
 [RequireComponent(typeof(Image))]
 public class DashCooldownUI : MonoBehaviour
 {
-    // Inspector?먯꽌 Player ?ㅻ툕?앺듃瑜????꾨뱶濡??쒕옒洹명븯?몄슂.
+    // Inspector에서 Player 오브젝트를 이 필드로 드래그하세요.
     [SerializeField] private Player player;
 
     private Image cooldownImage;
@@ -14,7 +14,7 @@ public class DashCooldownUI : MonoBehaviour
     void Awake()
     {
         cooldownImage = GetComponent<Image>();
-        originalColor = cooldownImage.color; // ?먮뵒?곗뿉???ㅼ젙??珥덇린 ?됱긽 ???(?? 諛섑닾紐?寃??
+        originalColor = cooldownImage.color; // 에디터에서 설정한 초기 색상 저장 (예: 반투명 검정)
     }
 
     void Update()
@@ -27,14 +27,14 @@ public class DashCooldownUI : MonoBehaviour
                 cooldownProgress = player.dashCooldownTimer / player.dashCooldown;
             }
 
-            // ?먮옒 ?됱긽??RGB 媛믪? ?좎??섍퀬 ?뚰뙆(?щ챸?? 媛믩쭔 蹂寃쏀빀?덈떎.
-            // ?뚰뙆 媛믪? 荑⑦???吏꾪뻾瑜좎뿉 鍮꾨??⑸땲??
+            // 원래 색상의 RGB 값은 유지하고 알파(투명도) 값만 변경합니다.
+            // 알파 값은 쿨타임 진행률에 비례합니다.
             Color newColor = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * cooldownProgress);
             cooldownImage.color = newColor;
         }
         else
         {
-            // player 李몄“媛 ?놁쑝硫??ㅻ쾭?덉씠瑜??꾩쟾???щ챸?섍쾶 留뚮벊?덈떎.
+            // player 참조가 없으면 오버레이를 완전히 투명하게 만듭니다.
             Color transparentColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
             cooldownImage.color = transparentColor;
         }

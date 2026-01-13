@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Entity_Combat : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class Entity_Combat : MonoBehaviour
     {
         foreach (var target in GetDetectedColliders())
         {
-            IDamageable damagable = target.GetComponent<IDamageable>();
+            IDamagable damagable = target.GetComponent<IDamagable>();
 
             if(damagable == null)
                 continue;

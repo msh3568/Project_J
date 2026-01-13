@@ -1,14 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections; // 肄붾（??IEnumerator)???ъ슜?섍린 ?꾪빐 異붽?
+using System.Collections; // 코루틴(IEnumerator)을 사용하기 위해 추가
 
 public class PlayerController : MonoBehaviour
 {
     private PlayerControls controls;
     private Vector2 moveInput;
-    private Player playerInstance; // Player ?몄뒪?댁뒪 李몄“ 異붽?
+    private Player playerInstance; // Player 인스턴스 참조 추가
 
-    // --- 李⑥? ?먰봽(紐⑥븘?곌린)?????蹂?섎뱾 ---
+    // --- 차지 점프(모아뛰기)에 대한 변수들 ---
     private bool isChargingJump = false;
     private float jumpChargeTimer = 0f;
     public float maxChargeTime = 2.0f;
@@ -19,21 +19,21 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerControls();
         controls.Player.Enable();
 
-        playerInstance = FindObjectOfType<Player>(); // Player ?몄뒪?댁뒪 李얠븘???좊떦
+        playerInstance = FindObjectOfType<Player>(); // Player 인스턴스 찾아서 할당
         if (playerInstance == null)
         {
             Debug.LogError("PlayerController: Player instance not found in scene!");
         }
 
-        // --- Move (?대룞) ---
+        // --- Move (이동) ---
         controls.Player.Move.performed += context => moveInput = context.ReadValue<Vector2>();
         controls.Player.Move.canceled += context => moveInput = Vector2.zero;
 
-        // --- Jump (?먰봽) ---
+        // --- Jump (점프) ---
         controls.Player.Jump.started += _ => StartJumpCharge();
         controls.Player.Jump.canceled += _ => PerformChargedJump();
 
-        // --- 湲고? 異붽????≪뀡???곌껐 ---
+        // --- 기타 추가된 액션들 연결 ---
         controls.Player.Attack.performed += _ => Attack();
         controls.Player.Baldo.performed += _ => Baldo();
         controls.Player.Dash.performed += _ => Dash();
@@ -42,28 +42,28 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-        // 寃뚯엫 ?ㅻ툕?앺듃媛 鍮꾪솢?깊솕?????뺤떎?섍쾶 紐⑤뱺 ?≪뀡??鍮꾪솢?깊솕?⑸땲?ㅳ?
-        StopRumble(); // 吏꾨룞 硫덉땄
+        // 게임 오브젝트가 비활성화될 때 확실하게 모든 액션을 비활성화합니다。
+        StopRumble(); // 진동 멈춤
         controls.Player.Disable();
     }
 
     private void Update()
     {
-        // 1. ?대룞 泥섎━
-        // ???ㅽ겕由쏀듃??Player.cs? 蹂꾧컻濡??吏곸엫??泥섎━?섎?濡? ?ㅼ젣 寃뚯엫?먯꽌??Player.cs???吏곸엫 濡쒖쭅怨?異⑸룎?????덉뒿?덈떎.
-        // ?ш린?쒕뒗 3D 怨듦컙?먯꽌???吏곸엫??媛?뺥븯怨??묒꽦?섏뿀?듬땲??
+        // 1. 이동 처리
+        // 이 스크립트는 Player.cs와 별개로 움직임을 처리하므로, 실제 게임에서는 Player.cs의 움직임 로직과 충돌할 수 있습니다.
+        // 여기서는 3D 공간에서의 움직임을 가정하고 작성되었습니다.
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
         // transform.Translate(moveDirection * Time.deltaTime * 5.0f);
 
 
     }
 
-    // --- ?먰봽 愿??---
+    // --- 점프 관련 ---
     private void StartJumpCharge()
     {
         isChargingJump = true;
         jumpChargeTimer = 0f;
-        TriggerRumble(0.2f, 0.2f, 0.1f); // ?먰봽 ?쒖옉 ??吏㏃? 吏꾨룞 異붽?
+        TriggerRumble(0.2f, 0.2f, 0.1f); // 점프 시작 시 짧은 진동 추가
     }
 
     private void PerformChargedJump()
@@ -71,135 +71,135 @@ public class PlayerController : MonoBehaviour
         if (!isChargingJump) return;
 
         float jumpPower = 5f + (jumpChargeTimer * 10f);;
-        // GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse); // ?ㅼ젣 ?먰봽 濡쒖쭅 (二쇱꽍 泥섎━??
+        // GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse); // 실제 점프 로직 (주석 처리됨)
 
         isChargingJump = false;
         jumpChargeTimer = 0f;
     }
 
-    // --- 洹????≪뀡 ?⑥닔??---
+    // --- 그 외 액션 함수들 ---
 
     private void Attack()
     {
         Debug.Log("Attack!");
-        // (怨듦꺽 濡쒖쭅 援ы쁽)
+        // (공격 로직 구현)
 
-        // --- 吏꾨룞 議곗젅 媛?대뱶 ---
+        // --- 진동 조절 가이드 ---
         // TriggerRumble(low, high, duration)
-        // low: ?二쇳뙆 紐⑦꽣 ?멸린 (0.0 ~ 1.0)
-        // high: 怨좎＜??紐⑦꽣 ?멸린 (0.0 ~ 1.0) - ??媛믩뱾??諛붽씀硫?"吏꾨룞 ?멸린"媛 議곗젅?⑸땲??
-        // duration: 吏꾨룞 吏???쒓컙 (珥??⑥쐞) - ??媛믪쓣 諛붽씀硫?"吏꾨룞 ?쒓컙"??議곗젅?⑸땲??
+        // low: 저주파 모터 세기 (0.0 ~ 1.0)
+        // high: 고주파 모터 세기 (0.0 ~ 1.0) - 이 값들을 바꾸면 "진동 세기"가 조절됩니다.
+        // duration: 진동 지속 시간 (초 단위) - 이 값을 바꾸면 "진동 시간"이 조절됩니다.
         TriggerRumble(0.3f, 0.3f, 0.1f);
     }
 
     private void Baldo()
     {
-        Debug.Log("Baldo (諛쒕룄)!");
-        // (諛쒕룄 以鍮?濡쒖쭅)
+        Debug.Log("Baldo (발도)!");
+        // (발도 준비 로직)
 
-        // "?좊뵜?덉씠 ??媛뺥븳 吏꾨룞"??肄붾（?댁쑝濡?泥섎━
+        // "선딜레이 후 강한 진동"을 코루틴으로 처리
         StartCoroutine(BaldoRumbleRoutine());
     }
 
     private IEnumerator BaldoRumbleRoutine()
     {
-        // 0.2珥덇컙 ?좊뵜?덉씠
+        // 0.2초간 선딜레이
         yield return new WaitForSeconds(0.2f);
 
-        // 媛뺥븳 吏꾨룞 (0.4珥덇컙 媛뺥븯寃?
+        // 강한 진동 (0.4초간 강하게)
         TriggerRumble(0.8f, 0.8f, 0.4f);
     }
 
     private void Dash()
     {
         Debug.Log("Dash!");
-        // (???濡쒖쭅 援ы쁽)
+        // (대시 로직 구현)
 
-        // 吏㏃? 吏꾨룞 (0.1珥덇컙 ?쏀븯寃?
+        // 짧은 진동 (0.1초간 약하게)
         TriggerRumble(0.2f, 0.2f, 0.1f);
     }
 
     private void Palling()
     {
-        Debug.Log("Palling (?⑤쭅 ?쒕룄)!");
-        // (?⑤쭅 ?먯꽭 ??濡쒖쭅 援ы쁽)
+        Debug.Log("Palling (패링 시도)!");
+        // (패링 자세 등 로직 구현)
 
-        // 以묒슂: ?⑤쭅? '?쒕룄'? '?깃났(?⑤쭅)'?쇰줈 ?섎돇硫? ?깃났? ?ㅻⅨ ?대깽?몄뿉???몄텧?????덉뒿?덈떎.
-        // ?곕씪???ш린?쒕뒗 ?쒕룄?????濡쒖쭅留??덉뼱???⑸땲??
+        // 중요: 패링은 '시도'와 '성공(패링)'으로 나뉘며, 성공은 다른 이벤트에서 호출될 수 있습니다.
+        // 따라서 여기서는 시도에 대한 로직만 있어야 합니다.
     }
 
     // ---
-    // ?⑤쭅 ?깃났 ??(?? ?곸쓽 怨듦꺽怨?遺?ろ삍????
-    // ?ㅻⅨ ?ㅽ겕由쏀듃??異⑸룎 媛먯? ?⑥닔(OnCollisionEnter ???먯꽌 ???⑥닔瑜?'?몃?'?먯꽌 ?몄텧?댁쨾???⑸땲??
+    // 패링 성공 시 (예: 적의 공격과 부딪혔을 때)
+    // 다른 스크립트의 충돌 감지 함수(OnCollisionEnter 등)에서 이 함수를 '외부'에서 호출해줘야 합니다.
     // ---
     public void TriggerPallingSuccessRumble()
     {
-        Debug.Log("?⑤쭅 ?깃났! (?⑤쭅??");
-        // ?⑤쭅 ?깃났 ??吏꾨룞 (0.2珥덇컙 以묎컙 ?멸린)
+        Debug.Log("패링 성공! (패링됨)");
+        // 패링 성공 시 진동 (0.2초간 중간 세기)
         TriggerRumble(0.6f, 0.6f, 0.2f);
     }
 
     private void Checkpoint()
     {
-        Debug.Log("Checkpoint (遺??!");
+        Debug.Log("Checkpoint (부활)!");
         GameManager.Instance.RespawnPlayerAtLastCheckpoint();
         StartCoroutine(RumbleFadeOut(1.0f));
     }
 
 
-    // --- 吏꾨룞(Rumble) ?⑥닔??(?낃렇?덉씠?쒕맖) ---
+    // --- 진동(Rumble) 함수들 (업그레이드됨) ---
 
-    // [吏?뺥븳 ?쒓컙 ?숈븞 吏꾨룞??二쇰뒗 ?⑥닔]
-    // (?댁쟾 TriggerRumble ?몄텧??吏꾪뻾 以묒씪 ?뚮? ?鍮꾪빐 CancelInvoke 異붽?)
+    // [지정한 시간 동안 진동을 주는 함수]
+    // (이전 TriggerRumble 호출이 진행 중일 때를 대비해 CancelInvoke 추가)
     public void TriggerRumble(float low, float high, float duration)
     {
         if (Gamepad.current == null) return;
 
-        // 吏꾨룞 ?멸린 ?ㅼ젙
+        // 진동 세기 설정
         SetRumble(low, high);
 
-        // ?댁쟾???덉빟??StopRumble???덈떎硫?痍⑥냼 (以묒슂)
+        // 이전에 예약된 StopRumble이 있다면 취소 (중요)
         CancelInvoke(nameof(StopRumble));
 
-        // duration珥??ㅼ뿉 StopRumble???덉빟
+        // duration초 뒤에 StopRumble을 예약
         Invoke(nameof(StopRumble), duration);
     }
 
-    // [?섏씠???꾩썐 吏꾨룞 肄붾（??
+    // [페이드 아웃 진동 코루틴]
     private IEnumerator RumbleFadeOut(float duration)
     {
         if (Gamepad.current == null) yield break;
 
         float timer = 0f;
 
-        // (?쒖옉??遺遺?
-        // ?섏씠?쒖븘?껋? ??긽 0.3f ?뺣룄???멸린?먯꽌 ?쒖옉?⑸땲??
+        // (시작점 부분)
+        // 페이드아웃은 항상 0.3f 정도의 세기에서 시작합니다.
         float startLow = 0.3f;
         float startHigh = 0.3f;
 
         while (timer < duration)
         {
-            // ?쒓컙???곕씪 1.0 -> 0.0 ?쇰줈 蹂?섎뒗 鍮꾩쑉 怨꾩궛
+            // 시간에 따라 1.0 -> 0.0 으로 변하는 비율 계산
             float t = timer / duration;
 
-            // ?쒖꽌??吏꾨룞 ?멸린瑜?以꾩엫 (Lerp: start 媛믪뿉??0f 濡?t 留뚰겮 蹂닿컙)
+            // 서서히 진동 세기를 줄임 (Lerp: start 값에서 0f 로 t 만큼 보간)
             SetRumble(Mathf.Lerp(startLow, 0f, t), Mathf.Lerp(startHigh, 0f, t));
 
             timer += Time.deltaTime;
-            yield return null; // ?ㅼ쓬 ?꾨젅?꾧퉴吏 ?湲?
+            yield return null; // 다음 프레임까지 대기
         }
 
-        StopRumble(); // ?뺤떎?섍쾶 ?뺤?
+        StopRumble(); // 확실하게 정지
     }
 
-    // [吏꾨룞 ?멸린 吏곸젒 ?ㅼ젙 ?⑥닔]
+    // [진동 세기 직접 설정 함수]
     private void SetRumble(float low, float high)
     {
         if (Gamepad.current == null) return;
         Gamepad.current.SetMotorSpeeds(low, high);
     }
 
-    // [吏꾨룞 ?뺤? ?⑥닔]
+    // [진동 정지 함수]
     private void StopRumble()
     {
         if (Gamepad.current == null) return;

@@ -1,14 +1,14 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems; // UI 클占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占십울옙
+using UnityEngine;
+using UnityEngine.EventSystems; // UI Ŭ�� ������ ���� �ʿ�
 
 public class Draggable : MonoBehaviour
 {
     private Vector3 offset;
     private Rigidbody2D rb;
-    private static Transform draggedObject; // 占쏙옙占쏙옙 占썲래占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙트占쏙옙 static占쏙옙占쏙옙 占쏙옙占쏙옙
+    private static Transform draggedObject; // ���� �巡�� ���� ������Ʈ�� static���� ����
 
     [SerializeField]
-    private LayerMask draggableLayer; // 占싸쏙옙占쏙옙占싶울옙占쏙옙 占썲래占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占싱어를 占쏙옙占쏙옙占쏙옙 占쏙옙 占쌍듸옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙
+    private LayerMask draggableLayer; // �ν����Ϳ��� �巡�� ������ ���̾ ������ �� �ֵ��� ���� �߰�
 
     void Awake()
     {
@@ -17,10 +17,10 @@ public class Draggable : MonoBehaviour
 
     void Update()
     {
-        // UI 占쏙옙占쏙옙 占쏙옙占쎌스 占쏙옙占쏙옙占싶곤옙 占쌍댐옙占쏙옙 확占쏙옙
+        // UI ���� ���콺 �����Ͱ� �ִ��� Ȯ��
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            // UI 占쏙옙占쏙옙 占쌍다몌옙 占썲래占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+            // UI ���� �ִٸ� �巡�� ������ �������� ����
             if (draggedObject != null)
             {
                 ReleaseObject();
@@ -28,7 +28,7 @@ public class Draggable : MonoBehaviour
             return;
         }
 
-        // 占쏙옙占쎌스 占쏙옙占쏙옙 占쏙옙튼占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙
+        // ���콺 ���� ��ư�� ������ ��
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(GetMouseWorldPosition(), Vector2.zero, Mathf.Infinity, draggableLayer);
@@ -38,7 +38,7 @@ public class Draggable : MonoBehaviour
                 draggedObject = hit.transform;
                 offset = draggedObject.position - GetMouseWorldPosition();
 
-                // 占쏙옙占쏙옙 효占쏙옙占쏙옙 占쏙옙占쏙옙 占십깍옙화
+                // ���� ȿ���� ���� �ʱ�ȭ
                 rb = draggedObject.GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {
@@ -48,7 +48,7 @@ public class Draggable : MonoBehaviour
             }
         }
 
-        // 占쏙옙占쎌스占쏙옙 占썲래占쏙옙占싹댐옙 占쏙옙占쏙옙 占쏙옙
+        // ���콺�� �巡���ϴ� ���� ��
         if (Input.GetMouseButton(0) && draggedObject != null)
         {
             Vector3 newPosition = GetMouseWorldPosition() + offset;
@@ -62,19 +62,19 @@ public class Draggable : MonoBehaviour
             }
         }
 
-        // 占쏙옙占쎌스 占쏙옙튼占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙
+        // ���콺 ��ư���� ���� ���� ��
         if (Input.GetMouseButtonUp(0) && draggedObject != null)
         {
             ReleaseObject();
         }
     }
 
-    // 占쏙옙占쏙옙占쏙옙트占쏙옙 占쏙옙占쏙옙占쌍댐옙 占쏙옙占쏙옙 占쌉쇽옙
+    // ������Ʈ�� �����ִ� ���� �Լ�
     private void ReleaseObject()
     {
         if (rb != null)
         {
-            rb.gravityScale = 1; // 占쏙옙占쏙옙 占쌩뤄옙占쏙옙占쏙옙 占쏙옙占쏙옙
+            rb.gravityScale = 1; // ���� �߷����� ����
         }
         draggedObject = null;
         rb = null;

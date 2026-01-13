@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Player_CounterAttackState : PlayerState
 {
@@ -37,7 +37,6 @@ public class Player_CounterAttackState : PlayerState
                 // This was a simple parry (melee attack, spikeball, etc.).
                 // The counter-effect (knockback/stun) was already handled in CounterAttackPerformed.
                 // We don't want to slow time, so just return to idle.
-                ParryCameraZoom.Instance?.Pulse();
                 player.anim.SetTrigger("counterAttackPerformed"); // Play a success feedback animation/effect if you have one
                 stateMachine.ChangeState(player.idleState);
             }

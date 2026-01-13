@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 
 [RequireComponent(typeof(AudioSource))] // Add AudioSource requirement
