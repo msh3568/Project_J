@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Player_BaldoState : PlayerState
 {
@@ -21,6 +21,9 @@ public class Player_BaldoState : PlayerState
         player.SetVelocity(0, rb.linearVelocity.y);
         
         player.skillManager.baldo.UseSkill(player.anim, player.facingDir);
+
+        if (CameraShakeManager.instance != null)
+            CameraShakeManager.instance.Shake(player.baldoShakeForce);
     }
 
     public override void Exit()
@@ -39,3 +42,4 @@ public class Player_BaldoState : PlayerState
             stateTimer -= Time.deltaTime;
     }
 }
+

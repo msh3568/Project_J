@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
+using Unity.Cinemachine;
 
-public class PotCannon : MonoBehaviour, IDamageable
+public class PotCannon : Entity_Health
 {
     [Header("Cannon Settings")]
     public GameObject spikeBallPrefab;
@@ -17,8 +18,11 @@ public class PotCannon : MonoBehaviour, IDamageable
 
     private float nextFireTime;
 
-    void Update()
+    private void Update()
     {
+        if (isDead)
+            return;
+
         if (Time.time > nextFireTime)
         {
             nextFireTime = Time.time + fireRate;
@@ -26,7 +30,7 @@ public class PotCannon : MonoBehaviour, IDamageable
         }
     }
 
-    void Fire()
+    private void Fire()
     {
         if (spikeBallPrefab == null || firePoint == null)
         {
@@ -42,22 +46,33 @@ public class PotCannon : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damage, Transform damageSource)
+    protected override void Die()
     {
-        Debug.Log("PotCannon took damage and is being destroyed!");
+        if (isDead)
+            return;
 
-        // Create an empty GameObject to host the explosion effect
+        isDead = true;
+        Debug.Log("PotCannon has died and is being destroyed!");
+
         GameObject explosionEffect = new GameObject("ExplosionEffect");
         explosionEffect.transform.position = transform.position;
 
-        // Add the explosion script and configure it
         SimpleExplosion explosion = explosionEffect.AddComponent<SimpleExplosion>();
-        explosion.fragmentPrefab = this.fragmentPrefab; // Pass the assigned prefab
-        explosion.fragmentColor = Color.black; // As requested
+        explosion.fragmentPrefab = fragmentPrefab;
+        explosion.fragmentColor = Color.black;
         explosion.fragmentCount = explosionFragmentCount;
         explosion.explosionForce = explosionFragmentForce;
 
-        // Destroy the cannon itself
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
+        else if (CameraShakeManager.instance != null)
+        {
+            CameraShakeManager.instance.Shake();
+        }
+
         Destroy(gameObject);
     }
 }

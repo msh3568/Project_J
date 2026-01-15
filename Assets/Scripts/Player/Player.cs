@@ -1,4 +1,4 @@
-﻿using NUnit.Framework.Constraints;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
@@ -28,6 +28,12 @@ public class Player : Entity
     public Vector2[] attackVelocity;
     public float attackVelocityDuration = .1f;
     public float comboResetTime = 1;
+
+    [Header("Camera Shake")]
+    [SerializeField] public float attackShakeForce = 0.6f;
+    [SerializeField] public float attackFinalShakeForce = 1.2f;
+    [SerializeField] public float baldoShakeForce = 1.5f;
+    [SerializeField] public float attackShakeDelay = 0.15f;
 
     [Header("Air Dash Options")]
     [SerializeField] public bool airDashWithJumpKey = true;
@@ -953,24 +959,24 @@ public class Player : Entity
 
         if (Mathf.Abs(inputX) > 0.01f)
         {
-            // 占쌉뤄옙占쏙옙 占쏙옙占쏙옙 占쏙옙
+            // �Է��� ���� ��
             bool changingDirection = Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed)
                                      && Mathf.Abs(currentSpeed) > 0.1f;
 
             if (isGrounded)
             {
-                // 占쏙옙占쏙옙: 占쏙옙占쏙옙 占쏙옙환 占쏙옙 占쏙옙 占쏙옙占쏙옙 占쎄레占쏙옙크
+                // ����: ���� ��ȯ �� �� ���� �극��ũ
                 accel = changingDirection ? groundDecel : groundAccel;
             }
             else
             {
-                // 占쏙옙占쏙옙: 占쏙옙占쏙옙 占쏙옙환占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
+                // ����: ���� ��ȯ�� ���� ����
                 accel = changingDirection ? airDecel : airAccel;
             }
         }
         else
         {
-            // 占쌉뤄옙占쏙옙 占쏙옙占쏙옙 占쏙옙: 0占쏙옙占쏙옙 占쏙옙占쏙옙
+            // �Է��� ���� ��: 0���� ����
             if (isGrounded)
                 accel = groundDecel;
             else
@@ -979,7 +985,7 @@ public class Player : Entity
             targetSpeed = 0f;
         }
 
-        // 占쏙옙占쏙옙 占쌈듸옙占쏙옙큼占쏙옙 targetSpeed 占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙占?占쏙옙 (占쏙옙占쏙옙/占쏙옙占쏙옙)
+        // ���� �ӵ���ŭ�� targetSpeed �� ���������?�� (����/����)
         float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accel * Time.deltaTime);
 
         SetVelocity(newSpeed, rb.linearVelocity.y);
@@ -993,3 +999,4 @@ public class Player : Entity
 }
 
     
+

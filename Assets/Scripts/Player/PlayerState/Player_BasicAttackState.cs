@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player_BasicAttackState : PlayerState
@@ -28,6 +29,9 @@ public class Player_BasicAttackState : PlayerState
 
         anim.SetInteger("basicAttackIndex", comboIndex);
         ApplyAttackVelocity();
+
+        float shakeForce = comboIndex >= comboLimit ? player.attackFinalShakeForce : player.attackShakeForce;
+        StartDelayedShake(shakeForce);
     }
 
 
@@ -67,6 +71,30 @@ public class Player_BasicAttackState : PlayerState
     }
 
 
+
+    private Coroutine shakeCoroutine;
+
+    private void StartDelayedShake(float force)
+    {
+        if (CameraShakeManager.instance == null)
+            return;
+
+        if (shakeCoroutine != null)
+            player.StopCoroutine(shakeCoroutine);
+
+        shakeCoroutine = player.StartCoroutine(DelayedShake(force));
+    }
+
+    private IEnumerator DelayedShake(float force)
+    {
+        float delay = player.attackShakeDelay;
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
+        if (CameraShakeManager.instance != null)
+            CameraShakeManager.instance.Shake(force);
+    }
+
     private void ResetComboIndexIfNeeded()
     {
         if(Time.time > lastTimeAttacked + player.comboResetTime)
@@ -76,3 +104,4 @@ public class Player_BasicAttackState : PlayerState
             comboIndex = FirstComboIndex;
     }
 }
+
