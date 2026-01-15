@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 4277882043115227875}
   - component: {fileID: 658537387868608796}
   - component: {fileID: 2888315931967699770}
+  - component: {fileID: 1734573825606761144}
   m_Layer: 12
   m_Name: Animator
   m_TagString: Enemy
@@ -144,6 +145,52 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!61 &1734573825606761144
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4603953581404189018}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.49, y: 1.14}
+    newSize: {x: 2.49, y: 1.14}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2.49, y: 1.14}
+  m_EdgeRadius: 0
 --- !u!1 &6656836635872708976
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +202,7 @@ GameObject:
   - component: {fileID: 8599858722228937240}
   - component: {fileID: 8295102177575496737}
   - component: {fileID: 2031760271382590031}
-  - component: {fileID: 6455394509641840081}
+  - component: {fileID: 7974593657550760626}
   m_Layer: 12
   m_Name: Spider
   m_TagString: Enemy
@@ -244,14 +291,18 @@ MonoBehaviour:
   attachedMoveMultiplier: 0.35
   disableJumpWhileAttached: 1
   disableDashWhileAttached: 1
+  attachedWarningColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  attachedBlinkSpeed: 6
+  attachedRandomRotationRange: 35
   parryProjectileSpeed: 10
   parrySpeedMultiplier: 3
   launchedFuseTime: 0.6
   explodeOnGround: 0
   launchedGravityScale: 0
+  launchedAttachRadius: 0.4
   explosionPrefab: {fileID: -2970758037187874360, guid: 89e05ebd83591504f9d4800368b4cb86, type: 3}
   explosionRadius: 1.5
-  explosionDamage: 10
+  explosionDamage: 500
   firewallDamage: 1
   enemyLayer:
     serializedVersion: 2
@@ -263,50 +314,76 @@ MonoBehaviour:
   walkStateName: SpiderWalk
   jumpStateName: SpiderJump
   enableDebugLogs: 1
+  idleLoopSfx: {fileID: 8300000, guid: 9013ea6890c4c9a4c864623573414f28, type: 3}
+  walkStepSfx: {fileID: 8300000, guid: 4bca6e2e46b7df846b5bd6054f49e249, type: 3}
+  spottedSfx: {fileID: 8300000, guid: f716ec23e3f757248b508c2bbe85e628, type: 3}
+  jumpSfx: {fileID: 8300000, guid: 4ba82c7396e1cf14c82e5373c3e9b23b, type: 3}
+  explodeSfx: {fileID: 8300000, guid: 62de00c6696be0c4ca5a1904cfb88d1e, type: 3}
+  attachedWarningSfx: {fileID: 8300000, guid: 8c565a49b98f7324fb2a4db86530aa01, type: 3}
+  idleLoopVolume: 0.6
+  walkStepVolume: 0.054
+  spottedVolume: 0.713
+  jumpVolume: 0.903
+  explodeVolume: 1
+  attachedWarningVolume: 1
+  walkStepIntervalMin: 0.08
+  walkStepIntervalMax: 0.2
+  walkStepSpeedMin: 0.5
+  walkStepSpeedMax: 6
+  attachedWarningLeadTime: 0.35
+  attachedWarningBurstCount: 20
+  attachedWarningBurstInterval: 0.03
   maxHp: 5
---- !u!61 &6455394509641840081
-BoxCollider2D:
+--- !u!114 &7974593657550760626
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6656836635872708976}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.49, y: 1.14}
-    newSize: {x: 2.49, y: 1.14}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.49, y: 1.14}
-  m_EdgeRadius: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 2
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.2
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}

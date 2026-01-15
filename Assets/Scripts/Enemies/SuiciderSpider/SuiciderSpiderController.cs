@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 {
@@ -42,6 +43,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     [SerializeField] private float attachedMoveMultiplier = 0.35f;
     [SerializeField] private bool disableJumpWhileAttached = true;
     [SerializeField] private bool disableDashWhileAttached = true;
+    [SerializeField] private Color attachedWarningColor = new Color(1f, 0.2f, 0.2f, 1f);
+    [SerializeField] private float attachedBlinkSpeed = 6f;
+    [SerializeField] private float attachedRandomRotationRange = 20f;
 
     [Header("Parry")]
     [SerializeField] private float parryProjectileSpeed = 10f;
@@ -49,6 +53,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     [SerializeField] private float launchedFuseTime = 0.6f;
     [SerializeField] private bool explodeOnGround = false;
     [SerializeField] private float launchedGravityScale = 0f;
+    [SerializeField] private float launchedAttachRadius = 0.4f;
 
     [Header("Explosion")]
     [SerializeField] private SuiciderSpiderExplosion explosionPrefab;
@@ -70,14 +75,42 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = false;
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip idleLoopSfx;
+    [SerializeField] private AudioClip walkStepSfx;
+    [SerializeField] private AudioClip spottedSfx;
+    [SerializeField] private AudioClip jumpSfx;
+    [SerializeField] private AudioClip explodeSfx;
+    [SerializeField] private AudioClip attachedWarningSfx;
+    [SerializeField, Range(0f, 1f)] private float idleLoopVolume = 0.6f;
+    [SerializeField, Range(0f, 1f)] private float walkStepVolume = 0.7f;
+    [SerializeField, Range(0f, 1f)] private float spottedVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float jumpVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float explodeVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float attachedWarningVolume = 1f;
+    [SerializeField] private float walkStepIntervalMin = 0.08f;
+    [SerializeField] private float walkStepIntervalMax = 0.2f;
+    [SerializeField] private float walkStepSpeedMin = 0.5f;
+    [SerializeField] private float walkStepSpeedMax = 6f;
+    [SerializeField] private float attachedWarningStartDelay = 0f;
+    [SerializeField] private int attachedWarningBurstCount = 20;
+    [SerializeField] private float attachedWarningBurstInterval = 0.03f;
+
     [Header("Health")]
     [SerializeField] private float maxHp = 5f;
 
     private Rigidbody2D rb;
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private Transform visualRoot;
+    private AudioSource sfxLoopSource;
     private Collider2D[] spiderColliders;
+    private Collider2D[] playerColliders;
+    private Collider2D[] attachedTargetColliders;
     private Transform playerTransform;
+    private Transform attachedTarget;
     private IPlayerStatus playerStatus;
+    private PlayerStatusAdapter playerStatusAdapter;
     private Player_Health playerHealth;
     private float currentHp;
     private float baseGravityScale;
@@ -86,13 +119,32 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private bool isParriedHold;
     private bool hasExploded;
     private int patrolDirection = 1;
+    private bool isIgnoringPlayerCollisions;
+    private bool isFacingRight = true;
+    private bool isAttachedToPlayer;
+    private SpiderState previousState;
+    private float walkStepTimer;
+    private bool playedAttachedWarning;
+    private int attachedWarningRemaining;
+    private float attachedWarningTimer;
+    private Color baseSpriteColor = Color.white;
+    private Coroutine attachedColorCo;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>(true);
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
+        if (animator != null)
+            visualRoot = animator.transform;
+        else if (spriteRenderer != null)
+            visualRoot = spriteRenderer.transform;
+        else
+            visualRoot = transform;
         spiderColliders = GetComponentsInChildren<Collider2D>(true);
         currentHp = maxHp;
+        if (rb != null)
+            rb.freezeRotation = true;
         if (detectionOrigin == null)
         {
             Transform detected = transform.Find("dection");
@@ -102,6 +154,22 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
         if (rb != null)
             baseGravityScale = rb.gravityScale;
+
+        if (spriteRenderer != null)
+            baseSpriteColor = spriteRenderer.color;
+
+        sfxLoopSource = GetComponent<AudioSource>();
+        if (sfxLoopSource == null)
+        {
+            sfxLoopSource = gameObject.AddComponent<AudioSource>();
+            sfxLoopSource.playOnAwake = false;
+        }
+        if (AudioManager.Instance != null && AudioManager.Instance.audioMixer != null)
+        {
+            var groups = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX");
+            if (groups.Length > 0)
+                sfxLoopSource.outputAudioMixerGroup = groups[0];
+        }
     }
 
     private void Start()
@@ -111,7 +179,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         {
             playerTransform = playerObj.transform;
             playerStatus = playerObj.GetComponent<IPlayerStatus>();
+            playerStatusAdapter = playerObj.GetComponent<PlayerStatusAdapter>();
             playerHealth = playerObj.GetComponent<Player_Health>();
+            playerColliders = playerObj.GetComponentsInChildren<Collider2D>(true);
         }
     }
 
@@ -187,7 +257,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             patrolDirection *= -1;
         }
 
+        UpdateFacing(patrolDirection);
         rb.linearVelocity = new Vector2(patrolDirection * patrolSpeed, rb.linearVelocity.y);
+        HandleWalkSteps(Mathf.Abs(patrolSpeed));
 
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
@@ -209,7 +281,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
         float speed = GetPlayerMoveSpeed() * chaseSpeedMultiplier;
         Vector2 direction = (playerTransform.position - transform.position).normalized;
+        UpdateFacing(direction.x);
         rb.linearVelocity = new Vector2(direction.x * speed, rb.linearVelocity.y);
+        HandleWalkSteps(Mathf.Abs(speed));
 
         if (distance <= jumpTriggerDistance)
         {
@@ -226,6 +300,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         if (stateTimer <= 0f)
         {
             Vector2 target = (playerTransform.position - transform.position).normalized;
+            UpdateFacing(target.x);
             rb.linearVelocity = target * jumpSpeed;
             SetState(SpiderState.Jump);
         }
@@ -243,11 +318,13 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     private void UpdateAttached()
     {
-        if (playerTransform == null)
+        if (attachedTarget == null)
         {
             Explode();
             return;
         }
+
+        HandleAttachedWarningSfx();
 
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
@@ -258,6 +335,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     private void UpdateLaunched()
     {
+        if (TryAttachToEnemyWhileLaunched())
+            return;
+
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
         {
@@ -270,8 +350,10 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         if (state == newState)
             return;
 
+        previousState = state;
         state = newState;
         Log($"State -> {state}");
+        HandleStateSfx(previousState, state);
 
         if (state == SpiderState.Idle)
         {
@@ -330,20 +412,23 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             return;
         }
 
+        if (playerTransform == null)
+            return;
+
         Log("Attach to player");
-        rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        transform.SetParent(playerTransform);
-        transform.localPosition = Vector3.zero;
+        AttachToTarget(playerTransform, playerColliders, true);
 
         if (playerStatus != null)
         {
             playerStatus.SetMoveSpeedMultiplier(attachedMoveMultiplier);
-            if (disableJumpWhileAttached)
+            if (disableJumpWhileAttached && playerStatusAdapter == null)
                 playerStatus.SetJumpEnabled(false);
             if (disableDashWhileAttached)
                 playerStatus.SetDashEnabled(false);
         }
+
+        if (playerStatusAdapter != null)
+            playerStatusAdapter.ApplyAttachedConfusion(true);
 
         SetState(SpiderState.Attached);
     }
@@ -351,11 +436,10 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private void DetachFromPlayer()
     {
         Log("Detach from player");
-        transform.SetParent(null);
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = baseGravityScale;
+        bool wasAttachedToPlayer = isAttachedToPlayer;
+        DetachFromTarget();
 
-        if (playerStatus != null)
+        if (playerStatus != null && wasAttachedToPlayer)
         {
             playerStatus.SetMoveSpeedMultiplier(1f);
             if (disableJumpWhileAttached)
@@ -363,6 +447,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             if (disableDashWhileAttached)
                 playerStatus.SetDashEnabled(true);
         }
+
+        if (playerStatusAdapter != null && wasAttachedToPlayer)
+            playerStatusAdapter.ApplyAttachedConfusion(false);
     }
 
     private void Explode()
@@ -374,6 +461,15 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         hasExploded = true;
         SetState(SpiderState.Exploded);
         DetachFromPlayer();
+
+        StopAllSfx();
+        PlayOneShot(explodeSfx, explodeVolume);
+
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
 
         if (explosionPrefab != null)
         {
@@ -415,6 +511,16 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             Log("Collision with Player");
             AttachToPlayer(collision.collider);
             return;
+        }
+
+        if (state == SpiderState.Launched)
+        {
+            if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
+            {
+                Log("Collision with Enemy (Launched)");
+                AttachToEnemy(collision.collider);
+                return;
+            }
         }
 
         if (state == SpiderState.Launched && explodeOnGround)
@@ -462,7 +568,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     public void SetParriedState(bool isParried)
     {
-        if (state == SpiderState.Exploded)
+        if (state == SpiderState.Exploded || state == SpiderState.Attached)
             return;
 
         isParriedHold = isParried;
@@ -484,7 +590,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     public void LaunchParried(Vector2 direction, Transform playerTransform)
     {
-        if (!isParriedHold || state == SpiderState.Exploded)
+        if (!isParriedHold || state == SpiderState.Exploded || state == SpiderState.Attached)
             return;
 
         Log($"Launch parried. Dir={direction}");
@@ -515,6 +621,264 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         {
             if (spiderColliders[i] != null)
                 spiderColliders[i].enabled = enabled;
+        }
+    }
+
+    private void AttachToEnemy(Collider2D enemyCollider)
+    {
+        if (enemyCollider == null || state == SpiderState.Attached || state == SpiderState.Exploded)
+            return;
+
+        Transform enemyTransform = enemyCollider.transform;
+        Collider2D[] enemyColliders = enemyTransform.GetComponentsInChildren<Collider2D>(true);
+        Log("Attach to enemy");
+        AttachToTarget(enemyTransform, enemyColliders, false);
+    }
+
+    private bool TryAttachToEnemyWhileLaunched()
+    {
+        if (state != SpiderState.Launched || attachedTarget != null)
+            return false;
+
+        if (launchedAttachRadius <= 0f)
+            return false;
+
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, launchedAttachRadius, enemyLayer);
+        if (hit == null)
+            return false;
+
+        AttachToEnemy(hit);
+        return state == SpiderState.Attached;
+    }
+
+    private void AttachToTarget(Transform target, Collider2D[] targetColliders, bool attachedToPlayer)
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        attachedTarget = target;
+        attachedTargetColliders = targetColliders;
+        isAttachedToPlayer = attachedToPlayer;
+        SetIgnoreTargetCollisions(true);
+        transform.SetParent(attachedTarget);
+        transform.localPosition = Vector3.zero;
+        float angle = Random.Range(-attachedRandomRotationRange, attachedRandomRotationRange);
+        if (visualRoot != null)
+            visualRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
+        SetState(SpiderState.Attached);
+        StartAttachedColor();
+    }
+
+    private void DetachFromTarget()
+    {
+        SetIgnoreTargetCollisions(false);
+        transform.SetParent(null);
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = baseGravityScale;
+        if (visualRoot != null)
+            visualRoot.localRotation = Quaternion.identity;
+        transform.rotation = Quaternion.identity;
+        StopAttachedColor();
+        attachedTarget = null;
+        attachedTargetColliders = null;
+        isAttachedToPlayer = false;
+    }
+
+    private void SetIgnoreTargetCollisions(bool ignore)
+    {
+        if (spiderColliders == null || attachedTargetColliders == null)
+            return;
+
+        if (isIgnoringPlayerCollisions == ignore)
+            return;
+
+        for (int i = 0; i < spiderColliders.Length; i++)
+        {
+            Collider2D spiderCollider = spiderColliders[i];
+            if (spiderCollider == null)
+                continue;
+
+            for (int j = 0; j < attachedTargetColliders.Length; j++)
+            {
+                Collider2D targetCollider = attachedTargetColliders[j];
+                if (targetCollider != null)
+                    Physics2D.IgnoreCollision(spiderCollider, targetCollider, ignore);
+            }
+        }
+
+        isIgnoringPlayerCollisions = ignore;
+    }
+
+    private void UpdateFacing(float directionX)
+    {
+        if (Mathf.Abs(directionX) < 0.01f)
+            return;
+
+        bool shouldFaceRight = directionX > 0f;
+        if (isFacingRight == shouldFaceRight)
+            return;
+
+        isFacingRight = shouldFaceRight;
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * (isFacingRight ? 1f : -1f);
+        transform.localScale = scale;
+    }
+
+    private void HandleStateSfx(SpiderState from, SpiderState to)
+    {
+        if (to == SpiderState.Idle)
+        {
+            StartLoop(idleLoopSfx, idleLoopVolume);
+        }
+        else if (to == SpiderState.Patrol || to == SpiderState.Chase)
+        {
+            StopLoop();
+            walkStepTimer = 0f;
+        }
+        else
+        {
+            StopLoop();
+        }
+
+        if (to == SpiderState.Chase && from != SpiderState.Chase)
+            PlayOneShot(spottedSfx, spottedVolume);
+
+        if (to == SpiderState.Jump && from != SpiderState.Jump)
+            PlayOneShot(jumpSfx, jumpVolume);
+
+        if (to == SpiderState.Attached)
+        {
+            playedAttachedWarning = false;
+            attachedWarningRemaining = 0;
+            attachedWarningTimer = 0f;
+        }
+    }
+
+    private void StartLoop(AudioClip clip, float volume)
+    {
+        if (sfxLoopSource == null)
+            return;
+
+        if (clip == null)
+        {
+            StopLoop();
+            return;
+        }
+
+        if (sfxLoopSource.clip == clip && sfxLoopSource.isPlaying)
+            return;
+
+        sfxLoopSource.clip = clip;
+        sfxLoopSource.loop = true;
+        sfxLoopSource.volume = volume;
+        sfxLoopSource.Play();
+    }
+
+    private void StopLoop()
+    {
+        if (sfxLoopSource == null)
+            return;
+
+        if (sfxLoopSource.isPlaying)
+            sfxLoopSource.Stop();
+        sfxLoopSource.clip = null;
+    }
+
+    private void StopAllSfx()
+    {
+        if (sfxLoopSource == null)
+            return;
+
+        sfxLoopSource.Stop();
+        sfxLoopSource.clip = null;
+    }
+
+    private void PlayOneShot(AudioClip clip, float volume)
+    {
+        if (clip == null)
+            return;
+
+        if (sfxLoopSource != null)
+            sfxLoopSource.PlayOneShot(clip, volume);
+    }
+
+    private void HandleWalkSteps(float speed)
+    {
+        if (state != SpiderState.Patrol && state != SpiderState.Chase)
+            return;
+
+        if (walkStepSfx == null || speed <= 0.01f)
+            return;
+
+        walkStepTimer -= Time.deltaTime;
+        if (walkStepTimer > 0f)
+            return;
+
+        float t = Mathf.InverseLerp(walkStepSpeedMin, walkStepSpeedMax, speed);
+        float interval = Mathf.Lerp(walkStepIntervalMax, walkStepIntervalMin, t);
+        walkStepTimer = Mathf.Max(0.01f, interval);
+        PlayOneShot(walkStepSfx, walkStepVolume);
+    }
+
+    private void HandleAttachedWarningSfx()
+    {
+        if (state != SpiderState.Attached || attachedWarningSfx == null || attachDuration <= 0f)
+            return;
+
+        if (!playedAttachedWarning)
+        {
+            float elapsed = attachDuration - stateTimer;
+            if (elapsed < attachedWarningStartDelay)
+                return;
+
+            attachedWarningRemaining = Mathf.Max(0, attachedWarningBurstCount);
+            attachedWarningTimer = 0f;
+            playedAttachedWarning = true;
+        }
+
+        if (attachedWarningRemaining <= 0)
+            return;
+
+        attachedWarningTimer -= Time.deltaTime;
+        if (attachedWarningTimer > 0f)
+            return;
+
+        PlayOneShot(attachedWarningSfx, attachedWarningVolume);
+        attachedWarningRemaining--;
+        attachedWarningTimer = Mathf.Max(0.01f, attachedWarningBurstInterval);
+    }
+
+    private void StartAttachedColor()
+    {
+        if (spriteRenderer == null)
+            return;
+
+        StopAttachedColor();
+        attachedColorCo = StartCoroutine(AttachedColorRoutine());
+    }
+
+    private void StopAttachedColor()
+    {
+        if (attachedColorCo != null)
+        {
+            StopCoroutine(attachedColorCo);
+            attachedColorCo = null;
+        }
+
+        if (spriteRenderer != null)
+            spriteRenderer.color = baseSpriteColor;
+    }
+
+    private System.Collections.IEnumerator AttachedColorRoutine()
+    {
+        float elapsed = 0f;
+        while (state == SpiderState.Attached && attachDuration > 0f)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / attachDuration);
+            float blink = 0.5f + 0.5f * Mathf.Sin(elapsed * attachedBlinkSpeed * Mathf.PI * 2f);
+            float intensity = Mathf.Clamp01(t * blink);
+            spriteRenderer.color = Color.Lerp(baseSpriteColor, attachedWarningColor, intensity);
+            yield return null;
         }
     }
 

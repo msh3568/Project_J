@@ -87,6 +87,9 @@ public class Player : Entity
 
         public Vector2 moveInput { get; private set; }
 
+        private bool overrideMoveInput;
+        private Vector2 overrideMoveInputValue;
+
     
 
         [Header("Charge Jump Details")]
@@ -174,6 +177,9 @@ public class Player : Entity
         {
 
             base.Awake();
+
+            if (rb != null)
+                rb.freezeRotation = true;
 
     
 
@@ -470,9 +476,9 @@ public class Player : Entity
 
             input.Enable();
 
-            input.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+            input.Player.Movement.performed += ctx => { if (overrideMoveInput) return; moveInput = ctx.ReadValue<Vector2>(); };
 
-            input.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
+            input.Player.Movement.canceled += ctx => { if (overrideMoveInput) return; moveInput = Vector2.zero; };
 
         }
 
@@ -994,6 +1000,21 @@ public class Player : Entity
 
     
 
+        public void SetMoveInputOverride(bool enabled, Vector2 value)
+        {
+            overrideMoveInput = enabled;
+            overrideMoveInputValue = value;
+            moveInput = enabled ? value : Vector2.zero;
+        }
+
+        public void SetMoveInput(Vector2 value)
+        {
+            if (overrideMoveInput)
+            {
+                overrideMoveInputValue = value;
+                moveInput = value;
+            }
+        }
         // Removed OnDestroy related to color changes
 
 }
