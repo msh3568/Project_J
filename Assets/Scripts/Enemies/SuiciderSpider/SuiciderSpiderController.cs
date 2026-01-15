@@ -63,7 +63,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     [SerializeField] private float explosionKnockbackDuration = 0.15f;
 
     [Header("Animator")]
-    [SerializeField] private string idleStateName = "spiderIdle";
+    [SerializeField] private string idleStateName = "SpiderIdle";
     [SerializeField] private string walkStateName = "SpiderWalk";
     [SerializeField] private string jumpStateName = "SpiderJump";
 
@@ -220,7 +220,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     private void UpdatePreJump()
     {
-        PlayAnimation(idleStateName);
+        PlayAnimation(jumpStateName);
 
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
@@ -394,15 +394,15 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         Destroy(gameObject);
     }
 
-    private void PlayAnimation(string stateName)
+    private void PlayAnimation(string targetParam)
     {
-        if (animator == null || string.IsNullOrEmpty(stateName))
+        if (animator == null || string.IsNullOrEmpty(targetParam))
             return;
 
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            animator.Play(stateName);
-        }
+        // Set the requested parameter to true, others to false
+        animator.SetBool(idleStateName, targetParam == idleStateName);
+        animator.SetBool(walkStateName, targetParam == walkStateName);
+        animator.SetBool(jumpStateName, targetParam == jumpStateName);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
