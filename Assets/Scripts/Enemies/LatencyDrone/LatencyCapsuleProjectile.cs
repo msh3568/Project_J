@@ -193,7 +193,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         if (parried)
         {
             rb.linearVelocity = Vector2.zero;
-            rb.isKinematic = true;
+            rb.bodyType = RigidbodyType2D.Kinematic;
             Debug.Log("Projectile state set to PARRIED.");
         }
     }
@@ -204,7 +204,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         
         this.damageSource = playerTransform; // Store the player as the damage source
 
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = direction.normalized * projectileSpeed * parriedSpeedMultiplier;
         gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
         Debug.Log($"Projectile LAUNCHED by player in direction {direction}.");

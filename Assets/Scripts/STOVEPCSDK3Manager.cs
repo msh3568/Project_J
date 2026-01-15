@@ -33,7 +33,7 @@ public class STOVEPCSDK3Manager : MonoBehaviour
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<STOVEPCSDK3Manager>();
+                    _instance = FindFirstObjectByType<STOVEPCSDK3Manager>();
 
                     if (_instance == null)
                     {

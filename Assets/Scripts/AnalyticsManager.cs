@@ -59,7 +59,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("Firebase 諛?UGS 珥덇린?붾? ?쒖옉?⑸땲??..");
+            Debug.Log("Firebase \uBC0F UGS \uCD08\uAE30\uD654\uB97C \uC2DC\uC791\uD569\uB2C8\uB2E4..");
 
             // 1. Initialize Firebase
             var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
@@ -68,30 +68,32 @@ public class AnalyticsManager : MonoBehaviour
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 reference = FirebaseDatabase.DefaultInstance.RootReference;
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                Debug.Log("Firebase 珥덇린???꾨즺.");
+                Debug.Log("Firebase \uCD08\uAE30\uD654 \uC644\uB8CC.");
             }
             else
             {
-                Debug.LogError($"Firebase ?섏〈??臾몄젣: {dependencyStatus}");
+                Debug.LogError($"Firebase \uC758\uC874\uC131 \uBB38\uC81C: {dependencyStatus}");
                 // Initialization failed, do not proceed.
                 return;
             }
 
             // 2. Initialize UGS
             await UnityServices.InitializeAsync();
+            #pragma warning disable CS0618
             AnalyticsService.Instance.StartDataCollection();
-            Debug.Log("UGS Analytics 珥덇린??諛??곗씠???섏쭛 ?쒖옉 ?꾨즺.");
+            #pragma warning restore CS0618
+            Debug.Log("UGS Analytics \uCD08\uAE30\uD654 \uBC0F \uB370\uC774\uD130 \uC218\uC9D1 \uC2DC\uC791 \uC644\uB8CC.");
 
             // 3. Set Initialized Flag
             isInitialized = true;
-            Debug.Log("紐⑤뱺 遺꾩꽍 ?쒕퉬?ㅺ? ?깃났?곸쑝濡?珥덇린?붾릺?덉뒿?덈떎.");
+            Debug.Log("\uBAA8\uB4E0 \uBD84\uC11D \uC900\uBE44\uAC00 \uC131\uACF5\uC801\uC73C\uB85C \uCD08\uAE30\uD654\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
 
             // After initialization, check the current scene and start session if needed.
             OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
         catch (Exception e)
         {
-            Debug.LogError($"遺꾩꽍 ?쒕퉬??珥덇린??以??ш컖???ㅻ쪟 諛쒖깮: {e}");
+            Debug.LogError($"\uBD84\uC11D \uC900\uBE44 \uCD08\uAE30\uD654 \uC911 \uC608\uC678 \uBC1C\uC0DD: {e}");
             // isInitialized remains false
         }
     }
@@ -100,11 +102,11 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (!isInitialized) 
         {
-            Debug.LogWarning("遺꾩꽍 ?쒕퉬?ㅺ? ?꾩쭅 以鍮꾨릺吏 ?딆븘 OnSceneLoaded 濡쒖쭅??嫄대꼫?곷땲??");
+            Debug.LogWarning("\uBD84\uC11D \uC900\uBE44\uAC00 \uC544\uC9C1 \uC900\uBE44\uB418\uC9C0 \uC54A\uC544 OnSceneLoaded \uB85C\uC9C1\uC744 \uAC74\uB108\uB731\uB2C8\uB2E4.");
             return;
         }
 
-        Debug.Log($"OnSceneLoaded: {scene.name}, ?몄뀡???쒖옉?⑸땲??");
+        Debug.Log($"OnSceneLoaded: {scene.name}, \uC138\uC158 \uC2DC\uC791\uD569\uB2C8\uB2E4");
         StartSession();
     }
 
@@ -112,7 +114,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (!isInitialized || isSessionStarted) return;
         
-        Debug.Log("?몄뀡 ?쒖옉 + Analytics session_start ?꾩넚 (Firebase & UGS)");
+        Debug.Log("\uC138\uC158 \uC2DC\uC791 + Analytics session_start \uC804\uC1A1 (Firebase & UGS)");
 
         sessionStartTime = DateTime.UtcNow;
         isSessionStarted = true;
@@ -229,7 +231,7 @@ public class AnalyticsManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("RankingManager ?먮뒗 STOVEPCSDK3Manager???몄뒪?댁뒪媛 議댁옱?섏? ?딆븘 ??궧??湲곕줉?????놁뒿?덈떎.");
+                Debug.LogWarning("RankingManager \uB610\uB294 STOVEPCSDK3Manager \uC778\uC2A4\uD134\uC2A4\uAC00 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC544 \uB7AD\uD0B9 \uAE30\uB85D\uC744 \uC800\uC7A5\uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.");
             }
         }
     }
@@ -268,11 +270,11 @@ public class AnalyticsManager : MonoBehaviour
 
     private IEnumerator EndSessionAndQuitRoutine()
     {
-        Debug.Log("醫낅즺 猷⑦떞 ?쒖옉: ?몄뀡 ?곗씠?곕? ??ν븯怨?醫낅즺?⑸땲??");
+        Debug.Log("\uC885\uB8CC \uB8E8\uD2F4 \uC2DC\uC791: \uC138\uC158 \uB370\uC774\uD130\uB97C \uC800\uC7A5\uD558\uACE0 \uC885\uB8CC\uD569\uB2C8\uB2E4.");
         EndSession();
         yield return new WaitUntil(() => isSessionDataSaved);
         
-        Debug.Log("?몄뀡 ?곗씠??????뺤씤?? ?댄뵆由ъ??댁뀡??醫낅즺?⑸땲??");
+        Debug.Log("\uC138\uC158 \uB370\uC774\uD130 \uC800\uC7A5 \uD655\uC778 \uD6C4 \uC560\uD50C\uB9AC\uCF00\uC774\uC158\uC744 \uC885\uB8CC\uD569\uB2C8\uB2E4.");
         Application.Quit(); // Now really quit.
     }
 
@@ -291,7 +293,7 @@ public class AnalyticsManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("?몄뀡 ID ?띾뱷 ?ㅽ뙣: " + task.Exception);
+                Debug.LogError("\uC138\uC158 ID \uD68D\uB4DD \uC2E4\uD328: " + task.Exception);
                 isSessionDataSaved = true; // Unblock quit process even on failure
                 return;
             }
@@ -339,11 +341,11 @@ public class AnalyticsManager : MonoBehaviour
             {
                 if (updateTask.IsCompletedSuccessfully)
                 {
-                    Debug.Log($"[?몄뀡 {sessionId}] ????꾨즺.");
+                    Debug.Log($"[\uC138\uC158 {sessionId}] \uC800\uC7A5 \uC644\uB8CC.");
                 }
                 else
                 {
-                    Debug.LogError("?몄뀡 ?곗씠??????ㅽ뙣: " + updateTask.Exception);
+                    Debug.LogError("\uC138\uC158 \uB370\uC774\uD130 \uC800\uC7A5 \uC2E4\uD328: " + updateTask.Exception);
                 }
                 isSessionDataSaved = true;
             });
@@ -352,7 +354,7 @@ public class AnalyticsManager : MonoBehaviour
     private void LogDualEvent(string eventName, Dictionary<string, object> parameters = null)
     {
         if (!isInitialized) {
-            Debug.LogWarning($"遺꾩꽍 ?쒕퉬?ㅺ? 以鍮꾨릺吏 ?딆븘 ?대깽???꾩넚??嫄대꼫?곷땲?? {eventName}");
+            Debug.LogWarning($"\uBD84\uC11D \uC900\uBE44\uAC00 \uC544\uC9C1 \uC900\uBE44\uB418\uC9C0 \uC54A\uC544 \uC774\uBCA4\uD2B8 \uC804\uC1A1\uC744 \uAC74\uB108\uB731\uB2C8\uB2E4 {eventName}");
             return;
         }
 
@@ -371,7 +373,7 @@ public class AnalyticsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"UGS ?대깽??'{eventName}' 濡쒓퉭 ?ㅽ뙣: {e.Message}");
+            Debug.LogError($"UGS \uC774\uBCA4\uD2B8 '{eventName}' \uB85C\uAE45 \uC2E4\uD328: {e.Message}");
         }
 
         // 2. Log to Firebase
@@ -398,7 +400,7 @@ public class AnalyticsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"Firebase ?대깽??'{eventName}' 濡쒓퉭 ?ㅽ뙣: {e.Message}");
+            Debug.LogError($"Firebase \uC774\uBCA4\uD2B8 '{eventName}' \uB85C\uAE45 \uC2E4\uD328: {e.Message}");
         }
     }
 }

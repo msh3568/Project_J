@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Unity.Cinemachine;
 
 [RequireComponent(typeof(AudioSource))] // Add AudioSource requirement
 public class Enemy : Entity
@@ -69,7 +70,11 @@ public class Enemy : Entity
             Instantiate(mediumFireTracePrefab, transform.position, Quaternion.identity);
         }
 
-        CameraShakeManager.instance?.Shake();
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
         OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
 

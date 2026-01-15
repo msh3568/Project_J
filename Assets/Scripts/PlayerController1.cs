@@ -19,7 +19,7 @@ public class PlayerController1 : MonoBehaviour
         controls = new NewPlayerControls();
         controls.Player.Enable();
 
-        playerInstance = FindObjectOfType<Player>(); // Player ?몄뒪?댁뒪 李얠븘???좊떦
+        playerInstance = FindFirstObjectByType<Player>(); // Player ?몄뒪?댁뒪 李얠븘???좊떦
         if (playerInstance == null)
         {
             Debug.LogError("PlayerController: Player instance not found in scene!");

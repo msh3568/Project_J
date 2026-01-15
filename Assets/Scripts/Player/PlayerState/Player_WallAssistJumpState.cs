@@ -6,7 +6,6 @@ public class Player_WallAssistJumpState : PlayerState
     {
     }
 
-    private float stateTimer;
     private bool isReturning;
 
     public override void Enter()

@@ -33,7 +33,7 @@ public class SpikeBall : MonoBehaviour, IParryable
         {
             if (rb == null) rb = GetComponent<Rigidbody2D>();
             rb.linearVelocity = Vector2.zero;
-            rb.isKinematic = true;
+            rb.bodyType = RigidbodyType2D.Kinematic;
         }
     }
 
@@ -44,7 +44,7 @@ public class SpikeBall : MonoBehaviour, IParryable
         this.damageSource = playerTransform; // Store the player as the damage source
 
         if (rb == null) rb = GetComponent<Rigidbody2D>();
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = direction.normalized * speed * parriedSpeedMultiplier;
         gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
 

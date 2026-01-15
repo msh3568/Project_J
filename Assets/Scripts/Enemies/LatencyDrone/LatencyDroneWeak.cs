@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
 
@@ -127,6 +128,8 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
             audioSource.spatialBlend = 1f; // 3D ?ъ슫?쒕줈 ?ㅼ젙 (嫄곕━媛?
             audioSource.volume = 0.5f; // 湲곕낯 蹂쇰ⅷ
         }
+
+        minHorizontalDistance = Mathf.Max(minHorizontalDistance, stopDistance);
 
         // Ensure SimpleExplosion script is present in project for destruction to work
         // It's not added here, but referenced later.
@@ -347,7 +350,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
     private void Die()
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
-
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
         // ?뚭눼 ???ъ슫???ъ깮 (?덈줈??肄붾（???ъ슜)
         if (deathSound != null)
         {
@@ -356,8 +363,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
 
         // Stop all movement
         rb.linearVelocity = Vector2.zero;
-        rb.isKinematic = true; // 臾쇰━???곹샇?묒슜???꾩쟾??硫덉땄
+        rb.bodyType = RigidbodyType2D.Kinematic; // 臾쇰━???곹샇?묒슜???꾩쟾??硫덉땄
         enabled = false; 
+        isFiringBurst = false;
+        StopAllCoroutines();
 
         // --- Explosion Effect ---
         GameObject explosionEffect = new GameObject("DroneExplosionEffect");
@@ -424,6 +433,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         isFiringBurst = true;
         for (int i = 0; i < capsulesPerBurst; i++)
         {
+            if (isDead) break;
             if (playerTransform == null) break; // ?뚮젅?댁뼱媛 ?щ씪議뚯쑝硫?諛쒖궗 以묒?
             Vector2 direction = (playerTransform.position - transform.position).normalized;
             FireProjectile(direction); // ?ㅼ떆 怨꾩궛??諛⑺뼢?쇰줈 諛쒖궗

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 
+#pragma warning disable CS0618
 namespace Cainos.LucidEditor.Experimental
 {
     public class TreeMenu
@@ -210,3 +211,4 @@ namespace Cainos.LucidEditor.Experimental
         }
     }
 }
+#pragma warning restore CS0618

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
+#pragma warning disable CS0618
 namespace Cainos.LucidEditor.Experimental
 {
     internal class SimpleTreeView : TreeView
@@ -111,3 +112,4 @@ namespace Cainos.LucidEditor.Experimental
         }
     }
 }
+#pragma warning restore CS0618

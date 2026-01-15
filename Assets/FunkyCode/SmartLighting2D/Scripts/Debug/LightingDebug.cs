@@ -17,11 +17,11 @@ namespace FunkyCode
         static public void OnGUI()
         {
             if (lights == null) {
-                lights = UnityEngine.Object.FindObjectsOfType(typeof(Light2D));
-                colliders = UnityEngine.Object.FindObjectsOfType(typeof(LightCollider2D));
-                sprites = UnityEngine.Object.FindObjectsOfType(typeof(LightSprite2D));
+                lights = UnityEngine.Object.FindObjectsByType(typeof(Light2D), FindObjectsSortMode.None);
+                colliders = UnityEngine.Object.FindObjectsByType(typeof(LightCollider2D), FindObjectsSortMode.None);
+                sprites = UnityEngine.Object.FindObjectsByType(typeof(LightSprite2D), FindObjectsSortMode.None);
 
-                tilemaps = UnityEngine.Object.FindObjectsOfType(typeof(LightTilemapCollider2D));
+                tilemaps = UnityEngine.Object.FindObjectsByType(typeof(LightTilemapCollider2D), FindObjectsSortMode.None);
             }
 
             if (timer == null)
@@ -185,9 +185,9 @@ namespace FunkyCode
 
             timer = TimerHelper.Create();
 
-            lights = UnityEngine.Object.FindObjectsOfType(typeof(Light2D));
-            colliders = UnityEngine.Object.FindObjectsOfType(typeof(LightCollider2D));
-            sprites = UnityEngine.Object.FindObjectsOfType(typeof(LightSprite2D));
+            lights = UnityEngine.Object.FindObjectsByType(typeof(Light2D), FindObjectsSortMode.None);
+            colliders = UnityEngine.Object.FindObjectsByType(typeof(LightCollider2D), FindObjectsSortMode.None);
+            sprites = UnityEngine.Object.FindObjectsByType(typeof(LightSprite2D), FindObjectsSortMode.None);
         }
     }
 }

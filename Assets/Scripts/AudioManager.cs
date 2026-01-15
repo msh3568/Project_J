@@ -113,7 +113,7 @@ public class AudioManager : MonoBehaviour
         
         if (bgmSource == null)
         {
-            AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+            AudioSource[] allAudioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
             foreach (AudioSource source in allAudioSources)
             {
                 if (source.isPlaying && source.loop)

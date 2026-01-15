@@ -31,7 +31,12 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
         rb = GetComponent<Rigidbody2D>();
         originalScript = GetComponent<SpikeBall>();
         lineRenderer = GetComponent<LineRenderer>();
-        player = FindObjectOfType<Player>();
+        player = FindFirstObjectByType<Player>();
+
+        if (trajectoryPointSpacing > 0f)
+        {
+            trajectoryPointCount = Mathf.Max(2, Mathf.RoundToInt(trajectoryPreviewLength / trajectoryPointSpacing));
+        }
 
         if (lineRenderer != null)
         {
@@ -53,7 +58,7 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
         }
 
         rb.linearVelocity = Vector2.zero;
-        rb.isKinematic = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
 
         GameManager.Instance.RequestSlowMotion(slow_scale, slow_duration);
         StartCoroutine(ReturnSequence());
@@ -73,6 +78,10 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
         if (lineRenderer != null)
         {
             lineRenderer.enabled = false;
+        }
+        if (return_delay > 0f)
+        {
+            yield return new WaitForSeconds(return_delay);
         }
         FireReturnShot();
     }
@@ -96,7 +105,7 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
 
         lastAimDirection = new Vector2(Mathf.Cos(targetAngle * Mathf.Deg2Rad), Mathf.Sin(targetAngle * Mathf.Deg2Rad));
 
-        PotCannon cannon = FindObjectOfType<PotCannon>();
+        PotCannon cannon = FindFirstObjectByType<PotCannon>();
         float originalSpeed = (cannon != null) ? cannon.fireForce : 10f;
         Vector2 initialVelocity = lastAimDirection * originalSpeed * returnSpeedMultiplier;
 
@@ -122,11 +131,11 @@ public class ParriableProjectile : MonoBehaviour, ICounterable
 
     private void FireReturnShot()
     {
-        if (!rb.isKinematic) return;
+        if (rb.bodyType != RigidbodyType2D.Kinematic) return;
 
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
 
-        PotCannon cannon = FindObjectOfType<PotCannon>();
+        PotCannon cannon = FindFirstObjectByType<PotCannon>();
         float originalSpeed = (cannon != null) ? cannon.fireForce : 10f;
         
         rb.linearVelocity = lastAimDirection * originalSpeed * returnSpeedMultiplier;

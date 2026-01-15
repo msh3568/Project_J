@@ -50,11 +50,11 @@ public class RankingManager : MonoBehaviour
             if (task.Result == DependencyStatus.Available)
             {
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("Firebase媛 ?깃났?곸쑝濡?珥덇린?붾릺?덉뒿?덈떎.");
+                Debug.Log("Firebase\uAC00 \uC131\uACF5\uC801\uC73C\uB85C \uCD08\uAE30\uD654\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
             }
             else
             {
-                Debug.LogError($"Firebase 醫낆냽???닿껐???ㅽ뙣?덉뒿?덈떎: {task.Result}");
+                Debug.LogError($"Firebase \uC885\uC18D\uC131 \uD574\uACB0\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: {task.Result}");
             }
         });
     }
@@ -85,7 +85,7 @@ public class RankingManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("??궧 濡쒕뵫???ㅽ뙣?덉뒿?덈떎: " + task.Exception);
+                Debug.LogError("\uB7AD\uD0B9 \uB85C\uB529\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: " + task.Exception);
                 return;
             }
             
@@ -106,7 +106,7 @@ public class RankingManager : MonoBehaviour
         if (!snapshot.Exists)
         {
             if (rankUITexts.Count > 0)
-                rankUITexts[0].text = "?꾩쭅 ??궧 ?곗씠?곌? ?놁뒿?덈떎.";
+                rankUITexts[0].text = "\uC544\uC9C1 \uB7AD\uD0B9 \uB370\uC774\uD130\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.";
             return;
         }
 
@@ -128,7 +128,7 @@ public class RankingManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"??궧 ?곗씠???뚯떛 ?ㅻ쪟: {e.Message}");
+                Debug.LogError($"\uB7AD\uD0B9 \uB370\uC774\uD130 \uD30C\uC2F1 \uC624\uB958: {e.Message}");
             }
         }
     }
@@ -142,7 +142,7 @@ public class RankingManager : MonoBehaviour
     {
         if (databaseReference == null)
         {
-            Debug.LogError("Firebase媛 珥덇린?붾릺吏 ?딆븯?듬땲??");
+            Debug.LogError("Firebase\uAC00 \uCD08\uAE30\uD654\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.");
             return;
         }
 
@@ -156,16 +156,16 @@ public class RankingManager : MonoBehaviour
         {
             if (task.IsCompletedSuccessfully)
             {
-                Debug.Log($"{playerName}??湲곕줉({clearTime}珥????깃났?곸쑝濡?異붽??섏뿀?듬땲??");
+                Debug.Log($"{playerName}\uB2D8 \uAE30\uB85D({clearTime}\uCD08)\uC774 \uC131\uACF5\uC801\uC73C\uB85C \uCD94\uAC00\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
                 LoadTopScores(); // ?먯닔 異붽? ????궧 ?덈줈怨좎묠
             }
             else if (task.IsFaulted)
             {
-                Debug.LogError($"湲곕줉 異붽? ?ㅽ뙣: {task.Exception}");
+                Debug.LogError($"\uAE30\uB85D \uCD94\uAC00 \uC2E4\uD328: {task.Exception}");
             }
             else if (task.IsCanceled)
             {
-                Debug.LogWarning($"湲곕줉 異붽? 痍⑥냼??");
+                Debug.LogWarning("\uAE30\uB85D \uCD94\uAC00 \uCDE8\uC18C\uB428");
             }
         });
     }

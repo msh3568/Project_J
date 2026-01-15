@@ -47,7 +47,7 @@ namespace FunkyCode
 				return instance;
 			}
 
-			foreach(var manager in UnityEngine.Object.FindObjectsOfType<LightingManager2D>())
+			foreach(var manager in UnityEngine.Object.FindObjectsByType<LightingManager2D>(FindObjectsSortMode.None))
 			{
 				instance = manager;
 
@@ -88,7 +88,7 @@ namespace FunkyCode
 						
 						Debug.LogWarning("Smart Lighting2D: Lighting Manager duplicate was found, new instance destroyed.", gameObject);
 
-						foreach(var manager in UnityEngine.Object.FindObjectsOfType<LightingManager2D>())
+						foreach(var manager in UnityEngine.Object.FindObjectsByType<LightingManager2D>(FindObjectsSortMode.None))
 						{
 							if (manager != instance)
 							{
@@ -104,7 +104,7 @@ namespace FunkyCode
 						
 						Debug.LogWarning("Smart Lighting2D: Lighting Manager duplicate was found, old instance destroyed.", gameObject);
 
-						foreach(var manager in UnityEngine.Object.FindObjectsOfType<LightingManager2D>())
+						foreach(var manager in UnityEngine.Object.FindObjectsByType<LightingManager2D>(FindObjectsSortMode.None))
 						{
 							if (manager != instance)
 							{
@@ -269,7 +269,7 @@ namespace FunkyCode
 		{
 			sceneView.OnEnable();
 
-			foreach(var onRenderMode in UnityEngine.Object.FindObjectsOfType<OnRenderMode>())
+			foreach(var onRenderMode in UnityEngine.Object.FindObjectsByType<OnRenderMode>(FindObjectsSortMode.None))
 			{
 				onRenderMode.DestroySelf();
 			}

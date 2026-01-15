@@ -9,7 +9,7 @@ public class AudioKiller : MonoBehaviour
     void Awake()
     {
         // ?꾩옱 ?ъ뿉 議댁옱?섎뒗 紐⑤뱺 AudioSource 而댄룷?뚰듃瑜?李얠뒿?덈떎.
-        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+        AudioSource[] allAudioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
 
         Debug.Log($"[AudioKiller] {allAudioSources.Length}媛쒖쓽 ?ㅻ뵒???뚯뒪瑜?諛쒓껄?덉뒿?덈떎. 猷⑦봽 以묒씤 紐⑤뱺 ?뚯뒪瑜?以묒??⑸땲??");
 
