@@ -5,6 +5,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private enum SpiderState
     {
         Idle,
+        Patrol,
         Chase,
         PreJump,
         Jump,
@@ -23,6 +24,12 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     [Header("Chase")]
     [SerializeField] private float chaseSpeedMultiplier = 1.5f;
+
+    [Header("Patrol")]
+    [SerializeField] private float idleWaitTime = 2f;
+    [SerializeField] private float patrolSpeed = 1.2f;
+    [SerializeField] private float patrolDuration = 2f;
+    [SerializeField] private float patrolWallCheckDistance = 0.4f;
 
     [Header("Jump Attack")]
     [SerializeField] private float jumpTriggerDistance = 2.5f;
@@ -78,6 +85,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private float stateTimer;
     private bool isParriedHold;
     private bool hasExploded;
+    private int patrolDirection = 1;
 
     private void Awake()
     {
@@ -123,6 +131,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             case SpiderState.Idle:
                 UpdateIdle();
                 break;
+            case SpiderState.Patrol:
+                UpdatePatrol();
+                break;
             case SpiderState.Chase:
                 UpdateChase();
                 break;
@@ -144,10 +155,44 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private void UpdateIdle()
     {
         PlayAnimation(idleStateName);
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
         if (HasLineOfSight() && Vector2.Distance(transform.position, playerTransform.position) <= detectionRange)
         {
             SetState(SpiderState.Chase);
+            return;
+        }
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
+        {
+            SetState(SpiderState.Patrol);
+        }
+    }
+
+    private void UpdatePatrol()
+    {
+        PlayAnimation(walkStateName);
+
+        if (HasLineOfSight() && Vector2.Distance(transform.position, playerTransform.position) <= detectionRange)
+        {
+            SetState(SpiderState.Chase);
+            return;
+        }
+
+        Vector2 origin = detectionOrigin != null ? detectionOrigin.position : transform.position;
+        Vector2 direction = patrolDirection > 0 ? Vector2.right : Vector2.left;
+        if (Physics2D.Raycast(origin, direction, patrolWallCheckDistance, obstacleLayer))
+        {
+            patrolDirection *= -1;
+        }
+
+        rb.linearVelocity = new Vector2(patrolDirection * patrolSpeed, rb.linearVelocity.y);
+
+        stateTimer -= Time.deltaTime;
+        if (stateTimer <= 0f)
+        {
+            SetState(SpiderState.Idle);
         }
     }
 
@@ -228,7 +273,15 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         state = newState;
         Log($"State -> {state}");
 
-        if (state == SpiderState.PreJump)
+        if (state == SpiderState.Idle)
+        {
+            stateTimer = idleWaitTime;
+        }
+        else if (state == SpiderState.Patrol)
+        {
+            stateTimer = patrolDuration;
+        }
+        else if (state == SpiderState.PreJump)
         {
             stateTimer = preJumpStopTime;
         }
