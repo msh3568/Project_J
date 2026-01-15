@@ -8,6 +8,7 @@ public class Player_Combat : Entity_Combat
     [Header("Parry details")]
     [SerializeField] private float parryCheckRadius = 1.5f;
     [SerializeField] private LayerMask whatIsParriable;
+    [SerializeField] private bool enableParryDebugLogs = false;
 
     private Player player;
 
@@ -24,11 +25,15 @@ public class Player_Combat : Entity_Combat
     {
         // --- 1. Check for Parriable Entities (Projectiles that can be aimed and returned) ---
         Collider2D[] parryTargets = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
+        if (enableParryDebugLogs)
+            Debug.Log($"[Parry] Candidates: {parryTargets.Length}", this);
         foreach (var target in parryTargets)
         {
-            IParryable parryable = target.GetComponent<IParryable>();
+            IParryable parryable = target.GetComponentInParent<IParryable>();
             if (parryable != null)
             {
+                if (enableParryDebugLogs)
+                    Debug.Log($"[Parry] Found IParryable: {parryable.GetGameObject().name}", this);
                 // This is a special projectile that triggers the slow-mo aim state.
                 player.parryAimState.SetParriedProjectile(parryable);
                 return target; // Return the target to be handled by the state machine
@@ -40,9 +45,11 @@ public class Player_Combat : Entity_Combat
         Collider2D[] counterTargets = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
         foreach (var target in counterTargets)
         {
-            ICounterable counterable = target.GetComponent<ICounterable>();
+            ICounterable counterable = target.GetComponentInParent<ICounterable>();
             if (counterable != null && counterable.CanBeCountered)
             {
+                if (enableParryDebugLogs)
+                    Debug.Log($"[Parry] Found ICounterable: {target.name}", this);
                 counterable.HandleCounter(); // Immediately handle the counter (e.g., knockback)
                 return target; // Return the target to signify a simple parry occurred
             }
@@ -59,11 +66,15 @@ public class Player_Combat : Entity_Combat
 
             if (counterable.CanBeCountered)
             {
+                if (enableParryDebugLogs)
+                    Debug.Log($"[Parry] Melee counter: {target.name}", this);
                 counterable.HandleCounter(); // Immediately handle the counter (e.g., stun/knockback)
                 return target; // Return the target to signify a simple parry occurred
             }
         }
         
+        if (enableParryDebugLogs)
+            Debug.Log("[Parry] No targets detected.", this);
         return null; // Nothing was parried
     }
 

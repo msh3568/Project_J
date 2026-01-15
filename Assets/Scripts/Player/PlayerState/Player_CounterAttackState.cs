@@ -26,7 +26,7 @@ public class Player_CounterAttackState : PlayerState
         if (parriedObject != null)
         {
             // A parry was successful. Now, decide what to do based on the type of object parried.
-            if (parriedObject.GetComponent<IParryable>() != null)
+            if (parriedObject.GetComponentInParent<IParryable>() != null)
             {
                 // This was a projectile that can be aimed and returned. Go to the slow-mo aim state.
                 // The projectile itself was already set inside CounterAttackPerformed.
