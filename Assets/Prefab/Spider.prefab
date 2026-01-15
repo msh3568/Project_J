@@ -320,17 +320,17 @@ MonoBehaviour:
   jumpSfx: {fileID: 8300000, guid: 4ba82c7396e1cf14c82e5373c3e9b23b, type: 3}
   explodeSfx: {fileID: 8300000, guid: 62de00c6696be0c4ca5a1904cfb88d1e, type: 3}
   attachedWarningSfx: {fileID: 8300000, guid: 8c565a49b98f7324fb2a4db86530aa01, type: 3}
-  idleLoopVolume: 0.6
-  walkStepVolume: 0.054
-  spottedVolume: 0.713
-  jumpVolume: 0.903
+  idleLoopVolume: 0.395
+  walkStepVolume: 0.101
+  spottedVolume: 0.326
+  jumpVolume: 0.341
   explodeVolume: 1
-  attachedWarningVolume: 1
+  attachedWarningVolume: 0.461
   walkStepIntervalMin: 0.08
   walkStepIntervalMax: 0.2
   walkStepSpeedMin: 0.5
   walkStepSpeedMax: 6
-  attachedWarningLeadTime: 0.35
+  attachedWarningStartDelay: 0
   attachedWarningBurstCount: 20
   attachedWarningBurstInterval: 0.03
   maxHp: 5

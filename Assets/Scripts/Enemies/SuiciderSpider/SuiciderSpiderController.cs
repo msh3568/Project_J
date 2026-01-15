@@ -463,7 +463,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         DetachFromPlayer();
 
         StopAllSfx();
-        PlayOneShot(explodeSfx, explodeVolume);
+        PlayOneShotAtPosition(explodeSfx, explodeVolume);
 
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
@@ -799,6 +799,23 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
         if (sfxLoopSource != null)
             sfxLoopSource.PlayOneShot(clip, volume);
+    }
+
+    private void PlayOneShotAtPosition(AudioClip clip, float volume)
+    {
+        if (clip == null)
+            return;
+
+        GameObject audioObject = new GameObject("SpiderTempSfx");
+        audioObject.transform.position = transform.position;
+        AudioSource tempSource = audioObject.AddComponent<AudioSource>();
+        tempSource.clip = clip;
+        tempSource.volume = volume;
+        tempSource.spatialBlend = 1f;
+        if (sfxLoopSource != null)
+            tempSource.outputAudioMixerGroup = sfxLoopSource.outputAudioMixerGroup;
+        tempSource.Play();
+        Destroy(audioObject, clip.length);
     }
 
     private void HandleWalkSteps(float speed)
