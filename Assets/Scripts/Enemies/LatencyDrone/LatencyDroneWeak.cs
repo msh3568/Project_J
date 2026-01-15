@@ -16,7 +16,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
 
     [Header("Retreat Settings")]
     [SerializeField] private float retreatForce = 10f; // ?ˆë¬´ ê°€ê¹Œì›Œì¡Œì„ ???¤ë¡œ ë¬¼ëŸ¬?˜ëŠ” ??
-    [SerializeField] private float retreatDuration = 0.2f; // ?¤ë¡œ ë¬¼ëŸ¬?˜ëŠ” ë°˜ë™ ì§€???œê°„
+    [SerializeField] private float retreatDuration = 0.2f;
+    [SerializeField] private float retreatKickSpeed = 6f;
+    [SerializeField] private float retreatKickDuration = 0.08f; // ?¤ë¡œ ë¬¼ëŸ¬?˜ëŠ” ë°˜ë™ ì§€???œê°„
     private bool isRetreating = false; // ?¤ë¡œ ë¬¼ëŸ¬?˜ëŠ” ì¤‘ì¸ì§€ ì²´í¬
 
     [Header("Firing Range Settings")]
@@ -525,13 +527,21 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable
         direction = (aimPoint - origin).normalized;
         return direction.sqrMagnitude > 0.0001f;
     }
-    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?Œë ˆ?´ì–´ ë°˜ë? ë°©í–¥)
+    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?¨«e???¢¥i?¢¥ e¡Æ?e? e¡Æ¨Ïi?¡Í)
     {
         isRetreating = true;
+
+        if (retreatKickSpeed > 0f)
+        {
+            rb.linearVelocity = new Vector2(directionSign * retreatKickSpeed, rb.linearVelocity.y);
+            if (retreatKickDuration > 0f)
+                yield return new WaitForSeconds(retreatKickDuration);
+        }
+
         float timer = 0f;
         while (timer < retreatDuration)
         {
-            // AddForce???„ë ˆ?„ë§ˆ???ìš©?˜ë?ë¡?Time.deltaTime ê³±í•´ì¤?
+            // AddForce????e????e¡×?????i?¨Ï??e?e¢®?Time.deltaTime e©ø¡¾i?¢¥i¢´?
             rb.AddForce(new Vector2(directionSign * retreatForce * Time.deltaTime, 0), ForceMode2D.Force);
             timer += Time.deltaTime;
             yield return null;
