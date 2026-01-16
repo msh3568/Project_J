@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 5534512755669402560}
   - component: {fileID: 1486717537877274078}
   - component: {fileID: 4431569971952825006}
+  - component: {fileID: 5655554843663247662}
   m_Layer: 8
-  m_Name: LatencyDroneWeak
+  m_Name: LatencyDroneStrong 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +90,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -4991669075272947769, guid: f61f404a53ead9046985d39e976f0cac, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.10215378, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -203,19 +204,37 @@ MonoBehaviour:
     m_RotationOrder: 4
   maxChaseSpeed: 13
   retreatForce: 10
-  retreatDistance: 1.5
   retreatDuration: 0.2
+  retreatKickSpeed: 6
+  retreatKickDuration: 0.08
   idealFiringDistance: 3
   maxFiringDistance: 6
   hoverAmplitude: 0.2
   hoverFrequency: 1
   hoverOffset: 0
+  approachAcceleration: 20
+  approachDeceleration: 30
   projectilePrefab: {fileID: 6487138611206206000, guid: 53430f6a6ae96ce419826d8a3c6a6d25, type: 3}
   firePoint: {fileID: 823762046094352857}
   fireCooldown: 1.6
   projectileSpawnOffset: 0.5
   recoilForce: 5
   recoilDuration: 0.1
+  usePredictiveAim: 1
+  maxPredictionTime: 1
+  minLeadSpeed: 0.1
+  capsulesPerBurst: 15
+  timeBetweenCapsules: 0.1
+  burstCooldown: 5
+  preFireSound: {fileID: 8300000, guid: 411f5cffaa06fe64aaa30ab6d282e665, type: 3}
+  fireSound: {fileID: 8300000, guid: 10984a48d8788034ea383e1324b29197, type: 3}
+  idleSound: {fileID: 8300000, guid: c3284d61b19729745993afb625428561, type: 3}
+  deathSound: {fileID: 8300000, guid: 9dbf1fdc0d066734ca523b2666c0b950, type: 3}
+  preFireVolume: 2
+  fireVolume: 2
+  idleVolume: 2
+  deathVolume: 2
+  sfxMixerGroup: {fileID: 0}
   fragmentPrefab: {fileID: 9157686852220618747, guid: e532fa09356fa554180398984055e3ef, type: 3}
   explosionFragmentCount: 30
   explosionFragmentForce: 150
@@ -549,6 +568,59 @@ PolygonCollider2D:
       - {x: 2.465, y: -2.59}
       - {x: 2.5249999, y: -2.54}
   m_UseDelaunayMesh: 0
+--- !u!114 &5655554843663247662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419452560728899010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 2
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.2
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
 --- !u!1 &9088978434521632956
 GameObject:
   m_ObjectHideFlags: 0
