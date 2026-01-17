@@ -51,12 +51,12 @@ public class Entity : MonoBehaviour
 
     protected virtual void Update()
     {
+        HandleCollisionDetection();
+        stateMachine.UpdateActiveState();
     }
 
     protected virtual void FixedUpdate()
     {
-        HandleCollisionDetection();
-        stateMachine.UpdateActiveState();
     }
 
     public void CurrentStateAnimationTrigger()
