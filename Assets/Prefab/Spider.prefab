@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 8295102177575496737}
   - component: {fileID: 2031760271382590031}
   - component: {fileID: 7974593657550760626}
+  - component: {fileID: -2112528197187626297}
   m_Layer: 12
   m_Name: Spider
   m_TagString: Enemy
@@ -387,3 +388,19 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &-2112528197187626297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6656836635872708976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7668c1a15cf26804781ef4bfc080f5fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RespawnOnCheckpoint
+  useLocalTransform: 0
+  resetRigidbody2D: 1
+  rebindAnimator: 1
+  reactivateOnRespawn: 1

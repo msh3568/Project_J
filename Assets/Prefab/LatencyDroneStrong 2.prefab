@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1486717537877274078}
   - component: {fileID: 4431569971952825006}
   - component: {fileID: 5655554843663247662}
+  - component: {fileID: -5455933742298674915}
   m_Layer: 8
   m_Name: LatencyDroneStrong 2
   m_TagString: Enemy
@@ -621,6 +622,22 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &-5455933742298674915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419452560728899010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7668c1a15cf26804781ef4bfc080f5fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RespawnOnCheckpoint
+  useLocalTransform: 0
+  resetRigidbody2D: 1
+  rebindAnimator: 1
+  reactivateOnRespawn: 1
 --- !u!1 &9088978434521632956
 GameObject:
   m_ObjectHideFlags: 0

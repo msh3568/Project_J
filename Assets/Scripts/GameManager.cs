@@ -296,6 +296,7 @@ public class GameManager : MonoBehaviour
             }
             ResetPlayerShieldAtRespawn();
             ResetEnemiesAtRespawn();
+            ResetRespawnablesAtCheckpoint();
         }
         else
         {
@@ -318,6 +319,18 @@ public class GameManager : MonoBehaviour
             if (enemy != null && enemy.CompareTag("Enemy"))
             {
                 enemy.ResetToSpawn();
+            }
+        }
+    }
+
+    private void ResetRespawnablesAtCheckpoint()
+    {
+        var respawnables = FindObjectsByType<RespawnOnCheckpoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var respawnable in respawnables)
+        {
+            if (respawnable != null)
+            {
+                respawnable.ResetToSpawn();
             }
         }
     }

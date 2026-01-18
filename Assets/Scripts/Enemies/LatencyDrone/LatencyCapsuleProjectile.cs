@@ -146,7 +146,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         // If parried, only care about hitting the ground
         if (isParried)
         {
-            if (other.CompareTag("Ground"))
+            if (other.CompareTag("Ground") || other.CompareTag("Wall"))
             {
                 Destroy(gameObject);
             }
@@ -179,7 +179,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
             }
             Destroy(gameObject);
         }
-        else if (other.CompareTag("Ground"))
+        else if (other.CompareTag("Ground") || other.CompareTag("Wall"))
         {
             Destroy(gameObject);
         }

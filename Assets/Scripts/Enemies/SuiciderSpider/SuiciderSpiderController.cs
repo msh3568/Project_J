@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Cinemachine;
 
-public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
+public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, ICheckpointRespawnable
 {
     private enum SpiderState
     {
@@ -113,6 +113,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private PlayerStatusAdapter playerStatusAdapter;
     private Player_Health playerHealth;
     private float currentHp;
+    private float initialHp;
     private float baseGravityScale;
     private SpiderState state = SpiderState.Idle;
     private float stateTimer;
@@ -127,6 +128,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     private bool playedAttachedWarning;
     private int attachedWarningRemaining;
     private float attachedWarningTimer;
+    private float flipLockTimer;
     private Color baseSpriteColor = Color.white;
     private Coroutine attachedColorCo;
 
@@ -143,6 +145,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             visualRoot = transform;
         spiderColliders = GetComponentsInChildren<Collider2D>(true);
         currentHp = maxHp;
+        initialHp = maxHp;
         if (rb != null)
             rb.freezeRotation = true;
         if (detectionOrigin == null)
@@ -187,6 +190,11 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     private void Update()
     {
+        if (flipLockTimer > 0f)
+        {
+            flipLockTimer -= Time.deltaTime;
+        }
+
         if (state == SpiderState.Exploded)
             return;
 
@@ -487,6 +495,13 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
             Destroy(explosion.gameObject, 0.5f);
         }
 
+        var respawnable = GetComponent<RespawnOnCheckpoint>();
+        if (respawnable != null)
+        {
+            respawnable.Despawn();
+            return;
+        }
+
         Destroy(gameObject);
     }
 
@@ -556,7 +571,14 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         if (currentHp <= 0f)
         {
             DetachFromPlayer();
-            Destroy(gameObject);
+            var respawnable = GetComponent<RespawnOnCheckpoint>();
+        if (respawnable != null)
+        {
+            respawnable.Despawn();
+            return;
+        }
+
+        Destroy(gameObject);
         }
     }
 
@@ -710,6 +732,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
 
     private void UpdateFacing(float directionX)
     {
+        if (flipLockTimer > 0f)
+            return;
+
         if (Mathf.Abs(directionX) < 0.01f)
             return;
 
@@ -721,6 +746,16 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x) * (isFacingRight ? 1f : -1f);
         transform.localScale = scale;
+    }
+
+    public void FlipFacing(float lockDuration = 0.5f)
+    {
+        isFacingRight = !isFacingRight;
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * (isFacingRight ? 1f : -1f);
+        transform.localScale = scale;
+        patrolDirection *= -1;
+        flipLockTimer = Mathf.Max(flipLockTimer, lockDuration);
     }
 
     private void HandleStateSfx(SpiderState from, SpiderState to)
@@ -903,4 +938,55 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable
     {
         return playerHealth != null && playerHealth.IsInvincible;
     }
+
+    public void OnCheckpointRespawn()
+    {
+        currentHp = initialHp;
+        hasExploded = false;
+        isParriedHold = false;
+        playedAttachedWarning = false;
+        attachedWarningRemaining = 0;
+        attachedWarningTimer = 0f;
+        DetachFromPlayer();
+        StopAllSfx();
+
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.gravityScale = baseGravityScale;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.freezeRotation = true;
+        }
+
+        SetCollidersEnabled(true);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = baseSpriteColor;
+        }
+
+        if (animator != null)
+        {
+            animator.Rebind();
+            animator.Update(0f);
+        }
+
+        if (playerTransform == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                playerTransform = playerObj.transform;
+                playerStatus = playerObj.GetComponent<IPlayerStatus>();
+                playerStatusAdapter = playerObj.GetComponent<PlayerStatusAdapter>();
+                playerHealth = playerObj.GetComponent<Player_Health>();
+                playerColliders = playerObj.GetComponentsInChildren<Collider2D>(true);
+            }
+        }
+
+        SetState(SpiderState.Idle);
+    }
 }
+
