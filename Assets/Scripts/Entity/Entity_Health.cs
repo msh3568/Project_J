@@ -92,6 +92,13 @@ public class Entity_Health : MonoBehaviour, IDamageable
         onHealthChanged?.Invoke(current, max);
     }
 
+    public void ResetHealthToMax()
+    {
+        isDead = false;
+        currentHp = maxHp;
+        onHealthChanged?.Invoke(currentHp, maxHp);
+    }
+
     protected virtual void Die()
     {
         Debug.Log($"[Die] {gameObject.name} Die() method called.");

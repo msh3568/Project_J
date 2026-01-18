@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        DisplaySettings.ApplySavedSettings();
+        DisplaySettings.ConfigureAllCanvasScalers();
 
         // Ensure bgmSource is set up. It's [SerializeField], so ideally assigned in Inspector.
         // If not assigned, try to get the first AudioSource.
@@ -168,6 +170,23 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateRespawnUI();
+        DisplaySettings.ConfigureAllCanvasScalers();
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+        {
+            DisplaySettings.ApplySavedSettings();
+        }
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (!pauseStatus)
+        {
+            DisplaySettings.ApplySavedSettings();
+        }
     }
 
     void Start()
@@ -275,6 +294,8 @@ public class GameManager : MonoBehaviour
             {
                 player.transform.position = activeCheckpointPosition.Value;
             }
+            ResetPlayerShieldAtRespawn();
+            ResetEnemiesAtRespawn();
         }
         else
         {
@@ -289,6 +310,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void ResetEnemiesAtRespawn()
+    {
+        var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null && enemy.CompareTag("Enemy"))
+            {
+                enemy.ResetToSpawn();
+            }
+        }
+    }
+
+    private void ResetPlayerShieldAtRespawn()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        var health = player.GetComponent<Player_Health>();
+        if (health != null)
+        {
+            health.ResetShieldToMax();
+        }
+    }
+
     public void SetActiveCheckpoint(Vector3 position)
     {
         if (!hasFirstCheckpoint)
@@ -299,7 +351,6 @@ public class GameManager : MonoBehaviour
 
         activeCheckpointPosition = position;
         activatedCheckpointCount++; // Increment count
-        ShowCheckpointText();
 
         // Log to Firebase
         if (AnalyticsManager.Instance != null)
@@ -310,12 +361,7 @@ public class GameManager : MonoBehaviour
 
     private void ShowCheckpointText()
     {
-        if (checkpointText != null)
-        {
-            checkpointText.text = "\uCCB4\uD06C\uD3EC\uC778\uD2B8 \uD65C\uC131\uD654\uB428";
-            checkpointText.gameObject.SetActive(true);
-            Invoke("HideCheckpointText", 2f); // Hide after 2 seconds
-        }
+        return;
     }
 
     private void HideCheckpointText()

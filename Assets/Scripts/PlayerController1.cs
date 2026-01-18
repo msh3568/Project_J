@@ -82,7 +82,6 @@ public class PlayerController1 : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("Attack!");
         // (怨듦꺽 濡쒖쭅 援ы쁽)
 
         // --- 吏꾨룞 議곗젅 媛?대뱶 ---

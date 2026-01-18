@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5655554843663247662}
   m_Layer: 8
   m_Name: LatencyDroneStrong 2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -223,9 +223,9 @@ MonoBehaviour:
   usePredictiveAim: 1
   maxPredictionTime: 1
   minLeadSpeed: 0.1
-  capsulesPerBurst: 15
+  capsulesPerBurst: 4
   timeBetweenCapsules: 0.1
-  burstCooldown: 5
+  burstCooldown: 2
   preFireSound: {fileID: 8300000, guid: 411f5cffaa06fe64aaa30ab6d282e665, type: 3}
   fireSound: {fileID: 8300000, guid: 10984a48d8788034ea383e1324b29197, type: 3}
   idleSound: {fileID: 8300000, guid: c3284d61b19729745993afb625428561, type: 3}

@@ -17,7 +17,8 @@ public class Player_WallAssistJumpState : PlayerState
 
         // Kick off away from wall and jump up
         // Note: facingDir is towards the wall. We want to move AWAY (-facingDir)
-        player.SetVelocity(-player.facingDir * player.wallAssistJumpKickOffForce, player.wallAssistJumpUpForce);
+        float upForce = player.wallAssistJumpUpForce * player.wallAssistJumpUpMultiplier;
+        player.SetVelocity(-player.facingDir * player.wallAssistJumpKickOffForce, upForce);
         
         stateTimer = player.wallAssistJumpDuration;
         isReturning = false;

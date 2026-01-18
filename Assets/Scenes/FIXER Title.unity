@@ -3058,7 +3058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleManager
   pressEnterText: {fileID: 1512208384}
-  sceneToLoad: GameSceneRespawn
+  sceneToLoad: GameSceneRespawn 1
   delayBeforePressEnter: 3
 --- !u!1 &2098065589
 GameObject:

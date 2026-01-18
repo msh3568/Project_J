@@ -19,6 +19,6 @@ public class Enemy_DeadState : EnemyState
         base.Update();
 
         if (stateTimer < 0)
-            GameObject.Destroy(enemy.gameObject);
+            enemy.HandleDeathDespawn();
     }
 }

@@ -56,7 +56,12 @@ public class Enemy : Entity
     [SerializeField] private Transform wallCheck;
 
     public Transform player { get; private set; }
-    public EnemyRespawner respawner { get; set; }
+    [Header("Respawn")]
+    [SerializeField] private bool respawnOnCheckpoint = true;
+    private Vector3 spawnPosition;
+    private Quaternion spawnRotation;
+    private Vector3 spawnScale;
+    private int spawnFacingDir;
 
     public void EnableCounterWindow(bool enable) => canBestunned = enable;
 
@@ -77,11 +82,6 @@ public class Enemy : Entity
         }
         OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
-
-        if (respawner != null)
-        {
-            respawner.Respawn();
-        }
     }
 
     public void TryEnterBattleState(Transform player)
@@ -143,6 +143,11 @@ public class Enemy : Entity
         {
             Flip();
         }
+
+        spawnPosition = transform.position;
+        spawnRotation = transform.rotation;
+        spawnScale = transform.localScale;
+        spawnFacingDir = facingDir;
     }
 
     protected override void HandleCollisionDetection()
@@ -171,6 +176,51 @@ public class Enemy : Entity
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(wallCheck.position, wallCheck.position + new Vector3(wallCheckDistance * facingDir, 0));
+        }
+    }
+
+    public void ResetToSpawn()
+    {
+        gameObject.SetActive(true);
+        transform.position = spawnPosition;
+        transform.rotation = spawnRotation;
+        transform.localScale = spawnScale;
+
+        ForceFacingDirection(spawnFacingDir);
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        var health = GetComponent<Entity_Health>();
+        if (health != null)
+        {
+            health.ResetHealthToMax();
+        }
+
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Update(0f);
+        }
+
+        if (stateMachine != null && idleState != null)
+        {
+            stateMachine.Initialize(idleState);
+        }
+    }
+
+    public void HandleDeathDespawn()
+    {
+        if (respawnOnCheckpoint)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 }

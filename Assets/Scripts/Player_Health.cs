@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Unity.Cinemachine;
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class Player_Health : Entity_Health
 {
@@ -22,6 +24,12 @@ public class Player_Health : Entity_Health
 
     private CameraShake cameraShake;
     private SpriteRenderer spriteRenderer;
+    private bool isFirewallRespawning;
+
+    [Header("Firewall Respawn")]
+    [SerializeField] private float firewallBlackoutDuration = 0.25f;
+    [SerializeField] private Color firewallBlackoutColor = Color.black;
+    [SerializeField] private bool freezePlayerDuringRespawn = true;
 
     protected override void Awake()
     {
@@ -86,6 +94,7 @@ public class Player_Health : Entity_Health
     public override void TakeDamage(float damage, Transform damageDealer)
     {
         if (isDead || IsInvincible) return;
+        if (isFirewallRespawning) return;
 
         CameraShakeManager.instance.CamerShake(impulseSource);
 
@@ -125,7 +134,7 @@ public class Player_Health : Entity_Health
         }
         else
         {
-            Die();
+            StartCoroutine(FirewallRespawnRoutine());
         }
     }
 
@@ -141,5 +150,67 @@ public class Player_Health : Entity_Health
             Debug.Log("Player has died!");
             base.Die();
         }
+    }
+
+    public void ResetShieldToMax()
+    {
+        currentShield = maxShield;
+        timeSinceLastHit = 0f;
+        regenerationTimer = 0f;
+        CanRegenerate = false;
+        InvokeOnHealthChanged(currentShield, maxShield);
+    }
+
+    private IEnumerator FirewallRespawnRoutine()
+    {
+        isFirewallRespawning = true;
+        IsInvincible = true;
+
+        var player = GetComponent<Player>();
+        if (freezePlayerDuringRespawn && player != null)
+        {
+            player.Immobilize(firewallBlackoutDuration);
+        }
+
+        var spriteCaches = new List<(SpriteRenderer renderer, Color color)>();
+        var sprites = Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var sr in sprites)
+        {
+            if (sr == null) continue;
+            if (sr.transform.IsChildOf(transform)) continue;
+            spriteCaches.Add((sr, sr.color));
+            sr.color = firewallBlackoutColor;
+        }
+
+        var tilemapCaches = new List<(Tilemap tilemap, Color color)>();
+        var tilemaps = Object.FindObjectsByType<Tilemap>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var tilemap in tilemaps)
+        {
+            if (tilemap == null) continue;
+            tilemapCaches.Add((tilemap, tilemap.color));
+            tilemap.color = firewallBlackoutColor;
+        }
+
+        yield return new WaitForSeconds(firewallBlackoutDuration);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RespawnPlayerAtLastCheckpoint();
+        }
+
+        foreach (var (renderer, color) in spriteCaches)
+        {
+            if (renderer != null)
+                renderer.color = color;
+        }
+
+        foreach (var (tilemap, color) in tilemapCaches)
+        {
+            if (tilemap != null)
+                tilemap.color = color;
+        }
+
+        IsInvincible = false;
+        isFirewallRespawning = false;
     }
 }

@@ -69,6 +69,7 @@ public class Player : Entity
         [SerializeField] public float wallSlideSlowMultiplier = 0.5f;
         [SerializeField] public float wallAssistJumpKickOffForce = 10f;
         [SerializeField] public float wallAssistJumpUpForce = 15f;
+        [SerializeField] public float wallAssistJumpUpMultiplier = 1.2f;
         [SerializeField] public float wallAssistJumpDuration = 0.2f;
         [SerializeField] public float wallAssistJumpReturnForce = 10f;
         [SerializeField] public float wallAssistJumpSpeed = 16f;

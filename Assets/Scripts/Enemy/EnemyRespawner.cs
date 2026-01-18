@@ -9,6 +9,7 @@ public class EnemyRespawner : MonoBehaviour
 
     private Vector3 spawnPosition;
     private Quaternion spawnRotation;
+    private Enemy currentEnemy;
 
     private void Awake()
     {
@@ -26,6 +27,16 @@ public class EnemyRespawner : MonoBehaviour
         StartCoroutine(RespawnCoroutine());
     }
 
+    public void ResetImmediate()
+    {
+        StopAllCoroutines();
+        if (currentEnemy != null)
+        {
+            Destroy(currentEnemy.gameObject);
+        }
+        SpawnEnemy();
+    }
+
     private IEnumerator RespawnCoroutine()
     {
         yield return new WaitForSeconds(respawnDelay);
@@ -37,11 +48,7 @@ public class EnemyRespawner : MonoBehaviour
         if (enemyPrefab != null)
         {
             GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, spawnRotation);
-            Enemy enemyComponent = newEnemy.GetComponent<Enemy>();
-            if (enemyComponent != null)
-            {
-                enemyComponent.respawner = this;
-            }
+            currentEnemy = newEnemy.GetComponent<Enemy>();
         }
     }
 }

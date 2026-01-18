@@ -4,6 +4,12 @@ using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
+    private static readonly Vector2Int[] ResolutionOptions =
+    {
+        new Vector2Int(1920, 1080),
+        new Vector2Int(1600, 900),
+        new Vector2Int(1280, 720)
+    };
     [Header("UI Groups")]
     public GameObject pauseGroup;            // ?쇱떆?뺤? UI ?꾩껜瑜?媛먯떥??遺紐?
     public GameObject pauseMenuContent;      // 湲곕낯 硫붾돱 李?(踰꾪듉??
@@ -126,5 +132,36 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f; // ?쒓컙 ?먮쫫???섎룎由?
         TimeManager.elapsedTime = 0f; // ??대㉧ 珥덇린??
         SceneManager.LoadScene("FIXER Title"); // "FIXER Title" ?ъ쓣 遺덈윭??
+    }
+
+    public void ApplyResolution(int width, int height)
+    {
+        Debug.Log($"PauseManager.ApplyResolution: {width}x{height}");
+        DisplaySettings.ApplyResolution(width, height);
+    }
+
+    public void ApplyResolutionByIndex(int index)
+    {
+        if (index < 0 || index >= ResolutionOptions.Length)
+        {
+            Debug.LogWarning($"PauseManager.ApplyResolutionByIndex: invalid index {index}");
+            return;
+        }
+
+        var resolution = ResolutionOptions[index];
+        Debug.Log($"PauseManager.ApplyResolutionByIndex: index={index}, {resolution.x}x{resolution.y}");
+        DisplaySettings.ApplyResolution(resolution.x, resolution.y);
+    }
+
+    public void ApplyWindowMode(int modeIndex)
+    {
+        if (modeIndex < 0 || modeIndex > 2)
+        {
+            Debug.LogWarning($"PauseManager.ApplyWindowMode: invalid index {modeIndex}");
+            return;
+        }
+
+        Debug.Log($"PauseManager.ApplyWindowMode: index={modeIndex}");
+        DisplaySettings.ApplyWindowMode((DisplaySettings.WindowMode)modeIndex);
     }
 }

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5655554843663247662}
   m_Layer: 8
   m_Name: LatencyDroneStrong
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -204,19 +204,25 @@ MonoBehaviour:
     m_RotationOrder: 4
   maxChaseSpeed: 13
   retreatForce: 10
-  retreatDistance: 1.5
   retreatDuration: 0.2
+  retreatKickSpeed: 6
+  retreatKickDuration: 0.08
   idealFiringDistance: 3
   maxFiringDistance: 6
   hoverAmplitude: 0.2
   hoverFrequency: 1
   hoverOffset: 0
+  approachAcceleration: 20
+  approachDeceleration: 30
   projectilePrefab: {fileID: 6487138611206206000, guid: 53430f6a6ae96ce419826d8a3c6a6d25, type: 3}
   firePoint: {fileID: 823762046094352857}
   fireCooldown: 1.6
   projectileSpawnOffset: 0.5
   recoilForce: 5
   recoilDuration: 0.1
+  usePredictiveAim: 1
+  maxPredictionTime: 1
+  minLeadSpeed: 0.1
   capsulesPerBurst: 15
   timeBetweenCapsules: 0.1
   burstCooldown: 5

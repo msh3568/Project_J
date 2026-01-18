@@ -22,6 +22,8 @@ public class Entity : MonoBehaviour
     [Header("Collision detection")]
     [SerializeField] protected LayerMask whatIsGround;
     [SerializeField] protected LayerMask whatIsWall;
+    [SerializeField] private bool requireWallTag = true;
+    [SerializeField] private string wallTag = "Wall";
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.2f);
     [SerializeField] protected float wallCheckDistance;
@@ -123,6 +125,18 @@ public class Entity : MonoBehaviour
         transform.localScale = newScale;
     }
 
+    public void ForceFacingDirection(int direction)
+    {
+        int dir = direction >= 0 ? 1 : -1;
+        facingDir = dir;
+        facingRight = dir == 1;
+
+        Vector3 newScale = transform.localScale;
+        newScale.x = Mathf.Abs(newScale.x) * (facingRight ? 1 : -1);
+        transform.localScale = newScale;
+        lastFlipTime = Time.time;
+    }
+
     public void TemporarilyDisableBattleStateAutoFlip(float duration)
     {
         if (enemyRef == null)
@@ -162,7 +176,8 @@ public class Entity : MonoBehaviour
     {
         Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
         groundHit = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
-        wallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsWall);
+        var wallHit = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsWall);
+        wallDetected = wallHit.collider != null && (!requireWallTag || wallHit.collider.CompareTag(wallTag));
     }
 
 
