@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: be071f408c625a147aa5421e747bb036
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308259
+  packageName: Pixel Craft VFX - URP
+  packageVersion: 1.0.02
+  assetPath: Assets/Vefects/Pixel Craft VFX URP/VFX/Projectile Water Impact/Particles/VFX_Projectile_Water_Impact_01_Color_Static.prefab
+  uploadId: 771196

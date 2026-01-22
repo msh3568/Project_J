@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a918f02d2d338824aba0c5b6a386365d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308259
+  packageName: Pixel Craft VFX - URP
+  packageVersion: 1.0.02
+  assetPath: Assets/Vefects/Pixel Craft VFX URP/VFX/Poison Debuff/Particles/Loop/VFX_Poison_Debuff_01_Vertical_Billboard_Color_Loop_Static.prefab
+  uploadId: 771196

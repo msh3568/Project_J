@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player_BasicAttackState : PlayerState
 {
     private float attackVelocityTimer;
+    private Entity_VFX vfx;
 
     private const int FirstComboIndex = 1;
     private int comboIndex = 1;
@@ -13,6 +14,7 @@ public class Player_BasicAttackState : PlayerState
     private float lastTimeAttacked;
     public Player_BasicAttackState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
+        vfx = player.GetComponent<Entity_VFX>();
         if (comboLimit != player.attackVelocity.Length)
         {
             comboLimit = player.attackVelocity.Length;
@@ -29,6 +31,8 @@ public class Player_BasicAttackState : PlayerState
 
         anim.SetInteger("basicAttackIndex", comboIndex);
         ApplyAttackVelocity();
+
+        vfx?.PlayAttackVfx(comboIndex);
 
         float shakeForce = comboIndex >= comboLimit ? player.attackFinalShakeForce : player.attackShakeForce;
         StartDelayedShake(shakeForce);

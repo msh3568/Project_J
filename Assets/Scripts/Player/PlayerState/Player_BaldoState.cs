@@ -3,9 +3,11 @@ using UnityEngine;
 public class Player_BaldoState : PlayerState
 {
     private int baldoDir; 
+    private Entity_VFX vfx;
 
     public Player_BaldoState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
+        vfx = player.GetComponent<Entity_VFX>();
     }
 
     public override void Enter()
@@ -21,6 +23,7 @@ public class Player_BaldoState : PlayerState
         player.SetVelocity(0, rb.linearVelocity.y);
         
         player.skillManager.baldo.UseSkill(player.anim, player.facingDir);
+        vfx?.PlayBaldoVfx();
 
         if (CameraShakeManager.instance != null)
             CameraShakeManager.instance.Shake(player.baldoShakeForce);
