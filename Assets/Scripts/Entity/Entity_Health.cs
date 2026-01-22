@@ -52,6 +52,12 @@ public class Entity_Health : MonoBehaviour, IDamageable
 
         ReduceHp(damage);
 
+        if (entityVfx != null)
+        {
+            entityVfx?.PlayOnDamageVfx();
+            entityVfx?.PlayOnDamagePrefabVfx();
+        }
+
         // If damage was lethal, Die() is called inside ReduceHp and isDead becomes true.
         // We must not apply knockback to a dead entity.
         if (isDead)
@@ -65,11 +71,6 @@ public class Entity_Health : MonoBehaviour, IDamageable
 
         Debug.Log($"[TakeDamage] Applying knockback to {gameObject.name}.");
         entity?.ReciveKnockback(knockback, duration);
-
-        if (entityVfx != null)
-        {
-            entityVfx?.PlayOnDamageVfx();
-        }
     }
 
 

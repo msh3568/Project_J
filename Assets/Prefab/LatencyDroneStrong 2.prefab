@@ -241,6 +241,12 @@ MonoBehaviour:
   explosionFragmentForce: 150
   explosionFragmentLifetime: 1.5
   explosionFragmentFadeDelay: 1
+  onHitVfxPrefab: {fileID: 4748681987041982144, guid: 8983ccc8e7221fe45907fe37d46b9df0, type: 3}
+  onHitVfxOffset: {x: 0, y: 0, z: 0}
+  onHitVfxLifetime: 0.5
+  onDeathVfxPrefab: {fileID: 4748681987041982144, guid: a48edc62f9348a642959ff5de9c503d7, type: 3}
+  onDeathVfxOffset: {x: 0, y: 0, z: 0}
+  onDeathVfxLifetime: 1.5
   patrolMoveRangeX: 4
   patrolSpeed: 5
   minHorizontalDistance: 3

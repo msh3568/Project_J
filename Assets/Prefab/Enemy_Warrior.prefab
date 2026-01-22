@@ -342,6 +342,8 @@ MonoBehaviour:
   whatIsWall:
     serializedVersion: 2
     m_Bits: 0
+  requireWallTag: 1
+  wallTag: Wall
   groundCheckDistance: 0.5
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.5
@@ -368,6 +370,7 @@ MonoBehaviour:
   playerCheckDistance: 10
   playerCheckDistanceBackward: 3
   wallCheck: {fileID: 6136616225538460658}
+  respawnOnCheckpoint: 1
 --- !u!50 &4828772609972833826
 Rigidbody2D:
   serializedVersion: 5
@@ -496,7 +499,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
+  onDamageVfxPrefab: {fileID: 4748681987041982144, guid: 171081587faa8534a8de8f0ff6052f2c, type: 3}
+  onDamageVfxOffset: {x: 0, y: -0.19, z: 0}
+  onDamageVfxScale: {x: 2, y: 2, z: 2}
+  onDamageVfxLifetime: 0.5
+  onDamageVfxFollowOwner: 1
   hitVfx: {fileID: 1345081126871789188, guid: 2b326e96230651545b7370ddcf2a86e5, type: 3}
+  hitVfxOffset: {x: 0, y: 0, z: 0}
+  hitVfxScale: {x: 1, y: 1, z: 1}
+  hitVfxLifetime: 0.5
+  flipHitVfxWithTargetFacing: 0
+  shieldHitVfxPrefab: {fileID: 0}
+  shieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  shieldHitVfxScale: {x: 1, y: 1, z: 1}
+  shieldHitVfxLifetime: 0.5
+  shieldHitVfxFollowOwner: 1
+  lastShieldHitVfxPrefab: {fileID: 0}
+  lastShieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  lastShieldHitVfxScale: {x: 1, y: 1, z: 1}
+  lastShieldHitVfxLifetime: 0.6
+  lastShieldHitVfxFollowOwner: 1
+  attackVfxPrefab1: {fileID: 0}
+  attackVfxPrefab2: {fileID: 0}
+  attackVfxPrefab3: {fileID: 0}
+  flipAttackVfx1WithFacing: 1
+  flipAttackVfx2WithFacing: 1
+  flipAttackVfx3WithFacing: 1
+  invertAttackVfx1: 0
+  invertAttackVfx2: 1
+  invertAttackVfx3: 0
+  attackVfxOffset: {x: 0, y: 0, z: 0}
+  attackVfxScale: {x: 1, y: 1, z: 1}
+  attackVfxLifetime: 0.5
+  attackVfxAnchor: {fileID: 0}
+  baldoVfxPrefab: {fileID: 0}
+  baldoVfxOffset: {x: 0, y: 0, z: 0}
+  baldoVfxScale: {x: 1, y: 1, z: 1}
+  baldoVfxLifetime: 0.8
+  flipBaldoVfxWithFacing: 1
+  invertBaldoVfx: 0
+  spawnBaldoVfxOnBothSides: 1
+  mirrorBaldoVfxFlip: 1
+  baldoVfxAnchor: {fileID: 0}
   attackAlert: {fileID: 1455090909206326654}
 --- !u!82 &6914361142803634593
 AudioSource:
