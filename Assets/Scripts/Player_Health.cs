@@ -12,12 +12,10 @@ public class Player_Health : Entity_Health
     [Header("Regeneration")]
     [SerializeField] public float regenerationTime = 10f;
     [SerializeField] public float regenerationDelayAfterHit = 3f;
-    [SerializeField] private float shieldHitInvulnerability = 1.5f;
 
     private float timeSinceLastHit;
     private float regenerationTimer;
     private int lastLoggedSecond; // New field to track last logged second
-    private float nextShieldDamageTime;
 
     private CinemachineImpulseSource impulseSource;
 
@@ -107,20 +105,8 @@ public class Player_Health : Entity_Health
 
         if (currentShield > 0)
         {
-            if (Time.time < nextShieldDamageTime)
-            {
-                entityVfx?.PlayShieldHitVfx();
-                return;
-            }
-
-            entityVfx?.PlayShieldHitVfx();
-            if (currentShield <= 2)
-            {
-                entityVfx?.PlayLastShieldHitVfx();
-            }
             currentShield--;
             InvokeOnHealthChanged(currentShield, maxShield);
-            nextShieldDamageTime = Time.time + shieldHitInvulnerability;
 
             if (spriteRenderer != null)
             {

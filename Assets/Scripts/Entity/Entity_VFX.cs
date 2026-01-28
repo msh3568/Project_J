@@ -12,33 +12,9 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private float onDamageVfxDuration = .2f;
     private Material originalMaterial;
     private Coroutine onDamageVfxCoroutine;
-    [SerializeField] private GameObject onDamageVfxPrefab;
-    [SerializeField] private Vector3 onDamageVfxOffset;
-    [SerializeField] private Vector3 onDamageVfxScale = Vector3.one;
-    [SerializeField] private float onDamageVfxLifetime = 0.5f;
-    [SerializeField] private bool onDamageVfxFollowOwner = true;
 
     [Header("On Doing Damage VFX")]
     [SerializeField] private GameObject hitVfx;
-    [SerializeField] private Vector3 hitVfxOffset;
-    [SerializeField] private Vector3 hitVfxScale = Vector3.one;
-    [SerializeField] private float hitVfxLifetime = 0.5f;
-    [SerializeField] private bool flipHitVfxWithTargetFacing;
-    [SerializeField] private bool hitVfxFollowTarget;
-
-    [Header("Player Shield Hit VFX")]
-    [SerializeField] private GameObject shieldHitVfxPrefab;
-    [SerializeField] private Vector3 shieldHitVfxOffset;
-    [SerializeField] private Vector3 shieldHitVfxScale = Vector3.one;
-    [SerializeField] private float shieldHitVfxLifetime = 0.5f;
-    [SerializeField] private bool shieldHitVfxFollowOwner = true;
-
-    [Header("Player Last Shield Hit VFX")]
-    [SerializeField] private GameObject lastShieldHitVfxPrefab;
-    [SerializeField] private Vector3 lastShieldHitVfxOffset;
-    [SerializeField] private Vector3 lastShieldHitVfxScale = Vector3.one;
-    [SerializeField] private float lastShieldHitVfxLifetime = 0.6f;
-    [SerializeField] private bool lastShieldHitVfxFollowOwner = true;
 
     [Header("On Attack VFX")]
     [SerializeField] private GameObject attackVfxPrefab1;
@@ -47,9 +23,6 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private bool flipAttackVfx1WithFacing = true;
     [SerializeField] private bool flipAttackVfx2WithFacing = true;
     [SerializeField] private bool flipAttackVfx3WithFacing = true;
-    [SerializeField] private bool invertAttackVfx1;
-    [SerializeField] private bool invertAttackVfx2 = true;
-    [SerializeField] private bool invertAttackVfx3;
     [SerializeField] private Vector3 attackVfxOffset;
     [SerializeField] private Vector3 attackVfxScale = Vector3.one;
     [SerializeField] private float attackVfxLifetime = 0.5f;
@@ -61,11 +34,9 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private Vector3 baldoVfxScale = Vector3.one;
     [SerializeField] private float baldoVfxLifetime = 0.8f;
     [SerializeField] private bool flipBaldoVfxWithFacing = true;
-    [SerializeField] private bool invertBaldoVfx;
-    [SerializeField] private bool spawnBaldoVfxOnBothSides = true;
-    [SerializeField] private bool mirrorBaldoVfxFlip = true;
     [SerializeField] private Transform baldoVfxAnchor;
 
+<<<<<<< HEAD
     [Header("Dash VFX")]
     [SerializeField] private GameObject dashVfxPrefab;
     [SerializeField] private Vector3 dashVfxOffset;
@@ -88,6 +59,8 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private MMF_Player baldoFeedbacks;
     [SerializeField] private MMF_Player dashFeedbacks;
 
+=======
+>>>>>>> parent of 7afc625e (vfx 업데이트)
     private void Awake()
     {
         entity = GetComponentInParent<Entity>();
@@ -100,6 +73,7 @@ public class Entity_VFX : MonoBehaviour
 
     public void CreateOnHitVFX(Transform target)
     {
+<<<<<<< HEAD
         if (hitFeedbacks != null)
         {
             hitFeedbacks.PlayFeedbacks();
@@ -123,6 +97,11 @@ public class Entity_VFX : MonoBehaviour
         ApplyVfxFlipAndPlay(newHitVfx, flipHitVfxWithTargetFacing && target.localScale.x < 0);
         if (hitVfxLifetime > 0f)
             Destroy(newHitVfx, hitVfxLifetime);
+=======
+        Vector3 spawnPosition = target.position + new Vector3(0.03f, -0.19f);
+        GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, Quaternion.identity);
+        Destroy(newHitVfx, 0.2f);
+>>>>>>> parent of 7afc625e (vfx 업데이트)
     }
 
     public void PlayOnDamageVfx()
@@ -146,6 +125,7 @@ public class Entity_VFX : MonoBehaviour
         onDamageVfxCoroutine =  StartCoroutine(OnDamageVfxco());
     }
 
+<<<<<<< HEAD
     public void PlayOnDamagePrefabVfx()
     {
         if (onDamagePrefabFeedbacks != null)
@@ -241,6 +221,11 @@ public class Entity_VFX : MonoBehaviour
         }
 
         GameObject prefab = GetAttackVfxPrefab(comboIndex, out bool flipWithFacing, out bool invert);
+=======
+    public void PlayAttackVfx(int comboIndex)
+    {
+        GameObject prefab = GetAttackVfxPrefab(comboIndex, out bool flipWithFacing);
+>>>>>>> parent of 7afc625e (vfx 업데이트)
         if (prefab == null)
             return;
 
@@ -248,52 +233,29 @@ public class Entity_VFX : MonoBehaviour
         Vector3 basePosition = attackVfxAnchor != null ? attackVfxAnchor.position : transform.position;
         Vector3 offset = new Vector3(attackVfxOffset.x * facingDir, attackVfxOffset.y, attackVfxOffset.z);
         GameObject newAttackVfx = Instantiate(prefab, basePosition + offset, Quaternion.identity);
-        Vector3 scale = new Vector3(Mathf.Abs(attackVfxScale.x), attackVfxScale.y, attackVfxScale.z);
+        Vector3 scale = attackVfxScale;
+        if (flipWithFacing)
+            scale = new Vector3(scale.x * facingDir, scale.y, scale.z);
         newAttackVfx.transform.localScale = scale;
-        bool finalFlip = (flipWithFacing && facingDir < 0) ^ invert;
-        ApplyVfxFlipAndPlay(newAttackVfx, finalFlip);
         Destroy(newAttackVfx, attackVfxLifetime);
     }
 
-    private GameObject GetAttackVfxPrefab(int comboIndex, out bool flipWithFacing, out bool invert)
+    private GameObject GetAttackVfxPrefab(int comboIndex, out bool flipWithFacing)
     {
         switch (comboIndex)
         {
             case 1:
                 flipWithFacing = flipAttackVfx1WithFacing;
-                invert = invertAttackVfx1;
                 return attackVfxPrefab1;
             case 2:
                 flipWithFacing = flipAttackVfx2WithFacing;
-                invert = invertAttackVfx2;
                 return attackVfxPrefab2;
             case 3:
                 flipWithFacing = flipAttackVfx3WithFacing;
-                invert = invertAttackVfx3;
                 return attackVfxPrefab3;
             default:
                 flipWithFacing = false;
-                invert = false;
                 return null;
-        }
-    }
-
-    private static void ApplyVfxFlipAndPlay(GameObject vfx, bool flipX)
-    {
-        foreach (var spriteRenderer in vfx.GetComponentsInChildren<SpriteRenderer>())
-        {
-            spriteRenderer.flipX = flipX;
-        }
-
-        foreach (var psRenderer in vfx.GetComponentsInChildren<ParticleSystemRenderer>())
-        {
-            psRenderer.flip = new Vector3(flipX ? 1f : 0f, 0f, 0f);
-        }
-
-        foreach (var ps in vfx.GetComponentsInChildren<ParticleSystem>())
-        {
-            if (!ps.isPlaying)
-                ps.Play(true);
         }
     }
 
@@ -317,6 +279,7 @@ public class Entity_VFX : MonoBehaviour
 
         int facingDir = entity != null ? entity.facingDir : 1;
         Vector3 basePosition = baldoVfxAnchor != null ? baldoVfxAnchor.position : transform.position;
+<<<<<<< HEAD
         float offsetX = Mathf.Abs(baldoVfxOffset.x);
         Vector3 rightOffset = new Vector3(offsetX, baldoVfxOffset.y, baldoVfxOffset.z);
         Vector3 leftOffset = new Vector3(-offsetX, baldoVfxOffset.y, baldoVfxOffset.z);
@@ -358,6 +321,14 @@ public class Entity_VFX : MonoBehaviour
         GameObject newBaldoVfx = Instantiate(baldoVfxPrefab, position, Quaternion.identity);
         newBaldoVfx.transform.localScale = new Vector3(Mathf.Abs(baldoVfxScale.x), baldoVfxScale.y, baldoVfxScale.z);
         ApplyVfxFlipAndPlay(newBaldoVfx, flipX);
+=======
+        Vector3 offset = new Vector3(baldoVfxOffset.x * facingDir, baldoVfxOffset.y, baldoVfxOffset.z);
+        GameObject newBaldoVfx = Instantiate(baldoVfxPrefab, basePosition + offset, Quaternion.identity);
+        Vector3 scale = baldoVfxScale;
+        if (flipBaldoVfxWithFacing)
+            scale = new Vector3(scale.x * facingDir, scale.y, scale.z);
+        newBaldoVfx.transform.localScale = scale;
+>>>>>>> parent of 7afc625e (vfx 업데이트)
         Destroy(newBaldoVfx, baldoVfxLifetime);
     }
 

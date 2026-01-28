@@ -4,11 +4,9 @@ public class Player_DashState : PlayerState
 {
     private float originalGravityScale;
     private int dashDir;
-    private Entity_VFX vfx;
 
     public Player_DashState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
-        vfx = player.GetComponent<Entity_VFX>();
     }
 
     public override void Enter()
@@ -36,7 +34,6 @@ public class Player_DashState : PlayerState
 
         originalGravityScale = rb.gravityScale;
         rb.gravityScale = 0;
-        vfx?.PlayDashVfx();
     }
 
     public override void Update()
