@@ -35,7 +35,8 @@ public class Player_BasicAttackState : PlayerState
         vfx?.PlayAttackVfx(comboIndex);
 
         float shakeForce = comboIndex >= comboLimit ? player.attackFinalShakeForce : player.attackShakeForce;
-        StartDelayedShake(shakeForce);
+        if (vfx == null || vfx.ShouldUseLegacyAttack(comboIndex))
+            StartDelayedShake(shakeForce);
     }
 
 

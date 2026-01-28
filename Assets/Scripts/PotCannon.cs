@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using MoreMountains.Feedbacks;
 
 public class PotCannon : Entity_Health
 {
@@ -15,6 +16,12 @@ public class PotCannon : Entity_Health
     [SerializeField] private int explosionFragmentCount = 30;
     [Tooltip("Force with which fragments are launched.")]
     [SerializeField] private float explosionFragmentForce = 150f;
+
+    [Header("Feel Feedbacks")]
+    [SerializeField] private bool enforceFeel = true;
+    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
+    [SerializeField] private MMF_Player deathFeedbacks;
 
     private float nextFireTime;
 
@@ -63,14 +70,29 @@ public class PotCannon : Entity_Health
         explosion.fragmentCount = explosionFragmentCount;
         explosion.explosionForce = explosionFragmentForce;
 
-        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-        if (impulseSource != null)
+        if (deathFeedbacks != null)
         {
-            impulseSource.GenerateImpulse();
+            deathFeedbacks.PlayFeedbacks();
         }
-        else if (CameraShakeManager.instance != null)
+        else if (enforceFeel)
         {
-            CameraShakeManager.instance.Shake();
+            Debug.LogError($"{name} PotCannon: Missing Death Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
+        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
+        if (!skipLegacyImpulse)
+        {
+            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+            if (impulseSource != null)
+            {
+                impulseSource.GenerateImpulse();
+            }
+            else if (CameraShakeManager.instance != null)
+            {
+                CameraShakeManager.instance.Shake();
+            }
         }
 
         Destroy(gameObject);

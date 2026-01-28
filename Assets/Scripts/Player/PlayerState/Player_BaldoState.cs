@@ -25,8 +25,11 @@ public class Player_BaldoState : PlayerState
         player.skillManager.baldo.UseSkill(player.anim, player.facingDir);
         vfx?.PlayBaldoVfx();
 
-        if (CameraShakeManager.instance != null)
-            CameraShakeManager.instance.Shake(player.baldoShakeForce);
+        if (vfx == null || vfx.ShouldUseLegacyBaldo())
+        {
+            if (CameraShakeManager.instance != null)
+                CameraShakeManager.instance.Shake(player.baldoShakeForce);
+        }
     }
 
     public override void Exit()

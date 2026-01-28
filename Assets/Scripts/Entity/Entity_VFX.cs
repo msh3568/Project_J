@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using MoreMountains.Feedbacks;
 
 public class Entity_VFX : MonoBehaviour
 {
@@ -72,6 +73,21 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private float dashVfxLifetime = 0.5f;
     [SerializeField] private bool dashVfxFollowOwner;
 
+    [Header("Feel Feedbacks")]
+    [SerializeField] private bool enforceFeel = true;
+    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool replaceLegacyVfxWhenFeedbacksPresent = true;
+    [SerializeField] private MMF_Player onDamageFeedbacks;
+    [SerializeField] private MMF_Player onDamagePrefabFeedbacks;
+    [SerializeField] private MMF_Player hitFeedbacks;
+    [SerializeField] private MMF_Player shieldHitFeedbacks;
+    [SerializeField] private MMF_Player lastShieldHitFeedbacks;
+    [SerializeField] private MMF_Player attackFeedback1;
+    [SerializeField] private MMF_Player attackFeedback2;
+    [SerializeField] private MMF_Player attackFeedback3;
+    [SerializeField] private MMF_Player baldoFeedbacks;
+    [SerializeField] private MMF_Player dashFeedbacks;
+
     private void Awake()
     {
         entity = GetComponentInParent<Entity>();
@@ -84,6 +100,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void CreateOnHitVFX(Transform target)
     {
+        if (hitFeedbacks != null)
+        {
+            hitFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Hit Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (hitVfx == null || target == null)
             return;
 
@@ -98,6 +127,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayOnDamageVfx()
     {
+        if (onDamageFeedbacks != null)
+        {
+            onDamageFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing On Damage Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (onDamageVfxCoroutine != null)
             StopCoroutine(onDamageVfxCoroutine);
 
@@ -106,6 +148,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayOnDamagePrefabVfx()
     {
+        if (onDamagePrefabFeedbacks != null)
+        {
+            onDamagePrefabFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing On Damage Prefab Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (onDamageVfxPrefab == null)
             return;
 
@@ -119,6 +174,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayLastShieldHitVfx()
     {
+        if (lastShieldHitFeedbacks != null)
+        {
+            lastShieldHitFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Last Shield Hit Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (lastShieldHitVfxPrefab == null)
             return;
 
@@ -132,6 +200,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayShieldHitVfx()
     {
+        if (shieldHitFeedbacks != null)
+        {
+            shieldHitFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Shield Hit Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (shieldHitVfxPrefab == null)
             return;
 
@@ -145,6 +226,20 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayAttackVfx(int comboIndex)
     {
+        MMF_Player attackFeedback = GetAttackFeedback(comboIndex);
+        if (attackFeedback != null)
+        {
+            attackFeedback.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Attack Feedback {comboIndex} (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         GameObject prefab = GetAttackVfxPrefab(comboIndex, out bool flipWithFacing, out bool invert);
         if (prefab == null)
             return;
@@ -204,6 +299,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayBaldoVfx()
     {
+        if (baldoFeedbacks != null)
+        {
+            baldoFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Baldo Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (baldoVfxPrefab == null)
             return;
 
@@ -221,6 +329,19 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayDashVfx()
     {
+        if (dashFeedbacks != null)
+        {
+            dashFeedbacks.PlayFeedbacks();
+            if (replaceLegacyVfxWhenFeedbacksPresent)
+                return;
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} Entity_VFX: Missing Dash Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
         if (dashVfxPrefab == null)
             return;
 
@@ -238,6 +359,42 @@ public class Entity_VFX : MonoBehaviour
         newBaldoVfx.transform.localScale = new Vector3(Mathf.Abs(baldoVfxScale.x), baldoVfxScale.y, baldoVfxScale.z);
         ApplyVfxFlipAndPlay(newBaldoVfx, flipX);
         Destroy(newBaldoVfx, baldoVfxLifetime);
+    }
+
+    private MMF_Player GetAttackFeedback(int comboIndex)
+    {
+        switch (comboIndex)
+        {
+            case 1:
+                return attackFeedback1;
+            case 2:
+                return attackFeedback2;
+            case 3:
+                return attackFeedback3;
+            default:
+                return null;
+        }
+    }
+
+    public bool HasAttackFeedback(int comboIndex) => GetAttackFeedback(comboIndex) != null;
+    public bool HasBaldoFeedback => baldoFeedbacks != null;
+    public bool HasDashFeedback => dashFeedbacks != null;
+    public bool HasOnDamageFeedback => onDamageFeedbacks != null;
+    public bool HasShieldHitFeedback => shieldHitFeedbacks != null;
+
+    public bool ShouldUseLegacyAttack(int comboIndex) => ShouldUseLegacyForFeedback(GetAttackFeedback(comboIndex));
+    public bool ShouldUseLegacyBaldo() => ShouldUseLegacyForFeedback(baldoFeedbacks);
+    public bool ShouldUseLegacyDash() => ShouldUseLegacyForFeedback(dashFeedbacks);
+    public bool ShouldUseLegacyShieldHit() => ShouldUseLegacyForFeedback(shieldHitFeedbacks);
+    public bool ShouldUseLegacyOnDamage() => ShouldUseLegacyForFeedback(onDamageFeedbacks);
+
+    private bool ShouldUseLegacyForFeedback(MMF_Player feedback)
+    {
+        if (feedback != null)
+            return false;
+        if (!enforceFeel)
+            return true;
+        return allowLegacyFallback;
     }
 
     private IEnumerator OnDamageVfxco()

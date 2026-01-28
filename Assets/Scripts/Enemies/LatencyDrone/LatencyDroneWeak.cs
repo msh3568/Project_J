@@ -2,6 +2,7 @@
 using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
+using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
@@ -81,6 +82,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private GameObject onDeathVfxPrefab;
     [SerializeField] private Vector3 onDeathVfxOffset;
     [SerializeField] private float onDeathVfxLifetime = 1.5f;
+
+    [Header("Feel Feedbacks")]
+    [SerializeField] private bool enforceFeel = true;
+    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
+    [SerializeField] private MMF_Player deathFeedbacks;
 
     private Transform playerTransform;
     private Rigidbody2D playerRb;
@@ -389,10 +396,25 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
         SpawnVfx(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime);
-        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-        if (impulseSource != null)
+        if (deathFeedbacks != null)
         {
-            impulseSource.GenerateImpulse();
+            deathFeedbacks.PlayFeedbacks();
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} LatencyDroneWeak: Missing Death Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
+        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
+        if (!skipLegacyImpulse)
+        {
+            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+            if (impulseSource != null)
+            {
+                impulseSource.GenerateImpulse();
+            }
         }
         // ?뚭눼 ???ъ슫???ъ깮 (?덈줈??肄붾（???ъ슜)
         if (deathSound != null)

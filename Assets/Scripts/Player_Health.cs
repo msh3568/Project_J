@@ -98,7 +98,9 @@ public class Player_Health : Entity_Health
         if (isDead || IsInvincible) return;
         if (isFirewallRespawning) return;
 
-        CameraShakeManager.instance.CamerShake(impulseSource);
+        bool shouldRunLegacyShake = entityVfx == null || entityVfx.ShouldUseLegacyShieldHit();
+        if (shouldRunLegacyShake && CameraShakeManager.instance != null)
+            CameraShakeManager.instance.CamerShake(impulseSource);
 
         timeSinceLastHit = 0f;
         regenerationTimer = 0f;

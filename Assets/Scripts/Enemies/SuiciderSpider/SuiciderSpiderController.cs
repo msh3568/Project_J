@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Cinemachine;
+using MoreMountains.Feedbacks;
 
 public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, ICheckpointRespawnable
 {
@@ -61,6 +62,12 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     [SerializeField] private float explosionDamage = 10f;
     [SerializeField] private int firewallDamage = 1;
     [SerializeField] private LayerMask enemyLayer;
+
+    [Header("Feel Feedbacks")]
+    [SerializeField] private bool enforceFeel = true;
+    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool replaceLegacyExplosionImpulseWhenFeedbacksPresent = true;
+    [SerializeField] private MMF_Player explosionFeedbacks;
 
     [Header("Knockback (Optional)")]
     [SerializeField] private bool explosionKnockback = false;
@@ -473,10 +480,25 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         StopAllSfx();
         PlayOneShotAtPosition(explodeSfx, explodeVolume);
 
-        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-        if (impulseSource != null)
+        if (explosionFeedbacks != null)
         {
-            impulseSource.GenerateImpulse();
+            explosionFeedbacks.PlayFeedbacks();
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} SuiciderSpider: Missing Explosion Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
+        bool skipLegacyImpulse = explosionFeedbacks != null && replaceLegacyExplosionImpulseWhenFeedbacksPresent;
+        if (!skipLegacyImpulse)
+        {
+            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+            if (impulseSource != null)
+            {
+                impulseSource.GenerateImpulse();
+            }
         }
 
         if (explosionPrefab != null)
