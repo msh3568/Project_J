@@ -2,6 +2,7 @@
 using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
+using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
@@ -75,6 +76,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float explosionFragmentForce = 150f;
     [SerializeField] private float explosionFragmentLifetime = 1.5f; // Default from SimpleExplosion
     [SerializeField] private float explosionFragmentFadeDelay = 1.0f; // Default from SimpleExplosion
+
+    [Header("Feel Feedbacks")]
+    [SerializeField] private bool enforceFeel = true;
+    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
+    [SerializeField] private MMF_Player deathFeedbacks;
 
     private Transform playerTransform;
     private Rigidbody2D playerRb;
@@ -381,10 +388,31 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private void Die()
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
+<<<<<<< HEAD
+        SpawnVfx(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime);
+        if (deathFeedbacks != null)
+=======
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
+>>>>>>> parent of 7afc625e (vfx 업데이트)
         {
-            impulseSource.GenerateImpulse();
+            deathFeedbacks.PlayFeedbacks();
+        }
+        else if (enforceFeel)
+        {
+            Debug.LogError($"{name} LatencyDroneWeak: Missing Death Feedbacks (MMF_Player).");
+            if (!allowLegacyFallback)
+                return;
+        }
+
+        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
+        if (!skipLegacyImpulse)
+        {
+            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+            if (impulseSource != null)
+            {
+                impulseSource.GenerateImpulse();
+            }
         }
         // ?뚭눼 ???ъ슫???ъ깮 (?덈줈??肄붾（???ъ슜)
         if (deathSound != null)
