@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Unity.Cinemachine;
-using MoreMountains.Feedbacks;
 
 public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, ICheckpointRespawnable
 {
@@ -62,12 +61,6 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     [SerializeField] private float explosionDamage = 10f;
     [SerializeField] private int firewallDamage = 1;
     [SerializeField] private LayerMask enemyLayer;
-
-    [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = false;
-    [SerializeField] private bool allowLegacyFallback = true;
-    [SerializeField] private bool replaceLegacyExplosionImpulseWhenFeedbacksPresent = true;
-    [SerializeField] private MMF_Player explosionFeedbacks;
 
     [Header("Knockback (Optional)")]
     [SerializeField] private bool explosionKnockback = false;
@@ -141,8 +134,6 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
     private void Awake()
     {
-        enforceFeel = false;
-        allowLegacyFallback = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>(true);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
@@ -482,25 +473,10 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         StopAllSfx();
         PlayOneShotAtPosition(explodeSfx, explodeVolume);
 
-        if (explosionFeedbacks != null)
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
         {
-            explosionFeedbacks.PlayFeedbacks();
-        }
-        else if (enforceFeel)
-        {
-            Debug.LogError($"{name} SuiciderSpider: Missing Explosion Feedbacks (MMF_Player).");
-            if (!allowLegacyFallback)
-                return;
-        }
-
-        bool skipLegacyImpulse = explosionFeedbacks != null && replaceLegacyExplosionImpulseWhenFeedbacksPresent;
-        if (!skipLegacyImpulse)
-        {
-            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-            if (impulseSource != null)
-            {
-                impulseSource.GenerateImpulse();
-            }
+            impulseSource.GenerateImpulse();
         }
 
         if (explosionPrefab != null)

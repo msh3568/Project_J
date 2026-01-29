@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using Unity.Cinemachine;
-using MoreMountains.Feedbacks;
 
 [RequireComponent(typeof(AudioSource))] // Add AudioSource requirement
 public class Enemy : Entity
@@ -47,12 +46,6 @@ public class Enemy : Entity
     [Header("Facing direction")]
     [SerializeField] private bool startFacingLeft;
 
-    [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = false;
-    [SerializeField] private bool allowLegacyFallback = true;
-    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
-    [SerializeField] private MMF_Player deathFeedbacks;
-
     [Header("Player detection")]
     [SerializeField] private LayerMask whatIsPlayer;
     [SerializeField] private Transform playerCheck;
@@ -82,25 +75,10 @@ public class Enemy : Entity
             Instantiate(mediumFireTracePrefab, transform.position, Quaternion.identity);
         }
 
-        if (deathFeedbacks != null)
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
         {
-            deathFeedbacks.PlayFeedbacks();
-        }
-        else if (enforceFeel)
-        {
-            Debug.LogError($"{name} Enemy: Missing Death Feedbacks (MMF_Player).");
-            if (!allowLegacyFallback)
-                return;
-        }
-
-        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
-        if (!skipLegacyImpulse)
-        {
-            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-            if (impulseSource != null)
-            {
-                impulseSource.GenerateImpulse();
-            }
+            impulseSource.GenerateImpulse();
         }
         OnEnemyDeath?.Invoke();
         stateMachine.ChangeState(deadState);
@@ -147,9 +125,6 @@ public class Enemy : Entity
         base.Awake();
 
         audioSource = GetComponent<AudioSource>(); // Initialize AudioSource
-        enforceFeel = false;
-        allowLegacyFallback = true;
-
         idleState = new Enemy_IdleState(this, stateMachine, "Idle");
         moveState = new Enemy_MoveState(this, stateMachine, "Move");
         attackState = new Enemy_AttackState(this, stateMachine, "Attack");

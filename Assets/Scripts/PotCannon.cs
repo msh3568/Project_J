@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Cinemachine;
-using MoreMountains.Feedbacks;
 
 public class PotCannon : Entity_Health
 {
@@ -17,19 +16,11 @@ public class PotCannon : Entity_Health
     [Tooltip("Force with which fragments are launched.")]
     [SerializeField] private float explosionFragmentForce = 150f;
 
-    [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = false;
-    [SerializeField] private bool allowLegacyFallback = true;
-    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
-    [SerializeField] private MMF_Player deathFeedbacks;
-
     private float nextFireTime;
 
     protected override void Awake()
     {
         base.Awake();
-        enforceFeel = false;
-        allowLegacyFallback = true;
     }
 
     private void Update()
@@ -77,29 +68,14 @@ public class PotCannon : Entity_Health
         explosion.fragmentCount = explosionFragmentCount;
         explosion.explosionForce = explosionFragmentForce;
 
-        if (deathFeedbacks != null)
+        CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
+        if (impulseSource != null)
         {
-            deathFeedbacks.PlayFeedbacks();
+            impulseSource.GenerateImpulse();
         }
-        else if (enforceFeel)
+        else if (CameraShakeManager.instance != null)
         {
-            Debug.LogError($"{name} PotCannon: Missing Death Feedbacks (MMF_Player).");
-            if (!allowLegacyFallback)
-                return;
-        }
-
-        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
-        if (!skipLegacyImpulse)
-        {
-            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-            if (impulseSource != null)
-            {
-                impulseSource.GenerateImpulse();
-            }
-            else if (CameraShakeManager.instance != null)
-            {
-                CameraShakeManager.instance.Shake();
-            }
+            CameraShakeManager.instance.Shake();
         }
 
         Destroy(gameObject);
