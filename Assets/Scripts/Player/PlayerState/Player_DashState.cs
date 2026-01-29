@@ -13,10 +13,6 @@ public class Player_DashState : PlayerState
     {
         base.Enter();
 
-        player.StartDashCooldown();
-        //dashDir = player.facingDir;
-        stateTimer = player.dashDuration;
-
         float xInput = player.moveInput.x;
 
         if(Mathf.Abs(xInput) > 0.01f)
@@ -31,6 +27,21 @@ public class Player_DashState : PlayerState
         {
             dashDir = player.facingDir;
         }
+
+        if (player.wallDetected)
+        {
+            if (player.groundDetected)
+                stateMachine.ChangeState(player.idleState);
+            else
+                stateMachine.ChangeState(player.wallSlideState);
+            return;
+        }
+
+        player.StartDashCooldown();
+        var vfx = player.GetComponent<Entity_VFX>();
+        vfx?.PlayDashVfx(dashDir);
+        //dashDir = player.facingDir;
+        stateTimer = player.dashDuration;
 
         originalGravityScale = rb.gravityScale;
         rb.gravityScale = 0;

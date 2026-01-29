@@ -123287,6 +123287,26 @@ MonoBehaviour:
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
   hitVfx: {fileID: 0}
+  onDamageVfxPrefab: {fileID: 0}
+  onDamageVfxOffset: {x: 0, y: 0, z: 0}
+  onDamageVfxScale: {x: 1, y: 1, z: 1}
+  onDamageVfxLifetime: 0.5
+  onDamageVfxFollowOwner: 1
+  hitVfxOffset: {x: 0, y: 0, z: 0}
+  hitVfxScale: {x: 1, y: 1, z: 1}
+  hitVfxLifetime: 0.5
+  flipHitVfxWithTargetFacing: 0
+  hitVfxFollowTarget: 0
+  shieldHitVfxPrefab: {fileID: 4748681987041982144, guid: 163bff84d78fe024c8bbf143ff97a9fa, type: 3}
+  shieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  shieldHitVfxScale: {x: 1, y: 1, z: 1}
+  shieldHitVfxLifetime: 0.5
+  shieldHitVfxFollowOwner: 1
+  lastShieldHitVfxPrefab: {fileID: 4748681987041982144, guid: eb084e1710fc56e4a90749e9a80418b5, type: 3}
+  lastShieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  lastShieldHitVfxScale: {x: 1, y: 1, z: 1}
+  lastShieldHitVfxLifetime: 0.6
+  lastShieldHitVfxFollowOwner: 1
 --- !u!82 &2049881637
 AudioSource:
   m_ObjectHideFlags: 0

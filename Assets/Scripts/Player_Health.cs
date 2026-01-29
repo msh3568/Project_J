@@ -25,11 +25,17 @@ public class Player_Health : Entity_Health
     private CameraShake cameraShake;
     private SpriteRenderer spriteRenderer;
     private bool isFirewallRespawning;
+    private Color baseSpriteColor = Color.white;
 
     [Header("Firewall Respawn")]
     [SerializeField] private float firewallBlackoutDuration = 0.25f;
     [SerializeField] private Color firewallBlackoutColor = Color.black;
     [SerializeField] private bool freezePlayerDuringRespawn = true;
+    [SerializeField] private float shieldHitInvulnDuration = 1f;
+    private float shieldHitInvulnTimer;
+    private bool isShieldHitInvuln;
+    [SerializeField] private int lowShieldThreshold = 2;
+    [SerializeField] private Color lowShieldColor = new Color(1f, 0.2f, 0.2f, 1f);
 
     protected override void Awake()
     {
@@ -45,6 +51,10 @@ public class Player_Health : Entity_Health
         {
             Debug.LogError("Player_Health: SpriteRenderer component not found on child objects!");
         }
+        else
+        {
+            baseSpriteColor = spriteRenderer.color;
+        }
     }
 
    
@@ -58,6 +68,15 @@ public class Player_Health : Entity_Health
     private void Update()
     {
         timeSinceLastHit += Time.deltaTime;
+        if (isShieldHitInvuln)
+        {
+            shieldHitInvulnTimer -= Time.deltaTime;
+            if (shieldHitInvulnTimer <= 0f)
+            {
+                shieldHitInvulnTimer = 0f;
+                isShieldHitInvuln = false;
+            }
+        }
 
         bool wasCanRegenerate = CanRegenerate;
         CanRegenerate = timeSinceLastHit > regenerationDelayAfterHit && currentShield < maxShield && !isDead;
@@ -87,6 +106,7 @@ public class Player_Health : Entity_Health
                 Debug.Log($"Shield regenerated. Current shield: {currentShield}");
                 regenerationTimer = 0f;
                 lastLoggedSecond = -1; // Reset for next shield point regeneration
+                UpdateShieldVisuals();
             }
         }
     }
@@ -95,6 +115,7 @@ public class Player_Health : Entity_Health
     {
         if (isDead || IsInvincible) return;
         if (isFirewallRespawning) return;
+        if (isShieldHitInvuln) return;
 
         bool shouldRunLegacyShake = entityVfx == null || entityVfx.ShouldUseLegacyShieldHit();
         if (shouldRunLegacyShake && CameraShakeManager.instance != null)
@@ -110,10 +131,17 @@ public class Player_Health : Entity_Health
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.color = Color.white;
+                spriteRenderer.color = baseSpriteColor;
             }
             
             entityVfx?.PlayOnDamageVfx();
+            if (currentShield > 0)
+                entityVfx?.PlayShieldHitVfx();
+            else
+                entityVfx?.PlayLastShieldHitVfx();
+
+            isShieldHitInvuln = true;
+            shieldHitInvulnTimer = shieldHitInvulnDuration;
 
             if (currentShield > 0)
             {
@@ -123,6 +151,8 @@ public class Player_Health : Entity_Health
             {
                 Debug.Log("Shield broken! Next hit will be lethal.");
             }
+
+            UpdateShieldVisuals();
             
             Player player = GetComponent<Player>();
             if (player != null)
@@ -161,6 +191,7 @@ public class Player_Health : Entity_Health
         regenerationTimer = 0f;
         CanRegenerate = false;
         InvokeOnHealthChanged(currentShield, maxShield);
+        UpdateShieldVisuals();
     }
 
     private IEnumerator FirewallRespawnRoutine()
@@ -214,5 +245,16 @@ public class Player_Health : Entity_Health
 
         IsInvincible = false;
         isFirewallRespawning = false;
+    }
+
+    private void UpdateShieldVisuals()
+    {
+        if (spriteRenderer == null)
+            return;
+
+        if (currentShield > 0 && currentShield <= lowShieldThreshold)
+            spriteRenderer.color = lowShieldColor;
+        else
+            spriteRenderer.color = baseSpriteColor;
     }
 }

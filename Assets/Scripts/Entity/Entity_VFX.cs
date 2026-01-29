@@ -68,9 +68,19 @@ public class Entity_VFX : MonoBehaviour
     [Header("Dash VFX")]
     [SerializeField] private GameObject dashVfxPrefab;
     [SerializeField] private Vector3 dashVfxOffset;
+    [SerializeField] private bool dashVfxUseLeftOffset = false;
+    [SerializeField] private Vector3 dashVfxLeftOffset;
     [SerializeField] private Vector3 dashVfxScale = Vector3.one;
     [SerializeField] private float dashVfxLifetime = 0.5f;
     [SerializeField] private bool dashVfxFollowOwner;
+    [SerializeField] private Transform dashVfxAnchor;
+    [SerializeField] private bool dashVfxForceWorldSimulation = true;
+    [SerializeField] private bool dashVfxForceSorting = false;
+    [SerializeField] private string dashVfxSortingLayer = "Default";
+    [SerializeField] private int dashVfxSortingOrder = 0;
+    [SerializeField] private float dashVfxCooldown = 0.05f;
+    [SerializeField] private int dashVfxBaseFacingDir = -1;
+    private float lastDashVfxTime;
 
     private void Awake()
     {
@@ -98,10 +108,16 @@ public class Entity_VFX : MonoBehaviour
 
     public void PlayOnDamageVfx()
     {
+        if (onDamageVfxPrefab != null)
+            PlayOnDamagePrefabVfx();
+
+        if (sr == null || onDamageMaterial == null)
+            return;
+
         if (onDamageVfxCoroutine != null)
             StopCoroutine(onDamageVfxCoroutine);
 
-        onDamageVfxCoroutine =  StartCoroutine(OnDamageVfxco());
+        onDamageVfxCoroutine = StartCoroutine(OnDamageVfxco());
     }
 
     public void PlayOnDamagePrefabVfx()
@@ -212,23 +228,55 @@ public class Entity_VFX : MonoBehaviour
         float offsetX = Mathf.Abs(baldoVfxOffset.x);
         Vector3 rightOffset = new Vector3(offsetX, baldoVfxOffset.y, baldoVfxOffset.z);
         Vector3 leftOffset = new Vector3(-offsetX, baldoVfxOffset.y, baldoVfxOffset.z);
-        bool baseFlip = false;
+        bool baseFlip = flipBaldoVfxWithFacing && facingDir < 0;
 
         SpawnBaldoVfxInstance(basePosition + rightOffset, baseFlip);
         if (spawnBaldoVfxOnBothSides)
             SpawnBaldoVfxInstance(basePosition + leftOffset, mirrorBaldoVfxFlip ? !baseFlip : baseFlip);
     }
 
-    public void PlayDashVfx()
+    public void PlayDashVfx(int direction)
     {
         if (dashVfxPrefab == null)
             return;
 
-        Vector3 spawnPosition = transform.position + dashVfxOffset;
-        Transform parent = dashVfxFollowOwner ? transform : null;
-        GameObject vfx = Instantiate(dashVfxPrefab, spawnPosition, Quaternion.identity, parent);
+        if (Time.time - lastDashVfxTime < dashVfxCooldown)
+            return;
+        lastDashVfxTime = Time.time;
+
+        int facingDir = direction == 0 ? (entity != null ? entity.facingDir : 1) : (direction > 0 ? 1 : -1);
+        Vector3 spawnOffset;
+        if (facingDir < 0)
+        {
+            spawnOffset = dashVfxUseLeftOffset ? dashVfxLeftOffset : new Vector3(-dashVfxOffset.x, dashVfxOffset.y, dashVfxOffset.z);
+        }
+        else
+        {
+            spawnOffset = dashVfxOffset;
+        }
+        Vector3 basePosition = dashVfxAnchor != null ? dashVfxAnchor.position : transform.position;
+        Vector3 spawnPosition = basePosition + spawnOffset;
+        GameObject vfx = Instantiate(dashVfxPrefab, spawnPosition, Quaternion.identity);
         vfx.transform.localScale = new Vector3(Mathf.Abs(dashVfxScale.x), dashVfxScale.y, dashVfxScale.z);
-        ApplyVfxFlipAndPlay(vfx, false);
+        int baseDir = dashVfxBaseFacingDir >= 0 ? 1 : -1;
+        bool flipX = facingDir != baseDir;
+        ApplyVfxFlipAndPlay(vfx, flipX);
+        if (dashVfxForceWorldSimulation)
+        {
+            foreach (var ps in vfx.GetComponentsInChildren<ParticleSystem>())
+            {
+                var main = ps.main;
+                main.simulationSpace = ParticleSystemSimulationSpace.World;
+            }
+        }
+        if (dashVfxForceSorting)
+        {
+            foreach (var spriteRenderer in vfx.GetComponentsInChildren<SpriteRenderer>())
+            {
+                spriteRenderer.sortingLayerName = dashVfxSortingLayer;
+                spriteRenderer.sortingOrder = dashVfxSortingOrder;
+            }
+        }
         Destroy(vfx, dashVfxLifetime);
     }
 
@@ -242,14 +290,28 @@ public class Entity_VFX : MonoBehaviour
 
     private IEnumerator OnDamageVfxco()
     {
-        if (onDamageMaterial != null)
-        {
+        if (sr != null && onDamageMaterial != null)
             sr.material = onDamageMaterial;
-        }
 
         yield return new WaitForSeconds(onDamageVfxDuration);
-        
-        sr.material = originalMaterial;
+
+        if (sr != null)
+            sr.material = originalMaterial;
+    }
+
+    public bool ShouldUseLegacyAttack(int comboIndex)
+    {
+        return GetAttackVfxPrefab(comboIndex, out _, out _) == null;
+    }
+
+    public bool ShouldUseLegacyBaldo()
+    {
+        return baldoVfxPrefab == null;
+    }
+
+    public bool ShouldUseLegacyShieldHit()
+    {
+        return shieldHitVfxPrefab == null && onDamageMaterial == null;
     }
 
 }
