@@ -2,7 +2,6 @@
 using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
-using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
@@ -76,12 +75,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float explosionFragmentForce = 150f;
     [SerializeField] private float explosionFragmentLifetime = 1.5f; // Default from SimpleExplosion
     [SerializeField] private float explosionFragmentFadeDelay = 1.0f; // Default from SimpleExplosion
-
-    [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = true;
-    [SerializeField] private bool allowLegacyFallback = false;
-    [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
-    [SerializeField] private MMF_Player deathFeedbacks;
+    [SerializeField] private GameObject onHitVfxPrefab;
+    [SerializeField] private Vector3 onHitVfxOffset;
+    [SerializeField] private float onHitVfxLifetime = 0.5f;
+    [SerializeField] private GameObject onDeathVfxPrefab;
+    [SerializeField] private Vector3 onDeathVfxOffset;
+    [SerializeField] private float onDeathVfxLifetime = 1.5f;
 
     private Transform playerTransform;
     private Rigidbody2D playerRb;
@@ -377,6 +376,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         health -= damage;
         Debug.Log($"[Drone Damage] Drone took {damage} damage from {damageSource.name}. Remaining HP: {health}");
+        SpawnVfx(onHitVfxPrefab, onHitVfxOffset, onHitVfxLifetime);
 
         if (health <= 0)
         {
@@ -388,31 +388,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private void Die()
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
-<<<<<<< HEAD
         SpawnVfx(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime);
-        if (deathFeedbacks != null)
-=======
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
->>>>>>> parent of 7afc625e (vfx 업데이트)
         {
-            deathFeedbacks.PlayFeedbacks();
-        }
-        else if (enforceFeel)
-        {
-            Debug.LogError($"{name} LatencyDroneWeak: Missing Death Feedbacks (MMF_Player).");
-            if (!allowLegacyFallback)
-                return;
-        }
-
-        bool skipLegacyImpulse = deathFeedbacks != null && replaceLegacyDeathImpulseWhenFeedbacksPresent;
-        if (!skipLegacyImpulse)
-        {
-            CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
-            if (impulseSource != null)
-            {
-                impulseSource.GenerateImpulse();
-            }
+            impulseSource.GenerateImpulse();
         }
         // ?뚭눼 ???ъ슫???ъ깮 (?덈줈??肄붾（???ъ슜)
         if (deathSound != null)
@@ -428,17 +408,20 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         StopAllCoroutines();
 
         // --- Explosion Effect ---
-        GameObject explosionEffect = new GameObject("DroneExplosionEffect");
-        explosionEffect.transform.position = transform.position;
-        SimpleExplosion explosion = explosionEffect.AddComponent<SimpleExplosion>();
-        if (explosion != null)
+        if (onDeathVfxPrefab == null)
         {
-            explosion.fragmentPrefab = this.fragmentPrefab;
-            explosion.fragmentCount = explosionFragmentCount;
-            explosion.explosionForce = explosionFragmentForce;
-            explosion.fragmentColor = Color.grey;
-            explosion.fragmentLifetime = explosionFragmentLifetime;
-            explosion.fragmentFadeDelay = explosionFragmentFadeDelay;
+            GameObject explosionEffect = new GameObject("DroneExplosionEffect");
+            explosionEffect.transform.position = transform.position;
+            SimpleExplosion explosion = explosionEffect.AddComponent<SimpleExplosion>();
+            if (explosion != null)
+            {
+                explosion.fragmentPrefab = this.fragmentPrefab;
+                explosion.fragmentCount = explosionFragmentCount;
+                explosion.explosionForce = explosionFragmentForce;
+                explosion.fragmentColor = Color.grey;
+                explosion.fragmentLifetime = explosionFragmentLifetime;
+                explosion.fragmentFadeDelay = explosionFragmentFadeDelay;
+            }
         }
 
         // 利됱떆 ?쒕줎??蹂댁씠吏 ?딄쾶 ?섍퀬 異⑸룎??鍮꾪솢?깊솕
@@ -477,6 +460,16 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         // 4. ?ъ슫???대┰??湲몄씠留뚰겮 湲곕떎由????꾩떆 ?ㅻ툕?앺듃 ?뚭눼
         yield return new WaitForSeconds(clip.length);
         Destroy(audioObject);
+    }
+
+    private void SpawnVfx(GameObject prefab, Vector3 offset, float lifetime)
+    {
+        if (prefab == null)
+            return;
+
+        GameObject vfx = Instantiate(prefab, transform.position + offset, Quaternion.identity);
+        if (lifetime > 0f)
+            Destroy(vfx, lifetime);
     }
 
     // ?덈줈??肄붾（??異붽?
