@@ -27,6 +27,11 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private float attackVfxLifetime = 0.5f;
     [SerializeField] private Transform attackVfxAnchor;
 
+    [Header("Legacy Feel (Camera Shake)")]
+    [SerializeField] private bool useLegacyAttackShake = true;
+    [SerializeField] private bool useLegacyBaldoShake = true;
+    [SerializeField] private bool useLegacyShieldHitShake = true;
+
     [Header("Baldo VFX")]
     [SerializeField] private GameObject baldoVfxPrefab;
     [SerializeField] private Vector3 baldoVfxOffset;
@@ -77,6 +82,14 @@ public class Entity_VFX : MonoBehaviour
         Destroy(newAttackVfx, attackVfxLifetime);
     }
 
+    public bool ShouldUseLegacyAttack(int comboIndex)
+    {
+        if (useLegacyAttackShake)
+            return true;
+
+        return GetAttackVfxPrefab(comboIndex, out _) == null;
+    }
+
     private GameObject GetAttackVfxPrefab(int comboIndex, out bool flipWithFacing)
     {
         switch (comboIndex)
@@ -112,6 +125,14 @@ public class Entity_VFX : MonoBehaviour
         Destroy(newBaldoVfx, baldoVfxLifetime);
     }
 
+    public bool ShouldUseLegacyBaldo()
+    {
+        if (useLegacyBaldoShake)
+            return true;
+
+        return baldoVfxPrefab == null;
+    }
+
     private IEnumerator OnDamageVfxco()
     {
         if (onDamageMaterial != null)
@@ -122,6 +143,14 @@ public class Entity_VFX : MonoBehaviour
         yield return new WaitForSeconds(onDamageVfxDuration);
         
         sr.material = originalMaterial;
+    }
+
+    public bool ShouldUseLegacyShieldHit()
+    {
+        if (useLegacyShieldHitShake)
+            return true;
+
+        return onDamageMaterial == null;
     }
 
 }

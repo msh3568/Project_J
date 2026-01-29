@@ -18,12 +18,19 @@ public class PotCannon : Entity_Health
     [SerializeField] private float explosionFragmentForce = 150f;
 
     [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = true;
-    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool enforceFeel = false;
+    [SerializeField] private bool allowLegacyFallback = true;
     [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
     [SerializeField] private MMF_Player deathFeedbacks;
 
     private float nextFireTime;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        enforceFeel = false;
+        allowLegacyFallback = true;
+    }
 
     private void Update()
     {

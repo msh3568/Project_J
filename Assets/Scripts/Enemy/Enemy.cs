@@ -48,8 +48,8 @@ public class Enemy : Entity
     [SerializeField] private bool startFacingLeft;
 
     [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = true;
-    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool enforceFeel = false;
+    [SerializeField] private bool allowLegacyFallback = true;
     [SerializeField] private bool replaceLegacyDeathImpulseWhenFeedbacksPresent = true;
     [SerializeField] private MMF_Player deathFeedbacks;
 
@@ -147,6 +147,8 @@ public class Enemy : Entity
         base.Awake();
 
         audioSource = GetComponent<AudioSource>(); // Initialize AudioSource
+        enforceFeel = false;
+        allowLegacyFallback = true;
 
         idleState = new Enemy_IdleState(this, stateMachine, "Idle");
         moveState = new Enemy_MoveState(this, stateMachine, "Move");

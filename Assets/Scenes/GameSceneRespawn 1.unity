@@ -83676,67 +83676,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Entity_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
-  onDamageVfxPrefab: {fileID: 0}
-  onDamageVfxOffset: {x: 0, y: 0, z: 0}
-  onDamageVfxScale: {x: 1, y: 1, z: 1}
-  onDamageVfxLifetime: 0.5
-  onDamageVfxFollowOwner: 1
   hitVfx: {fileID: 4748681987041982144, guid: 163bff84d78fe024c8bbf143ff97a9fa, type: 3}
-  hitVfxOffset: {x: 0, y: 0, z: 0}
-  hitVfxScale: {x: 1.5, y: 1.5, z: 1.5}
-  hitVfxLifetime: 0.5
-  flipHitVfxWithTargetFacing: 0
-  hitVfxFollowTarget: 0
-  shieldHitVfxPrefab: {fileID: 4748681987041982144, guid: 163bff84d78fe024c8bbf143ff97a9fa, type: 3}
-  shieldHitVfxOffset: {x: 0, y: 0, z: 0}
-  shieldHitVfxScale: {x: 1.5, y: 1.5, z: 1.5}
-  shieldHitVfxLifetime: 0.5
-  shieldHitVfxFollowOwner: 1
-  lastShieldHitVfxPrefab: {fileID: 4748681987041982144, guid: 06a1ca87111b21c44ad60f463f7f08a6, type: 3}
-  lastShieldHitVfxOffset: {x: 0, y: 0, z: 0}
-  lastShieldHitVfxScale: {x: 1.5, y: 1.5, z: 1.5}
-  lastShieldHitVfxLifetime: 0.6
-  lastShieldHitVfxFollowOwner: 1
   attackVfxPrefab1: {fileID: 4748681987041982144, guid: 4afc1f581569bae49915ddc5bc0ac7f3, type: 3}
   attackVfxPrefab2: {fileID: 4748681987041982144, guid: 949a6e7271e7cdc4e96b9febea605dfb, type: 3}
   attackVfxPrefab3: {fileID: 4748681987041982144, guid: cdfb72b2c5ee0044cafe686cb82c58aa, type: 3}
   flipAttackVfx1WithFacing: 1
   flipAttackVfx2WithFacing: 1
   flipAttackVfx3WithFacing: 1
-  invertAttackVfx1: 0
-  invertAttackVfx2: 0
-  invertAttackVfx3: 1
   attackVfxOffset: {x: 1.49, y: 0, z: 0}
   attackVfxScale: {x: 2, y: 2, z: 2}
   attackVfxLifetime: 0.5
   attackVfxAnchor: {fileID: 0}
+  useLegacyAttackShake: 1
+  useLegacyBaldoShake: 1
+  useLegacyShieldHitShake: 1
   baldoVfxPrefab: {fileID: 4748681987041982144, guid: 63b079e85f5e5b547a089f0df07e663a, type: 3}
   baldoVfxOffset: {x: 3, y: 0, z: 0}
   baldoVfxScale: {x: 1.8, y: 1.8, z: 1.8}
   baldoVfxLifetime: 0.8
   flipBaldoVfxWithFacing: 1
-  invertBaldoVfx: 0
-  spawnBaldoVfxOnBothSides: 1
-  mirrorBaldoVfxFlip: 1
   baldoVfxAnchor: {fileID: 0}
-  dashVfxPrefab: {fileID: 4748681987041982144, guid: 782ca1503d60fce4bb3eb241b31225e5, type: 3}
-  dashVfxOffset: {x: 0, y: 0, z: 0}
-  dashVfxScale: {x: 1, y: 1, z: 1}
-  dashVfxLifetime: 0.5
-  dashVfxFollowOwner: 0
-  enforceFeel: 1
-  allowLegacyFallback: 0
-  replaceLegacyVfxWhenFeedbacksPresent: 1
-  onDamageFeedbacks: {fileID: 1978560252}
-  onDamagePrefabFeedbacks: {fileID: 276316793}
-  hitFeedbacks: {fileID: 0}
-  shieldHitFeedbacks: {fileID: 1017954136}
-  lastShieldHitFeedbacks: {fileID: 1563763723}
-  attackFeedback1: {fileID: 0}
-  attackFeedback2: {fileID: 0}
-  attackFeedback3: {fileID: 0}
-  baldoFeedbacks: {fileID: 0}
-  dashFeedbacks: {fileID: 0}
 --- !u!82 &2049881637
 AudioSource:
   m_ObjectHideFlags: 0
@@ -83987,7 +83946,6 @@ MonoBehaviour:
   currentShield: 0
   regenerationTime: 10
   regenerationDelayAfterHit: 3
-  shieldHitInvulnerability: 0.4
   firewallBlackoutDuration: 3
   firewallBlackoutColor: {r: 0, g: 0, b: 0, a: 1}
   freezePlayerDuringRespawn: 1

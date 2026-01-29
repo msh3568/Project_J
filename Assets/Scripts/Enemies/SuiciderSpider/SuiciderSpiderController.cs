@@ -64,8 +64,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Feel Feedbacks")]
-    [SerializeField] private bool enforceFeel = true;
-    [SerializeField] private bool allowLegacyFallback = false;
+    [SerializeField] private bool enforceFeel = false;
+    [SerializeField] private bool allowLegacyFallback = true;
     [SerializeField] private bool replaceLegacyExplosionImpulseWhenFeedbacksPresent = true;
     [SerializeField] private MMF_Player explosionFeedbacks;
 
@@ -141,6 +141,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
     private void Awake()
     {
+        enforceFeel = false;
+        allowLegacyFallback = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>(true);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
