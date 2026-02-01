@@ -83,6 +83,7 @@ public class SpikeBall : MonoBehaviour, IParryable
                     {
                         Debug.Log($"[SpikeBall Active] Parried projectile hitting '{hit.name}'. Dealing {parriedDamage} damage from source '{damageSource.name}'.");
                         damageable.TakeDamage(parriedDamage, damageSource);
+                        GameManager.Instance?.RequestHitSlowMo();
                         
                         // Disable own collider to prevent hitting multiple times
                         GetComponent<Collider2D>().enabled = false;

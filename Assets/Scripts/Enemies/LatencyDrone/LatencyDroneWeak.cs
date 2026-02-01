@@ -47,6 +47,24 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float maxPredictionTime = 1.0f;
     [SerializeField] private float minLeadSpeed = 0.1f;
 
+    [Header("Attack Telegraph")]
+    [SerializeField] private LineRenderer telegraphLine;
+    [SerializeField] private float telegraphDuration = 0.35f;
+    [SerializeField] private float telegraphDelayAfterFire = 0.7f;
+    [SerializeField] private float telegraphMaxDistance = 20f;
+    [SerializeField] private float telegraphWidth = 0.06f;
+    [SerializeField] private LayerMask telegraphHitMask;
+    [SerializeField] private Color telegraphColor = new Color(1f, 0.15f, 0.15f, 0.9f);
+    [SerializeField] private AnimationCurve telegraphPulse = AnimationCurve.EaseInOut(0f, 0.5f, 1f, 1f);
+    [SerializeField] private Color telegraphColorRed = new Color(1f, 0.15f, 0.15f, 0.9f);
+    [SerializeField] private Color telegraphColorWhite = new Color(1f, 1f, 1f, 0.9f);
+    [SerializeField] private Color telegraphColorBlue = new Color(0.25f, 0.5f, 1f, 0.9f);
+    [SerializeField] private float telegraphFlashMinHz = 2f;
+    [SerializeField] private float telegraphFlashMaxHz = 12f;
+    [SerializeField] private bool lockAimDuringTelegraph = true;
+    [SerializeField] private bool lockAimDuringBurst = true;
+    [SerializeField] private bool holdPositionWhenAimLocked = true;
+
     [Header("Burst Fire Settings")]
     [SerializeField] private int capsulesPerBurst = 3; // ??踰덉뿉 諛쒖궗??罹≪뒓 ??
     [SerializeField] private float timeBetweenCapsules = 0.1f; // ?곕컻 ??罹≪뒓??媛꾧꺽
@@ -68,6 +86,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private AudioMixerGroup sfxMixerGroup; // SFX 誘뱀꽌 洹몃９
 
     private AudioSource audioSource;                 // ?ъ슫???ъ깮???꾪븳 AudioSource
+    private Coroutine telegraphCoroutine;
+    private float nextTelegraphTime = Mathf.Infinity;
+    private Vector2 lockedAimDirection;
+    private bool hasLockedAim;
 
     [Header("Destruction Settings")]
     [SerializeField] private GameObject fragmentPrefab; // This prefab should have Fragment.cs attached
@@ -153,6 +175,28 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         minHorizontalDistance = Mathf.Max(minHorizontalDistance, stopDistance);
         initialHealth = health;
 
+        if (telegraphLine == null)
+        {
+            telegraphLine = gameObject.GetComponent<LineRenderer>();
+        }
+        if (telegraphLine == null)
+        {
+            telegraphLine = gameObject.AddComponent<LineRenderer>();
+            telegraphLine.useWorldSpace = true;
+            telegraphLine.positionCount = 2;
+            telegraphLine.startWidth = telegraphWidth;
+            telegraphLine.endWidth = telegraphWidth;
+            telegraphLine.startColor = telegraphColor;
+            telegraphLine.endColor = telegraphColor;
+            telegraphLine.enabled = false;
+        }
+        if (telegraphLine != null && telegraphLine.sharedMaterial == null)
+        {
+            Shader lineShader = Shader.Find("Sprites/Default");
+            if (lineShader != null)
+                telegraphLine.material = new Material(lineShader);
+        }
+
         // Ensure SimpleExplosion script is present in project for destruction to work
         // It's not added here, but referenced later.
         // It expects a fragmentPrefab which itself needs Fragment.cs
@@ -177,6 +221,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         hoverBaseY = transform.position.y; // Initialize hoverBaseY
         hoverOffset = Random.Range(0f, 2f * Mathf.PI); // Randomize hover start for asynchronous movement
         nextFireTime = Time.time + fireCooldown; // Initial delay before first shot
+        nextTelegraphTime = Time.time + telegraphDelayAfterFire;
         initialPatrolPosition = transform.position; // Store the initial position for patrolling
         lastPlayerPosition = playerTransform.position;
         hasLastPlayerPosition = true;
@@ -198,9 +243,15 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         // Player Detection and Movement
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        bool isTelegraphing = telegraphCoroutine != null;
+        bool isAimLocked = hasLockedAim && (lockAimDuringTelegraph && isTelegraphing || lockAimDuringBurst && isFiringBurst);
 
         if (distanceToPlayer < detectionRange && !isRetreating) // ?뚮젅?댁뼱媛 媛먯? 踰붿쐞 ?댁뿉 ?덇퀬, ?ㅻ줈 臾쇰윭?섎뒗 以묒씠 ?꾨땺 ??
         {
+            if (isAimLocked && holdPositionWhenAimLocked)
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
             Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
             Vector2 currentVelocity = Vector2.zero; // ?덈줈???띾룄瑜?怨꾩궛?섏뿬 ?ш린?????
 
@@ -233,7 +284,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
                 StartCoroutine(ApplyRetreat(Mathf.Sign(xDifference) * -1)); // ?뚮젅?댁뼱 諛섎? 諛⑺뼢?쇰줈 諛?대깂
             }
 
-            if (!isRetreating)
+            if (!isRetreating && !(isAimLocked && holdPositionWhenAimLocked))
             {
                 if (absoluteXDistance > maxFiringDistance)
                 {
@@ -259,13 +310,16 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             float currentY = transform.position.y;
             float yDifference = targetY - currentY;
 
-            if (Mathf.Abs(yDifference) > 0.1f) // 誘몄꽭??李⑥씠??臾댁떆?섍퀬 Y異??대룞
+            if (!isAimLocked || !holdPositionWhenAimLocked)
             {
-                currentVelocity.y = Mathf.Sign(yDifference) * verticalAdjustSpeed;
-            }
-            else
-            {
-                currentVelocity.y = 0; // 紐⑺몴 Y ?꾩튂???꾨떖?섎㈃ Y異??대룞 ?뺤?
+                if (Mathf.Abs(yDifference) > 0.1f) // 誘몄꽭??李⑥씠??臾댁떆?섍퀬 Y異??대룞
+                {
+                    currentVelocity.y = Mathf.Sign(yDifference) * verticalAdjustSpeed;
+                }
+                else
+                {
+                    currentVelocity.y = 0; // 紐⑺몴 Y ?꾩튂???꾨떖?섎㈃ Y異??대룞 ?뺤?
+                }
             }
 
             Vector2 desiredVelocity = currentVelocity;
@@ -291,6 +345,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
                     StartCoroutine(FireBurstCoroutine());
                 }
             }
+            else if (!isFiringBurst && Time.time >= nextTelegraphTime && Time.time < nextFireTime)
+            {
+                if (telegraphCoroutine == null && absoluteXDistance >= idealFiringDistance && absoluteXDistance <= maxFiringDistance)
+                {
+                    telegraphCoroutine = StartCoroutine(ShowTelegraphCoroutine(Time.time, nextFireTime));
+                }
+            }
         }
         else if (isRetreating) // ?ㅻ줈 臾쇰윭?섎뒗 以묒씠?쇰㈃ ?ㅻⅨ ?됰룞???섏? ?딆쓬
         {
@@ -298,6 +359,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
         else // Player out of detection range
         {
+            HideTelegraph();
             // ?덈줈???쒖같(Patrol) 濡쒖쭅
             // ?꾩옱 ?꾩튂? 珥덇린 ?쒖같 ?꾩튂瑜?湲곗??쇰줈 ?대룞 諛⑺뼢 寃곗젙
             if (transform.position.x >= initialPatrolPosition.x + patrolMoveRangeX)
@@ -405,6 +467,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         rb.bodyType = RigidbodyType2D.Kinematic; // 臾쇰━???곹샇?묒슜???꾩쟾??硫덉땄
         enabled = false; 
         isFiringBurst = false;
+        HideTelegraph();
         StopAllCoroutines();
 
         // --- Explosion Effect ---
@@ -491,6 +554,14 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     }
 
     private Vector2 GetAimDirection()
+    {
+        if (hasLockedAim && (lockAimDuringTelegraph || lockAimDuringBurst))
+            return lockedAimDirection;
+
+        return ComputeAimDirection();
+    }
+
+    private Vector2 ComputeAimDirection()
     {
         Vector2 origin = firePoint != null ? (Vector2)firePoint.position : (Vector2)transform.position;
         Vector2 targetPos = playerTransform.position;
@@ -582,16 +653,92 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private IEnumerator FireBurstCoroutine()
     {
         isFiringBurst = true;
+        HideTelegraph();
+        if (lockAimDuringBurst)
+        {
+            if (!hasLockedAim)
+                lockedAimDirection = ComputeAimDirection();
+            hasLockedAim = true;
+        }
         for (int i = 0; i < capsulesPerBurst; i++)
         {
             if (isDead) break;
             if (playerTransform == null) break; // ?뚮젅?댁뼱媛 ?щ씪議뚯쑝硫?諛쒖궗 以묒?
-            Vector2 direction = GetAimDirection();
+            Vector2 direction = lockAimDuringBurst ? lockedAimDirection : GetAimDirection();
             FireProjectile(direction); // ?ㅼ떆 怨꾩궛??諛⑺뼢?쇰줈 諛쒖궗
             yield return new WaitForSeconds(timeBetweenCapsules);
         }
         isFiringBurst = false;
         nextFireTime = Time.time + burstCooldown; // ?곕컻 醫낅즺 ??荑⑤떎???곸슜
+        nextTelegraphTime = Time.time + telegraphDelayAfterFire;
+        hasLockedAim = false;
+    }
+
+    private IEnumerator ShowTelegraphCoroutine(float startTime, float endTime)
+    {
+        if (telegraphLine == null)
+        {
+            telegraphCoroutine = null;
+            yield break;
+        }
+
+        telegraphLine.enabled = true;
+        telegraphLine.startColor = telegraphColorRed;
+        telegraphLine.endColor = telegraphColorRed;
+        if (lockAimDuringTelegraph)
+        {
+            lockedAimDirection = ComputeAimDirection();
+            hasLockedAim = true;
+        }
+        float timer = 0f;
+        float flashPhase = 0f;
+        while (Time.time < endTime)
+        {
+            if (isDead || playerTransform == null)
+                break;
+
+            Vector2 direction = GetAimDirection();
+            Vector3 origin = firePoint != null ? firePoint.position : transform.position;
+            Vector3 end = origin + (Vector3)direction.normalized * telegraphMaxDistance;
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, telegraphMaxDistance, telegraphHitMask);
+            if (hit.collider != null)
+                end = hit.point;
+            telegraphLine.SetPosition(0, origin);
+            telegraphLine.SetPosition(1, end);
+
+            float t = Mathf.Clamp01(Mathf.InverseLerp(startTime, endTime, Time.time));
+            float width = telegraphWidth * Mathf.Clamp01(telegraphPulse.Evaluate(t));
+            telegraphLine.startWidth = width;
+            telegraphLine.endWidth = width;
+
+            float flashHz = Mathf.Lerp(telegraphFlashMinHz, telegraphFlashMaxHz, t);
+            flashPhase += Time.deltaTime * flashHz;
+            int colorIndex = Mathf.FloorToInt(flashPhase) % 3;
+            Color nextColor = telegraphColorRed;
+            if (colorIndex == 1) nextColor = telegraphColorWhite;
+            else if (colorIndex == 2) nextColor = telegraphColorBlue;
+            telegraphLine.startColor = nextColor;
+            telegraphLine.endColor = nextColor;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        telegraphLine.enabled = false;
+        if (!isFiringBurst && lockAimDuringTelegraph)
+            hasLockedAim = false;
+        telegraphCoroutine = null;
+    }
+
+    private void HideTelegraph()
+    {
+        if (telegraphCoroutine != null)
+        {
+            StopCoroutine(telegraphCoroutine);
+            telegraphCoroutine = null;
+        }
+        if (telegraphLine != null)
+            telegraphLine.enabled = false;
+        hasLockedAim = false;
     }
     
     public void OnCheckpointRespawn()
@@ -600,6 +747,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         isDead = false;
         enabled = true;
         isFiringBurst = false;
+        HideTelegraph();
         StopAllCoroutines();
 
         if (rb != null)

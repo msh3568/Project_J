@@ -224,9 +224,47 @@ MonoBehaviour:
   usePredictiveAim: 1
   maxPredictionTime: 1
   minLeadSpeed: 0.1
+  telegraphLine: {fileID: 0}
+  telegraphDuration: 0.35
+  telegraphDelayAfterFire: 0.7
+  telegraphMaxDistance: 20
+  telegraphWidth: 0.5
+  telegraphHitMask:
+    serializedVersion: 2
+    m_Bits: 16448
+  telegraphColor: {r: 1, g: 0.15, b: 0.15, a: 0.9}
+  telegraphPulse:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  telegraphColorRed: {r: 1, g: 0.15, b: 0.15, a: 0.9}
+  telegraphColorWhite: {r: 1, g: 1, b: 1, a: 0.9}
+  telegraphColorBlue: {r: 0.25, g: 0.5, b: 1, a: 0.9}
+  telegraphFlashMinHz: 2
+  telegraphFlashMaxHz: 12
   capsulesPerBurst: 4
   timeBetweenCapsules: 0.1
-  burstCooldown: 2
+  burstCooldown: 3
   preFireSound: {fileID: 8300000, guid: 411f5cffaa06fe64aaa30ab6d282e665, type: 3}
   fireSound: {fileID: 8300000, guid: 10984a48d8788034ea383e1324b29197, type: 3}
   idleSound: {fileID: 8300000, guid: c3284d61b19729745993afb625428561, type: 3}
@@ -241,6 +279,12 @@ MonoBehaviour:
   explosionFragmentForce: 150
   explosionFragmentLifetime: 1.5
   explosionFragmentFadeDelay: 1
+  onHitVfxPrefab: {fileID: 0}
+  onHitVfxOffset: {x: 0, y: 0, z: 0}
+  onHitVfxLifetime: 0.5
+  onDeathVfxPrefab: {fileID: 0}
+  onDeathVfxOffset: {x: 0, y: 0, z: 0}
+  onDeathVfxLifetime: 1.5
   patrolMoveRangeX: 4
   patrolSpeed: 5
   minHorizontalDistance: 3

@@ -128,6 +128,7 @@ public class Player_Health : Entity_Health
         {
             currentShield--;
             InvokeOnHealthChanged(currentShield, maxShield);
+            GameManager.Instance?.RequestHitSlowMo();
 
             if (spriteRenderer != null)
             {

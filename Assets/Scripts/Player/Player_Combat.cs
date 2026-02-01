@@ -80,6 +80,14 @@ public class Player_Combat : Entity_Combat
 
     public float GetCounterRecoveryDuration() => counterRecovery;
 
+    protected override void OnSuccessfulHit(Collider2D target, IDamageable damagable)
+    {
+        if (target != null && target.CompareTag("Player"))
+            return;
+
+        GameManager.Instance?.RequestHitSlowMo();
+    }
+
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

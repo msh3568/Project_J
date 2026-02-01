@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviour
 
     private Coroutine slowMoCoroutine;
 
+    [Header("Hit Slow Motion")]
+    [SerializeField] private bool enableHitSlowMo = true;
+    [SerializeField, Range(0.05f, 1f)] private float hitSlowScale = 0.2f;
+    [SerializeField] private float hitSlowDuration = 0.1f;
+
     public void RequestSlowMotion(float scale, float duration)
     {
         if (slowMoCoroutine != null)
@@ -41,6 +46,13 @@ public class GameManager : MonoBehaviour
             StopCoroutine(slowMoCoroutine);
         }
         slowMoCoroutine = StartCoroutine(SlowMotionCoroutine(scale, duration));
+    }
+
+    public void RequestHitSlowMo()
+    {
+        if (!enableHitSlowMo)
+            return;
+        RequestSlowMotion(hitSlowScale, hitSlowDuration);
     }
 
     private IEnumerator SlowMotionCoroutine(float scale, float duration)

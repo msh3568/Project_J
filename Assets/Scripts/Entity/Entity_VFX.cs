@@ -16,6 +16,9 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private Vector3 onDamageVfxScale = Vector3.one;
     [SerializeField] private float onDamageVfxLifetime = 0.5f;
     [SerializeField] private bool onDamageVfxFollowOwner = true;
+    [SerializeField] private bool overrideOnDamageVfxSorting = false;
+    [SerializeField] private string onDamageVfxSortingLayer = "Default";
+    [SerializeField] private int onDamageVfxSortingOrder = 0;
 
     [Header("On Doing Damage VFX")]
     [SerializeField] private GameObject hitVfx;
@@ -123,14 +126,44 @@ public class Entity_VFX : MonoBehaviour
     public void PlayOnDamagePrefabVfx()
     {
         if (onDamageVfxPrefab == null)
+        {
+            Debug.LogWarning($"[VFX] {name} onDamageVfxPrefab is null, skipping.", this);
             return;
+        }
+
+        string sortingLayer = onDamageVfxSortingLayer;
+        int sortingOrder = onDamageVfxSortingOrder;
+        if (!overrideOnDamageVfxSorting && sr != null)
+        {
+            sortingLayer = sr.sortingLayerName;
+            sortingOrder = sr.sortingOrder + 1;
+        }
 
         Vector3 spawnPosition = transform.position + onDamageVfxOffset;
         Transform parent = onDamageVfxFollowOwner ? transform : null;
         GameObject vfx = Instantiate(onDamageVfxPrefab, spawnPosition, Quaternion.identity, parent);
         vfx.transform.localScale = new Vector3(Mathf.Abs(onDamageVfxScale.x), onDamageVfxScale.y, onDamageVfxScale.z);
+        foreach (var psRenderer in vfx.GetComponentsInChildren<ParticleSystemRenderer>(true))
+        {
+            psRenderer.enabled = true;
+            if (psRenderer.sharedMaterial == null)
+            {
+                Shader defaultShader = Shader.Find("Sprites/Default");
+                if (defaultShader != null)
+                    psRenderer.material = new Material(defaultShader);
+            }
+            psRenderer.sortingLayerName = sortingLayer;
+            psRenderer.sortingOrder = sortingOrder;
+        }
+        foreach (var spriteRenderer in vfx.GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.sortingLayerName = sortingLayer;
+            spriteRenderer.sortingOrder = sortingOrder;
+        }
         ApplyVfxFlipAndPlay(vfx, false);
         Destroy(vfx, onDamageVfxLifetime);
+        Debug.Log($"[VFX] {name} spawned onDamageVfxPrefab '{onDamageVfxPrefab.name}' at {spawnPosition}.", this);
     }
 
     public void PlayLastShieldHitVfx()

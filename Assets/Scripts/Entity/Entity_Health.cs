@@ -52,6 +52,16 @@ public class Entity_Health : MonoBehaviour, IDamageable
 
         ReduceHp(damage);
 
+        // Always play hit VFX, even if this hit was lethal.
+        if (entityVfx != null)
+        {
+            entityVfx?.PlayOnDamageVfx();
+        }
+        else
+        {
+            Debug.LogWarning($"[VFX] {gameObject.name} has no Entity_VFX, cannot play on-damage VFX.", this);
+        }
+
         // If damage was lethal, Die() is called inside ReduceHp and isDead becomes true.
         // We must not apply knockback to a dead entity.
         if (isDead)
@@ -66,10 +76,7 @@ public class Entity_Health : MonoBehaviour, IDamageable
         Debug.Log($"[TakeDamage] Applying knockback to {gameObject.name}.");
         entity?.ReciveKnockback(knockback, duration);
 
-        if (entityVfx != null)
-        {
-            entityVfx?.PlayOnDamageVfx();
-        }
+        // VFX already played above.
     }
 
 

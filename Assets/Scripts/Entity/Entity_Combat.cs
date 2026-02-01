@@ -16,7 +16,7 @@ public class Entity_Combat : MonoBehaviour
     }
 
 
-    public void PerformAttack()
+    public virtual void PerformAttack()
     {
         foreach (var target in GetDetectedColliders())
         {
@@ -29,8 +29,14 @@ public class Entity_Combat : MonoBehaviour
             
             if (vfx != null)
                 vfx.CreateOnHitVFX(target.transform);
+
+            OnSuccessfulHit(target, damagable);
         }
         
+    }
+
+    protected virtual void OnSuccessfulHit(Collider2D target, IDamageable damagable)
+    {
     }
 
 

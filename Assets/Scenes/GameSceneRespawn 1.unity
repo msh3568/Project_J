@@ -6226,11 +6226,11 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 5.01, z: 0}
-  Damping: {x: 1, y: 1, z: 1}
+  Damping: {x: 0.4, y: 0.4, z: 0.4}
   Lookahead:
-    Enabled: 0
-    Time: 0
-    Smoothing: 0
+    Enabled: 1
+    Time: 0.15
+    Smoothing: 5
     IgnoreY: 0
 --- !u!114 &751552179
 MonoBehaviour:
@@ -82849,7 +82849,7 @@ MonoBehaviour:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}
   - {x: 2.75, y: 1.75}
-  attackVelocityDuration: 0.1
+  attackVelocityDuration: 0.2
   comboResetTime: 1
   attackShakeForce: 0.6
   attackFinalShakeForce: 1.2
@@ -83154,8 +83154,8 @@ MonoBehaviour:
   attackVfxPrefab2: {fileID: 4748681987041982144, guid: 949a6e7271e7cdc4e96b9febea605dfb, type: 3}
   attackVfxPrefab3: {fileID: 4748681987041982144, guid: cdfb72b2c5ee0044cafe686cb82c58aa, type: 3}
   flipAttackVfx1WithFacing: 1
-  flipAttackVfx2WithFacing: 0
-  flipAttackVfx3WithFacing: 0
+  flipAttackVfx2WithFacing: 1
+  flipAttackVfx3WithFacing: 1
   invertAttackVfx1: 0
   invertAttackVfx2: 0
   invertAttackVfx3: 1
@@ -83167,7 +83167,7 @@ MonoBehaviour:
   baldoVfxOffset: {x: 3, y: 0, z: 0}
   baldoVfxScale: {x: 1.8, y: 1.8, z: 1.8}
   baldoVfxLifetime: 0.8
-  flipBaldoVfxWithFacing: 1
+  flipBaldoVfxWithFacing: 0
   invertBaldoVfx: 0
   spawnBaldoVfxOnBothSides: 1
   mirrorBaldoVfxFlip: 1

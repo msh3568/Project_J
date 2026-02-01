@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections; // 肄붾（??IEnumerator)???ъ슜?섍린 ?꾪빐 異붽?
 
 public class PlayerController1 : MonoBehaviour
@@ -44,7 +43,6 @@ public class PlayerController1 : MonoBehaviour
     private void OnDisable()
     {
         // 寃뚯엫 ?ㅻ툕?앺듃媛 鍮꾪솢?깊솕?????뺤떎?섍쾶 紐⑤뱺 ?≪뀡??鍮꾪솢?깊솕?⑸땲?ㅳ?
-        StopRumble(); // 吏꾨룞 硫덉땄
         controls.Player.Disable();
     }
 
@@ -64,7 +62,6 @@ public class PlayerController1 : MonoBehaviour
     {
         isChargingJump = true;
         jumpChargeTimer = 0f;
-        TriggerRumble(0.2f, 0.2f, 0.1f); // ?먰봽 ?쒖옉 ??吏㏃? 吏꾨룞 異붽?
     }
 
     private void PerformChargedJump()
@@ -89,7 +86,6 @@ public class PlayerController1 : MonoBehaviour
         // low: ?二쇳뙆 紐⑦꽣 ?멸린 (0.0 ~ 1.0)
         // high: 怨좎＜??紐⑦꽣 ?멸린 (0.0 ~ 1.0) - ??媛믩뱾??諛붽씀硫?"吏꾨룞 ?멸린"媛 議곗젅?⑸땲??
         // duration: 吏꾨룞 吏???쒓컙 (珥??⑥쐞) - ??媛믪쓣 諛붽씀硫?"吏꾨룞 ?쒓컙"??議곗젅?⑸땲??
-        TriggerRumble(0.3f, 0.3f, 0.1f);
     }
 
     private void Baldo()
@@ -98,7 +94,6 @@ public class PlayerController1 : MonoBehaviour
         // (諛쒕룄 以鍮?濡쒖쭅)
 
         // "?좊뵜?덉씠 ??媛뺥븳 吏꾨룞"??肄붾（?댁쑝濡?泥섎━
-        StartCoroutine(BaldoRumbleRoutine());
     }
 
     private IEnumerator BaldoRumbleRoutine()
@@ -107,7 +102,7 @@ public class PlayerController1 : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         // 媛뺥븳 吏꾨룞 (0.4珥덇컙 媛뺥븯寃?
-        TriggerRumble(0.8f, 0.8f, 0.4f);
+        yield break;
     }
 
     private void Dash()
@@ -116,7 +111,6 @@ public class PlayerController1 : MonoBehaviour
         // (???濡쒖쭅 援ы쁽)
 
         // 吏㏃? 吏꾨룞 (0.1珥덇컙 ?쏀븯寃?
-        TriggerRumble(0.2f, 0.2f, 0.1f);
     }
 
     private void Palling()
@@ -136,73 +130,14 @@ public class PlayerController1 : MonoBehaviour
     {
         Debug.Log("?⑤쭅 ?깃났! (?⑤쭅??");
         // ?⑤쭅 ?깃났 ??吏꾨룞 (0.2珥덇컙 以묎컙 ?멸린)
-        TriggerRumble(0.6f, 0.6f, 0.2f);
     }
 
     private void Checkpoint()
     {
         Debug.Log("Checkpoint (遺??!");
         GameManager.Instance.RespawnPlayerAtLastCheckpoint();
-        StartCoroutine(RumbleFadeOut(1.0f));
     }
 
 
-    // --- 吏꾨룞(Rumble) ?⑥닔??(?낃렇?덉씠?쒕맖) ---
-
-    // [吏?뺥븳 ?쒓컙 ?숈븞 吏꾨룞??二쇰뒗 ?⑥닔]
-    // (?댁쟾 TriggerRumble ?몄텧??吏꾪뻾 以묒씪 ?뚮? ?鍮꾪빐 CancelInvoke 異붽?)
-    public void TriggerRumble(float low, float high, float duration)
-    {
-        if (Gamepad.current == null) return;
-
-        // 吏꾨룞 ?멸린 ?ㅼ젙
-        SetRumble(low, high);
-
-        // ?댁쟾???덉빟??StopRumble???덈떎硫?痍⑥냼 (以묒슂)
-        CancelInvoke(nameof(StopRumble));
-
-        // duration珥??ㅼ뿉 StopRumble???덉빟
-        Invoke(nameof(StopRumble), duration);
-    }
-
-    // [?섏씠???꾩썐 吏꾨룞 肄붾（??
-    private IEnumerator RumbleFadeOut(float duration)
-    {
-        if (Gamepad.current == null) yield break;
-
-        float timer = 0f;
-
-        // (?쒖옉??遺遺?
-        // ?섏씠?쒖븘?껋? ??긽 0.3f ?뺣룄???멸린?먯꽌 ?쒖옉?⑸땲??
-        float startLow = 0.3f;
-        float startHigh = 0.3f;
-
-        while (timer < duration)
-        {
-            // ?쒓컙???곕씪 1.0 -> 0.0 ?쇰줈 蹂?섎뒗 鍮꾩쑉 怨꾩궛
-            float t = timer / duration;
-
-            // ?쒖꽌??吏꾨룞 ?멸린瑜?以꾩엫 (Lerp: start 媛믪뿉??0f 濡?t 留뚰겮 蹂닿컙)
-            SetRumble(Mathf.Lerp(startLow, 0f, t), Mathf.Lerp(startHigh, 0f, t));
-
-            timer += Time.deltaTime;
-            yield return null; // ?ㅼ쓬 ?꾨젅?꾧퉴吏 ?湲?
-        }
-
-        StopRumble(); // ?뺤떎?섍쾶 ?뺤?
-    }
-
-    // [吏꾨룞 ?멸린 吏곸젒 ?ㅼ젙 ?⑥닔]
-    private void SetRumble(float low, float high)
-    {
-        if (Gamepad.current == null) return;
-        Gamepad.current.SetMotorSpeeds(low, high);
-    }
-
-    // [吏꾨룞 ?뺤? ?⑥닔]
-    private void StopRumble()
-    {
-        if (Gamepad.current == null) return;
-        Gamepad.current.SetMotorSpeeds(0f, 0f);
-    }
+    // Gamepad rumble disabled.
 }
