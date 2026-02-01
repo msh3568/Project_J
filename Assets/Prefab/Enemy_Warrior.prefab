@@ -503,8 +503,8 @@ MonoBehaviour:
   onDamageVfxOffset: {x: 0, y: 0, z: 0}
   onDamageVfxScale: {x: 2, y: 2, z: 2}
   onDamageVfxLifetime: 0.5
-  onDamageVfxFollowOwner: 1
-  overrideOnDamageVfxSorting: 0
+  onDamageVfxFollowOwner: 0
+  overrideOnDamageVfxSorting: 1
   onDamageVfxSortingLayer: Enemy
   onDamageVfxSortingOrder: 15
   hitVfx: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
