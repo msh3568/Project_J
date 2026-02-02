@@ -103,6 +103,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private GameObject onDeathVfxPrefab;
     [SerializeField] private Vector3 onDeathVfxOffset;
     [SerializeField] private float onDeathVfxLifetime = 1.5f;
+    [SerializeField, Min(0.1f)] private float onDeathVfxScale = 1f;
+    [SerializeField] private GameObject onDeathExtraVfxPrefab;
+    [SerializeField] private Vector3 onDeathExtraVfxOffset;
+    [SerializeField] private float onDeathExtraVfxLifetime = 1.5f;
+    [SerializeField, Min(0.1f)] private float onDeathExtraVfxScale = 1f;
 
     private Transform playerTransform;
     private Rigidbody2D playerRb;
@@ -450,7 +455,8 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private void Die()
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
-        SpawnVfx(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime);
+        SpawnVfxWithScale(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime, onDeathVfxScale);
+        SpawnVfxWithScale(onDeathExtraVfxPrefab, onDeathExtraVfxOffset, onDeathExtraVfxLifetime, onDeathExtraVfxScale);
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
         {
@@ -531,6 +537,17 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             return;
 
         GameObject vfx = Instantiate(prefab, transform.position + offset, Quaternion.identity);
+        if (lifetime > 0f)
+            Destroy(vfx, lifetime);
+    }
+
+    private void SpawnVfxWithScale(GameObject prefab, Vector3 offset, float lifetime, float scale)
+    {
+        if (prefab == null)
+            return;
+
+        GameObject vfx = Instantiate(prefab, transform.position + offset, Quaternion.identity);
+        vfx.transform.localScale = Vector3.one * Mathf.Max(0.01f, scale);
         if (lifetime > 0f)
             Destroy(vfx, lifetime);
     }

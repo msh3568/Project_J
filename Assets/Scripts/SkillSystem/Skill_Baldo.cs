@@ -40,7 +40,7 @@ public class Skill_Baldo : Skill_Base
             foreach (Collider2D enemy in hitEnemies)
             {
                 enemy.GetComponent<Entity_Health>()?.TakeDamage(damage, transform);
-                GameManager.Instance?.RequestHitSlowMo();
+                GameManager.Instance?.RequestHitSlowMoAndShake();
             }
         }
     }

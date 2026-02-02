@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class ScreenHitEffect : MonoBehaviour
 {
@@ -16,9 +18,37 @@ public class ScreenHitEffect : MonoBehaviour
     [SerializeField] private float twistFrequency = 18f;
     [SerializeField] private float positionJitter = 0.03f;
 
+    [Header("URP Glitch (Optional)")]
+    [SerializeField] private Volume volume;
+    [SerializeField] private float chromaticIntensity = 0.6f;
+    [SerializeField] private float lensDistortionIntensity = -0.12f;
+    [SerializeField] private bool addToExistingPostFx = true;
+    [SerializeField] private AnimationCurve postFxCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+    [SerializeField] private bool driveVolumeWeight = true;
+
+    [Header("Full Screen Glitch (Renderer Feature)")]
+    [SerializeField] private bool driveFullscreenGlitch = true;
+    [SerializeField] private float glitchStrength = 1f;
+    [SerializeField] private float glitchHorizontal = 0.05f;
+    [SerializeField] private float glitchBlockSize = 120f;
+    [SerializeField] private float glitchLineJitter = 18f;
+    [SerializeField] private float glitchColorSplit = 0.003f;
+
     private Coroutine effectCoroutine;
     private Vector3 cachedCameraLocalPos;
     private Quaternion cachedCameraLocalRot;
+    private ChromaticAberration chromatic;
+    private LensDistortion lensDistortion;
+    private float cachedChromatic;
+    private float cachedLensDistortion;
+    private bool cachedChromaticActive;
+    private bool cachedLensDistortionActive;
+    private float cachedVolumeWeight;
+    private static readonly int GlitchStrengthId = Shader.PropertyToID("_GlitchStrength");
+    private static readonly int GlitchHorizontalId = Shader.PropertyToID("_GlitchHorizontal");
+    private static readonly int GlitchBlockSizeId = Shader.PropertyToID("_GlitchBlockSize");
+    private static readonly int GlitchLineJitterId = Shader.PropertyToID("_GlitchLineJitter");
+    private static readonly int GlitchColorSplitId = Shader.PropertyToID("_GlitchColorSplit");
 
     public void Play()
     {
@@ -38,12 +68,16 @@ public class ScreenHitEffect : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / duration);
             ApplyOverlay(t);
             ApplyTwist(t);
+            ApplyPostFx(t);
+            ApplyFullscreenGlitch(t);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         ApplyOverlay(1f);
+        RestorePostFx();
+        RestoreFullscreenGlitch();
         RestoreCameraTransform();
         effectCoroutine = null;
     }
@@ -72,6 +106,32 @@ public class ScreenHitEffect : MonoBehaviour
         cameraTransform.localPosition = cachedCameraLocalPos + new Vector3(jitter * positionJitter * falloff, 0f, 0f);
     }
 
+    private void ApplyPostFx(float t)
+    {
+        if (volume == null || chromatic == null || lensDistortion == null)
+            return;
+
+        float weight = Mathf.Clamp01(postFxCurve.Evaluate(t));
+        if (driveVolumeWeight)
+        {
+            volume.weight = weight;
+            return;
+        }
+        float chromaValue = chromaticIntensity * weight;
+        float lensValue = lensDistortionIntensity * weight;
+
+        if (addToExistingPostFx)
+        {
+            chromaValue += cachedChromatic;
+            lensValue += cachedLensDistortion;
+        }
+
+        chromatic.intensity.Override(chromaValue);
+        lensDistortion.intensity.Override(lensValue);
+        chromatic.active = cachedChromaticActive || weight > 0.01f;
+        lensDistortion.active = cachedLensDistortionActive || weight > 0.01f;
+    }
+
     private void CacheCameraTransform()
     {
         if (cameraTransform == null)
@@ -88,5 +148,70 @@ public class ScreenHitEffect : MonoBehaviour
 
         cameraTransform.localPosition = cachedCameraLocalPos;
         cameraTransform.localRotation = cachedCameraLocalRot;
+    }
+
+    private void RestorePostFx()
+    {
+        if (chromatic != null)
+        {
+            chromatic.intensity.Override(cachedChromatic);
+            chromatic.active = cachedChromaticActive;
+        }
+        if (lensDistortion != null)
+        {
+            lensDistortion.intensity.Override(cachedLensDistortion);
+            lensDistortion.active = cachedLensDistortionActive;
+        }
+        if (volume != null)
+            volume.weight = cachedVolumeWeight;
+    }
+
+    private void ApplyFullscreenGlitch(float t)
+    {
+        if (!driveFullscreenGlitch)
+            return;
+
+        float weight = Mathf.Clamp01(postFxCurve.Evaluate(t)) * glitchStrength;
+        Shader.SetGlobalFloat(GlitchStrengthId, weight);
+        Shader.SetGlobalFloat(GlitchHorizontalId, glitchHorizontal);
+        Shader.SetGlobalFloat(GlitchBlockSizeId, glitchBlockSize);
+        Shader.SetGlobalFloat(GlitchLineJitterId, glitchLineJitter);
+        Shader.SetGlobalFloat(GlitchColorSplitId, glitchColorSplit);
+    }
+
+    private void RestoreFullscreenGlitch()
+    {
+        Shader.SetGlobalFloat(GlitchStrengthId, 0f);
+    }
+
+    private void Awake()
+    {
+        if (volume == null)
+            volume = Object.FindFirstObjectByType<Volume>(FindObjectsInactive.Include);
+
+        if (volume == null || volume.profile == null)
+            return;
+
+        cachedVolumeWeight = volume.weight;
+        volume.profile.TryGet(out chromatic);
+        volume.profile.TryGet(out lensDistortion);
+
+        if (chromatic != null)
+        {
+            cachedChromatic = chromatic.intensity.value;
+            cachedChromaticActive = chromatic.active;
+        }
+        if (lensDistortion != null)
+        {
+            cachedLensDistortion = lensDistortion.intensity.value;
+            cachedLensDistortionActive = lensDistortion.active;
+        }
+    }
+
+    private void OnDisable()
+    {
+        RestorePostFx();
+        RestoreFullscreenGlitch();
+        RestoreCameraTransform();
     }
 }

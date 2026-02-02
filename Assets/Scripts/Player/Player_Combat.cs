@@ -85,7 +85,7 @@ public class Player_Combat : Entity_Combat
         if (target != null && target.CompareTag("Player"))
             return;
 
-        GameManager.Instance?.RequestHitSlowMo();
+        GameManager.Instance?.RequestHitSlowMoAndShake();
     }
 
     protected override void OnDrawGizmos()

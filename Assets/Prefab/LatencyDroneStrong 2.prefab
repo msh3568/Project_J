@@ -262,6 +262,9 @@ MonoBehaviour:
   telegraphColorBlue: {r: 0.25, g: 0.5, b: 1, a: 0.9}
   telegraphFlashMinHz: 2
   telegraphFlashMaxHz: 12
+  lockAimDuringTelegraph: 1
+  lockAimDuringBurst: 1
+  holdPositionWhenAimLocked: 1
   capsulesPerBurst: 4
   timeBetweenCapsules: 0.1
   burstCooldown: 3
@@ -282,9 +285,14 @@ MonoBehaviour:
   onHitVfxPrefab: {fileID: 0}
   onHitVfxOffset: {x: 0, y: 0, z: 0}
   onHitVfxLifetime: 0.5
-  onDeathVfxPrefab: {fileID: 0}
+  onDeathVfxPrefab: {fileID: 9178752477838292781, guid: 9650ddf86f117264bbe523e9e40d8686, type: 3}
   onDeathVfxOffset: {x: 0, y: 0, z: 0}
-  onDeathVfxLifetime: 1.5
+  onDeathVfxLifetime: 0.3
+  onDeathVfxScale: 2
+  onDeathExtraVfxPrefab: {fileID: 0}
+  onDeathExtraVfxOffset: {x: 0, y: 0, z: 0}
+  onDeathExtraVfxLifetime: 1.5
+  onDeathExtraVfxScale: 1
   patrolMoveRangeX: 4
   patrolSpeed: 5
   minHorizontalDistance: 3

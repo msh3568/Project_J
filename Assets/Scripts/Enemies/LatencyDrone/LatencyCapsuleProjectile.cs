@@ -41,7 +41,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
                     {
                         Debug.Log($"[LatencyCapsule Active] Parried projectile hitting '{hit.name}'. Dealing 1000 damage from source '{damageSource.name}'.");
                         damageable.TakeDamage(1000f, damageSource);
-                        GameManager.Instance?.RequestHitSlowMo();
+                        GameManager.Instance?.RequestHitSlowMoAndShake();
                         
                         // Disable own collider to prevent hitting multiple times
                         GetComponent<Collider2D>().enabled = false;

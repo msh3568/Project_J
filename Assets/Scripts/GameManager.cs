@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool enableHitSlowMo = true;
     [SerializeField, Range(0.05f, 1f)] private float hitSlowScale = 0.2f;
     [SerializeField] private float hitSlowDuration = 0.1f;
+    [SerializeField] private bool enableHitShakeOnSuccess = true;
+    [SerializeField, Range(0f, 3f)] private float hitShakeForce = 0.8f;
 
     public void RequestSlowMotion(float scale, float duration)
     {
@@ -53,6 +55,14 @@ public class GameManager : MonoBehaviour
         if (!enableHitSlowMo)
             return;
         RequestSlowMotion(hitSlowScale, hitSlowDuration);
+    }
+
+    public void RequestHitSlowMoAndShake()
+    {
+        if (enableHitSlowMo)
+            RequestSlowMotion(hitSlowScale, hitSlowDuration);
+        if (enableHitShakeOnSuccess && CameraShakeManager.instance != null)
+            CameraShakeManager.instance.Shake(hitShakeForce);
     }
 
     private IEnumerator SlowMotionCoroutine(float scale, float duration)
