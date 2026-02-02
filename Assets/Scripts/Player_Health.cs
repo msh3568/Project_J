@@ -26,6 +26,7 @@ public class Player_Health : Entity_Health
     private SpriteRenderer spriteRenderer;
     private bool isFirewallRespawning;
     private Color baseSpriteColor = Color.white;
+    [SerializeField] private ScreenHitEffect screenHitEffect;
 
     [Header("Firewall Respawn")]
     [SerializeField] private float firewallBlackoutDuration = 0.25f;
@@ -43,6 +44,10 @@ public class Player_Health : Entity_Health
         entityVfx = GetComponent<Entity_VFX>();
         cameraShake = GetComponent<CameraShake>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (screenHitEffect == null)
+        {
+            screenHitEffect = Object.FindFirstObjectByType<ScreenHitEffect>(FindObjectsInactive.Include);
+        }
         currentShield = maxShield;
         IsInvincible = false;
         CanRegenerate = false; // Initialize
@@ -129,6 +134,7 @@ public class Player_Health : Entity_Health
             currentShield--;
             InvokeOnHealthChanged(currentShield, maxShield);
             GameManager.Instance?.RequestHitSlowMo();
+            screenHitEffect?.Play();
 
             if (spriteRenderer != null)
             {
