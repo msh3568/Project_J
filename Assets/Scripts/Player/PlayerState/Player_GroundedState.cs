@@ -23,6 +23,9 @@ public class Player_GroundedState : PlayerState
     {
         base.Update();
 
+        if (player.IsGrappling)
+            return;
+
         if (input.Player.Dash.WasPressedThisFrame() && player.CanDash())
         {
             player.PlaySound(player.dashSound1);

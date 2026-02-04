@@ -13,6 +13,9 @@ public class Player_DashState : PlayerState
     {
         base.Enter();
 
+        if (player.IsGrappling)
+            return;
+
         float xInput = player.moveInput.x;
 
         if(Mathf.Abs(xInput) > 0.01f)

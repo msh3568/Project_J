@@ -10,6 +10,9 @@ public class Player_AiredState : PlayerState
     {
         base.Update();
 
+        if (player.IsGrappling)
+            return;
+
         if (input.Player.CounterAttack.WasPressedThisFrame())
         {
             stateMachine.ChangeState(player.counterAttackState);

@@ -22,7 +22,14 @@ public class Player : Entity
     public Player_BaldoState baldoState { get; private set; }
     public Player_CounterAttackState counterAttackState { get; private set; }
     public Player_ParryAimState parryAimState { get; private set; }
+    public Player_GrappleState grappleState { get; private set; }
     #endregion
+
+    [Header("Grapple")]
+    [SerializeField] private LockOnGrappleConfig grappleConfig;
+    [SerializeField] private GrappleLockOnSystem grappleLockOnSystem;
+    [SerializeField] private GrappleVisualizer grappleVisualizer;
+    public bool IsGrappling => grappleState != null && stateMachine != null && stateMachine.currentState == grappleState && grappleState.IsGrapplingActive;
 
     [Header("AttackDetails")]
     public Vector2[] attackVelocity;
@@ -210,6 +217,14 @@ public class Player : Entity
 
             skillManager = GetComponent<Player_SkillManager>();
 
+            grappleLockOnSystem = grappleLockOnSystem != null ? grappleLockOnSystem : GetComponent<GrappleLockOnSystem>();
+            grappleVisualizer = grappleVisualizer != null ? grappleVisualizer : GetComponent<GrappleVisualizer>();
+
+            if (grappleLockOnSystem != null && grappleConfig != null)
+            {
+                grappleLockOnSystem.SetConfig(grappleConfig);
+            }
+
             idleState = new Player_IdleState(this, stateMachine, "idle");
 
             moveState = new Player_MoveState(this, stateMachine, "move");
@@ -233,6 +248,7 @@ public class Player : Entity
 
             counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
             parryAimState = new Player_ParryAimState(this, stateMachine, "counterAttack");
+            grappleState = new Player_GrappleState(this, stateMachine, "jumpfall");
         }
 
     
@@ -275,9 +291,10 @@ public class Player : Entity
 
                 return;
 
-    
+            grappleLockOnSystem?.RefreshLockOn();
+            TryStartGrappleIfRequested();
 
-                    base.Update();
+            base.Update();
 
     
 
@@ -339,7 +356,15 @@ public class Player : Entity
 
         }
 
-    
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+
+            if (stateMachine != null && stateMachine.currentState == grappleState)
+            {
+                grappleState.FixedUpdateGrapple();
+            }
+        }
 
         public void Immobilize(float duration)
 
@@ -348,8 +373,6 @@ public class Player : Entity
             StartCoroutine(ImmobilizeCoroutine(duration));
 
         }
-
-    
 
         private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
 
@@ -469,7 +492,37 @@ public class Player : Entity
 
         // Removed ApplyTemporaryColor and TemporaryColorCoroutine
 
-    
+        private void TryStartGrappleIfRequested()
+        {
+            if (IsGrappling || grappleState == null || grappleLockOnSystem == null || input == null)
+                return;
+
+            // Grapple is only allowed mid-air to avoid jump/input conflicts on ground.
+            if (groundDetected)
+                return;
+
+            if (!IsGrappleInputPressedThisFrame())
+                return;
+
+            GrappleTargetBase target = grappleLockOnSystem.CurrentTarget;
+            if (target == null)
+                return;
+
+            LockOnGrappleConfig configToUse = grappleConfig != null ? grappleConfig : grappleLockOnSystem.Config;
+            if (configToUse == null)
+                return;
+
+            grappleState.PrepareGrapple(target, grappleLockOnSystem, configToUse);
+            stateMachine.ChangeState(grappleState);
+        }
+
+        private bool IsGrappleInputPressedThisFrame()
+        {
+            if (grappleConfig != null)
+                return grappleConfig.WasGrapplePressed(input);
+
+            return input != null && input.Player.Jump.WasPressedThisFrame();
+        }
 
         private void OnEnable()
 
@@ -1005,7 +1058,15 @@ public class Player : Entity
         {
             overrideMoveInput = enabled;
             overrideMoveInputValue = value;
-            moveInput = enabled ? value : Vector2.zero;
+
+            if (enabled)
+            {
+                moveInput = value;
+            }
+            else
+            {
+                moveInput = input != null ? input.Player.Movement.ReadValue<Vector2>() : Vector2.zero;
+            }
         }
 
         public void SetMoveInput(Vector2 value)

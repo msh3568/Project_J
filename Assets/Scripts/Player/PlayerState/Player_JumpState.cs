@@ -23,7 +23,8 @@ public class Player_JumpState : Player_AiredState
             calculatedJumpForce = Mathf.Lerp(player.minChargeJumpForce, player.maxChargeJumpForce, chargeRatio);
         }
 
-        player.SetVelocity(rb.linearVelocity.x, calculatedJumpForce);
+        float jumpX = Mathf.Abs(rb.linearVelocity.x) < 0.05f ? 0f : rb.linearVelocity.x;
+        player.SetVelocity(jumpX, calculatedJumpForce);
         player.currentChargeTime = 0f;
     }
 

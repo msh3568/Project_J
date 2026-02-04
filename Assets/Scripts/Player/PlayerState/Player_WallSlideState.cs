@@ -16,6 +16,9 @@ public class Player_WallSlideState : PlayerState
     public override void Update()
     {
         base.Update();
+
+        if (player.IsGrappling)
+            return;
         HandleWallSlide();
 
         if (input.Player.Jump.WasPressedThisFrame() && player.moveInput.y > 0.8f && player.CanUseWallAssistJump())
