@@ -2,6 +2,7 @@
 using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
+using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
@@ -109,6 +110,16 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float onDeathExtraVfxLifetime = 1.5f;
     [SerializeField, Min(0.1f)] private float onDeathExtraVfxScale = 1f;
 
+    [Header("Pre-Death Flash")]
+    [SerializeField] private bool enablePreDeathFlash = true;
+    [SerializeField] private bool useFeelPreDeathFlash = true;
+    [SerializeField] private MMF_Player preDeathFlashFeedback;
+    [SerializeField] private float preDeathFlashDuration = 0.3f;
+    [SerializeField] private Color preDeathFlashColor = Color.white;
+    [SerializeField] private float preDeathFlashMinHz = 6f;
+    [SerializeField] private float preDeathFlashMaxHz = 18f;
+    [SerializeField, Range(0f, 1f)] private float preDeathFlashMinIntensity = 0.35f;
+
     private Transform playerTransform;
     private Rigidbody2D playerRb;
     private Vector2 lastPlayerPosition;
@@ -118,6 +129,8 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private SpriteRenderer sr; // Reference to the SpriteRenderer for flipping
     private float nextFireTime;
     private bool isDead = false;
+    private bool isDying = false;
+    private Color baseSpriteColor = Color.white;
     private float hoverBaseY; // Store the base Y position for hovering
     private float initialHealth;
 
@@ -150,6 +163,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             // Assign a circular sprite in the editor. A default white circle sprite can be used.
             sr.color = Color.gray; // Example drone color
         }
+        baseSpriteColor = sr.color;
 
         CircleCollider2D collider = GetComponent<CircleCollider2D>();
         if (collider == null)
@@ -439,7 +453,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     public void TakeDamage(float damage, Transform damageSource)
     {
-        if (isDead) return;
+        if (isDead || isDying) return;
 
         health -= damage;
         Debug.Log($"[Drone Damage] Drone took {damage} damage from {damageSource.name}. Remaining HP: {health}");
@@ -447,9 +461,55 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         if (health <= 0)
         {
+            isDying = true;
             isDead = true;
-            Die();
+            StopAllCoroutines();
+            HideTelegraph();
+            isFiringBurst = false;
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.bodyType = RigidbodyType2D.Kinematic;
+            }
+            StartCoroutine(PreDeathFlashThenDie());
         }
+    }
+
+    private IEnumerator PreDeathFlashThenDie()
+    {
+        if (!enablePreDeathFlash || preDeathFlashDuration <= 0f || sr == null)
+        {
+            Die();
+            yield break;
+        }
+
+        if (useFeelPreDeathFlash && preDeathFlashFeedback != null)
+        {
+            preDeathFlashFeedback.PlayFeedbacks();
+            yield return new WaitForSeconds(preDeathFlashDuration);
+            Die();
+            yield break;
+        }
+
+        float elapsed = 0f;
+        float phase = 0f;
+        while (elapsed < preDeathFlashDuration)
+        {
+            float t = Mathf.Clamp01(elapsed / preDeathFlashDuration);
+            float flashHz = Mathf.Lerp(preDeathFlashMinHz, preDeathFlashMaxHz, t);
+            phase += Time.deltaTime * flashHz;
+            float pulse = 0.5f + 0.5f * Mathf.Sin(phase * Mathf.PI * 2f);
+            float pulseIntensity = Mathf.Lerp(preDeathFlashMinIntensity, 1f, pulse);
+            float ramp = Mathf.Lerp(preDeathFlashMinIntensity, 1f, t);
+            float intensity = Mathf.Clamp01(Mathf.Max(pulseIntensity, ramp));
+            sr.color = Color.Lerp(baseSpriteColor, preDeathFlashColor, intensity);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = preDeathFlashColor;
+        Die();
     }
 
     private void Die()
@@ -762,6 +822,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     {
         health = initialHealth;
         isDead = false;
+        isDying = false;
         enabled = true;
         isFiringBurst = false;
         HideTelegraph();
@@ -778,6 +839,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         if (sr != null)
         {
             sr.enabled = true;
+            sr.color = baseSpriteColor;
         }
 
         var col = GetComponent<Collider2D>();
@@ -810,6 +872,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             audioSource.volume = idleVolume;
             audioSource.Play();
         }
+
+        if (preDeathFlashFeedback != null)
+            preDeathFlashFeedback.StopFeedbacks();
     }
 }
 

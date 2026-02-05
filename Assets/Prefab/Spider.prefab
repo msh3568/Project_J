@@ -302,6 +302,9 @@ MonoBehaviour:
   launchedGravityScale: 0
   launchedAttachRadius: 0.4
   explosionPrefab: {fileID: -2970758037187874360, guid: 89e05ebd83591504f9d4800368b4cb86, type: 3}
+  deathVfxPrefab: {fileID: 9178752477838292781, guid: 9650ddf86f117264bbe523e9e40d8686, type: 3}
+  deathVfxScale: {x: 0.7, y: 0.7, z: 0.7}
+  deathVfxLifetime: 0.2
   explosionRadius: 1.5
   explosionDamage: 500
   firewallDamage: 1

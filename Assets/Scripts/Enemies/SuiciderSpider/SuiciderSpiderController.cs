@@ -47,6 +47,13 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     [SerializeField] private float attachedBlinkSpeed = 6f;
     [SerializeField] private float attachedRandomRotationRange = 20f;
 
+    [Header("Pre-Explode Flash")]
+    [SerializeField] private bool enablePreExplodeFlash = true;
+    [SerializeField] private float preExplodeFlashDuration = 0.7f;
+    [SerializeField] private Color preExplodeFlashColor = Color.white;
+    [SerializeField] private float preExplodeFlashBlinkSpeed = 14f;
+    [SerializeField] private float preExplodeFlashMinIntensity = 0.35f;
+
     [Header("Parry")]
     [SerializeField] private float parryProjectileSpeed = 10f;
     [SerializeField] private float parrySpeedMultiplier = 3f;
@@ -57,6 +64,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
     [Header("Explosion")]
     [SerializeField] private SuiciderSpiderExplosion explosionPrefab;
+    [SerializeField] private GameObject deathVfxPrefab;
+    [SerializeField] private Vector3 deathVfxScale = Vector3.one;
+    [SerializeField] private float deathVfxLifetime = 1.5f;
     [SerializeField] private float explosionRadius = 1.5f;
     [SerializeField] private float explosionDamage = 10f;
     [SerializeField] private int firewallDamage = 1;
@@ -333,6 +343,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         }
 
         HandleAttachedWarningSfx();
+        ApplyPreExplodeFlash(attachDuration, stateTimer);
 
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
@@ -346,6 +357,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         if (TryAttachToEnemyWhileLaunched())
             return;
 
+        ApplyPreExplodeFlash(launchedFuseTime, stateTimer);
         stateTimer -= Time.deltaTime;
         if (stateTimer <= 0f)
         {
@@ -357,6 +369,9 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     {
         if (state == newState)
             return;
+
+        if (state == SpiderState.Launched && newState != SpiderState.Launched && spriteRenderer != null)
+            spriteRenderer.color = baseSpriteColor;
 
         previousState = state;
         state = newState;
@@ -472,6 +487,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
         StopAllSfx();
         PlayOneShotAtPosition(explodeSfx, explodeVolume);
+        SpawnDeathVfx();
 
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
@@ -571,14 +587,15 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         if (currentHp <= 0f)
         {
             DetachFromPlayer();
+            SpawnDeathVfx();
             var respawnable = GetComponent<RespawnOnCheckpoint>();
-        if (respawnable != null)
-        {
-            respawnable.Despawn();
-            return;
-        }
+            if (respawnable != null)
+            {
+                respawnable.Despawn();
+                return;
+            }
 
-        Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -937,6 +954,39 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     private bool IsPlayerInvincible()
     {
         return playerHealth != null && playerHealth.IsInvincible;
+    }
+
+    private void ApplyPreExplodeFlash(float totalFuseTime, float remainingTime)
+    {
+        if (!enablePreExplodeFlash || spriteRenderer == null || totalFuseTime <= 0f)
+            return;
+
+        float flashWindow = Mathf.Max(0f, preExplodeFlashDuration);
+        if (flashWindow <= 0f || remainingTime > flashWindow)
+        {
+            // In launched state, keep default tint until the flash window begins.
+            if (state == SpiderState.Launched)
+                spriteRenderer.color = baseSpriteColor;
+            return;
+        }
+
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * preExplodeFlashBlinkSpeed * Mathf.PI * 2f);
+        float pulseIntensity = Mathf.Lerp(preExplodeFlashMinIntensity, 1f, pulse);
+        float timeRamp = 1f - Mathf.Clamp01(remainingTime / flashWindow);
+        float intensity = Mathf.Clamp01(Mathf.Max(pulseIntensity, timeRamp));
+        spriteRenderer.color = Color.Lerp(baseSpriteColor, preExplodeFlashColor, intensity);
+    }
+
+    private void SpawnDeathVfx()
+    {
+        if (deathVfxPrefab == null)
+            return;
+
+        GameObject vfx = Instantiate(deathVfxPrefab, transform.position, Quaternion.identity);
+        vfx.transform.localScale = deathVfxScale;
+
+        if (deathVfxLifetime > 0f)
+            Destroy(vfx, deathVfxLifetime);
     }
 
     public void OnCheckpointRespawn()
