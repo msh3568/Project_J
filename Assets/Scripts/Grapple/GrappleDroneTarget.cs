@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GrappleDroneTarget : GrappleTargetBase
+public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
 {
     [SerializeField] private bool enforceEnemyLayer = true;
 
@@ -24,7 +24,7 @@ public class GrappleDroneTarget : GrappleTargetBase
         triggered = true;
 
         // Reuse the drone's existing death pipeline (explosion/sound/cleanup).
-        LatencyDroneWeak drone = GetComponent<LatencyDroneWeak>();
+        LatencyDroneWeak drone = GetComponentInParent<LatencyDroneWeak>();
         if (drone != null)
         {
             drone.TakeDamage(9999f, player != null ? player.transform : transform);
@@ -37,4 +37,9 @@ public class GrappleDroneTarget : GrappleTargetBase
             Destroy(gameObject);
         }
     }
+    public void OnCheckpointRespawn()
+    {
+        triggered = false;
+    }
 }
+

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Player_GroundedState : PlayerState
 {
@@ -9,7 +9,9 @@ public class Player_GroundedState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        player.TryPlayLandingVfx();
         player.hasAirDashed = false;
+        player.grappleAirJumpAvailable = false;
 
         // Reset wall jump counter only if we land on a flat floor and are not against a wall.
         if (!player.wallDetected && player.groundDetected && player.groundHit.normal.y > 0.7f)
@@ -75,3 +77,4 @@ public class Player_GroundedState : PlayerState
     }
    
 }
+

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Unity.Cinemachine;
 
 public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, ICheckpointRespawnable
@@ -488,6 +488,7 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         StopAllSfx();
         PlayOneShotAtPosition(explodeSfx, explodeVolume);
         SpawnDeathVfx();
+        AwakeningManager.RaiseGlobalKill();
 
         CinemachineImpulseSource impulseSource = GetComponent<CinemachineImpulseSource>();
         if (impulseSource != null)
@@ -1039,4 +1040,5 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         SetState(SpiderState.Idle);
     }
 }
+
 

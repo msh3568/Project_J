@@ -14,6 +14,7 @@ public class Player_WallAssistJumpState : PlayerState
         player.canFlip = false; // Disable flipping
         player.IncrementConsecutiveWallJumps();
         player.StartWallAssistJumpCooldown();
+        player.PlayJumpVfx();
 
         // Kick off away from wall and jump up
         // Note: facingDir is towards the wall. We want to move AWAY (-facingDir)

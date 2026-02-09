@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Player_CounterAttackState : PlayerState
 {
     private Player_Combat combat;
+    private bool parrySucceeded;
 
     public Player_CounterAttackState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
@@ -12,6 +13,7 @@ public class Player_CounterAttackState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        parrySucceeded = false;
         stateTimer = combat.GetCounterRecoveryDuration(); // This is the parry window
     }
 
@@ -25,6 +27,8 @@ public class Player_CounterAttackState : PlayerState
         
         if (parriedObject != null)
         {
+            parrySucceeded = true;
+            player.AwakeningManager?.RegisterParrySuccess();
             // A parry was successful. Now, decide what to do based on the type of object parried.
             if (parriedObject.GetComponentInParent<IParryable>() != null)
             {
@@ -48,6 +52,8 @@ public class Player_CounterAttackState : PlayerState
         // If the parry window timer runs out, the attempt has failed. Return to idle.
         if (stateTimer < 0)
         {
+            if (!parrySucceeded)
+                player.AwakeningManager?.RegisterParryFail();
             stateMachine.ChangeState(player.idleState);
         }
     }
@@ -57,6 +63,7 @@ public class Player_CounterAttackState : PlayerState
         base.Exit();
     }
 }
+
 
 
 

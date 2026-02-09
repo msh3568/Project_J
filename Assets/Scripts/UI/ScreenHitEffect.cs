@@ -11,6 +11,9 @@ public class ScreenHitEffect : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float maxOverlayAlpha = 0.45f;
     [SerializeField] private float duration = 0.8f;
     [SerializeField] private AnimationCurve overlayFade = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+    [SerializeField] private bool onlyApplyOverlayDuringAwakening = true;
+    [SerializeField] private bool allowOverlayOutsideAwakening = true;
+    [SerializeField] private bool suppressWhenGrappling = false;
 
     [Header("Twist (Optional)")]
     [SerializeField] private Transform cameraTransform;
@@ -19,6 +22,10 @@ public class ScreenHitEffect : MonoBehaviour
     [SerializeField] private float positionJitter = 0.03f;
 
     [Header("URP Glitch (Optional)")]
+
+    [SerializeField] private AwakeningManager awakeningManager;
+    [SerializeField] private Player player;
+    [SerializeField] private bool onlyApplyPostFxDuringAwakening = true;
     [SerializeField] private Volume volume;
     [SerializeField] private float chromaticIntensity = 0.6f;
     [SerializeField] private float lensDistortionIntensity = -0.12f;
@@ -33,6 +40,7 @@ public class ScreenHitEffect : MonoBehaviour
     [SerializeField] private float glitchBlockSize = 120f;
     [SerializeField] private float glitchLineJitter = 18f;
     [SerializeField] private float glitchColorSplit = 0.003f;
+    [SerializeField] private bool disableGlobalShaderGlitch = true;
 
     private Coroutine effectCoroutine;
     private Vector3 cachedCameraLocalPos;
@@ -50,11 +58,32 @@ public class ScreenHitEffect : MonoBehaviour
     private static readonly int GlitchLineJitterId = Shader.PropertyToID("_GlitchLineJitter");
     private static readonly int GlitchColorSplitId = Shader.PropertyToID("_GlitchColorSplit");
 
+    public void StopAndClearImmediate()
+    {
+        if (effectCoroutine != null)
+        {
+            StopCoroutine(effectCoroutine);
+            effectCoroutine = null;
+        }
+
+        ForceClearOverlay();
+        RestorePostFx();
+        RestoreFullscreenGlitch();
+        RestoreCameraTransform();
+    }
+
     public void Play()
     {
+        if (suppressWhenGrappling && player != null && player.IsGrappling)
+        {
+            StopAndClearImmediate();
+            return;
+        }
+
         if (effectCoroutine != null)
             StopCoroutine(effectCoroutine);
 
+        CachePostFxState();
         effectCoroutine = StartCoroutine(PlayRoutine());
     }
 
@@ -84,12 +113,35 @@ public class ScreenHitEffect : MonoBehaviour
 
     private void ApplyOverlay(float t)
     {
+        if (onlyApplyOverlayDuringAwakening && !allowOverlayOutsideAwakening
+            && (awakeningManager == null || !awakeningManager.IsAwakening))
+        {
+            ForceClearOverlay();
+            return;
+        }
+
+        if (suppressWhenGrappling && player != null && player.IsGrappling)
+        {
+            ForceClearOverlay();
+            return;
+        }
+
         if (redOverlay == null)
             return;
 
         float alpha = maxOverlayAlpha * Mathf.Clamp01(overlayFade.Evaluate(t));
         Color c = redOverlay.color;
         c.a = alpha;
+        redOverlay.color = c;
+    }
+
+    private void ForceClearOverlay()
+    {
+        if (redOverlay == null)
+            return;
+
+        Color c = redOverlay.color;
+        c.a = 0f;
         redOverlay.color = c;
     }
 
@@ -108,6 +160,15 @@ public class ScreenHitEffect : MonoBehaviour
 
     private void ApplyPostFx(float t)
     {
+        if (onlyApplyPostFxDuringAwakening && (awakeningManager == null || !awakeningManager.IsAwakening))
+            return;
+
+        if (suppressWhenGrappling && player != null && player.IsGrappling)
+        {
+            RestorePostFx();
+            return;
+        }
+
         if (volume == null || chromatic == null || lensDistortion == null)
             return;
 
@@ -168,6 +229,16 @@ public class ScreenHitEffect : MonoBehaviour
 
     private void ApplyFullscreenGlitch(float t)
     {
+        if (disableGlobalShaderGlitch)
+            return;
+        if (onlyApplyPostFxDuringAwakening && (awakeningManager == null || !awakeningManager.IsAwakening))
+            return;
+        if (suppressWhenGrappling && player != null && player.IsGrappling)
+        {
+            RestoreFullscreenGlitch();
+            return;
+        }
+
         if (!driveFullscreenGlitch)
             return;
 
@@ -181,14 +252,27 @@ public class ScreenHitEffect : MonoBehaviour
 
     private void RestoreFullscreenGlitch()
     {
+        if (disableGlobalShaderGlitch)
+            return;
         Shader.SetGlobalFloat(GlitchStrengthId, 0f);
     }
 
     private void Awake()
     {
+        if (awakeningManager == null)
+            awakeningManager = Object.FindFirstObjectByType<AwakeningManager>(FindObjectsInactive.Include);
+
+        if (player == null)
+            player = Object.FindFirstObjectByType<Player>(FindObjectsInactive.Include);
+
         if (volume == null)
             volume = Object.FindFirstObjectByType<Volume>(FindObjectsInactive.Include);
 
+        CachePostFxState();
+    }
+
+    private void CachePostFxState()
+    {
         if (volume == null || volume.profile == null)
             return;
 

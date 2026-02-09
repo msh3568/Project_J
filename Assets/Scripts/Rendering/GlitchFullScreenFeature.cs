@@ -11,10 +11,12 @@ public class GlitchFullScreenFeature : ScriptableRendererFeature
     {
         public Material material;
         public RenderPassEvent passEvent = RenderPassEvent.AfterRenderingPostProcessing;
+        public bool forceDisableFeature = false;
     }
 
     [SerializeField] private Settings settings = new Settings();
     private GlitchPass pass;
+    public static bool ForceDisable = false;
 
     public override void Create()
     {
@@ -23,10 +25,21 @@ public class GlitchFullScreenFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
+        if (ForceDisable || settings.forceDisableFeature)
+            return;
+
         if (settings.material == null)
             return;
 
+        if (renderingData.cameraData.cameraType == CameraType.SceneView)
+            return;
+
         if (renderingData.cameraData.isPreviewCamera)
+            return;
+
+        float tvPower = Shader.GetGlobalFloat("_TVPower");
+        float glitchStrength = Shader.GetGlobalFloat("_GlitchStrength");
+        if (tvPower <= 0.0001f && glitchStrength <= 0.0001f)
             return;
 
         pass.Setup(renderer);

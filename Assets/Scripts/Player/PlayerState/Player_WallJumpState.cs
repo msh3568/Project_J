@@ -11,6 +11,7 @@ public class Player_WallJumpState : PlayerState
     {
         base.Enter();
 
+        player.PlayJumpVfx();
         player.SetVelocity(player.wallJumpForce.x * -player.facingDir, player.wallJumpForce.y);
     }
 

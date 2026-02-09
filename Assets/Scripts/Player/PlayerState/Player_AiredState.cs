@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class Player_AiredState : PlayerState
 {
@@ -19,6 +19,15 @@ public class Player_AiredState : PlayerState
             return;
         }
 
+        if (player.grappleAirJumpAvailable && input.Player.Jump.WasPressedThisFrame())
+        {
+            player.grappleAirJumpAvailable = false;
+            player.isChargingJump = false;
+            player.currentChargeTime = 0f;
+            stateMachine.ChangeState(player.jumpState);
+            return;
+        }
+
         bool jumpDash = player.airDashWithJumpKey && input.Player.Jump.WasPressedThisFrame();
         bool dashDash = player.airDashWithDashKey && input.Player.Dash.WasPressedThisFrame();
 
@@ -36,3 +45,4 @@ public class Player_AiredState : PlayerState
             player.HorizontalMovement(isGrounded: false);
     }
 }
+

@@ -14,9 +14,15 @@ public static class DisplaySettings
     private const string PrefWidth = "DisplayWidth";
     private const string PrefHeight = "DisplayHeight";
     private const string PrefWindowMode = "DisplayWindowMode";
+    private const float ApplyCooldownSeconds = 0.3f;
+    public static bool DisableApplySavedSettings = false;
 
     private static readonly Vector2Int DefaultResolution = new Vector2Int(1920, 1080);
     private static List<Vector2Int> cachedResolutions;
+    private static float lastApplyTime = -999f;
+    private static int lastAppliedWidth = -1;
+    private static int lastAppliedHeight = -1;
+    private static WindowMode lastAppliedMode = (WindowMode)(-1);
 
     public static IReadOnlyList<Vector2Int> GetSupportedResolutions()
     {
@@ -59,6 +65,8 @@ public static class DisplaySettings
 
     public static void ApplySavedSettings()
     {
+        if (DisableApplySavedSettings)
+            return;
         var mode = LoadWindowMode();
         var resolution = LoadResolution();
         ApplySettings(resolution.x, resolution.y, mode, false);
@@ -85,6 +93,7 @@ public static class DisplaySettings
 
     public static void ApplySettings(int width, int height, WindowMode mode, bool save)
     {
+        float now = Time.realtimeSinceStartup;
         int saveWidth = width;
         int saveHeight = height;
         WindowMode saveMode = mode;
@@ -105,6 +114,24 @@ public static class DisplaySettings
         {
             width = Screen.currentResolution.width;
             height = Screen.currentResolution.height;
+        }
+
+        if (lastAppliedMode == mode &&
+            lastAppliedWidth == width &&
+            lastAppliedHeight == height &&
+            now - lastApplyTime < ApplyCooldownSeconds)
+        {
+            Debug.Log("DisplaySettings.ApplySettings: skipped duplicate apply within cooldown.");
+            return;
+        }
+
+        if (Screen.width == width && Screen.height == height && Screen.fullScreenMode == fullScreenMode)
+        {
+            lastAppliedWidth = width;
+            lastAppliedHeight = height;
+            lastAppliedMode = mode;
+            lastApplyTime = now;
+            return;
         }
 
         Screen.fullScreen = mode != WindowMode.Windowed;
@@ -135,6 +162,11 @@ public static class DisplaySettings
 
         Debug.Log($"DisplaySettings.ApplySettings: requested {saveWidth}x{saveHeight}, mode={mode}, unityMode={GetUnityFullScreenMode(mode)}");
         Debug.Log($"DisplaySettings.ApplySettings: actual {Screen.width}x{Screen.height}, unityMode={Screen.fullScreenMode}");
+
+        lastAppliedWidth = Screen.width;
+        lastAppliedHeight = Screen.height;
+        lastAppliedMode = mode;
+        lastApplyTime = now;
 
         if (save)
         {

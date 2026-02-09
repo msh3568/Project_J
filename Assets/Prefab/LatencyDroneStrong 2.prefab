@@ -525,7 +525,7 @@ MonoBehaviour:
   telegraphHitMask:
     serializedVersion: 2
     m_Bits: 16448
-  telegraphColor: {r: 1, g: 0.15, b: 0.15, a: 0.9}
+  telegraphColor: {r: 1, g: 0.15, b: 0.15, a: 0.21176471}
   telegraphPulse:
     serializedVersion: 2
     m_Curve:
@@ -550,9 +550,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  telegraphColorRed: {r: 1, g: 0.15, b: 0.15, a: 0.9}
-  telegraphColorWhite: {r: 1, g: 1, b: 1, a: 0.9}
-  telegraphColorBlue: {r: 0.25, g: 0.5, b: 1, a: 0.9}
+  telegraphColorRed: {r: 1, g: 0.15, b: 0.15, a: 0.21176471}
+  telegraphColorWhite: {r: 1, g: 1, b: 1, a: 0.21176471}
+  telegraphColorBlue: {r: 0.25, g: 0.5, b: 1, a: 0.21176471}
   telegraphFlashMinHz: 2
   telegraphFlashMaxHz: 12
   lockAimDuringTelegraph: 0

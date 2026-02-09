@@ -23,6 +23,7 @@ Shader "ScreenGlitchFullScreen"
             float _GlitchBlockSize;
             float _GlitchLineJitter;
             float _GlitchColorSplit;
+            float _TVPower;
 
             struct Attributes
             {
@@ -50,7 +51,7 @@ Shader "ScreenGlitchFullScreen"
 
             half4 Frag(Varyings input) : SV_Target
             {
-                float2 uv = input.texcoord;
+                float2 uv = input.texcoord;\r\n                float power = saturate(_TVPower);\r\n                if (power <= 0.0001 && _GlitchStrength <= 0.0001)\r\n                {\r\n                    power = 1.0;\r\n                }\r\n                uv.y = (uv.y - 0.5) * power + 0.5;
                 float strength = _GlitchStrength;
                 if (strength <= 0.0001)
                 {
@@ -73,3 +74,4 @@ Shader "ScreenGlitchFullScreen"
         }
     }
 }
+

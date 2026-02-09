@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using Unity.Cinemachine;
 
@@ -81,6 +81,7 @@ public class Enemy : Entity
             impulseSource.GenerateImpulse();
         }
         OnEnemyDeath?.Invoke();
+        AwakeningManager.RaiseGlobalKill();
         stateMachine.ChangeState(deadState);
     }
 
@@ -209,6 +210,12 @@ public class Enemy : Entity
         {
             stateMachine.Initialize(idleState);
         }
+
+        var respawnables = GetComponentsInChildren<ICheckpointRespawnable>(true);
+        foreach (var respawnable in respawnables)
+        {
+            respawnable.OnCheckpointRespawn();
+        }
     }
 
     public void HandleDeathDespawn()
@@ -223,3 +230,6 @@ public class Enemy : Entity
         }
     }
 }
+
+
+

@@ -17,8 +17,9 @@ public class Player_GrappleState : PlayerState
     private Vector2 startPosition;
     private Vector2 targetPosition;
     private float elapsed;
-    private float travelTime;
+    private float baseTravelTime;
     private bool arrived;
+    private bool grappleEndNotified;
 
     private float startSlowTimer;
     private bool movementStarted;
@@ -56,9 +57,10 @@ public class Player_GrappleState : PlayerState
 
         startPosition = rb.position;
         targetPosition = activeTarget.GetAimPosition();
-        travelTime = Mathf.Max(0.01f, config.travelTime);
+        baseTravelTime = Mathf.Max(0.01f, config.travelTime);
         elapsed = 0f;
         arrived = false;
+        grappleEndNotified = false;
         IsGrapplingActive = true;
         movementStarted = config.startSlowDuration <= 0f;
         startSlowTimer = 0f;
@@ -77,6 +79,7 @@ public class Player_GrappleState : PlayerState
             playerHealth.IsInvincible = true;
             appliedInvincibility = true;
         }
+        playerHealth?.ClearHitEffectForGrappleStart();
 
         if (config.phaseThroughDuringGrapple)
         {
@@ -120,7 +123,7 @@ public class Player_GrappleState : PlayerState
             return;
         }
 
-        if (elapsed >= travelTime)
+        if (elapsed >= baseTravelTime)
         {
             CompleteGrapple();
         }
@@ -131,9 +134,12 @@ public class Player_GrappleState : PlayerState
         if (!IsGrapplingActive || arrived || !movementStarted)
             return;
 
-        elapsed += Time.fixedDeltaTime;
-        float t = Mathf.Clamp01(elapsed / travelTime);
-        Vector2 nextPosition = Vector2.Lerp(startPosition, targetPosition, t);
+        float speedMultiplier = player.GetAwakeningGrappleSpeedMultiplier();
+        elapsed += Time.fixedDeltaTime * speedMultiplier;
+        float t = Mathf.Clamp01(elapsed / baseTravelTime);
+        float accelMultiplier = player.GetAwakeningGrappleAccelMultiplier();
+        float easedT = 1f - Mathf.Pow(1f - t, accelMultiplier);
+        Vector2 nextPosition = Vector2.Lerp(startPosition, targetPosition, easedT);
         rb.MovePosition(nextPosition);
 
         if (t >= 1f)
@@ -171,10 +177,26 @@ public class Player_GrappleState : PlayerState
             lockOnSystem?.MarkTargetAsRecentlyUsed(activeTarget);
         }
 
+        if (!player.groundDetected)
+        {
+            player.grappleAirJumpAvailable = true;
+        }
+
+        NotifyGrappleEnded();
+
         if (player.groundDetected)
             stateMachine.ChangeState(player.idleState);
         else
             stateMachine.ChangeState(player.fallState);
+    }
+
+    private void NotifyGrappleEnded()
+    {
+        if (grappleEndNotified)
+            return;
+
+        grappleEndNotified = true;
+        player.NotifyGrappleEnded();
     }
 
     private void ReturnControlToDefaultState()
@@ -227,3 +249,6 @@ public class Player_GrappleState : PlayerState
         appliedInvincibility = false;
     }
 }
+
+
+
