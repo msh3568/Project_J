@@ -44,6 +44,7 @@ public class Player : Entity
     public bool IsGrappleOnCooldown => grappleCooldownTimer > 0f;
     public bool grappleAirJumpAvailable { get; set; }
     public AwakeningManager AwakeningManager => awakeningManager;
+    public LockOnGrappleConfig GrappleConfig => grappleConfig;
 
     [Header("AttackDetails")]
     public Vector2[] attackVelocity;
@@ -601,6 +602,17 @@ public class Player : Entity
                 return false;
 
             return true;
+        }
+
+        public bool IsGrappleReadyForUI()
+        {
+            if (IsGrappling || grappleState == null || grappleLockOnSystem == null)
+                return false;
+
+            if (groundDetected)
+                return false;
+
+            return IsGrappleReady();
         }
 
         public void NotifyGrappleEnded()

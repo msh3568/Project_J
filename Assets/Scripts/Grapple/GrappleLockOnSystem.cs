@@ -4,6 +4,7 @@ using UnityEngine;
 public class GrappleLockOnSystem : MonoBehaviour
 {
     [SerializeField] private LockOnGrappleConfig config;
+    [SerializeField] private bool forceGroundWallOcclusion = true;
 
     private readonly Collider2D[] overlapBuffer = new Collider2D[64];
 
@@ -12,6 +13,9 @@ public class GrappleLockOnSystem : MonoBehaviour
     private GrappleTargetBase currentTarget;
     private GrappleTargetBase lastUsedTarget;
     private float lastUsedUntil;
+    private bool loggedMissingConfig;
+    private bool loggedMissingOcclusionMask;
+    private bool loggedLockOnBlockedByOcclusion;
 
     public GrappleTargetBase CurrentTarget => currentTarget;
     public LockOnGrappleConfig Config => config;
@@ -19,6 +23,7 @@ public class GrappleLockOnSystem : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<Player>();
+        EnsureConfig();
     }
 
     private void Update()
@@ -33,13 +38,148 @@ public class GrappleLockOnSystem : MonoBehaviour
 
     public void RefreshLockOn()
     {
+        EnsureConfig();
         if (player == null || config == null)
         {
             currentTarget = null;
             return;
         }
 
+        EnsureOcclusionMask();
+        if (!HasValidOcclusionMask())
+        {
+            currentTarget = null;
+            return;
+        }
         currentTarget = FindBestTarget();
+    }
+
+    private void EnsureConfig()
+    {
+        if (config != null)
+            return;
+
+        if (player != null && player.GrappleConfig != null)
+        {
+            config = player.GrappleConfig;
+            return;
+        }
+
+        config = ScriptableObject.CreateInstance<LockOnGrappleConfig>();
+        config.hideFlags = HideFlags.DontSave;
+        config.targetLayerMask = ~0;
+        EnsureOcclusionMask();
+
+        if (!loggedMissingConfig)
+        {
+            loggedMissingConfig = true;
+            Debug.LogWarning("[GrappleLockOnSystem] Missing LockOnGrappleConfig. Using runtime defaults.", this);
+        }
+    }
+
+    private void EnsureOcclusionMask()
+    {
+        if (config == null || !ShouldBlockBehindWalls())
+            return;
+
+        int forcedMask = ResolveGroundWallMask();
+        if (forcedMask != 0)
+        {
+            config.occlusionMask = config.occlusionMask.value | forcedMask;
+        }
+
+        if (config.occlusionMask.value != 0)
+            return;
+
+        int combinedMask = 0;
+        if (player != null)
+        {
+            combinedMask |= player.WallLayerMask.value;
+            combinedMask |= player.GroundLayerMask.value;
+        }
+
+        if (combinedMask != 0)
+        {
+            config.occlusionMask = combinedMask;
+            return;
+        }
+
+        int wallLayer = LayerMask.NameToLayer("Wall");
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        if (wallLayer >= 0)
+        {
+            combinedMask |= 1 << wallLayer;
+        }
+        if (groundLayer >= 0)
+        {
+            combinedMask |= 1 << groundLayer;
+        }
+        if (combinedMask != 0)
+        {
+            config.occlusionMask = combinedMask;
+        }
+
+        if (!loggedMissingOcclusionMask)
+        {
+            loggedMissingOcclusionMask = true;
+            Debug.LogWarning("[GrappleLockOnSystem] Occlusion mask is empty. Grapple may lock through walls.", this);
+        }
+    }
+
+    private bool HasValidOcclusionMask()
+    {
+        if (config == null || !ShouldBlockBehindWalls())
+            return true;
+
+        int mask = config.occlusionMask.value | ResolveGroundWallMask();
+        if (mask == 0 && player != null)
+            mask = player.WallLayerMask.value | player.GroundLayerMask.value;
+        if (mask == 0)
+        {
+            EnsureOcclusionMask();
+            mask = config != null ? (config.occlusionMask.value | ResolveGroundWallMask()) : 0;
+        }
+
+        if (mask != 0)
+            return true;
+
+        if (!loggedLockOnBlockedByOcclusion)
+        {
+            loggedLockOnBlockedByOcclusion = true;
+            Debug.LogWarning("[GrappleLockOnSystem] Occlusion mask missing. Lock-on disabled to prevent grappling through walls.", this);
+        }
+
+        return false;
+    }
+
+    private bool ShouldBlockBehindWalls()
+    {
+        if (config == null)
+            return false;
+
+        return config.blockBehindWalls || forceGroundWallOcclusion;
+    }
+
+    private int ResolveGroundWallMask()
+    {
+        int mask = 0;
+        if (player != null)
+        {
+            mask |= player.WallLayerMask.value;
+            mask |= player.GroundLayerMask.value;
+        }
+
+        if (mask != 0)
+            return mask;
+
+        int wallLayer = LayerMask.NameToLayer("Wall");
+        if (wallLayer >= 0)
+            mask |= 1 << wallLayer;
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        if (groundLayer >= 0)
+            mask |= 1 << groundLayer;
+
+        return mask;
     }
 
     public void MarkTargetAsRecentlyUsed(GrappleTargetBase target)
@@ -147,10 +287,17 @@ public class GrappleLockOnSystem : MonoBehaviour
 
     private bool IsOccluded(Vector2 from, Vector2 to, GrappleTargetBase target)
     {
-        if (config == null || !config.blockBehindWalls)
+        if (config == null || !ShouldBlockBehindWalls())
             return false;
 
-        int mask = config.occlusionMask.value;
+        int mask = config.occlusionMask.value | ResolveGroundWallMask();
+        if (mask == 0 && player != null)
+            mask = player.WallLayerMask.value | player.GroundLayerMask.value;
+        if (mask == 0)
+        {
+            EnsureOcclusionMask();
+            mask = config != null ? (config.occlusionMask.value | ResolveGroundWallMask()) : 0;
+        }
         if (mask == 0)
             return false;
 

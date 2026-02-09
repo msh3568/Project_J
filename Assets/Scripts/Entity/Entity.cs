@@ -32,6 +32,8 @@ public class Entity : MonoBehaviour
     public RaycastHit2D groundHit { get; private set; }
     public bool groundDetected => groundHit.collider != null;
     public bool wallDetected { get; protected set; }
+    public LayerMask WallLayerMask => whatIsWall;
+    public LayerMask GroundLayerMask => whatIsGround;
 
     private bool isKnocked;
     private Coroutine knockbackCo;

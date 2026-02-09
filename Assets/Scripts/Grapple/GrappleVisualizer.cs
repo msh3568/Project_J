@@ -6,12 +6,15 @@ public class GrappleVisualizer : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Vector3 lineStartOffset;
     [SerializeField] private Vector3 lineEndOffset;
+    [SerializeField] private bool hideWhenGrappleUnavailable = true;
 
     private GrappleLockOnSystem lockOnSystem;
+    private Player player;
 
     private void Awake()
     {
         lockOnSystem = GetComponent<GrappleLockOnSystem>();
+        player = GetComponent<Player>();
 
         if (lineRenderer != null)
             lineRenderer.positionCount = 2;
@@ -21,6 +24,12 @@ public class GrappleVisualizer : MonoBehaviour
     {
         if (lineRenderer == null)
             return;
+
+        if (hideWhenGrappleUnavailable && player != null && !player.IsGrappleReadyForUI())
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
 
         GrappleTargetBase target = lockOnSystem != null ? lockOnSystem.CurrentTarget : null;
         if (target == null)

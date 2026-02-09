@@ -45,10 +45,11 @@ public class Player_Health : Entity_Health
     [SerializeField, InspectorName("Legacy Screen Hit Effect")] private ScreenHitEffect screenHitEffect;
     [SerializeField, InspectorName("Screen Hit Feedback")] private MMF_Player hitFeedback;
     [SerializeField] private bool preferFeelHitFeedback = true;
-    [SerializeField] private bool alwaysPlayLegacyScreenHitFallback = true;
+    [SerializeField] private bool alwaysPlayLegacyScreenHitFallback = false;
     [SerializeField, Min(0.05f)] private float hitFeedbackMaxDuration = 0.2f;
     private Coroutine hitFeedbackStopCoroutine;
     private bool hasLoggedMissingHitEffectSetup;
+    private bool hasLoggedMissingFeelFeedback;
     [SerializeField] private bool debugLogBlockedDamage = true;
     [SerializeField] private bool forceHitShakeFallbackWhenFeelFails = true;
     [Header("FEEL Runtime Safeguards")]
@@ -295,16 +296,20 @@ public class Player_Health : Entity_Health
     {
         ResolveHitFeedbackReferences();
         bool playedAnyHitFeedback = false;
-        if (preferFeelHitFeedback && hitFeedback != null)
+        if (preferFeelHitFeedback)
         {
-            EnsureFeelVolumeVisibleForHit();
-            bool playedFeel = TryPlayFeedback(hitFeedback, intensityMultiplier);
-            if (!playedFeel)
+            bool playedFeel = false;
+            if (hitFeedback != null)
             {
-                // Recover from stale/missing runtime references by resolving once more and retrying.
-                hitFeedback = null;
-                ResolveHitFeedbackReferences();
+                EnsureFeelVolumeVisibleForHit();
                 playedFeel = TryPlayFeedback(hitFeedback, intensityMultiplier);
+                if (!playedFeel)
+                {
+                    // Recover from stale/missing runtime references by resolving once more and retrying.
+                    hitFeedback = null;
+                    ResolveHitFeedbackReferences();
+                    playedFeel = TryPlayFeedback(hitFeedback, intensityMultiplier);
+                }
             }
 
             if (playedFeel)
@@ -318,12 +323,15 @@ public class Player_Health : Entity_Health
                 if (forceHitShakeFallbackWhenFeelFails)
                     GameManager.Instance?.RequestHitSlowMoAndShake();
 
-                Debug.LogWarning("[Player_Health] FEEL hit feedback failed to play. Falling back to legacy screen hit effect.", this);
+                if (!hasLoggedMissingFeelFeedback)
+                {
+                    hasLoggedMissingFeelFeedback = true;
+                    Debug.LogWarning("[Player_Health] FEEL hit feedback missing or failed. Check MMF_HitImpact reference.", this);
+                }
             }
         }
 
-        bool shouldPlayLegacyFallback = !playedAnyHitFeedback
-            || (alwaysPlayLegacyScreenHitFallback && !preferFeelHitFeedback);
+        bool shouldPlayLegacyFallback = !playedAnyHitFeedback || alwaysPlayLegacyScreenHitFallback;
         if (screenHitEffect != null && shouldPlayLegacyFallback)
         {
             screenHitEffect.Play();
@@ -365,7 +373,12 @@ public class Player_Health : Entity_Health
 
     private static bool HasUsableFeedbacks(MMF_Player feedback)
     {
-        return feedback != null && feedback.FeedbacksList != null && feedback.FeedbacksList.Count > 0;
+        if (feedback == null)
+            return false;
+
+        bool hasList = feedback.FeedbacksList != null && feedback.FeedbacksList.Count > 0;
+        bool hasLegacy = feedback.Feedbacks != null && feedback.Feedbacks.Count > 0;
+        return hasList || hasLegacy;
     }
 
     private bool TryPlayFeedback(MMF_Player feedback, float intensityMultiplier = 1f)
@@ -388,11 +401,22 @@ public class Player_Health : Entity_Health
         feedback.ResumeFeedbacks();
 
         int playCountBefore = feedback.PlayCount;
+        feedback.PlayFeedbacks(feedback.transform.position, intensity);
+        if (feedback.PlayCount > playCountBefore || feedback.IsPlaying)
+            return true;
+
+        if (ForcePlayFeedback(feedback, intensity, resetBeforePlay: true))
+            return true;
+
+        // Retry with a soft reset if play was blocked (cooldown/range/state).
         feedback.StopFeedbacks();
         feedback.RestoreInitialValues();
+        playCountBefore = feedback.PlayCount;
         feedback.PlayFeedbacks(feedback.transform.position, intensity);
-
         if (feedback.PlayCount > playCountBefore || feedback.IsPlaying)
+            return true;
+
+        if (ForcePlayFeedback(feedback, intensity, resetBeforePlay: false))
             return true;
 
         // Hard reset once to recover from a stale player state after gameplay state transitions.
@@ -418,6 +442,42 @@ public class Player_Health : Entity_Health
         feedback.PlayFeedbacks(feedback.transform.position, intensity);
 
         return feedback.PlayCount > playCountBefore || feedback.IsPlaying;
+    }
+
+    private static bool ForcePlayFeedback(MMF_Player feedback, float intensity, bool resetBeforePlay)
+    {
+        if (feedback == null)
+            return false;
+
+        bool originalOnlyPlay = feedback.OnlyPlayIfWithinRange;
+        float originalCooldown = feedback.CooldownDuration;
+        Transform originalRangeCenter = feedback.RangeCenter;
+        bool originalCanPlay = feedback.CanPlay;
+        bool originalCanPlayWhile = feedback.CanPlayWhileAlreadyPlaying;
+
+        feedback.OnlyPlayIfWithinRange = false;
+        feedback.CooldownDuration = 0f;
+        feedback.RangeCenter = feedback.transform;
+        feedback.CanPlay = true;
+        feedback.CanPlayWhileAlreadyPlaying = true;
+
+        if (resetBeforePlay)
+        {
+            feedback.StopFeedbacks();
+            feedback.RestoreInitialValues();
+        }
+
+        int playCountBefore = feedback.PlayCount;
+        feedback.PlayFeedbacks(feedback.transform.position, intensity);
+        bool success = feedback.PlayCount > playCountBefore || feedback.IsPlaying;
+
+        feedback.OnlyPlayIfWithinRange = originalOnlyPlay;
+        feedback.CooldownDuration = originalCooldown;
+        feedback.RangeCenter = originalRangeCenter;
+        feedback.CanPlay = originalCanPlay;
+        feedback.CanPlayWhileAlreadyPlaying = originalCanPlayWhile;
+
+        return success;
     }
 
     private static void StopFeedback(MMF_Player feedback)
@@ -590,6 +650,7 @@ public class Player_Health : Entity_Health
             if (volume == null || volume.gameObject == null)
                 continue;
 
+            EnsureFeelVolumeRuntimeComponents(volume);
             EnsureFeelShakersOnVolume(volume.gameObject);
         }
     }
@@ -624,6 +685,19 @@ public class Player_Health : Entity_Health
 
         DisableLegacyShakerByTypeName(volumeObject, "MoreMountains.FeedbacksForThirdParty.MMChromaticAberrationShaker");
         DisableLegacyShakerByTypeName(volumeObject, "MoreMountains.FeedbacksForThirdParty.MMLensDistortionShaker");
+    }
+
+    private static void EnsureFeelVolumeRuntimeComponents(Volume volume)
+    {
+        if (volume == null)
+            return;
+
+        if (!volume.enabled)
+            volume.enabled = true;
+
+        MMGlobalPostProcessingVolumeAutoBlend_URP autoBlend = volume.GetComponent<MMGlobalPostProcessingVolumeAutoBlend_URP>();
+        if (autoBlend != null && !autoBlend.enabled)
+            autoBlend.enabled = true;
     }
 
     private static bool IsValidFeelGlobalVolume(Volume volume)
@@ -725,6 +799,8 @@ public class Player_Health : Entity_Health
 
         if (feelGlobalVolume == null)
             return;
+
+        EnsureFeelVolumeRuntimeComponents(feelGlobalVolume);
 
         if (feelGlobalVolume.weight > 0f)
             return;

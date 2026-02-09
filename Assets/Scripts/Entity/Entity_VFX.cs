@@ -19,6 +19,7 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private bool overrideOnDamageVfxSorting = false;
     [SerializeField] private string onDamageVfxSortingLayer = "Default";
     [SerializeField] private int onDamageVfxSortingOrder = 0;
+    [SerializeField] private bool useUnscaledTimeForDamageVfx = true;
 
     [Header("On Doing Damage VFX")]
     [SerializeField] private GameObject hitVfx;
@@ -143,6 +144,7 @@ public class Entity_VFX : MonoBehaviour
         Transform parent = onDamageVfxFollowOwner ? transform : null;
         GameObject vfx = Instantiate(onDamageVfxPrefab, spawnPosition, Quaternion.identity, parent);
         vfx.transform.localScale = new Vector3(Mathf.Abs(onDamageVfxScale.x), onDamageVfxScale.y, onDamageVfxScale.z);
+        ApplyUnscaledTimeToParticles(vfx, useUnscaledTimeForDamageVfx);
         foreach (var psRenderer in vfx.GetComponentsInChildren<ParticleSystemRenderer>(true))
         {
             psRenderer.enabled = true;
@@ -175,6 +177,7 @@ public class Entity_VFX : MonoBehaviour
         Transform parent = lastShieldHitVfxFollowOwner ? transform : null;
         GameObject vfx = Instantiate(lastShieldHitVfxPrefab, spawnPosition, Quaternion.identity, parent);
         vfx.transform.localScale = new Vector3(Mathf.Abs(lastShieldHitVfxScale.x), lastShieldHitVfxScale.y, lastShieldHitVfxScale.z);
+        ApplyUnscaledTimeToParticles(vfx, useUnscaledTimeForDamageVfx);
         ApplyVfxFlipAndPlay(vfx, false);
         Destroy(vfx, lastShieldHitVfxLifetime);
     }
@@ -188,6 +191,7 @@ public class Entity_VFX : MonoBehaviour
         Transform parent = shieldHitVfxFollowOwner ? transform : null;
         GameObject vfx = Instantiate(shieldHitVfxPrefab, spawnPosition, Quaternion.identity, parent);
         vfx.transform.localScale = new Vector3(Mathf.Abs(shieldHitVfxScale.x), shieldHitVfxScale.y, shieldHitVfxScale.z);
+        ApplyUnscaledTimeToParticles(vfx, useUnscaledTimeForDamageVfx);
         ApplyVfxFlipAndPlay(vfx, false);
         Destroy(vfx, shieldHitVfxLifetime);
     }
@@ -326,10 +330,25 @@ public class Entity_VFX : MonoBehaviour
         if (sr != null && onDamageMaterial != null)
             sr.material = onDamageMaterial;
 
-        yield return new WaitForSeconds(onDamageVfxDuration);
+        if (useUnscaledTimeForDamageVfx)
+            yield return new WaitForSecondsRealtime(onDamageVfxDuration);
+        else
+            yield return new WaitForSeconds(onDamageVfxDuration);
 
         if (sr != null)
             sr.material = originalMaterial;
+    }
+
+    private static void ApplyUnscaledTimeToParticles(GameObject vfx, bool useUnscaledTime)
+    {
+        if (!useUnscaledTime || vfx == null)
+            return;
+
+        foreach (var ps in vfx.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var main = ps.main;
+            main.useUnscaledTime = true;
+        }
     }
 
     public bool ShouldUseLegacyAttack(int comboIndex)
