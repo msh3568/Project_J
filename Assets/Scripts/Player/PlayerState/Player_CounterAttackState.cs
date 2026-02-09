@@ -4,6 +4,7 @@ public class Player_CounterAttackState : PlayerState
 {
     private Player_Combat combat;
     private bool parrySucceeded;
+    private float parryAttemptStartedAt;
 
     public Player_CounterAttackState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
@@ -14,6 +15,7 @@ public class Player_CounterAttackState : PlayerState
     {
         base.Enter();
         parrySucceeded = false;
+        parryAttemptStartedAt = Time.unscaledTime;
         stateTimer = combat.GetCounterRecoveryDuration(); // This is the parry window
     }
 
@@ -28,6 +30,8 @@ public class Player_CounterAttackState : PlayerState
         if (parriedObject != null)
         {
             parrySucceeded = true;
+            bool wasPerfectParry = (Time.unscaledTime - parryAttemptStartedAt) <= player.GetPerfectParryWindow();
+            player.ApplyParryCooldownOnSuccess(wasPerfectParry);
             player.AwakeningManager?.RegisterParrySuccess();
             // A parry was successful. Now, decide what to do based on the type of object parried.
             if (parriedObject.GetComponentInParent<IParryable>() != null)

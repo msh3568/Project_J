@@ -13,11 +13,8 @@ public class Player_AiredState : PlayerState
         if (player.IsGrappling)
             return;
 
-        if (input.Player.CounterAttack.WasPressedThisFrame())
-        {
-            stateMachine.ChangeState(player.counterAttackState);
+        if (player.TryStartCounterAttackFromInput())
             return;
-        }
 
         if (player.grappleAirJumpAvailable && input.Player.Jump.WasPressedThisFrame())
         {

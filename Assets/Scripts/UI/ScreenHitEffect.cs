@@ -32,6 +32,7 @@ public class ScreenHitEffect : MonoBehaviour
     [SerializeField] private bool addToExistingPostFx = true;
     [SerializeField] private AnimationCurve postFxCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
     [SerializeField] private bool driveVolumeWeight = true;
+    [SerializeField] private bool tracePostFxLogs = true;
 
     [Header("Full Screen Glitch (Renderer Feature)")]
     [SerializeField] private bool driveFullscreenGlitch = true;
@@ -52,6 +53,7 @@ public class ScreenHitEffect : MonoBehaviour
     private bool cachedChromaticActive;
     private bool cachedLensDistortionActive;
     private float cachedVolumeWeight;
+    private bool droveVolumeWeightThisPlay;
     private static readonly int GlitchStrengthId = Shader.PropertyToID("_GlitchStrength");
     private static readonly int GlitchHorizontalId = Shader.PropertyToID("_GlitchHorizontal");
     private static readonly int GlitchBlockSizeId = Shader.PropertyToID("_GlitchBlockSize");
@@ -74,6 +76,8 @@ public class ScreenHitEffect : MonoBehaviour
 
     public void Play()
     {
+        droveVolumeWeightThisPlay = false;
+
         if (suppressWhenGrappling && player != null && player.IsGrappling)
         {
             StopAndClearImmediate();
@@ -175,6 +179,10 @@ public class ScreenHitEffect : MonoBehaviour
         float weight = Mathf.Clamp01(postFxCurve.Evaluate(t));
         if (driveVolumeWeight)
         {
+            droveVolumeWeightThisPlay = true;
+            float previousWeight = volume.weight;
+            if (!Mathf.Approximately(previousWeight, weight))
+                LogPostFxWeightTrace("ApplyPostFx", previousWeight, weight);
             volume.weight = weight;
             return;
         }
@@ -223,8 +231,15 @@ public class ScreenHitEffect : MonoBehaviour
             lensDistortion.intensity.Override(cachedLensDistortion);
             lensDistortion.active = cachedLensDistortionActive;
         }
-        if (volume != null)
+        if (volume != null && droveVolumeWeightThisPlay)
+        {
+            float previousWeight = volume.weight;
+            if (!Mathf.Approximately(previousWeight, cachedVolumeWeight))
+                LogPostFxWeightTrace("RestorePostFx", previousWeight, cachedVolumeWeight);
             volume.weight = cachedVolumeWeight;
+        }
+
+        droveVolumeWeightThisPlay = false;
     }
 
     private void ApplyFullscreenGlitch(float t)
@@ -297,5 +312,22 @@ public class ScreenHitEffect : MonoBehaviour
         RestorePostFx();
         RestoreFullscreenGlitch();
         RestoreCameraTransform();
+    }
+
+    private void LogPostFxWeightTrace(string source, float before, float after)
+    {
+        if (!tracePostFxLogs)
+            return;
+
+        string volumeName = volume != null && volume.gameObject != null ? volume.gameObject.name : "(null)";
+        bool isAwakening = awakeningManager != null && awakeningManager.IsAwakening;
+        bool isGrappling = player != null && player.IsGrappling;
+        float saturation = float.NaN;
+        if (volume != null && volume.profile != null && volume.profile.TryGet(out ColorAdjustments colorAdjustments))
+            saturation = colorAdjustments.saturation.value;
+
+        Debug.Log(
+            $"[SAT_TRACE][ScreenHitEffect.{source}] volume='{volumeName}' weight {before:F2}->{after:F2} sat={saturation:F2} awakening={isAwakening} grappling={isGrappling}",
+            this);
     }
 }

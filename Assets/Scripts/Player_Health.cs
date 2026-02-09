@@ -58,6 +58,8 @@ public class Player_Health : Entity_Health
     [SerializeField, Min(0.05f)] private float hitFeedbackStandardDuration = 0.2f;
     [SerializeField, Range(0f, 1f)] private float feelVolumeWeightDuringHit = 1f;
     [SerializeField, Min(0.05f)] private float feelVolumeLiftDuration = 0.2f;
+    [SerializeField] private bool traceFeelVolumeLogs = true;
+    [SerializeField] private bool autoAttachSaturationTraceWatcher = true;
     private Volume feelGlobalVolume;
     private readonly List<Volume> feelGlobalVolumes = new List<Volume>();
     private float feelLiftRestoreWeight;
@@ -95,6 +97,7 @@ public class Player_Health : Entity_Health
             baseSpriteColor = spriteRenderer.color;
         }
 
+        EnsureSaturationTraceWatcher();
         TrySetupFeelRuntimeSafeguards();
     }
 
@@ -105,6 +108,7 @@ public class Player_Health : Entity_Health
         Debug.Log($"Initial shield: {currentShield}");
         impulseSource = GetComponent<CinemachineImpulseSource>();
         ResolveHitFeedbackReferences();
+        EnsureSaturationTraceWatcher();
         TrySetupFeelRuntimeSafeguards();
     }
 
@@ -257,6 +261,9 @@ public class Player_Health : Entity_Health
 
     public void ClearHitEffectForGrappleStart()
     {
+        if (traceFeelVolumeLogs)
+            Debug.Log("[SAT_TRACE][Player_Health.ClearHitEffectForGrappleStart] stopping hit feedback and forcing volume restore.", this);
+
         if (preferFeelHitFeedback && hitFeedback != null)
         {
             StopFeedback(hitFeedback);
@@ -287,13 +294,30 @@ public class Player_Health : Entity_Health
 
     private IEnumerator StopHitFeedbackAfterDelay()
     {
-        yield return new WaitForSeconds(hitFeedbackMaxDuration);
+        float delay = Mathf.Max(0f, hitFeedbackMaxDuration);
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
+
         StopFeedback(hitFeedback);
+        RestartFeelVolumeRestore(0f);
         hitFeedbackStopCoroutine = null;
     }
 
-    public void PlayHitImpactFeedbackOnly(float intensityMultiplier = 1f, bool includeShieldHitVfxAndSound = false)
+    public void PlayHitImpactFeedbackOnly(
+        float intensityMultiplier = 1f,
+        bool includeShieldHitVfxAndSound = false,
+        bool allowLegacyScreenEffect = true)
     {
+        if (traceFeelVolumeLogs)
+        {
+            string feedbackName = hitFeedback != null && hitFeedback.gameObject != null
+                ? hitFeedback.gameObject.name
+                : "(null)";
+            Debug.Log(
+                $"[SAT_TRACE][Player_Health.PlayHitImpactFeedbackOnly] feedback='{feedbackName}' intensity={intensityMultiplier:F2} allowLegacy={allowLegacyScreenEffect} includeVfxSound={includeShieldHitVfxAndSound}",
+                this);
+        }
+
         ResolveHitFeedbackReferences();
         bool playedAnyHitFeedback = false;
         if (preferFeelHitFeedback)
@@ -331,7 +355,9 @@ public class Player_Health : Entity_Health
             }
         }
 
-        bool shouldPlayLegacyFallback = !playedAnyHitFeedback || alwaysPlayLegacyScreenHitFallback;
+        bool shouldPlayLegacyFallback = allowLegacyScreenEffect
+                                        && (!playedAnyHitFeedback
+                                            || (alwaysPlayLegacyScreenHitFallback && !preferFeelHitFeedback));
         if (screenHitEffect != null && shouldPlayLegacyFallback)
         {
             screenHitEffect.Play();
@@ -806,7 +832,11 @@ public class Player_Health : Entity_Health
             return;
 
         feelLiftRestoreWeight = feelGlobalVolume.weight;
-        feelGlobalVolume.weight = Mathf.Clamp01(feelVolumeWeightDuringHit);
+        float previousWeight = feelGlobalVolume.weight;
+        float targetWeight = Mathf.Clamp01(feelVolumeWeightDuringHit);
+        if (!Mathf.Approximately(previousWeight, targetWeight))
+            LogFeelVolumeTrace("EnsureFeelVolumeVisibleForHit", feelGlobalVolume, previousWeight, targetWeight);
+        feelGlobalVolume.weight = targetWeight;
         float duration = Mathf.Max(hitFeedbackMaxDuration, feelVolumeLiftDuration);
         RestartFeelVolumeRestore(duration);
     }
@@ -838,7 +868,11 @@ public class Player_Health : Entity_Health
 
         if (feelGlobalVolume != null)
         {
-            feelGlobalVolume.weight = Mathf.Clamp01(feelLiftRestoreWeight);
+            float previousWeight = feelGlobalVolume.weight;
+            float restoredWeight = Mathf.Clamp01(feelLiftRestoreWeight);
+            if (!Mathf.Approximately(previousWeight, restoredWeight))
+                LogFeelVolumeTrace("RestoreFeelVolumeAfterDelay", feelGlobalVolume, previousWeight, restoredWeight);
+            feelGlobalVolume.weight = restoredWeight;
         }
 
         feelVolumeLiftCoroutine = null;
@@ -873,6 +907,35 @@ public class Player_Health : Entity_Health
                 behaviour.enabled = false;
             }
         }
+    }
+
+    private void EnsureSaturationTraceWatcher()
+    {
+        if (!autoAttachSaturationTraceWatcher)
+            return;
+
+        if (GetComponent<SaturationTraceWatcher>() != null)
+            return;
+
+        SaturationTraceWatcher watcher = gameObject.AddComponent<SaturationTraceWatcher>();
+        if (traceFeelVolumeLogs && watcher != null)
+            Debug.Log("[SAT_TRACE][Player_Health] SaturationTraceWatcher attached to Player.", this);
+    }
+
+    private void LogFeelVolumeTrace(string source, Volume volume, float before, float after)
+    {
+        if (!traceFeelVolumeLogs)
+            return;
+
+        EnsureFeelAwakeningManager();
+        Player player = GetComponent<Player>();
+        bool isGrappling = player != null && player.IsGrappling;
+        bool isAwakening = feelAwakeningManager != null && feelAwakeningManager.IsAwakening;
+        string volumeName = volume != null && volume.gameObject != null ? volume.gameObject.name : "(null)";
+
+        Debug.Log(
+            $"[SAT_TRACE][Player_Health.{source}] volume='{volumeName}' weight {before:F2}->{after:F2} awakening={isAwakening} grappling={isGrappling}",
+            this);
     }
 
     protected override bool IsHeavyDamage(float damage)

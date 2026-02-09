@@ -37,11 +37,13 @@ public class Player : Entity
     [SerializeField] private GrappleVisualizer grappleVisualizer;
     [SerializeField] private float grappleHitCooldown = 1.5f;
     private float grappleCooldownTimer;
+    private float parryCooldownTimer;
     private float lastGrappleEndTime = -999f;
     [SerializeField] private AwakeningManager awakeningManager;
     public bool IsGrappling => grappleState != null && stateMachine != null && stateMachine.currentState == grappleState && grappleState.IsGrapplingActive;
     public bool IsParryAiming => parryAimState != null && stateMachine != null && stateMachine.currentState == parryAimState;
     public bool IsGrappleOnCooldown => grappleCooldownTimer > 0f;
+    public bool IsParryOnCooldown => parryCooldownTimer > 0f;
     public bool grappleAirJumpAvailable { get; set; }
     public AwakeningManager AwakeningManager => awakeningManager;
     public LockOnGrappleConfig GrappleConfig => grappleConfig;
@@ -192,6 +194,11 @@ public class Player : Entity
         [SerializeField] public Material trajectoryLineMaterial;
         [SerializeField] public float parryInvincibilityDuration = 0.25f;
 
+        [Header("Parry Cooldown")]
+        [SerializeField, Min(0f)] private float normalParryCooldown = 0.7f;
+        [SerializeField, Min(0f)] private float perfectParryWindow = 0.2f;
+        [SerializeField] private bool logParryCooldownDebug = false;
+
         [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     
@@ -339,6 +346,13 @@ public class Player : Entity
                 grappleCooldownTimer -= Time.deltaTime;
                 if (grappleCooldownTimer < 0f)
                     grappleCooldownTimer = 0f;
+            }
+
+            if (parryCooldownTimer > 0f)
+            {
+                parryCooldownTimer -= Time.unscaledDeltaTime;
+                if (parryCooldownTimer < 0f)
+                    parryCooldownTimer = 0f;
             }
 
 
@@ -1304,13 +1318,46 @@ public class Player : Entity
 
             public bool WasCounterAttackPressedThisFrame() => input.Player.CounterAttack.WasPressedThisFrame();
 
-    
-
             public bool IsCounterAttackBeingHeld() => input.Player.CounterAttack.IsPressed();
 
-    
-
             public bool WasCounterAttackReleasedThisFrame() => input.Player.CounterAttack.WasReleasedThisFrame();
+
+            public bool CanStartCounterAttack() => parryCooldownTimer <= 0f;
+
+            public float GetPerfectParryWindow() => Mathf.Max(0f, perfectParryWindow);
+
+            public void ApplyParryCooldownOnSuccess(bool wasPerfectParry)
+            {
+                if (wasPerfectParry)
+                {
+                    if (logParryCooldownDebug)
+                        Debug.Log("[Parry] Perfect parry: cooldown skipped.", this);
+                    return;
+                }
+
+                if (normalParryCooldown <= 0f)
+                    return;
+
+                parryCooldownTimer = Mathf.Max(parryCooldownTimer, normalParryCooldown);
+                if (logParryCooldownDebug)
+                    Debug.Log($"[Parry] Normal parry cooldown applied: {parryCooldownTimer:F2}s", this);
+            }
+
+            public bool TryStartCounterAttackFromInput()
+            {
+                if (!WasCounterAttackPressedThisFrame())
+                    return false;
+
+                if (!CanStartCounterAttack())
+                {
+                    if (logParryCooldownDebug)
+                        Debug.Log($"[Parry] Counter blocked by cooldown: {parryCooldownTimer:F2}s", this);
+                    return false;
+                }
+
+                stateMachine.ChangeState(counterAttackState);
+                return true;
+            }
 
     
 

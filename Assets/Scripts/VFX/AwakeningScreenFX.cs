@@ -22,6 +22,7 @@ public class AwakeningScreenFX : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = false;
     [SerializeField] private bool disableGlobalShaderGlitch = true;
+    [SerializeField] private bool traceSaturationLogs = true;
 
     [Header("Awakening Exit Pulse")]
     [SerializeField] private bool playHitPulseOnAwakeningExit = true;
@@ -149,7 +150,7 @@ public class AwakeningScreenFX : MonoBehaviour
             float intensityScale = isGrappling ? grapplingFxMultiplier : 1f;
             ApplyHold(intensityScale);
         }
-        else if (isGrappling)
+        else
         {
             RestorePostFx();
             RestoreGlitch();
@@ -333,7 +334,8 @@ public class AwakeningScreenFX : MonoBehaviour
             // Fallback to shared hit feedback if a dedicated awakening-exit feedback isn't assigned.
             playerHealth.PlayHitImpactFeedbackOnly(
                 awakeningExitHitPulseIntensity,
-                includeShieldHitVfxAndSound: awakeningExitPulsePlaysShieldVfxAndSound);
+                includeShieldHitVfxAndSound: awakeningExitPulsePlaysShieldVfxAndSound,
+                allowLegacyScreenEffect: false);
         }
         else if (playedDedicatedExitFeedback && awakeningExitPulsePlaysShieldVfxAndSound && playerHealth != null)
         {
@@ -392,8 +394,12 @@ public class AwakeningScreenFX : MonoBehaviour
             float targetContrast = Mathf.Clamp(cachedContrast + (contrastBoost * intensityScale), -100f, 100f);
             float targetSaturation = Mathf.Clamp(cachedSaturation + (saturationBoost * intensityScale), -100f, 100f);
             float targetPostExposure = Mathf.Clamp(cachedPostExposure + (postExposureBoost * intensityScale), -5f, 5f);
+            float currentSaturation = colorAdjustments.saturation.value;
+            float appliedSaturation = Mathf.Lerp(cachedSaturation, targetSaturation, tintBlend);
+            if (!Mathf.Approximately(currentSaturation, appliedSaturation))
+                LogSaturationTrace("ApplyTint", currentSaturation, appliedSaturation);
             colorAdjustments.contrast.Override(Mathf.Lerp(cachedContrast, targetContrast, tintBlend));
-            colorAdjustments.saturation.Override(Mathf.Lerp(cachedSaturation, targetSaturation, tintBlend));
+            colorAdjustments.saturation.Override(appliedSaturation);
             colorAdjustments.postExposure.Override(Mathf.Lerp(cachedPostExposure, targetPostExposure, tintBlend));
             colorAdjustments.active = true;
         }
@@ -451,6 +457,9 @@ public class AwakeningScreenFX : MonoBehaviour
     {
         if (colorAdjustments != null)
         {
+            float currentSaturation = colorAdjustments.saturation.value;
+            if (!Mathf.Approximately(currentSaturation, cachedSaturation))
+                LogSaturationTrace("RestorePostFx", currentSaturation, cachedSaturation);
             colorAdjustments.colorFilter.Override(cachedColorFilter);
             colorAdjustments.contrast.Override(cachedContrast);
             colorAdjustments.saturation.Override(cachedSaturation);
@@ -567,5 +576,22 @@ public class AwakeningScreenFX : MonoBehaviour
         Shader.SetGlobalFloat(TvPowerId, 1f);
         Shader.SetGlobalFloat(GlitchStrengthId, 0f);
         Shader.SetGlobalFloat(GlitchColorSplitId, 0f);
+    }
+
+    private void LogSaturationTrace(string source, float before, float after)
+    {
+        if (!traceSaturationLogs)
+            return;
+
+        float volumeWeight = awakeningVolume != null ? awakeningVolume.weight : -1f;
+        bool isAwakening = awakeningManager != null && awakeningManager.IsAwakening;
+        bool isGrappling = player != null && player.IsGrappling;
+        string volumeName = awakeningVolume != null && awakeningVolume.gameObject != null
+            ? awakeningVolume.gameObject.name
+            : "(null)";
+
+        Debug.Log(
+            $"[SAT_TRACE][AwakeningScreenFX.{source}] volume='{volumeName}' sat {before:F2}->{after:F2} weight={volumeWeight:F2} awakening={isAwakening} grappling={isGrappling}",
+            this);
     }
 }

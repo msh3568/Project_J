@@ -48,8 +48,8 @@ public class Player_BasicAttackState : PlayerState
         if(triggerCalled)
             stateMachine.ChangeState(player.idleState);
 
-        if (input.Player.CounterAttack.WasPressedThisFrame())
-            stateMachine.ChangeState(player.counterAttackState);
+        if (player.TryStartCounterAttackFromInput())
+            return;
     }
 
     public override void Exit()
