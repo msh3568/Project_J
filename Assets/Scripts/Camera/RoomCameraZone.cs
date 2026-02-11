@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Collider2D))]
 public class RoomCameraZone : MonoBehaviour
 {
+    private static readonly List<RoomCameraZone> allZones = new();
+
     [Header("Zone")]
     [SerializeField] private Collider2D bounds;
     [SerializeField] private int priority = 0;
@@ -43,6 +46,7 @@ public class RoomCameraZone : MonoBehaviour
     public bool OverrideDeadZone => overrideDeadZone;
     public bool DeadZoneEnabled => deadZoneEnabled;
     public Vector2 DeadZoneSize => deadZoneSize;
+    public static IReadOnlyList<RoomCameraZone> AllZones => allZones;
 
     private void Reset()
     {
@@ -51,6 +55,20 @@ public class RoomCameraZone : MonoBehaviour
         {
             bounds.isTrigger = true;
         }
+    }
+
+    private void OnEnable()
+    {
+        if (!allZones.Contains(this))
+        {
+            allZones.Add(this);
+        }
+    }
+
+    private void OnDisable()
+    {
+        allZones.Remove(this);
+        RoomCameraManager.Instance?.Unregister(this);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

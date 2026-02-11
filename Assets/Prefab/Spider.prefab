@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 2031760271382590031}
   - component: {fileID: 7974593657550760626}
   - component: {fileID: -2112528197187626297}
+  - component: {fileID: 644912633955945598}
   m_Layer: 12
   m_Name: Spider
   m_TagString: Enemy
@@ -295,6 +296,11 @@ MonoBehaviour:
   attachedWarningColor: {r: 1, g: 0.2, b: 0.2, a: 1}
   attachedBlinkSpeed: 6
   attachedRandomRotationRange: 35
+  enablePreExplodeFlash: 1
+  preExplodeFlashDuration: 0.7
+  preExplodeFlashColor: {r: 1, g: 1, b: 1, a: 1}
+  preExplodeFlashBlinkSpeed: 14
+  preExplodeFlashMinIntensity: 0.35
   parryProjectileSpeed: 10
   parrySpeedMultiplier: 3
   launchedFuseTime: 0.6
@@ -407,3 +413,18 @@ MonoBehaviour:
   resetRigidbody2D: 1
   rebindAnimator: 1
   reactivateOnRespawn: 1
+--- !u!114 &644912633955945598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6656836635872708976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df880d2f171b4944aa05a968b58e596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTrackedUnit
+  clearOnDisable: 1
+  clearOnDestroy: 1
+  debugLogs: 0

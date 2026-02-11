@@ -307,6 +307,7 @@ GameObject:
   - component: {fileID: 5655554843663247662}
   - component: {fileID: -5455933742298674915}
   - component: {fileID: 5777396416537457761}
+  - component: {fileID: 8182826497129415573}
   m_Layer: 15
   m_Name: LatencyDroneStrong 2
   m_TagString: Enemy
@@ -1006,6 +1007,21 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+--- !u!114 &8182826497129415573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419452560728899010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df880d2f171b4944aa05a968b58e596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTrackedUnit
+  clearOnDisable: 1
+  clearOnDestroy: 1
+  debugLogs: 0
 --- !u!1 &8282238455544917858
 GameObject:
   m_ObjectHideFlags: 0

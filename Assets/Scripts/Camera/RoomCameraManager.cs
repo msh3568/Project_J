@@ -13,11 +13,17 @@ public class RoomCameraManager : MonoBehaviour
     [SerializeField] private CinemachineCamera secondaryCamera;
     [SerializeField] private CinemachineConfiner2D confiner;
     [SerializeField] private RoomCameraZone defaultRoom;
+    [SerializeField] private Transform roomTarget;
+    [SerializeField] private string roomTargetTag = "Player";
 
     [Header("Transition")]
     [SerializeField, Min(0f)] private float transitionDuration = 0.2f;
     [SerializeField] private bool useUnscaledTime = false;
     [SerializeField] private bool disableConfinerDuringTransition = true;
+
+    [Header("Room Resolve")]
+    [SerializeField] private bool resolveRoomByTargetPosition = true;
+    [SerializeField, Min(0f)] private float emptyRoomGraceDuration = 0.2f;
 
     private CinemachinePositionComposer composer;
     private float baseOrthoSize;
@@ -35,6 +41,7 @@ public class RoomCameraManager : MonoBehaviour
     private readonly List<RoomCameraZone> activeRooms = new();
     private Coroutine transitionCoroutine;
     private RoomCameraZone currentRoom;
+    private float lastResolvedRoomTime = float.NegativeInfinity;
 
     private void Awake()
     {
@@ -81,6 +88,18 @@ public class RoomCameraManager : MonoBehaviour
 
     private void OnEnable()
     {
+        ApplyBestRoom();
+    }
+
+    private void LateUpdate()
+    {
+        if (!resolveRoomByTargetPosition)
+        {
+            return;
+        }
+
+        // Trigger callbacks can be skipped while player colliders are disabled (e.g. grapple phase-through).
+        // Polling keeps the camera room locked to the player's actual room in that case.
         ApplyBestRoom();
     }
 
@@ -141,10 +160,25 @@ public class RoomCameraManager : MonoBehaviour
     private void ApplyBestRoom()
     {
         var room = GetBestRoom();
+        if (room == null && resolveRoomByTargetPosition)
+        {
+            room = GetRoomAtTargetPosition();
+        }
+
         if (room != null)
         {
             ApplyRoom(room);
+            lastResolvedRoomTime = useUnscaledTime ? Time.unscaledTime : Time.time;
             return;
+        }
+
+        if (currentRoom != null)
+        {
+            float now = useUnscaledTime ? Time.unscaledTime : Time.time;
+            if (now - lastResolvedRoomTime < emptyRoomGraceDuration)
+            {
+                return;
+            }
         }
 
         if (defaultRoom != null)
@@ -154,6 +188,76 @@ public class RoomCameraManager : MonoBehaviour
         }
 
         RestoreBase();
+    }
+
+    private RoomCameraZone GetRoomAtTargetPosition()
+    {
+        Transform target = ResolveRoomTarget();
+        if (target == null)
+        {
+            return null;
+        }
+
+        Vector2 targetPos = target.position;
+        RoomCameraZone best = null;
+        int bestPriority = int.MinValue;
+        var zones = RoomCameraZone.AllZones;
+
+        for (int i = 0; i < zones.Count; i++)
+        {
+            RoomCameraZone zone = zones[i];
+            if (zone == null || !zone.isActiveAndEnabled)
+            {
+                continue;
+            }
+
+            Collider2D zoneBounds = zone.Bounds;
+            if (zoneBounds == null || !zoneBounds.OverlapPoint(targetPos))
+            {
+                continue;
+            }
+
+            if (zone.Priority > bestPriority)
+            {
+                best = zone;
+                bestPriority = zone.Priority;
+            }
+        }
+
+        return best;
+    }
+
+    private Transform ResolveRoomTarget()
+    {
+        if (roomTarget != null)
+        {
+            return roomTarget;
+        }
+
+        if (cinemachineCamera != null && cinemachineCamera.Follow != null)
+        {
+            roomTarget = cinemachineCamera.Follow;
+            return roomTarget;
+        }
+
+        if (secondaryCamera != null && secondaryCamera.Follow != null)
+        {
+            roomTarget = secondaryCamera.Follow;
+            return roomTarget;
+        }
+
+        if (string.IsNullOrEmpty(roomTargetTag))
+        {
+            return null;
+        }
+
+        GameObject targetObject = GameObject.FindGameObjectWithTag(roomTargetTag);
+        if (targetObject != null)
+        {
+            roomTarget = targetObject.transform;
+        }
+
+        return roomTarget;
     }
 
     private RoomCameraZone GetBestRoom()

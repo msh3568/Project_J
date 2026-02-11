@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 6914361142803634593}
   - component: {fileID: -835647704000066398}
   - component: {fileID: 4698212770224806697}
+  - component: {fileID: -3429579383243768769}
   m_Layer: 15
   m_Name: Enemy_Warrior
   m_TagString: Enemy
@@ -345,6 +346,7 @@ MonoBehaviour:
     m_Bits: 0
   requireWallTag: 1
   wallTag: Wall
+  includeGroundInWallCheck: 0
   groundCheckDistance: 0.5
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.5
@@ -508,6 +510,7 @@ MonoBehaviour:
   overrideOnDamageVfxSorting: 1
   onDamageVfxSortingLayer: Enemy
   onDamageVfxSortingOrder: 15
+  useUnscaledTimeForDamageVfx: 1
   hitVfx: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
   hitVfxOffset: {x: 0, y: 0, z: 0}
   hitVfxScale: {x: 1, y: 1, z: 1}
@@ -726,3 +729,18 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+--- !u!114 &-3429579383243768769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8454643877003574839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df880d2f171b4944aa05a968b58e596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTrackedUnit
+  clearOnDisable: 1
+  clearOnDestroy: 1
+  debugLogs: 0

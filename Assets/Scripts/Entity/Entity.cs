@@ -22,8 +22,9 @@ public class Entity : MonoBehaviour
     [Header("Collision detection")]
     [SerializeField] protected LayerMask whatIsGround;
     [SerializeField] protected LayerMask whatIsWall;
-    [SerializeField] private bool requireWallTag = true;
-    [SerializeField] private string wallTag = "Wall";
+    [SerializeField] protected bool requireWallTag = true;
+    [SerializeField] protected string wallTag = "Wall";
+    [SerializeField] protected bool includeGroundInWallCheck = false;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.2f);
     [SerializeField] protected float wallCheckDistance;
@@ -178,7 +179,8 @@ public class Entity : MonoBehaviour
     {
         Vector2 box_origin = (Vector2)transform.position + groundCheckPositionOffset;
         groundHit = Physics2D.BoxCast(box_origin, groundCheckSize, 0, Vector2.down, groundCheckDistance, whatIsGround);
-        var wallHit = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsWall);
+        int wallMask = includeGroundInWallCheck ? (whatIsWall.value | whatIsGround.value) : whatIsWall.value;
+        var wallHit = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, wallMask);
         wallDetected = wallHit.collider != null && (!requireWallTag || wallHit.collider.CompareTag(wallTag));
     }
 

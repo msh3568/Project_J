@@ -231,6 +231,8 @@ public class Player : Entity
         {
 
             base.Awake();
+            requireWallTag = false;
+            includeGroundInWallCheck = true;
 
             if (rb != null)
                 rb.freezeRotation = true;

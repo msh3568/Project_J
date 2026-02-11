@@ -38,15 +38,32 @@ public class Player_GroundedState : PlayerState
 
         if (rb.linearVelocity.y < 0 && player.groundDetected == false)
             stateMachine.ChangeState(player.fallState);
-        
-            
+
+        bool pressingIntoWall = Mathf.Abs(player.moveInput.x) > 0.01f && Mathf.Sign(player.moveInput.x) == player.facingDir;
+        if (player.wallDetected && (pressingIntoWall || player.moveInput.y > 0.8f))
+        {
+            stateMachine.ChangeState(player.wallSlideState);
+            return;
+        }
+
         if (input.Player.Baldo.WasPressedThisFrame() && player.skillManager.baldo.CanUseSkill())
         {
             player.PlaySound(player.baldoSkillSound);
             stateMachine.ChangeState(player.baldoState);
+            return;
         }
 
         // Charge Jump Logic
+        if (input.Player.Jump.WasPressedThisFrame() && player.wallDetected)
+        {
+            if (player.moveInput.y > 0.8f && player.CanUseWallAssistJump())
+                stateMachine.ChangeState(player.wallAssistJumpState);
+            else
+                stateMachine.ChangeState(player.wallJumpState);
+
+            return;
+        }
+
         if (input.Player.Jump.WasPressedThisFrame())
         {
             player.isChargingJump = true;

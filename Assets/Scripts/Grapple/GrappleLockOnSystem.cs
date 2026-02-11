@@ -16,6 +16,7 @@ public class GrappleLockOnSystem : MonoBehaviour
     private bool loggedMissingConfig;
     private bool loggedMissingOcclusionMask;
     private bool loggedLockOnBlockedByOcclusion;
+    private bool loggedFallbackLayerScan;
 
     public GrappleTargetBase CurrentTarget => currentTarget;
     public LockOnGrappleConfig Config => config;
@@ -193,80 +194,98 @@ public class GrappleLockOnSystem : MonoBehaviour
 
     private GrappleTargetBase FindBestTarget()
     {
-        LayerMask searchMask = config.GetSearchLayerMask();
-        int hitCount = Physics2D.OverlapCircleNonAlloc(player.transform.position, config.searchRadius, overlapBuffer, searchMask);
-        if (hitCount <= 0)
-            return null;
-
         Vector2 forward = GetForwardDirection();
         float halfPrimary = config.coneAngle * 0.5f;
         float halfFallback = config.fallbackConeAngle * 0.5f;
+        int primaryMask = config.GetSearchLayerMask().value;
+        bool shouldRunFallbackPass = primaryMask != ~0;
+        int passCount = shouldRunFallbackPass ? 2 : 1;
 
-        GrappleTargetBase bestPrimary = null;
-        GrappleTargetBase bestFallback = null;
-        float bestPrimaryScore = float.MaxValue;
-        float bestFallbackScore = float.MaxValue;
-
-        for (int i = 0; i < hitCount; i++)
+        for (int pass = 0; pass < passCount; pass++)
         {
-            Collider2D col = overlapBuffer[i];
-            if (col == null)
+            int mask = pass == 0 ? primaryMask : ~0;
+            int hitCount = Physics2D.OverlapCircleNonAlloc(player.transform.position, config.searchRadius, overlapBuffer, mask);
+            if (hitCount <= 0)
                 continue;
 
-            GrappleTargetBase target = col.GetComponentInParent<GrappleTargetBase>();
-            if (target == null)
-                target = col.GetComponent<GrappleTargetBase>();
+            GrappleTargetBase bestPrimary = null;
+            GrappleTargetBase bestFallback = null;
+            float bestPrimaryScore = float.MaxValue;
+            float bestFallbackScore = float.MaxValue;
 
-            if (target == null || !target.IsAvailableForGrapple(player))
-                continue;
-
-            if (target == lastUsedTarget && Time.time < lastUsedUntil)
-                continue;
-
-            Vector2 targetPos = target.GetAimPosition();
-            Vector2 toTarget = targetPos - (Vector2)player.transform.position;
-            float distance = toTarget.magnitude;
-            if (distance <= 0.001f || distance > config.searchRadius)
-                continue;
-
-            if (config.requireOnScreen && !IsOnScreen(targetPos))
-                continue;
-
-            if (IsOccluded((Vector2)player.transform.position, targetPos, target))
-                continue;
-
-            float angle = Vector2.Angle(forward, toTarget.normalized);
-
-            bool insidePrimary = angle <= halfPrimary;
-            bool insideFallback = angle <= halfFallback;
-            if (!insideFallback)
-                continue;
-
-            float normDist = Mathf.Clamp01(distance / Mathf.Max(0.001f, config.searchRadius));
-            float normAnglePrimary = Mathf.Clamp01(angle / Mathf.Max(1f, halfPrimary));
-            float normAngleFallback = Mathf.Clamp01(angle / Mathf.Max(1f, halfFallback));
-
-            if (insidePrimary)
+            for (int i = 0; i < hitCount; i++)
             {
-                float score = config.distWeight * normDist + config.angleWeight * normAnglePrimary;
-                if (score < bestPrimaryScore)
+                Collider2D col = overlapBuffer[i];
+                if (col == null)
+                    continue;
+
+                GrappleTargetBase target = col.GetComponentInParent<GrappleTargetBase>();
+                if (target == null)
+                    target = col.GetComponent<GrappleTargetBase>();
+
+                if (target == null || !target.IsAvailableForGrapple(player))
+                    continue;
+
+                if (target == lastUsedTarget && Time.time < lastUsedUntil)
+                    continue;
+
+                Vector2 targetPos = target.GetAimPosition();
+                Vector2 toTarget = targetPos - (Vector2)player.transform.position;
+                float distance = toTarget.magnitude;
+                if (distance <= 0.001f || distance > config.searchRadius)
+                    continue;
+
+                if (config.requireOnScreen && !IsOnScreen(targetPos))
+                    continue;
+
+                if (IsOccluded((Vector2)player.transform.position, targetPos, target))
+                    continue;
+
+                float angle = Vector2.Angle(forward, toTarget.normalized);
+
+                bool insidePrimary = angle <= halfPrimary;
+                bool insideFallback = angle <= halfFallback;
+                if (!insideFallback)
+                    continue;
+
+                float normDist = Mathf.Clamp01(distance / Mathf.Max(0.001f, config.searchRadius));
+                float normAnglePrimary = Mathf.Clamp01(angle / Mathf.Max(1f, halfPrimary));
+                float normAngleFallback = Mathf.Clamp01(angle / Mathf.Max(1f, halfFallback));
+
+                if (insidePrimary)
                 {
-                    bestPrimaryScore = score;
-                    bestPrimary = target;
+                    float score = config.distWeight * normDist + config.angleWeight * normAnglePrimary;
+                    if (score < bestPrimaryScore)
+                    {
+                        bestPrimaryScore = score;
+                        bestPrimary = target;
+                    }
+                }
+                else
+                {
+                    float score = config.distWeight * normDist + config.angleWeight * normAngleFallback;
+                    if (score < bestFallbackScore)
+                    {
+                        bestFallbackScore = score;
+                        bestFallback = target;
+                    }
                 }
             }
-            else
+
+            GrappleTargetBase selected = bestPrimary != null ? bestPrimary : bestFallback;
+            if (selected != null)
             {
-                float score = config.distWeight * normDist + config.angleWeight * normAngleFallback;
-                if (score < bestFallbackScore)
+                if (pass == 1 && !loggedFallbackLayerScan)
                 {
-                    bestFallbackScore = score;
-                    bestFallback = target;
+                    loggedFallbackLayerScan = true;
+                    Debug.LogWarning("[GrappleLockOnSystem] Target found only via all-layer fallback. Check targetLayerMask/layer setup for GrapplePointTarget.", this);
                 }
+
+                return selected;
             }
         }
 
-        return bestPrimary != null ? bestPrimary : bestFallback;
+        return null;
     }
 
     private Vector2 GetForwardDirection()
