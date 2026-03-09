@@ -1338,7 +1338,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: abad1f6428fb69b4aa560cc059432524, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1383,7 +1383,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0, g: 0, b: 0, a: 1}
       key1: {r: 0, g: 0, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -7957,9 +7957,13 @@ MonoBehaviour:
   secondaryCamera: {fileID: 897928681}
   confiner: {fileID: 751552181}
   defaultRoom: {fileID: 879340886}
+  roomTarget: {fileID: 0}
+  roomTargetTag: Player
   transitionDuration: 0.35
   useUnscaledTime: 0
   disableConfinerDuringTransition: 1
+  resolveRoomByTargetPosition: 1
+  emptyRoomGraceDuration: 0.2
 --- !u!1 &757187469
 GameObject:
   m_ObjectHideFlags: 0
@@ -31768,6 +31772,7 @@ MonoBehaviour:
     m_Bits: 16384
   requireWallTag: 1
   wallTag: Wall
+  includeGroundInWallCheck: 0
   groundCheckDistance: 1.4
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
@@ -32523,6 +32528,9 @@ MonoBehaviour:
   lineStartOffset: {x: 0, y: 0, z: 0}
   lineEndOffset: {x: 0, y: 0, z: 0}
   hideWhenGrappleUnavailable: 1
+  lineMaterialOverride: {fileID: 2100000, guid: abad1f6428fb69b4aa560cc059432524, type: 2}
+  lockOnLineColor: {r: 0, g: 0, b: 0, a: 1}
+  tintMaterialColor: 1
 --- !u!114 &2049881648
 MonoBehaviour:
   m_ObjectHideFlags: 0
