@@ -482,6 +482,13 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
         Log("Explode");
         hasExploded = true;
+
+        // Notify room tracking if component exists
+        if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
+        {
+            trackedUnit.NotifyDead();
+        }
+
         SetState(SpiderState.Exploded);
         DetachFromPlayer();
 

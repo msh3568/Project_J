@@ -12,19 +12,19 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float stopDistance = 3f; // Distance from player to stop moving and start firing
 
     [Header("Chase Speed Curve Settings")]
-    [SerializeField] private AnimationCurve chaseSpeedCurve; // ?�레?�어?�??거리???�른 추적 ?�도 곡선 (0: 가까�?, 1: detectionRange)
-    [SerializeField] private float maxChaseSpeed = 5f; // AnimationCurve??1.0f??매핑??최�? 추적 ?�도
+    [SerializeField] private AnimationCurve chaseSpeedCurve; // ?�레?�어?�??거리???�른 추적 ?�도 곡선 (0: 가까�?, 1: detectionRange)
+    [SerializeField] private float maxChaseSpeed = 5f; // AnimationCurve??1.0f??매핑??최�? 추적 ?�도
 
     [Header("Retreat Settings")]
-    [SerializeField] private float retreatForce = 10f; // ?�무 가까워졌을 ???�로 물러?�는 ??
+    [SerializeField] private float retreatForce = 10f; // ?�무 가까워졌을 ???�로 물러?�는 ??
     [SerializeField] private float retreatDuration = 0.2f;
     [SerializeField] private float retreatKickSpeed = 6f;
-    [SerializeField] private float retreatKickDuration = 0.08f; // ?�로 물러?�는 반동 지???�간
-    private bool isRetreating = false; // ?�로 물러?�는 중인지 체크
+    [SerializeField] private float retreatKickDuration = 0.08f; // ?�로 물러?�는 반동 지???�간
+    private bool isRetreating = false; // ?�로 물러?�는 중인지 체크
 
     [Header("Firing Range Settings")]
-    [SerializeField] private float idealFiringDistance = 3f; // ??거리 ?�으�??�어?�면 발사 ?�작
-    [SerializeField] private float maxFiringDistance = 6f; // ??거리 밖에?�는 발사?��? ?�음
+    [SerializeField] private float idealFiringDistance = 3f; // ??거리 ?�으�??�어?�면 발사 ?�작
+    [SerializeField] private float maxFiringDistance = 6f; // ??거리 밖에?�는 발사?��? ?�음
 
     [Header("Hovering Effect")]
     [SerializeField] private float hoverAmplitude = 0.2f; // How high it floats up and down
@@ -68,25 +68,25 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     [Header("Burst Fire Settings")]
     [SerializeField] private int capsulesPerBurst = 3; // ??번에 발사??캡슐 ??
-    [SerializeField] private float timeBetweenCapsules = 0.1f; // ?�발 ??캡슐??간격
-    [SerializeField] private float burstCooldown = 2.0f; // ?�발 ?�체가 ?�난 ???�음 ?�발까�????��??�간
-    private bool isFiringBurst = false; // ?�발 발사 중인지 체크
+    [SerializeField] private float timeBetweenCapsules = 0.1f; // ?�발 ??캡슐??간격
+    [SerializeField] private float burstCooldown = 2.0f; // ?�발 ?�체가 ?�난 ???�음 ?�발까�????��??�간
+    private bool isFiringBurst = false; // ?�발 발사 중인지 체크
 
     [Header("Sound Settings")]
-    [SerializeField] private AudioClip preFireSound; // 발사 ???�운???�립
-    [SerializeField] private AudioClip fireSound;    // 발사 ???�운???�립
-    [SerializeField] private AudioClip idleSound;    // ?�상???�생???�운???�립 (루프)
-    [SerializeField] private AudioClip deathSound;   // ?�괴 ???�운???�립
+    [SerializeField] private AudioClip preFireSound; // 발사 ???�운???�립
+    [SerializeField] private AudioClip fireSound;    // 발사 ???�운???�립
+    [SerializeField] private AudioClip idleSound;    // ?�상???�생???�운???�립 (루프)
+    [SerializeField] private AudioClip deathSound;   // ?�괴 ???�운???�립
 
-    [SerializeField, Range(0f, 2f)] private float preFireVolume = 0.5f; // 발사 ???�운??볼륨
-    [SerializeField, Range(0f, 2f)] private float fireVolume = 0.5f;    // 발사 ???�운??볼륨
-    [SerializeField, Range(0f, 2f)] private float idleVolume = 0.5f;    // ?�상???�운??볼륨
-    [SerializeField, Range(0f, 2f)] private float deathVolume = 0.5f;   // ?�괴 ???�운??볼륨
+    [SerializeField, Range(0f, 2f)] private float preFireVolume = 0.5f; // 발사 ???�운??볼륨
+    [SerializeField, Range(0f, 2f)] private float fireVolume = 0.5f;    // 발사 ???�운??볼륨
+    [SerializeField, Range(0f, 2f)] private float idleVolume = 0.5f;    // ?�상???�운??볼륨
+    [SerializeField, Range(0f, 2f)] private float deathVolume = 0.5f;   // ?�괴 ???�운??볼륨
 
     [Header("Mixer Settings")]
     [SerializeField] private AudioMixerGroup sfxMixerGroup; // SFX 믹서 그룹
 
-    private AudioSource audioSource;                 // ?�운???�생???�한 AudioSource
+    private AudioSource audioSource;                 // ?�운???�생???�한 AudioSource
     private Coroutine telegraphCoroutine;
     private float nextTelegraphTime = Mathf.Infinity;
     private Vector2 lockedAimDirection;
@@ -135,15 +135,15 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private float initialHealth;
 
     [Header("Patrol Settings")]
-    [SerializeField] private float patrolMoveRangeX = 5f; // X축으�??�동??최�? 범위
-    [SerializeField] private float patrolSpeed = 1.5f; // ?�찰 ?�동 ?�도
-    private Vector2 initialPatrolPosition; // ?�론???�성???�의 초기 ?�치 ?�??
-    private int patrolDirection = 1; // 1: ?�른�? -1: ?�쪽
+    [SerializeField] private float patrolMoveRangeX = 5f; // X축으�??�동??최�? 범위
+    [SerializeField] private float patrolSpeed = 1.5f; // ?�찰 ?�동 ?�도
+    private Vector2 initialPatrolPosition; // ?�론???�성???�의 초기 ?�치 ?�??
+    private int patrolDirection = 1; // 1: ?�른�? -1: ?�쪽
 
     [Header("Drone Chase Settings")]
-    [SerializeField] private float minHorizontalDistance = 2f; // ?�레?�어?�??최소 X�?거리
-    [SerializeField] private float followHeightOffset = 3f; // ?�레?�어 머리 ?�에???��????�이 (?�레?�어 Y + followHeightOffset)
-    [SerializeField] private float verticalAdjustSpeed = 2f; // Y�?조정 ?�도
+    [SerializeField] private float minHorizontalDistance = 2f; // ?�레?�어?�??최소 X�?거리
+    [SerializeField] private float followHeightOffset = 3f; // ?�레?�어 머리 ?�에???��????�이 (?�레?�어 Y + followHeightOffset)
+    [SerializeField] private float verticalAdjustSpeed = 2f; // Y�?조정 ?�도
 
     void Awake()
     {
@@ -177,17 +177,17 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false; // ?�작 ??바로 ?�생?��? ?�도�??�정
-            audioSource.spatialBlend = 1f; // 3D ?�운?�로 ?�정 (거리�?
-            audioSource.volume = 1.0f; // 개별 ?�운??볼륨???�으므�?AudioSource ?�체 볼륨?� 최�?
+            audioSource.playOnAwake = false; // ?�작 ??바로 ?�생?��? ?�도�??�정
+            audioSource.spatialBlend = 1f; // 3D ?�운?�로 ?�정 (거리�?
+            audioSource.volume = 1.0f; // 개별 ?�운??볼륨???�으므�?AudioSource ?�체 볼륨?� 최�?
         }
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false; // ?�작 ??바로 ?�생?��? ?�도�??�정
-            audioSource.spatialBlend = 1f; // 3D ?�운?�로 ?�정 (거리�?
+            audioSource.playOnAwake = false; // ?�작 ??바로 ?�생?��? ?�도�??�정
+            audioSource.spatialBlend = 1f; // 3D ?�운?�로 ?�정 (거리�?
             audioSource.volume = 0.5f; // 기본 볼륨
         }
 
@@ -245,12 +245,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         lastPlayerPosition = playerTransform.position;
         hasLastPlayerPosition = true;
 
-        // ?�상???�운???�생
+        // ?�상???�운???�생
         if (audioSource != null && idleSound != null)
         {
             audioSource.clip = idleSound;
-            audioSource.loop = true; // 반복 ?�생
-            audioSource.volume = idleVolume; // ?�상???�운??볼륨 ?�용
+            audioSource.loop = true; // 반복 ?�생
+            audioSource.volume = idleVolume; // ?�상???�운??볼륨 ?�용
             audioSource.Play();
         }
     }
@@ -265,14 +265,14 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         bool isTelegraphing = telegraphCoroutine != null;
         bool isAimLocked = hasLockedAim && (lockAimDuringTelegraph && isTelegraphing || lockAimDuringBurst && isFiringBurst);
 
-        if (distanceToPlayer < detectionRange && !isRetreating) // ?�레?�어가 감�? 범위 ?�에 ?�고, ?�로 물러?�는 중이 ?�닐 ??
+        if (distanceToPlayer < detectionRange && !isRetreating) // ?�레?�어가 감�? 범위 ?�에 ?�고, ?�로 물러?�는 중이 ?�닐 ??
         {
             if (isAimLocked && holdPositionWhenAimLocked)
             {
                 rb.linearVelocity = Vector2.zero;
             }
             Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-            Vector2 currentVelocity = Vector2.zero; // ?�로???�도�?계산?�여 ?�기???�??
+            Vector2 currentVelocity = Vector2.zero; // ?�로???�도�?계산?�여 ?�기???�??
 
             // --- Flipping Logic ---
             Vector3 currentScale = transform.localScale;
@@ -286,21 +286,21 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             }
             // --- End Flipping Logic ---
 
-            // --- X�??�동 ---
+            // --- X�??�동 ---
             float targetX = playerTransform.position.x;
             float currentX = transform.position.x;
             float xDifference = targetX - currentX;
-            float absoluteXDistance = Mathf.Abs(xDifference); // ?�레?�어?�??X�??��? 거리 (?�수 �?
+            float absoluteXDistance = Mathf.Abs(xDifference); // ?�레?�어?�??X�??��? 거리 (?�수 �?
 
-            // chaseSpeedCurve�??�용?�여 ?�재 추적 ?�도 계산
-            // curve??0-1 ?�력???�레?�어?�??거리�??�규?�하???�용
+            // chaseSpeedCurve�??�용?�여 ?�재 추적 ?�도 계산
+            // curve??0-1 ?�력???�레?�어?�??거리�??�규?�하???�용
             float normalizedDistance = Mathf.InverseLerp(0, detectionRange, absoluteXDistance);
             float evaluatedSpeed = chaseSpeedCurve.Evaluate(normalizedDistance) * maxChaseSpeed;
 
-            // ?�로 물러?�는 반동 처리
+            // ?�로 물러?�는 반동 처리
             if (absoluteXDistance < idealFiringDistance && !isRetreating)
             {
-                StartCoroutine(ApplyRetreat(Mathf.Sign(xDifference) * -1)); // ?�레?�어 반�? 방향?�로 밀?�냄
+                StartCoroutine(ApplyRetreat(Mathf.Sign(xDifference) * -1)); // ?�레?�어 반�? 방향?�로 밀?�냄
             }
 
             if (!isRetreating && !(isAimLocked && holdPositionWhenAimLocked))
@@ -323,7 +323,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
                 currentVelocity.x = 0;
             }
 
-            // --- Y�??�동 (?��? 머리 ???��?) ---
+            // --- Y�??�동 (?��? 머리 ???��?) ---
             float bobOffset = Mathf.Sin(Time.time * hoverFrequency + hoverOffset) * hoverAmplitude;
             float targetY = playerTransform.position.y + followHeightOffset + bobOffset;
             float currentY = transform.position.y;
@@ -331,13 +331,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
             if (!isAimLocked || !holdPositionWhenAimLocked)
             {
-                if (Mathf.Abs(yDifference) > 0.1f) // 미세??차이??무시?�고 Y�??�동
+                if (Mathf.Abs(yDifference) > 0.1f) // 미세??차이??무시?�고 Y�??�동
                 {
                     currentVelocity.y = Mathf.Sign(yDifference) * verticalAdjustSpeed;
                 }
                 else
                 {
-                    currentVelocity.y = 0; // 목표 Y ?�치???�달?�면 Y�??�동 ?��?
+                    currentVelocity.y = 0; // 목표 Y ?�치???�달?�면 Y�??�동 ?��?
                 }
             }
 
@@ -347,19 +347,19 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             float accelY = Mathf.Abs(desiredVelocity.y) > Mathf.Abs(current.y) ? approachAcceleration : approachDeceleration;
             float newX = Mathf.MoveTowards(current.x, desiredVelocity.x, accelX * Time.deltaTime);
             float newY = Mathf.MoveTowards(current.y, desiredVelocity.y, accelY * Time.deltaTime);
-            rb.linearVelocity = new Vector2(newX, newY); // 최종 계산???�도 ?�용
-            hoverBaseY = transform.position.y; // ?�버링을 ?�해 ?�재 Y ?�치 ?�데?�트
+            rb.linearVelocity = new Vector2(newX, newY); // 최종 계산???�도 ?�용
+            hoverBaseY = transform.position.y; // ?�버링을 ?�해 ?�재 Y ?�치 ?�데?�트
 
             // Firing Logic
-            if (Time.time >= nextFireTime && !isFiringBurst) // ?�발 발사 중이 ?�닐 ?�만 ?�음 ?�발 ?�작
+            if (Time.time >= nextFireTime && !isFiringBurst) // ?�발 발사 중이 ?�닐 ?�만 ?�음 ?�발 ?�작
             {
-                // ?�레?�어?�??X�??��? 거리 (발사 조건 ?�인??
+                // ?�레?�어?�??X�??��? 거리 (발사 조건 ?�인??
                 if (absoluteXDistance >= idealFiringDistance && absoluteXDistance <= maxFiringDistance)
                 {
-                    // 발사 ???�운???�생
+                    // 발사 ???�운???�생
                     if (audioSource != null && preFireSound != null)
                     {
-                        audioSource.PlayOneShot(preFireSound, preFireVolume); // 발사 ???�운??볼륨 ?�용
+                        audioSource.PlayOneShot(preFireSound, preFireVolume); // 발사 ???�운??볼륨 ?�용
                     }
                     StartCoroutine(FireBurstCoroutine());
                 }
@@ -372,34 +372,34 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
                 }
             }
         }
-        else if (isRetreating) // ?�로 물러?�는 중이?�면 ?�른 ?�동???��? ?�음
+        else if (isRetreating) // ?�로 물러?�는 중이?�면 ?�른 ?�동???��? ?�음
         {
-            // 리트�?코루?�이 ?�날 ?�까지 ?��?
+            // 리트�?코루?�이 ?�날 ?�까지 ?��?
         }
         else // Player out of detection range
         {
             HideTelegraph();
-            // ?�로???�찰(Patrol) 로직
-            // ?�재 ?�치?� 초기 ?�찰 ?�치�?기�??�로 ?�동 방향 결정
+            // ?�로???�찰(Patrol) 로직
+            // ?�재 ?�치?� 초기 ?�찰 ?�치�?기�??�로 ?�동 방향 결정
             if (transform.position.x >= initialPatrolPosition.x + patrolMoveRangeX)
             {
-                patrolDirection = -1; // ?�른�??�에 ?�달?�면 ?�쪽?�로 ?�동
+                patrolDirection = -1; // ?�른�??�에 ?�달?�면 ?�쪽?�로 ?�동
             }
             else if (transform.position.x <= initialPatrolPosition.x - patrolMoveRangeX)
             {
-                patrolDirection = 1; // ?�쪽 ?�에 ?�달?�면 ?�른쪽으�??�동
+                patrolDirection = 1; // ?�쪽 ?�에 ?�달?�면 ?�른쪽으�??�동
             }
 
-            // X�??�찰 ?�동
+            // X�??�찰 ?�동
             rb.linearVelocity = new Vector2(patrolDirection * patrolSpeed, rb.linearVelocity.y);
 
-            // Flipping Logic (?�찰 ?�에???�론??방향???�집?�야 ??
+            // Flipping Logic (?�찰 ?�에???�론??방향???�집?�야 ??
             Vector3 currentScale = transform.localScale;
-            if (patrolDirection < 0) // ?�쪽?�로 ?�동 �?
+            if (patrolDirection < 0) // ?�쪽?�로 ?�동 �?
             {
                 transform.localScale = new Vector3(Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face right (positive scale)
             }
-            else if (patrolDirection > 0) // ?�른쪽으�??�동 �?
+            else if (patrolDirection > 0) // ?�른쪽으�??�동 �?
             {
                 transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face left (negative scale)
             }
@@ -427,10 +427,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
         newProjectile.Initialize(direction, transform);
 
-        // 캡슐 발사 ???�운???�생
+        // 캡슐 발사 ???�운???�생
         if (audioSource != null && fireSound != null)
         {
-            audioSource.PlayOneShot(fireSound, fireVolume); // 발사 ???�운??볼륨 ?�용
+            audioSource.PlayOneShot(fireSound, fireVolume); // 발사 ???�운??볼륨 ?�용
         }
 
         // --- Recoil Effect ---
@@ -515,6 +515,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private void Die()
     {
         Debug.Log("[Drone Destruction] Latency Drone is dying!");
+
+        // Notify room tracking if component exists
+        if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
+        {
+            trackedUnit.NotifyDead();
+        }
+
         SpawnVfxWithScale(onDeathVfxPrefab, onDeathVfxOffset, onDeathVfxLifetime, onDeathVfxScale);
         SpawnVfxWithScale(onDeathExtraVfxPrefab, onDeathExtraVfxOffset, onDeathExtraVfxLifetime, onDeathExtraVfxScale);
         AwakeningManager.RaiseGlobalKill();
@@ -523,7 +530,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         {
             impulseSource.GenerateImpulse();
         }
-        // ?�괴 ???�운???�생 (?�로??코루???�용)
+        // ?�괴 ???�운???�생 (?�로??코루???�용)
         if (deathSound != null)
         {
             StartCoroutine(PlaySoundAndDestroy(deathSound, transform.position, deathVolume));
@@ -531,7 +538,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         // Stop all movement
         rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Kinematic; // 물리???�호?�용???�전??멈춤
+        rb.bodyType = RigidbodyType2D.Kinematic; // 물리???�호?�용???�전??멈춤
         enabled = false; 
         isFiringBurst = false;
         HideTelegraph();
@@ -554,13 +561,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             }
         }
 
-        // 즉시 ?�론??보이지 ?�게 ?�고 충돌??비활?�화
+        // 즉시 ?�론??보이지 ?�게 ?�고 충돌??비활?�화
         if (sr != null) sr.enabled = false;
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
         
-        // ???�브?�트 ?�체??즉시 ?�괴?��? ?�고, ?�운??코루?�이 ?�립?�으�??�행?�도�???
-        // ?�요??모든 컴포?�트(?�프?�이?? 콜라?�더)�?비활?�화?�으므�?보이지 ?�고 ?�호?�용?��? ?�음
+        // ???�브?�트 ?�체??즉시 ?�괴?��? ?�고, ?�운??코루?�이 ?�립?�으�??�행?�도�???
+        // ?�요??모든 컴포?�트(?�프?�이?? 콜라?�더)�?비활?�화?�으므�?보이지 ?�고 ?�호?�용?��? ?�음
         var respawnable = GetComponent<RespawnOnCheckpoint>();
         if (respawnable != null)
         {
@@ -568,26 +575,26 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             return;
         }
 
-        Destroy(gameObject, 3f); // ?�운?��? ?�펙?��? ?�날 ?�간??충분??�?
+        Destroy(gameObject, 3f); // ?�운?��? ?�펙?��? ?�날 ?�간??충분??�?
     }
 
     private IEnumerator PlaySoundAndDestroy(AudioClip clip, Vector3 position, float volume)
     {
-        // 1. ?�시 게임?�브?�트 ?�성
+        // 1. ?�시 게임?�브?�트 ?�성
         GameObject audioObject = new GameObject("TempAudio");
         audioObject.transform.position = position;
 
-        // 2. AudioSource 컴포?�트 추�? �??�정
+        // 2. AudioSource 컴포?�트 추�? �??�정
         AudioSource tempAudioSource = audioObject.AddComponent<AudioSource>();
         tempAudioSource.clip = clip;
         tempAudioSource.volume = volume;
-        tempAudioSource.spatialBlend = 1.0f; // 3D ?�운?�로 ?�정
-        tempAudioSource.outputAudioMixerGroup = sfxMixerGroup; // 믹서 그룹 ?�당
+        tempAudioSource.spatialBlend = 1.0f; // 3D ?�운?�로 ?�정
+        tempAudioSource.outputAudioMixerGroup = sfxMixerGroup; // 믹서 그룹 ?�당
 
-        // 3. ?�운???�생
+        // 3. ?�운???�생
         tempAudioSource.Play();
 
-        // 4. ?�운???�립??길이만큼 기다�????�시 ?�브?�트 ?�괴
+        // 4. ?�운???�립??길이만큼 기다�????�시 ?�브?�트 ?�괴
         yield return new WaitForSeconds(clip.length);
         Destroy(audioObject);
     }
@@ -613,7 +620,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             Destroy(vfx, lifetime);
     }
 
-    // ?�로??코루??추�?
+    // ?�로??코루??추�?
     private void UpdatePlayerVelocity()
     {
         if (playerRb != null)
@@ -706,7 +713,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         direction = (aimPoint - origin).normalized;
         return direction.sqrMagnitude > 0.0001f;
     }
-    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?��e???��i?�� e��?e? e�ƨ�i?��)
+    private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?��e???��i?�� e��?e? e�ƨ�i?��)
     {
         isRetreating = true;
 
@@ -720,7 +727,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         float timer = 0f;
         while (timer < retreatDuration)
         {
-            // AddForce????e????e��?????i?��??e?e��?Time.deltaTime e����i?��i��?
+            // AddForce????e????e��?????i?��??e?e��?Time.deltaTime e����i?��i��?
             rb.AddForce(new Vector2(directionSign * retreatForce * Time.deltaTime, 0), ForceMode2D.Force);
             timer += Time.deltaTime;
             yield return null;
@@ -741,13 +748,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         for (int i = 0; i < capsulesPerBurst; i++)
         {
             if (isDead) break;
-            if (playerTransform == null) break; // ?�레?�어가 ?�라졌으�?발사 중�?
+            if (playerTransform == null) break; // ?�레?�어가 ?�라졌으�?발사 중�?
             Vector2 direction = lockAimDuringBurst ? lockedAimDirection : GetAimDirection();
-            FireProjectile(direction); // ?�시 계산??방향?�로 발사
+            FireProjectile(direction); // ?�시 계산??방향?�로 발사
             yield return new WaitForSeconds(timeBetweenCapsules);
         }
         isFiringBurst = false;
-        nextFireTime = Time.time + burstCooldown; // ?�발 종료 ??쿨다???�용
+        nextFireTime = Time.time + burstCooldown; // ?�발 종료 ??쿨다???�용
         nextTelegraphTime = Time.time + telegraphDelayAfterFire;
         hasLockedAim = false;
     }

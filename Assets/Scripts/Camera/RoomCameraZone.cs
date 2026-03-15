@@ -29,6 +29,10 @@ public class RoomCameraZone : MonoBehaviour
     [SerializeField] private bool deadZoneEnabled = true;
     [SerializeField] private Vector2 deadZoneSize = new Vector2(0.3f, 0.4f);
 
+    [Header("Fixed Camera")]
+    [SerializeField] private bool useFixedPosition = false;
+    [SerializeField] private Transform fixedTarget;
+
     public Collider2D Bounds => bounds != null ? bounds : GetComponent<Collider2D>();
     public int Priority => priority;
     public bool InvalidateConfinerCache => invalidateConfinerCache;
@@ -46,6 +50,10 @@ public class RoomCameraZone : MonoBehaviour
     public bool OverrideDeadZone => overrideDeadZone;
     public bool DeadZoneEnabled => deadZoneEnabled;
     public Vector2 DeadZoneSize => deadZoneSize;
+
+    public bool UseFixedPosition => useFixedPosition;
+    public Transform FixedTarget => fixedTarget;
+
     public static IReadOnlyList<RoomCameraZone> AllZones => allZones;
 
     private void Reset()

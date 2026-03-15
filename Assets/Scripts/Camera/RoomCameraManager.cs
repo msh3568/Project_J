@@ -309,6 +309,9 @@ public class RoomCameraManager : MonoBehaviour
                 }
             }
 
+            // Update Follow target for single camera mode
+            cinemachineCamera.Follow = room.UseFixedPosition ? room.FixedTarget : ResolveRoomTarget();
+
             StartTransition(room);
             return;
         }
@@ -321,6 +324,8 @@ public class RoomCameraManager : MonoBehaviour
         currentRoom = null;
         if (secondaryCamera == null)
         {
+            // Restore player follow for single camera mode
+            cinemachineCamera.Follow = ResolveRoomTarget();
             StartTransition(null);
             return;
         }
@@ -409,6 +414,9 @@ public class RoomCameraManager : MonoBehaviour
 
         if (room != null)
         {
+            // Set Follow target based on room settings
+            cam.Follow = room.UseFixedPosition ? room.FixedTarget : ResolveRoomTarget();
+
             var bounds = room.Bounds;
             if (camConfiner != null && bounds != null)
             {
@@ -477,6 +485,9 @@ public class RoomCameraManager : MonoBehaviour
         }
         else
         {
+            // Restore default follow target when not in any room
+            cam.Follow = ResolveRoomTarget();
+
             if (camConfiner != null)
             {
                 camConfiner.BoundingShape2D = null;

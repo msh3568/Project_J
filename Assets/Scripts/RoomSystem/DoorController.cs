@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,11 +29,23 @@ public class DoorController : MonoBehaviour
     [SerializeField] private UnityEvent onLocked;
     [SerializeField] private UnityEvent onUnlocked;
 
+    [Header("Visual Movement")]
+    [SerializeField] private bool useMovement = true;
+    [SerializeField] private Transform movingPart;
+    [SerializeField] private Vector3 openedOffset = new Vector3(0, 4, 0);
+    [SerializeField] private float moveDuration = 1.0f;
+    [SerializeField] private AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     public bool IsLocked { get; private set; }
+    private Vector3 closedPosition;
+    private Coroutine moveCoroutine;
 
     private void Awake()
     {
         CacheReferencesIfMissing();
+        if (movingPart == null) movingPart = transform;
+        closedPosition = movingPart.localPosition;
+        
         ApplyLockedState(lockOnAwake, true);
     }
 
@@ -61,6 +74,20 @@ public class DoorController : MonoBehaviour
         ApplyAnimatorState(shouldLock);
         ApplySpriteState(shouldLock);
 
+        if (useMovement)
+        {
+            Vector3 targetPos = shouldLock ? closedPosition : closedPosition + openedOffset;
+            if (force)
+            {
+                movingPart.localPosition = targetPos;
+            }
+            else
+            {
+                if (moveCoroutine != null) StopCoroutine(moveCoroutine);
+                moveCoroutine = StartCoroutine(MoveRoutine(targetPos));
+            }
+        }
+
         if (shouldLock)
         {
             if (onLocked != null)
@@ -74,6 +101,20 @@ public class DoorController : MonoBehaviour
 
         if (debugLogs)
             Debug.Log("[DoorController] " + name + " -> " + (shouldLock ? "Locked" : "Unlocked"), this);
+    }
+
+    private IEnumerator MoveRoutine(Vector3 targetPos)
+    {
+        Vector3 startPos = movingPart.localPosition;
+        float elapsed = 0f;
+        while (elapsed < moveDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = moveCurve.Evaluate(elapsed / moveDuration);
+            movingPart.localPosition = Vector3.Lerp(startPos, targetPos, t);
+            yield return null;
+        }
+        movingPart.localPosition = targetPos;
     }
 
     private void CacheReferencesIfMissing()

@@ -110,6 +110,13 @@ public class Entity_Health : MonoBehaviour, IDamageable
     {
         Debug.Log($"[Die] {gameObject.name} Die() method called.");
         isDead = true;
+
+        // Notify room tracking if component exists
+        if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
+        {
+            trackedUnit.NotifyDead();
+        }
+
         entity.onEntityDeath();
     }
 

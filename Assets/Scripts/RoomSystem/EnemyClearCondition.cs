@@ -66,15 +66,23 @@ public class EnemyClearCondition : RoomClearConditionBase
             RoomTrackedUnit[] found = root.GetComponentsInChildren<RoomTrackedUnit>(includeInactiveChildren);
             for (int i = 0; i < found.Length; i++)
             {
-                AddRuntimeUnit(found[i]);
+                if (found[i] != null && !runtimeUnits.Contains(found[i]))
+                    runtimeUnits.Add(found[i]);
             }
+            
+            if (debugLogs)
+                Debug.Log($"[EnemyClearCondition] {name} Auto-collected {runtimeUnits.Count} units from {root.name}", this);
             return;
         }
 
         for (int i = 0; i < trackedUnits.Count; i++)
         {
-            AddRuntimeUnit(trackedUnits[i]);
+            if (trackedUnits[i] != null && !runtimeUnits.Contains(trackedUnits[i]))
+                runtimeUnits.Add(trackedUnits[i]);
         }
+
+        if (debugLogs)
+            Debug.Log($"[EnemyClearCondition] {name} Manual-registered {runtimeUnits.Count} units", this);
     }
 
     private void AddRuntimeUnit(RoomTrackedUnit unit)
