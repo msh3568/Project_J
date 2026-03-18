@@ -30,6 +30,13 @@ public class RoomController : MonoBehaviour
     [SerializeField] private bool requireAllConditions = true;
     [SerializeField] private bool autoCompleteWhenNoConditions = false;
 
+    [Header("Optimization")]
+    [SerializeField] private bool optimizeObjects = true;
+    [SerializeField] private bool autoCollectEnemies = true;
+    [SerializeField] private List<GameObject> objectsToOptimize = new List<GameObject>();
+    [SerializeField] private bool deactivateOnStart = true;
+    [SerializeField] private bool deactivateOnExit = true;
+
     [Header("Events (Optional)")]
     [SerializeField] private UnityEvent onRoomActivated;
     [SerializeField] private UnityEvent onRoomLocked;
@@ -52,7 +59,51 @@ public class RoomController : MonoBehaviour
             trigger.isTrigger = true;
         }
 
+        if (optimizeObjects && autoCollectEnemies)
+        {
+            CollectEnemiesInHierarchy();
+        }
+
         BuildRuntimeConditionList();
+
+        if (optimizeObjects && deactivateOnStart)
+        {
+            SetObjectsState(false);
+        }
+    }
+
+    private void CollectEnemiesInHierarchy()
+    {
+        // Find all RoomTrackedUnit in children to identify enemies
+        RoomTrackedUnit[] units = GetComponentsInChildren<RoomTrackedUnit>(true);
+        foreach (var unit in units)
+        {
+            if (unit != null && !objectsToOptimize.Contains(unit.gameObject))
+            {
+                objectsToOptimize.Add(unit.gameObject);
+            }
+        }
+    }
+
+    private void SetObjectsState(bool state)
+    {
+        for (int i = 0; i < objectsToOptimize.Count; i++)
+        {
+            GameObject obj = objectsToOptimize[i];
+            if (obj == null) continue;
+
+            // If we are deactivating, tell children units to suppress their clear-on-disable behavior
+            if (!state)
+            {
+                RoomTrackedUnit[] units = obj.GetComponentsInChildren<RoomTrackedUnit>(true);
+                foreach (var unit in units)
+                {
+                    if (unit != null) unit.suppressClearOnDisable = true;
+                }
+            }
+
+            obj.SetActive(state);
+        }
     }
 
     private void OnDisable()
@@ -71,10 +122,30 @@ public class RoomController : MonoBehaviour
         BeginRoom();
     }
 
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!optimizeObjects || !deactivateOnExit)
+            return;
+
+        if (!IsPlayerCollider(other))
+            return;
+
+        if (debugLogs)
+            Debug.Log("[RoomController] Player exited. Deactivating objects on " + name, this);
+
+        SetObjectsState(false);
+        IsRoomActive = false;
+    }
+
     public void BeginRoom()
     {
         if (activateOnlyOnce && hasActivatedAtLeastOnce)
             return;
+
+        if (optimizeObjects)
+        {
+            SetObjectsState(true);
+        }
 
         hasActivatedAtLeastOnce = true;
         IsRoomActive = true;

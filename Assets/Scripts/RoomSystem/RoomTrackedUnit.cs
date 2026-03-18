@@ -12,6 +12,12 @@ public class RoomTrackedUnit : MonoBehaviour, IRoomClearUnit
     public bool IsCleared { get; private set; }
     public event Action<IRoomClearUnit> Cleared;
 
+    /// <summary>
+    /// If true, the next OnDisable will NOT mark this unit as cleared.
+    /// Used for performance optimization (activating/deactivating zones).
+    /// </summary>
+    [HideInInspector] public bool suppressClearOnDisable;
+
     public void NotifyDead()
     {
         MarkCleared("NotifyDead");
@@ -25,10 +31,17 @@ public class RoomTrackedUnit : MonoBehaviour, IRoomClearUnit
     public void ResetClearedState()
     {
         IsCleared = false;
+        suppressClearOnDisable = false;
     }
 
     private void OnDisable()
     {
+        if (suppressClearOnDisable)
+        {
+            suppressClearOnDisable = false; // Reset for next time
+            return;
+        }
+
         if (clearOnDisable)
             MarkCleared("OnDisable");
     }

@@ -5841,8 +5841,8 @@ Transform:
   m_GameObject: {fileID: 254491060}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9547108, y: -0.37587768, z: 0}
-  m_LocalScale: {x: 0.012783656, y: 0.19478247, z: 0.028587779}
+  m_LocalPosition: {x: 281.6, y: 39.9, z: 0}
+  m_LocalScale: {x: 2.4276218, y: 11.193272, z: 0.21612787}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 730538632}
@@ -5911,7 +5911,7 @@ Transform:
   - {fileID: 2138982969}
   - {fileID: 585479164}
   - {fileID: 841797759}
-  m_Father: {fileID: 547622757}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &256427102
 PrefabInstance:
@@ -11155,8 +11155,8 @@ Transform:
   m_GameObject: {fileID: 505986450}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 136.5, y: 9.1237, z: 0}
+  m_LocalScale: {x: 114.43973, y: 45.65952, z: 7.560149}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 375397411}
@@ -11172,7 +11172,7 @@ Transform:
   - {fileID: 1146297779}
   - {fileID: 599964852}
   - {fileID: 852974220}
-  m_Father: {fileID: 879340885}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &506768006
 PrefabInstance:
@@ -11458,7 +11458,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 12
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -11483,7 +11483,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 99.353455, y: 7.3640976, z: 10.975195}
+  m_LocalPosition: {x: 86.13997, y: 3.9540977, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11946,7 +11946,6 @@ GameObject:
   - component: {fileID: 547622756}
   - component: {fileID: 547622755}
   - component: {fileID: 547622754}
-  - component: {fileID: 547622758}
   m_Layer: 9
   m_Name: Room_C
   m_TagString: Untagged
@@ -12100,48 +12099,9 @@ Transform:
   m_LocalPosition: {x: 100.3, y: 61.5, z: 0}
   m_LocalScale: {x: 189.90045, y: 57.465504, z: 7.560149}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 254491061}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &547622758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 547622753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f19a28954171b0c49b766f6d7f20db21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  activateOnPlayerEnter: 1
-  activateOnlyOnce: 1
-  playerTag: Player
-  debugLogs: 0
-  lockOnEnter: 1
-  lockMode: 0
-  entranceDoors: []
-  exitDoors: []
-  clearConditions: []
-  autoFindConditionsInChildren: 0
-  requireAllConditions: 1
-  autoCompleteWhenNoConditions: 0
-  optimizeObjects: 1
-  autoCollectEnemies: 1
-  objectsToOptimize: []
-  deactivateOnStart: 1
-  deactivateOnExit: 1
-  onRoomActivated:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomLocked:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomCleared:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &551957791
 GameObject:
   m_ObjectHideFlags: 0
@@ -20919,7 +20879,6 @@ GameObject:
   - component: {fileID: 879340884}
   - component: {fileID: 879340883}
   - component: {fileID: 879340886}
-  - component: {fileID: 879340887}
   m_Layer: 9
   m_Name: Room_A
   m_TagString: Untagged
@@ -21043,8 +21002,7 @@ Transform:
   m_LocalPosition: {x: 136.5, y: 9.1237, z: 0}
   m_LocalScale: {x: 114.43973, y: 45.65952, z: 7.560149}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 505986451}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &879340886
@@ -21077,44 +21035,6 @@ MonoBehaviour:
   deadZoneSize: {x: 0.3, y: 0.4}
   useFixedPosition: 0
   fixedTarget: {fileID: 567608187}
---- !u!114 &879340887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 879340882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f19a28954171b0c49b766f6d7f20db21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  activateOnPlayerEnter: 1
-  activateOnlyOnce: 1
-  playerTag: Player
-  debugLogs: 0
-  lockOnEnter: 1
-  lockMode: 0
-  entranceDoors: []
-  exitDoors: []
-  clearConditions: []
-  autoFindConditionsInChildren: 0
-  requireAllConditions: 1
-  autoCompleteWhenNoConditions: 0
-  optimizeObjects: 1
-  autoCollectEnemies: 1
-  objectsToOptimize: []
-  deactivateOnStart: 1
-  deactivateOnExit: 1
-  onRoomActivated:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomLocked:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomCleared:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &882009364 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8599858722228937240, guid: 44d25d59cb8128943a48ee563d8671df, type: 3}
@@ -21619,7 +21539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &912950525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30717,7 +30637,6 @@ GameObject:
   - component: {fileID: 1287477413}
   - component: {fileID: 1287477412}
   - component: {fileID: 1287477411}
-  - component: {fileID: 1287477415}
   m_Layer: 9
   m_Name: Room_B
   m_TagString: Untagged
@@ -30871,48 +30790,9 @@ Transform:
   m_LocalPosition: {x: 308.1, y: 36.4, z: 0}
   m_LocalScale: {x: 224.09721, y: 68.411316, z: 7.560149}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1690101645}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1287477415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287477410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f19a28954171b0c49b766f6d7f20db21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  activateOnPlayerEnter: 1
-  activateOnlyOnce: 1
-  playerTag: Player
-  debugLogs: 0
-  lockOnEnter: 1
-  lockMode: 0
-  entranceDoors: []
-  exitDoors: []
-  clearConditions: []
-  autoFindConditionsInChildren: 0
-  requireAllConditions: 1
-  autoCompleteWhenNoConditions: 0
-  optimizeObjects: 1
-  autoCollectEnemies: 1
-  objectsToOptimize: []
-  deactivateOnStart: 1
-  deactivateOnExit: 1
-  onRoomActivated:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomLocked:
-    m_PersistentCalls:
-      m_Calls: []
-  onRoomCleared:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1296077946 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6553441442515390054, guid: c912388ec771a514ba5f0501dd8ff3e1, type: 3}
@@ -49308,8 +49188,8 @@ Transform:
   m_GameObject: {fileID: 1690101644}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.11825224, y: 0.05116113, z: 0}
-  m_LocalScale: {x: 0.0108328955, y: 0.16361727, z: 0.028587779}
+  m_LocalPosition: {x: 281.6, y: 39.9, z: 0}
+  m_LocalScale: {x: 2.4276218, y: 11.193272, z: 0.21612787}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1852883906}
@@ -49342,7 +49222,7 @@ Transform:
   - {fileID: 1941272289}
   - {fileID: 70986536}
   - {fileID: 1720316024}
-  m_Father: {fileID: 1287477414}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1697841241
 PrefabInstance:
@@ -59107,12 +58987,15 @@ SceneRoots:
   - {fileID: 891520157}
   - {fileID: 9253283}
   - {fileID: 1042018196}
+  - {fileID: 505986451}
   - {fileID: 567608187}
   - {fileID: 879340885}
   - {fileID: 1152878013}
+  - {fileID: 1690101645}
   - {fileID: 1367803768}
   - {fileID: 1287477414}
   - {fileID: 2020438867}
+  - {fileID: 254491061}
   - {fileID: 1357341406}
   - {fileID: 547622757}
   - {fileID: 1517762491}
