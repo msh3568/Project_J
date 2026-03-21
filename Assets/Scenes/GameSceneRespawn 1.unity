@@ -29655,7 +29655,7 @@ MonoBehaviour:
   inputDisableDuration: 0.5
   doorsToLock:
   - {fileID: 1244795921}
-  clearCondition: {fileID: 1042018195}
+  clearCondition: {fileID: 1152878012}
   onRoomLocked:
     m_PersistentCalls:
       m_Calls: []
