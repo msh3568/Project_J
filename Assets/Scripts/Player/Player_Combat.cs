@@ -88,6 +88,34 @@ public class Player_Combat : Entity_Combat
         GameManager.Instance?.RequestHitSlowMoAndShake();
     }
 
+    protected override bool AllowMultiHit => false;
+
+    protected override Collider2D GetPrimaryTarget(Collider2D[] detectedColliders)
+    {
+        if (detectedColliders == null || detectedColliders.Length == 0)
+            return null;
+
+        Collider2D closestTarget = null;
+        float closestDistance = float.PositiveInfinity;
+        Vector2 attackOrigin = GetAttackOrigin();
+
+        for (int i = 0; i < detectedColliders.Length; i++)
+        {
+            Collider2D candidate = detectedColliders[i];
+            if (!HasDamageable(candidate))
+                continue;
+
+            float sqrDistance = ((Vector2)candidate.transform.position - attackOrigin).sqrMagnitude;
+            if (sqrDistance < closestDistance)
+            {
+                closestDistance = sqrDistance;
+                closestTarget = candidate;
+            }
+        }
+
+        return closestTarget;
+    }
+
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

@@ -130,6 +130,15 @@ public class RoomController : MonoBehaviour
         if (!IsPlayerCollider(other))
             return;
 
+        // Keep room content alive while the encounter is still in progress.
+        // Fast player movement, especially grapples, can momentarily leave the trigger bounds.
+        if (IsRoomActive && !IsRoomCleared)
+        {
+            if (debugLogs)
+                Debug.Log("[RoomController] Player exited during active encounter. Keeping objects active on " + name, this);
+            return;
+        }
+
         if (debugLogs)
             Debug.Log("[RoomController] Player exited. Deactivating objects on " + name, this);
 
