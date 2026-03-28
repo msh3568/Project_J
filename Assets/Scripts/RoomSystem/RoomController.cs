@@ -23,6 +23,8 @@ public class RoomController : MonoBehaviour
     [SerializeField] private DoorLockMode lockMode = DoorLockMode.ExitOnly;
     [SerializeField] private List<DoorController> entranceDoors = new List<DoorController>();
     [SerializeField] private List<DoorController> exitDoors = new List<DoorController>();
+    [Tooltip("Doors in this list will lock on entry but will NOT unlock when the room is cleared.")]
+    [SerializeField] private List<DoorController> entranceDoorsToStayLocked = new List<DoorController>();
 
     [Header("Clear Conditions")]
     [SerializeField] private List<RoomClearConditionBase> clearConditions = new List<RoomClearConditionBase>();
@@ -190,6 +192,33 @@ public class RoomController : MonoBehaviour
             UnlockManagedDoors();
     }
 
+    public void ResetRoomFull()
+    {
+        IsRoomActive = false;
+        IsRoomCleared = false;
+        warnedNoConditions = false;
+        hasActivatedAtLeastOnce = false;
+
+        UnsubscribeConditions();
+        BuildRuntimeConditionList();
+
+        // Unlock everything first to have a clean state
+        UnlockManagedDoors();
+
+        // Re-lock if it should be locked on awake
+        if (lockOnEnter)
+        {
+            // We don't call LockConfiguredDoors() here because we want the 
+            // initial state before the player enters the trigger.
+        }
+
+        // Deactivate objects if optimization is enabled
+        if (optimizeObjects)
+        {
+            SetObjectsState(false);
+        }
+    }
+
     public void ForceEvaluateClear()
     {
         EvaluateRoomClearState();
@@ -320,6 +349,13 @@ public class RoomController : MonoBehaviour
         }
 
         LockDoorList(exitDoors);
+
+        // Lock permanent doors (don't add to lockedDoors so they aren't unlocked)
+        for (int i = 0; i < entranceDoorsToStayLocked.Count; i++)
+        {
+            if (entranceDoorsToStayLocked[i] != null)
+                entranceDoorsToStayLocked[i].Lock();
+        }
 
         if (debugLogs)
             Debug.Log("[RoomController] Locked doors count: " + lockedDoors.Count + " in " + name, this);

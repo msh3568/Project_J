@@ -318,6 +318,7 @@ public class GameManager : MonoBehaviour
             }
             ResetPlayerShieldAtRespawn();
             ResetEnemiesAtRespawn();
+            ResetRoomsAtRespawn();
             ResetRespawnablesAtCheckpoint();
         }
         else
@@ -330,6 +331,18 @@ public class GameManager : MonoBehaviour
             activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
             respawnCount = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    private void ResetRoomsAtRespawn()
+    {
+        var rooms = FindObjectsByType<RoomController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var room in rooms)
+        {
+            if (room != null)
+            {
+                room.ResetRoomFull();
+            }
         }
     }
 

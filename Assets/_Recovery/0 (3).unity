@@ -449,7 +449,6 @@ MonoBehaviour:
   entranceDoors: []
   exitDoors:
   - {fileID: 221254714}
-  entranceDoorsToStayLocked: []
   clearConditions:
   - {fileID: 0}
   - {fileID: 0}
@@ -4320,7 +4319,7 @@ Transform:
   m_GameObject: {fileID: 254491060}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9547108, y: -0.325, z: 0}
+  m_LocalPosition: {x: 0.9547108, y: -0.37587768, z: 0}
   m_LocalScale: {x: 0.012783656, y: 0.19478247, z: 0.028587779}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7703,11 +7702,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -93.5
+      value: -87.987335
       objectReference: {fileID: 0}
     - target: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.3
+      value: 1.5009003
       objectReference: {fileID: 0}
     - target: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9100,8 +9099,8 @@ Transform:
   m_GameObject: {fileID: 547622753}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 100.3, y: 60.8, z: 0}
-  m_LocalScale: {x: 189.90045, y: 59.764122, z: 7.560149}
+  m_LocalPosition: {x: 100.3, y: 61.5, z: 0}
+  m_LocalScale: {x: 189.90045, y: 57.465504, z: 7.560149}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 254491061}
@@ -9126,10 +9125,7 @@ MonoBehaviour:
   lockOnEnter: 1
   lockMode: 0
   entranceDoors: []
-  exitDoors:
-  - {fileID: 1244795921}
-  entranceDoorsToStayLocked:
-  - {fileID: 56645574}
+  exitDoors: []
   clearConditions: []
   autoFindConditionsInChildren: 0
   requireAllConditions: 1
@@ -12520,7 +12516,6 @@ MonoBehaviour:
   entranceDoors: []
   exitDoors:
   - {fileID: 221254714}
-  entranceDoorsToStayLocked: []
   clearConditions:
   - {fileID: 0}
   - {fileID: 0}
@@ -15968,7 +15963,6 @@ MonoBehaviour:
   lockMode: 0
   entranceDoors: []
   exitDoors: []
-  entranceDoorsToStayLocked: []
   clearConditions: []
   autoFindConditionsInChildren: 0
   requireAllConditions: 1
@@ -16320,7 +16314,6 @@ MonoBehaviour:
   entranceDoors: []
   exitDoors:
   - {fileID: 221254714}
-  entranceDoorsToStayLocked: []
   clearConditions:
   - {fileID: 0}
   - {fileID: 0}
@@ -22961,10 +22954,7 @@ MonoBehaviour:
   lockOnEnter: 1
   lockMode: 0
   entranceDoors: []
-  exitDoors:
-  - {fileID: 56645574}
-  entranceDoorsToStayLocked:
-  - {fileID: 221254714}
+  exitDoors: []
   clearConditions: []
   autoFindConditionsInChildren: 0
   requireAllConditions: 1
@@ -25552,7 +25542,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4.4699707, y: -11.849976}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1430866791
@@ -46663,8 +46653,8 @@ SceneRoots:
   - {fileID: 666862235}
   - {fileID: 43260250}
   - {fileID: 221254717}
-  - {fileID: 56645577}
   - {fileID: 1244795924}
+  - {fileID: 56645577}
   - {fileID: 2049881624}
   - {fileID: 757187471}
   - {fileID: 229412610}
