@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -46,6 +47,10 @@ public class RoomController : MonoBehaviour
 
     public bool IsRoomActive { get; private set; }
     public bool IsRoomCleared { get; private set; }
+    public event Action<RoomController> RoomActivated;
+    public event Action<RoomController> RoomDeactivated;
+    public event Action<RoomController> RoomCleared;
+    public event Action<RoomController> RoomReset;
 
     private readonly List<RoomClearConditionBase> runtimeConditions = new List<RoomClearConditionBase>();
     private readonly HashSet<DoorController> lockedDoors = new HashSet<DoorController>();
@@ -108,6 +113,22 @@ public class RoomController : MonoBehaviour
         }
     }
 
+    public void RegisterOptimizedObject(GameObject obj)
+    {
+        if (obj == null || objectsToOptimize.Contains(obj))
+            return;
+
+        objectsToOptimize.Add(obj);
+    }
+
+    public void UnregisterOptimizedObject(GameObject obj)
+    {
+        if (obj == null)
+            return;
+
+        objectsToOptimize.Remove(obj);
+    }
+
     private void OnDisable()
     {
         UnsubscribeConditions();
@@ -146,6 +167,7 @@ public class RoomController : MonoBehaviour
 
         SetObjectsState(false);
         IsRoomActive = false;
+        RoomDeactivated?.Invoke(this);
     }
 
     public void BeginRoom()
@@ -176,6 +198,7 @@ public class RoomController : MonoBehaviour
         if (onRoomActivated != null)
             onRoomActivated.Invoke();
 
+        RoomActivated?.Invoke(this);
         EvaluateRoomClearState();
     }
 
@@ -187,6 +210,8 @@ public class RoomController : MonoBehaviour
 
         UnsubscribeConditions();
         BuildRuntimeConditionList();
+
+        RoomReset?.Invoke(this);
 
         if (unlockDoors)
             UnlockManagedDoors();
@@ -201,6 +226,8 @@ public class RoomController : MonoBehaviour
 
         UnsubscribeConditions();
         BuildRuntimeConditionList();
+
+        RoomReset?.Invoke(this);
 
         // Unlock everything first to have a clean state
         UnlockManagedDoors();
@@ -337,6 +364,8 @@ public class RoomController : MonoBehaviour
 
         if (onRoomCleared != null)
             onRoomCleared.Invoke();
+
+        RoomCleared?.Invoke(this);
     }
 
     private void LockConfiguredDoors()

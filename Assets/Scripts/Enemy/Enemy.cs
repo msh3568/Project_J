@@ -181,7 +181,9 @@ public class Enemy : Entity
 
     public void ResetToSpawn()
     {
-        gameObject.SetActive(true);
+        if (ShouldReactivateOnCheckpointRespawn() && !gameObject.activeSelf)
+            gameObject.SetActive(true);
+
         transform.position = spawnPosition;
         transform.rotation = spawnRotation;
         transform.localScale = spawnScale;
@@ -216,6 +218,15 @@ public class Enemy : Entity
         {
             respawnable.OnCheckpointRespawn();
         }
+    }
+
+    private bool ShouldReactivateOnCheckpointRespawn()
+    {
+        RoomController room = GetComponentInParent<RoomController>(true);
+        if (room == null)
+            return true;
+
+        return room.IsRoomActive || room.IsRoomCleared;
     }
 
     public void HandleDeathDespawn()

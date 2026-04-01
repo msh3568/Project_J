@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private TimeManager timeManager;
     private AudioSource audioSource; // New: AudioSource for GameManager sounds (effects)
+    private RoomController[] cachedRooms = System.Array.Empty<RoomController>();
+    private Enemy[] cachedEnemies = System.Array.Empty<Enemy>();
+    private RespawnOnCheckpoint[] cachedRespawnables = System.Array.Empty<RespawnOnCheckpoint>();
 
     private Coroutine slowMoCoroutine;
 
@@ -191,6 +194,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        CacheRespawnTargets();
         UpdateRespawnUI();
         DisplaySettings.ConfigureAllCanvasScalers();
     }
@@ -240,6 +244,7 @@ public class GameManager : MonoBehaviour
             checkpointText.gameObject.SetActive(false);
         }
 
+        CacheRespawnTargets();
         UpdateRespawnUI();
     }
 
@@ -270,6 +275,8 @@ public class GameManager : MonoBehaviour
 
     public void RespawnPlayerAtLastCheckpoint(bool isVoidFall = false)
     {
+        EndSlowMotion();
+
         if (player == null) // Try to find player again if it was null
         {
             player = GameObject.FindWithTag("Player");
@@ -317,8 +324,8 @@ public class GameManager : MonoBehaviour
                 player.transform.position = activeCheckpointPosition.Value;
             }
             ResetPlayerShieldAtRespawn();
-            ResetEnemiesAtRespawn();
             ResetRoomsAtRespawn();
+            ResetEnemiesAtRespawn();
             ResetRespawnablesAtCheckpoint();
         }
         else
@@ -336,9 +343,9 @@ public class GameManager : MonoBehaviour
 
     private void ResetRoomsAtRespawn()
     {
-        var rooms = FindObjectsByType<RoomController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var room in rooms)
+        for (int i = 0; i < cachedRooms.Length; i++)
         {
+            RoomController room = cachedRooms[i];
             if (room != null)
             {
                 room.ResetRoomFull();
@@ -348,9 +355,9 @@ public class GameManager : MonoBehaviour
 
     private void ResetEnemiesAtRespawn()
     {
-        var enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var enemy in enemies)
+        for (int i = 0; i < cachedEnemies.Length; i++)
         {
+            Enemy enemy = cachedEnemies[i];
             if (enemy != null && enemy.CompareTag("Enemy"))
             {
                 enemy.ResetToSpawn();
@@ -360,14 +367,21 @@ public class GameManager : MonoBehaviour
 
     private void ResetRespawnablesAtCheckpoint()
     {
-        var respawnables = FindObjectsByType<RespawnOnCheckpoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var respawnable in respawnables)
+        for (int i = 0; i < cachedRespawnables.Length; i++)
         {
+            RespawnOnCheckpoint respawnable = cachedRespawnables[i];
             if (respawnable != null)
             {
                 respawnable.ResetToSpawn();
             }
         }
+    }
+
+    private void CacheRespawnTargets()
+    {
+        cachedRooms = FindObjectsByType<RoomController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        cachedEnemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        cachedRespawnables = FindObjectsByType<RespawnOnCheckpoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     private void ResetPlayerShieldAtRespawn()

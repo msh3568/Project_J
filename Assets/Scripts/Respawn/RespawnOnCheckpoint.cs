@@ -37,11 +37,13 @@ public class RespawnOnCheckpoint : MonoBehaviour
 
     public void ResetToSpawn()
     {
-        if (reactivateOnRespawn && !gameObject.activeSelf)
+        bool shouldReactivate = ShouldReactivateOnCheckpointRespawn();
+
+        if (shouldReactivate && !gameObject.activeSelf)
         {
             gameObject.SetActive(true);
         }
-        else if (!reactivateOnRespawn && !spawnActive)
+        else if (!shouldReactivate && !spawnActive)
         {
             gameObject.SetActive(false);
             return;
@@ -85,6 +87,18 @@ public class RespawnOnCheckpoint : MonoBehaviour
         {
             respawnable.OnCheckpointRespawn();
         }
+    }
+
+    private bool ShouldReactivateOnCheckpointRespawn()
+    {
+        if (!reactivateOnRespawn)
+            return false;
+
+        RoomController room = GetComponentInParent<RoomController>(true);
+        if (room == null)
+            return true;
+
+        return room.IsRoomActive || room.IsRoomCleared;
     }
 
     public void Despawn()

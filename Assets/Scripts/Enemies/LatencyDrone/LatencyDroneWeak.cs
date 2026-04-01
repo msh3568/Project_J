@@ -828,10 +828,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     
     public void OnCheckpointRespawn()
     {
+        bool controlledByDormantActivator = IsControlledByDormantActivator();
+
         health = initialHealth;
         isDead = false;
         isDying = false;
-        enabled = true;
+        enabled = !controlledByDormantActivator;
         isFiringBurst = false;
         isRetreating = false;
         hasLockedAim = false;
@@ -877,16 +879,26 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         patrolDirection = 1;
         hasLastPlayerPosition = false;
 
-        if (audioSource != null && idleSound != null)
+        if (!controlledByDormantActivator && audioSource != null && idleSound != null)
         {
             audioSource.clip = idleSound;
             audioSource.loop = true;
             audioSource.volume = idleVolume;
             audioSource.Play();
         }
+        else if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
 
         if (preDeathFlashFeedback != null)
             preDeathFlashFeedback.StopFeedbacks();
+    }
+
+    private bool IsControlledByDormantActivator()
+    {
+        DormantEnemyActivator2D dormantActivator = GetComponent<DormantEnemyActivator2D>();
+        return dormantActivator != null && dormantActivator.KeepsEnemyDormantOnRespawn;
     }
 }
 

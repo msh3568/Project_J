@@ -28,6 +28,8 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private float hitVfxLifetime = 0.5f;
     [SerializeField] private bool flipHitVfxWithTargetFacing;
     [SerializeField] private bool hitVfxFollowTarget;
+    [SerializeField] private bool randomizeHitVfxZRotation = true;
+    [SerializeField] private Vector2 hitVfxRandomZRotationRange = new Vector2(90f, 180f);
 
     [Header("Player Shield Hit VFX")]
     [SerializeField] private GameObject shieldHitVfxPrefab;
@@ -98,16 +100,32 @@ public class Entity_VFX : MonoBehaviour
 
     public void CreateOnHitVFX(Transform target)
     {
+        CreateOnHitVFX(target, target != null ? (Vector2)target.position : (Vector2)transform.position);
+    }
+
+    public void CreateOnHitVFX(Transform target, Vector2 hitPoint)
+    {
         if (hitVfx == null || target == null)
             return;
 
-        Vector3 spawnPosition = target.position + hitVfxOffset;
+        Vector3 spawnPosition = new Vector3(hitPoint.x, hitPoint.y, target.position.z) + hitVfxOffset;
         Transform parent = hitVfxFollowTarget ? target : null;
-        GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, Quaternion.identity, parent);
+        GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, GetHitVfxRotation(), parent);
         newHitVfx.transform.localScale = new Vector3(Mathf.Abs(hitVfxScale.x), hitVfxScale.y, hitVfxScale.z);
         ApplyVfxFlipAndPlay(newHitVfx, flipHitVfxWithTargetFacing && target.localScale.x < 0);
         if (hitVfxLifetime > 0f)
             Destroy(newHitVfx, hitVfxLifetime);
+    }
+
+    private Quaternion GetHitVfxRotation()
+    {
+        if (!randomizeHitVfxZRotation)
+            return Quaternion.identity;
+
+        float min = Mathf.Min(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
+        float max = Mathf.Max(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
+        float zRotation = Random.Range(min, max);
+        return Quaternion.Euler(0f, 0f, zRotation);
     }
 
     public void PlayOnDamageVfx()

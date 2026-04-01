@@ -66,10 +66,24 @@ public class Entity_Combat : MonoBehaviour
         damagable.TakeDamage(damage, transform);
 
         if (vfx != null)
-            vfx.CreateOnHitVFX(target.transform);
+            vfx.CreateOnHitVFX(target.transform, GetHitPoint(target));
 
         OnSuccessfulHit(target, damagable);
         return true;
+    }
+
+    protected virtual Vector2 GetHitPoint(Collider2D target)
+    {
+        if (target == null)
+            return transform.position;
+
+        Vector2 attackOrigin = GetAttackOrigin();
+        Vector2 hitPoint = target.ClosestPoint(attackOrigin);
+
+        if (float.IsNaN(hitPoint.x) || float.IsNaN(hitPoint.y))
+            return target.transform.position;
+
+        return hitPoint;
     }
 
     protected bool HasDamageable(Collider2D target)
