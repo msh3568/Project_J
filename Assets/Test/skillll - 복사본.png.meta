@@ -1,0 +1,557 @@
+fileFormatVersion: 2
+guid: 05161aeb382f0684782b6c696fcfedc3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5544148424649024407
+    second: "skillll - \uBCF5\uC0AC\uBCF8_0"
+  - first:
+      213: 1357410571842787041
+    second: "skillll - \uBCF5\uC0AC\uBCF8_1"
+  - first:
+      213: -7968070029909561639
+    second: "skillll - \uBCF5\uC0AC\uBCF8_2"
+  - first:
+      213: 2918000257819664956
+    second: "skillll - \uBCF5\uC0AC\uBCF8_3"
+  - first:
+      213: 5749365498638631482
+    second: "skillll - \uBCF5\uC0AC\uBCF8_4"
+  - first:
+      213: 1840222056416692422
+    second: "skillll - \uBCF5\uC0AC\uBCF8_5"
+  - first:
+      213: 8268967442076686208
+    second: "skillll - \uBCF5\uC0AC\uBCF8_6"
+  - first:
+      213: 5419207843078450303
+    second: "skillll - \uBCF5\uC0AC\uBCF8_7"
+  - first:
+      213: 2938316545762933426
+    second: "skillll - \uBCF5\uC0AC\uBCF8_8"
+  - first:
+      213: -6998749512081097006
+    second: "skillll - \uBCF5\uC0AC\uBCF8_9"
+  - first:
+      213: -3374431202397559209
+    second: "skillll - \uBCF5\uC0AC\uBCF8_10"
+  - first:
+      213: 1809739447710713248
+    second: "skillll - \uBCF5\uC0AC\uBCF8_11"
+  - first:
+      213: 15018133512163357
+    second: "skillll - \uBCF5\uC0AC\uBCF8_12"
+  - first:
+      213: -2945370568194781925
+    second: "skillll - \uBCF5\uC0AC\uBCF8_13"
+  - first:
+      213: 7992699309568515684
+    second: "skillll - \uBCF5\uC0AC\uBCF8_14"
+  - first:
+      213: 4134453212638967158
+    second: "skillll - \uBCF5\uC0AC\uBCF8_15"
+  - first:
+      213: -2740233498080837916
+    second: "skillll - \uBCF5\uC0AC\uBCF8_16"
+  - first:
+      213: 177003608429938602
+    second: "skillll - \uBCF5\uC0AC\uBCF8_17"
+  - first:
+      213: 275103065702799693
+    second: "skillll - \uBCF5\uC0AC\uBCF8_18"
+  - first:
+      213: 180380293990374279
+    second: "skillll - \uBCF5\uC0AC\uBCF8_19"
+  - first:
+      213: -5810038075280544673
+    second: "skillll - \uBCF5\uC0AC\uBCF8_20"
+  - first:
+      213: -6903468850880846929
+    second: "skillll - \uBCF5\uC0AC\uBCF8_21"
+  - first:
+      213: -3413812464061633988
+    second: "skillll - \uBCF5\uC0AC\uBCF8_22"
+  - first:
+      213: 3574699524784865898
+    second: "skillll - \uBCF5\uC0AC\uBCF8_23"
+  - first:
+      213: -6466412217728576970
+    second: "skillll - \uBCF5\uC0AC\uBCF8_24"
+  - first:
+      213: -7554375683657149424
+    second: "skillll - \uBCF5\uC0AC\uBCF8_25"
+  - first:
+      213: -6549144068095609323
+    second: "skillll - \uBCF5\uC0AC\uBCF8_26"
+  - first:
+      213: 2417985632899328950
+    second: "skillll - \uBCF5\uC0AC\uBCF8_27"
+  - first:
+      213: -7424660116709671536
+    second: "skillll - \uBCF5\uC0AC\uBCF8_28"
+  - first:
+      213: 8913860077158328301
+    second: "skillll - \uBCF5\uC0AC\uBCF8_29"
+  - first:
+      213: 3054510498276197965
+    second: "skillll - \uBCF5\uC0AC\uBCF8_30"
+  - first:
+      213: 8957177193397722418
+    second: "skillll - \uBCF5\uC0AC\uBCF8_31"
+  - first:
+      213: 3700044676053488770
+    second: "skillll - \uBCF5\uC0AC\uBCF8_32"
+  - first:
+      213: 1857381891835273873
+    second: "skillll - \uBCF5\uC0AC\uBCF8_33"
+  - first:
+      213: 2652735604636998116
+    second: "skillll - \uBCF5\uC0AC\uBCF8_34"
+  - first:
+      213: -8528954163429977267
+    second: "skillll - \uBCF5\uC0AC\uBCF8_35"
+  - first:
+      213: 703902017564247357
+    second: "skillll - \uBCF5\uC0AC\uBCF8_36"
+  - first:
+      213: -1858150958007303898
+    second: "skillll - \uBCF5\uC0AC\uBCF8_37"
+  - first:
+      213: -9141955590882206890
+    second: "skillll - \uBCF5\uC0AC\uBCF8_38"
+  - first:
+      213: -4942054659972004087
+    second: "skillll - \uBCF5\uC0AC\uBCF8_39"
+  - first:
+      213: 7272870308160336998
+    second: "skillll - \uBCF5\uC0AC\uBCF8_40"
+  - first:
+      213: 7932440765513024323
+    second: "skillll - \uBCF5\uC0AC\uBCF8_41"
+  - first:
+      213: -2279558766824325663
+    second: "skillll - \uBCF5\uC0AC\uBCF8_42"
+  - first:
+      213: 906321208516246823
+    second: "skillll - \uBCF5\uC0AC\uBCF8_43"
+  - first:
+      213: -7065242851001931267
+    second: "skillll - \uBCF5\uC0AC\uBCF8_44"
+  - first:
+      213: -5922364560866790962
+    second: "skillll - \uBCF5\uC0AC\uBCF8_45"
+  - first:
+      213: -2729971646890702516
+    second: "skillll - \uBCF5\uC0AC\uBCF8_46"
+  - first:
+      213: 8499262397684762284
+    second: "skillll - \uBCF5\uC0AC\uBCF8_47"
+  - first:
+      213: 5566384292038258296
+    second: "skillll - \uBCF5\uC0AC\uBCF8_48"
+  - first:
+      213: -6783580235161439237
+    second: "skillll - \uBCF5\uC0AC\uBCF8_49"
+  - first:
+      213: -842597855812458606
+    second: "skillll - \uBCF5\uC0AC\uBCF8_50"
+  - first:
+      213: 3149368316911025203
+    second: "skillll - \uBCF5\uC0AC\uBCF8_51"
+  - first:
+      213: 3982983816206552621
+    second: "skillll - \uBCF5\uC0AC\uBCF8_52"
+  - first:
+      213: 5198215096259352747
+    second: "skillll - \uBCF5\uC0AC\uBCF8_53"
+  - first:
+      213: -5639249810125601385
+    second: "skillll - \uBCF5\uC0AC\uBCF8_54"
+  - first:
+      213: -7060877196080904944
+    second: "skillll - \uBCF5\uC0AC\uBCF8_55"
+  - first:
+      213: -3001018425062943667
+    second: "skillll - \uBCF5\uC0AC\uBCF8_56"
+  - first:
+      213: 2723765642520642222
+    second: "skillll - \uBCF5\uC0AC\uBCF8_57"
+  - first:
+      213: -8637039498489822676
+    second: "skillll - \uBCF5\uC0AC\uBCF8_58"
+  - first:
+      213: -685235241922214540
+    second: "skillll - \uBCF5\uC0AC\uBCF8_59"
+  - first:
+      213: 4692958595998392517
+    second: "skillll - \uBCF5\uC0AC\uBCF8_60"
+  - first:
+      213: 618482938546027198
+    second: "skillll - \uBCF5\uC0AC\uBCF8_61"
+  - first:
+      213: -1371334379360581919
+    second: "skillll - \uBCF5\uC0AC\uBCF8_62"
+  - first:
+      213: -1531273204352826457
+    second: "skillll - \uBCF5\uC0AC\uBCF8_63"
+  - first:
+      213: -2257028943940539618
+    second: "skillll - \uBCF5\uC0AC\uBCF8_64"
+  - first:
+      213: 1266282377214503900
+    second: "skillll - \uBCF5\uC0AC\uBCF8_65"
+  - first:
+      213: -6537416448166824323
+    second: "skillll - \uBCF5\uC0AC\uBCF8_66"
+  - first:
+      213: 60632162404336602
+    second: "skillll - \uBCF5\uC0AC\uBCF8_67"
+  - first:
+      213: -8151881748785196679
+    second: "skillll - \uBCF5\uC0AC\uBCF8_68"
+  - first:
+      213: 3528980854714413405
+    second: "skillll - \uBCF5\uC0AC\uBCF8_69"
+  - first:
+      213: -3054440494458447188
+    second: "skillll - \uBCF5\uC0AC\uBCF8_70"
+  - first:
+      213: 5193468596739340547
+    second: "skillll - \uBCF5\uC0AC\uBCF8_71"
+  - first:
+      213: 8819315494228493655
+    second: "skillll - \uBCF5\uC0AC\uBCF8_72"
+  - first:
+      213: 4368780302803330568
+    second: "skillll - \uBCF5\uC0AC\uBCF8_73"
+  - first:
+      213: -971994484495786162
+    second: "skillll - \uBCF5\uC0AC\uBCF8_74"
+  - first:
+      213: -178947268214314223
+    second: "skillll - \uBCF5\uC0AC\uBCF8_75"
+  - first:
+      213: -552205947548534617
+    second: "skillll - \uBCF5\uC0AC\uBCF8_76"
+  - first:
+      213: -3324649134491444446
+    second: "skillll - \uBCF5\uC0AC\uBCF8_77"
+  - first:
+      213: 5891658830186302638
+    second: "skillll - \uBCF5\uC0AC\uBCF8_78"
+  - first:
+      213: 7687948399948228956
+    second: "skillll - \uBCF5\uC0AC\uBCF8_79"
+  - first:
+      213: 8400466118704784513
+    second: "skillll - \uBCF5\uC0AC\uBCF8_80"
+  - first:
+      213: -1563364922228251436
+    second: "skillll - \uBCF5\uC0AC\uBCF8_81"
+  - first:
+      213: 555581399617747738
+    second: "skillll - \uBCF5\uC0AC\uBCF8_82"
+  - first:
+      213: 3292165689314214025
+    second: "skillll - \uBCF5\uC0AC\uBCF8_83"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "skillll - \uBCF5\uC0AC\uBCF8_0"
+      rect:
+        serializedVersion: 2
+        x: 5199
+        y: 0
+        width: 1383
+        height: 970
+      alignment: 9
+      pivot: {x: 0.48064882, y: 0.50172436}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96cd0c6c16a3f03b0800000000000000
+      internalID: -5544148424649024407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll - \uBCF5\uC0AC\uBCF8_1"
+      rect:
+        serializedVersion: 2
+        x: 3272
+        y: 0
+        width: 1483
+        height: 970
+      alignment: 9
+      pivot: {x: 0.5112785, y: 0.4844807}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e69c0529bd76d210800000000000000
+      internalID: 1357410571842787041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll - \uBCF5\uC0AC\uBCF8_2"
+      rect:
+        serializedVersion: 2
+        x: 7015
+        y: 0
+        width: 1524
+        height: 970
+      alignment: 9
+      pivot: {x: 0.45829362, y: 0.50172436}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9deedc1468abb6190800000000000000
+      internalID: -7968070029909561639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll - \uBCF5\uC0AC\uBCF8_3"
+      rect:
+        serializedVersion: 2
+        x: 1863
+        y: 0
+        width: 1049
+        height: 952
+      alignment: 9
+      pivot: {x: 0.5494293, y: 0.49648607}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c32e6d536c1de7820800000000000000
+      internalID: 2918000257819664956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll - \uBCF5\uC0AC\uBCF8_30"
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 447
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d46447c5d1dc36a20800000000000000
+      internalID: 3054510498276197965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 91b8774d275c45a4e9f9146bb4d1e50f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      "skillll - \uBCF5\uC0AC\uBCF8_0": -5544148424649024407
+      "skillll - \uBCF5\uC0AC\uBCF8_1": 1357410571842787041
+      "skillll - \uBCF5\uC0AC\uBCF8_10": -3374431202397559209
+      "skillll - \uBCF5\uC0AC\uBCF8_11": 1809739447710713248
+      "skillll - \uBCF5\uC0AC\uBCF8_12": 15018133512163357
+      "skillll - \uBCF5\uC0AC\uBCF8_13": -2945370568194781925
+      "skillll - \uBCF5\uC0AC\uBCF8_14": 7992699309568515684
+      "skillll - \uBCF5\uC0AC\uBCF8_15": 4134453212638967158
+      "skillll - \uBCF5\uC0AC\uBCF8_16": -2740233498080837916
+      "skillll - \uBCF5\uC0AC\uBCF8_17": 177003608429938602
+      "skillll - \uBCF5\uC0AC\uBCF8_18": 275103065702799693
+      "skillll - \uBCF5\uC0AC\uBCF8_19": 180380293990374279
+      "skillll - \uBCF5\uC0AC\uBCF8_2": -7968070029909561639
+      "skillll - \uBCF5\uC0AC\uBCF8_20": -5810038075280544673
+      "skillll - \uBCF5\uC0AC\uBCF8_21": -6903468850880846929
+      "skillll - \uBCF5\uC0AC\uBCF8_22": -3413812464061633988
+      "skillll - \uBCF5\uC0AC\uBCF8_23": 3574699524784865898
+      "skillll - \uBCF5\uC0AC\uBCF8_24": -6466412217728576970
+      "skillll - \uBCF5\uC0AC\uBCF8_25": -7554375683657149424
+      "skillll - \uBCF5\uC0AC\uBCF8_26": -6549144068095609323
+      "skillll - \uBCF5\uC0AC\uBCF8_27": 2417985632899328950
+      "skillll - \uBCF5\uC0AC\uBCF8_28": -7424660116709671536
+      "skillll - \uBCF5\uC0AC\uBCF8_29": 8913860077158328301
+      "skillll - \uBCF5\uC0AC\uBCF8_3": 2918000257819664956
+      "skillll - \uBCF5\uC0AC\uBCF8_30": 3054510498276197965
+      "skillll - \uBCF5\uC0AC\uBCF8_31": 8957177193397722418
+      "skillll - \uBCF5\uC0AC\uBCF8_32": 3700044676053488770
+      "skillll - \uBCF5\uC0AC\uBCF8_33": 1857381891835273873
+      "skillll - \uBCF5\uC0AC\uBCF8_34": 2652735604636998116
+      "skillll - \uBCF5\uC0AC\uBCF8_35": -8528954163429977267
+      "skillll - \uBCF5\uC0AC\uBCF8_36": 703902017564247357
+      "skillll - \uBCF5\uC0AC\uBCF8_37": -1858150958007303898
+      "skillll - \uBCF5\uC0AC\uBCF8_38": -9141955590882206890
+      "skillll - \uBCF5\uC0AC\uBCF8_39": -4942054659972004087
+      "skillll - \uBCF5\uC0AC\uBCF8_4": 5749365498638631482
+      "skillll - \uBCF5\uC0AC\uBCF8_40": 7272870308160336998
+      "skillll - \uBCF5\uC0AC\uBCF8_41": 7932440765513024323
+      "skillll - \uBCF5\uC0AC\uBCF8_42": -2279558766824325663
+      "skillll - \uBCF5\uC0AC\uBCF8_43": 906321208516246823
+      "skillll - \uBCF5\uC0AC\uBCF8_44": -7065242851001931267
+      "skillll - \uBCF5\uC0AC\uBCF8_45": -5922364560866790962
+      "skillll - \uBCF5\uC0AC\uBCF8_46": -2729971646890702516
+      "skillll - \uBCF5\uC0AC\uBCF8_47": 8499262397684762284
+      "skillll - \uBCF5\uC0AC\uBCF8_48": 5566384292038258296
+      "skillll - \uBCF5\uC0AC\uBCF8_49": -6783580235161439237
+      "skillll - \uBCF5\uC0AC\uBCF8_5": 1840222056416692422
+      "skillll - \uBCF5\uC0AC\uBCF8_50": -842597855812458606
+      "skillll - \uBCF5\uC0AC\uBCF8_51": 3149368316911025203
+      "skillll - \uBCF5\uC0AC\uBCF8_52": 3982983816206552621
+      "skillll - \uBCF5\uC0AC\uBCF8_53": 5198215096259352747
+      "skillll - \uBCF5\uC0AC\uBCF8_54": -5639249810125601385
+      "skillll - \uBCF5\uC0AC\uBCF8_55": -7060877196080904944
+      "skillll - \uBCF5\uC0AC\uBCF8_56": -3001018425062943667
+      "skillll - \uBCF5\uC0AC\uBCF8_57": 2723765642520642222
+      "skillll - \uBCF5\uC0AC\uBCF8_58": -8637039498489822676
+      "skillll - \uBCF5\uC0AC\uBCF8_59": -685235241922214540
+      "skillll - \uBCF5\uC0AC\uBCF8_6": 8268967442076686208
+      "skillll - \uBCF5\uC0AC\uBCF8_60": 4692958595998392517
+      "skillll - \uBCF5\uC0AC\uBCF8_61": 618482938546027198
+      "skillll - \uBCF5\uC0AC\uBCF8_62": -1371334379360581919
+      "skillll - \uBCF5\uC0AC\uBCF8_7": 5419207843078450303
+      "skillll - \uBCF5\uC0AC\uBCF8_8": 2938316545762933426
+      "skillll - \uBCF5\uC0AC\uBCF8_9": -6998749512081097006
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

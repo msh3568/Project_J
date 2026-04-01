@@ -1,0 +1,610 @@
+fileFormatVersion: 2
+guid: d306b85699bdce84a8839dee5f4b6f0a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7079390774032844418
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_0"
+  - first:
+      213: 5067997928516260941
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_1"
+  - first:
+      213: 1723636967357432596
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_2"
+  - first:
+      213: 2572406160169635458
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_3"
+  - first:
+      213: -995126843520425513
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_4"
+  - first:
+      213: 8189054643798016450
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_5"
+  - first:
+      213: -8831403245745941624
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_6"
+  - first:
+      213: -7693296897470463629
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_7"
+  - first:
+      213: 3991112259444319048
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_8"
+  - first:
+      213: 3964625905435778766
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_9"
+  - first:
+      213: -4963307407777071529
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_10"
+  - first:
+      213: -1904217343184341808
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_11"
+  - first:
+      213: 1188828669226525532
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_12"
+  - first:
+      213: 1931698813118626837
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_13"
+  - first:
+      213: 6388240687865607282
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_14"
+  - first:
+      213: -6818109050887922501
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_15"
+  - first:
+      213: 3145051333998547904
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_16"
+  - first:
+      213: 2693682298652799824
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_17"
+  - first:
+      213: -6010487508514057132
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_18"
+  - first:
+      213: -2646424274875839664
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_19"
+  - first:
+      213: 1834339676358555908
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_20"
+  - first:
+      213: -8325576882818833623
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_21"
+  - first:
+      213: 24794020862629479
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_22"
+  - first:
+      213: -313958289815762704
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_23"
+  - first:
+      213: -7323757793893506276
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_24"
+  - first:
+      213: 4491588478313431556
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_25"
+  - first:
+      213: -699953435686229466
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_26"
+  - first:
+      213: -3241549366599684810
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_27"
+  - first:
+      213: -9061379358579348116
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_28"
+  - first:
+      213: -4422918840419095842
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_29"
+  - first:
+      213: 1292741781401052415
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_30"
+  - first:
+      213: -8822057179990244557
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_31"
+  - first:
+      213: -1715587172758820573
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_32"
+  - first:
+      213: 1254202828534057362
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_33"
+  - first:
+      213: -8591490190959034151
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_34"
+  - first:
+      213: -97573305541082992
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_35"
+  - first:
+      213: 2511416688979175065
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_36"
+  - first:
+      213: 2724463559867924120
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_37"
+  - first:
+      213: 8693879955128910798
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_38"
+  - first:
+      213: 4861846272104768364
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_39"
+  - first:
+      213: -5092465087887338532
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_40"
+  - first:
+      213: 924728247215063946
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_41"
+  - first:
+      213: -6246416850354097686
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_42"
+  - first:
+      213: 5092343445704677681
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_43"
+  - first:
+      213: 8659084216755661229
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_44"
+  - first:
+      213: -4426979416241416427
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_45"
+  - first:
+      213: -5985126525186321114
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_46"
+  - first:
+      213: -4484531219776625620
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_47"
+  - first:
+      213: 4613309967702554595
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_48"
+  - first:
+      213: -9208622407102862661
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_49"
+  - first:
+      213: -3069865718459006576
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_50"
+  - first:
+      213: 1100412190261293056
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_51"
+  - first:
+      213: 6394115501823859448
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_52"
+  - first:
+      213: 3880959491401036575
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_53"
+  - first:
+      213: 5623800245860569897
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_54"
+  - first:
+      213: 2529676682982353624
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_55"
+  - first:
+      213: -6308236198710425108
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_56"
+  - first:
+      213: -1168138960562504098
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_57"
+  - first:
+      213: -1669346826298978417
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_58"
+  - first:
+      213: -2488379800993975298
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_59"
+  - first:
+      213: 7467417008057205741
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_60"
+  - first:
+      213: -3436663145797918866
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_61"
+  - first:
+      213: 1050869010275655405
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_62"
+  - first:
+      213: -8950682519059301428
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_63"
+  - first:
+      213: -5782401916055023143
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_64"
+  - first:
+      213: -4403779705934554269
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_65"
+  - first:
+      213: -2370736091221628891
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_66"
+  - first:
+      213: -3824130874146022743
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_67"
+  - first:
+      213: -3941323824097353224
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_68"
+  - first:
+      213: 2465216091023068482
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_69"
+  - first:
+      213: 6301899967380617664
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_70"
+  - first:
+      213: -3103371233647757341
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_71"
+  - first:
+      213: -7240446016051920591
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_72"
+  - first:
+      213: 5335356752093544751
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_73"
+  - first:
+      213: -2663017799110254418
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_74"
+  - first:
+      213: 5313496536686785616
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_75"
+  - first:
+      213: -2673324666402793589
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_76"
+  - first:
+      213: -971431142242653158
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_77"
+  - first:
+      213: 5368485242339177
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_78"
+  - first:
+      213: -6216196886060179634
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_79"
+  - first:
+      213: 8908044955527284871
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_80"
+  - first:
+      213: -274710128583180766
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_81"
+  - first:
+      213: -7398969980963269556
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_82"
+  - first:
+      213: -1376610913883480845
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_83"
+  - first:
+      213: -5571563245360097264
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_84"
+  - first:
+      213: 1032259263812709228
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_85"
+  - first:
+      213: 5214432859351554001
+    second: "skillll4 - \uBCF5\uC0AC\uBCF8_86"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_0"
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 0
+        width: 1289
+        height: 970
+      alignment: 9
+      pivot: {x: 0.60832626, y: 0.55905694}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 286c768966c0f3260800000000000000
+      internalID: 7079390774032844418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_1"
+      rect:
+        serializedVersion: 2
+        x: 1854
+        y: 0
+        width: 1335
+        height: 970
+      alignment: 9
+      pivot: {x: 0.644822, y: 0.5848943}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4490abb345255640800000000000000
+      internalID: 5067997928516260941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_2"
+      rect:
+        serializedVersion: 2
+        x: 3558
+        y: 0
+        width: 1314
+        height: 970
+      alignment: 9
+      pivot: {x: 0.696182, y: 0.5812032}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 413421980b69be710800000000000000
+      internalID: 1723636967357432596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_3"
+      rect:
+        serializedVersion: 2
+        x: 5183
+        y: 0
+        width: 1228
+        height: 970
+      alignment: 9
+      pivot: {x: 0.7274142, y: 0.5775122}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28e00f206c503b320800000000000000
+      internalID: 2572406160169635458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_14"
+      rect:
+        serializedVersion: 2
+        x: 2639
+        y: 637
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2743deb2f0797a850800000000000000
+      internalID: 6388240687865607282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "skillll4 - \uBCF5\uC0AC\uBCF8_73"
+      rect:
+        serializedVersion: 2
+        x: 2234
+        y: 247
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f218486b2befa0a40800000000000000
+      internalID: 5335356752093544751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f246ec41771840340b36f4c8ecb6edd5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "skillll4 - \uBCF5\uC0AC\uBCF8_0": 7079390774032844418
+      "skillll4 - \uBCF5\uC0AC\uBCF8_1": 5067997928516260941
+      "skillll4 - \uBCF5\uC0AC\uBCF8_10": -4963307407777071529
+      "skillll4 - \uBCF5\uC0AC\uBCF8_11": -1904217343184341808
+      "skillll4 - \uBCF5\uC0AC\uBCF8_12": 1188828669226525532
+      "skillll4 - \uBCF5\uC0AC\uBCF8_13": 1931698813118626837
+      "skillll4 - \uBCF5\uC0AC\uBCF8_14": 6388240687865607282
+      "skillll4 - \uBCF5\uC0AC\uBCF8_15": -6818109050887922501
+      "skillll4 - \uBCF5\uC0AC\uBCF8_16": 3145051333998547904
+      "skillll4 - \uBCF5\uC0AC\uBCF8_17": 2693682298652799824
+      "skillll4 - \uBCF5\uC0AC\uBCF8_18": -6010487508514057132
+      "skillll4 - \uBCF5\uC0AC\uBCF8_19": -2646424274875839664
+      "skillll4 - \uBCF5\uC0AC\uBCF8_2": 1723636967357432596
+      "skillll4 - \uBCF5\uC0AC\uBCF8_20": 1834339676358555908
+      "skillll4 - \uBCF5\uC0AC\uBCF8_21": -8325576882818833623
+      "skillll4 - \uBCF5\uC0AC\uBCF8_22": 24794020862629479
+      "skillll4 - \uBCF5\uC0AC\uBCF8_23": -313958289815762704
+      "skillll4 - \uBCF5\uC0AC\uBCF8_24": -7323757793893506276
+      "skillll4 - \uBCF5\uC0AC\uBCF8_25": 4491588478313431556
+      "skillll4 - \uBCF5\uC0AC\uBCF8_26": -699953435686229466
+      "skillll4 - \uBCF5\uC0AC\uBCF8_27": -3241549366599684810
+      "skillll4 - \uBCF5\uC0AC\uBCF8_28": -9061379358579348116
+      "skillll4 - \uBCF5\uC0AC\uBCF8_29": -4422918840419095842
+      "skillll4 - \uBCF5\uC0AC\uBCF8_3": 2572406160169635458
+      "skillll4 - \uBCF5\uC0AC\uBCF8_30": 1292741781401052415
+      "skillll4 - \uBCF5\uC0AC\uBCF8_31": -8822057179990244557
+      "skillll4 - \uBCF5\uC0AC\uBCF8_32": -1715587172758820573
+      "skillll4 - \uBCF5\uC0AC\uBCF8_33": 1254202828534057362
+      "skillll4 - \uBCF5\uC0AC\uBCF8_34": -8591490190959034151
+      "skillll4 - \uBCF5\uC0AC\uBCF8_35": -97573305541082992
+      "skillll4 - \uBCF5\uC0AC\uBCF8_36": 2511416688979175065
+      "skillll4 - \uBCF5\uC0AC\uBCF8_37": 2724463559867924120
+      "skillll4 - \uBCF5\uC0AC\uBCF8_38": 8693879955128910798
+      "skillll4 - \uBCF5\uC0AC\uBCF8_39": 4861846272104768364
+      "skillll4 - \uBCF5\uC0AC\uBCF8_4": -995126843520425513
+      "skillll4 - \uBCF5\uC0AC\uBCF8_40": -5092465087887338532
+      "skillll4 - \uBCF5\uC0AC\uBCF8_41": 924728247215063946
+      "skillll4 - \uBCF5\uC0AC\uBCF8_42": -6246416850354097686
+      "skillll4 - \uBCF5\uC0AC\uBCF8_43": 5092343445704677681
+      "skillll4 - \uBCF5\uC0AC\uBCF8_44": 8659084216755661229
+      "skillll4 - \uBCF5\uC0AC\uBCF8_45": -4426979416241416427
+      "skillll4 - \uBCF5\uC0AC\uBCF8_46": -5985126525186321114
+      "skillll4 - \uBCF5\uC0AC\uBCF8_47": -4484531219776625620
+      "skillll4 - \uBCF5\uC0AC\uBCF8_48": 4613309967702554595
+      "skillll4 - \uBCF5\uC0AC\uBCF8_49": -9208622407102862661
+      "skillll4 - \uBCF5\uC0AC\uBCF8_5": 8189054643798016450
+      "skillll4 - \uBCF5\uC0AC\uBCF8_50": -3069865718459006576
+      "skillll4 - \uBCF5\uC0AC\uBCF8_51": 1100412190261293056
+      "skillll4 - \uBCF5\uC0AC\uBCF8_52": 6394115501823859448
+      "skillll4 - \uBCF5\uC0AC\uBCF8_53": 3880959491401036575
+      "skillll4 - \uBCF5\uC0AC\uBCF8_54": 5623800245860569897
+      "skillll4 - \uBCF5\uC0AC\uBCF8_55": 2529676682982353624
+      "skillll4 - \uBCF5\uC0AC\uBCF8_56": -6308236198710425108
+      "skillll4 - \uBCF5\uC0AC\uBCF8_57": -1168138960562504098
+      "skillll4 - \uBCF5\uC0AC\uBCF8_58": -1669346826298978417
+      "skillll4 - \uBCF5\uC0AC\uBCF8_59": -2488379800993975298
+      "skillll4 - \uBCF5\uC0AC\uBCF8_6": -8831403245745941624
+      "skillll4 - \uBCF5\uC0AC\uBCF8_60": 7467417008057205741
+      "skillll4 - \uBCF5\uC0AC\uBCF8_61": -3436663145797918866
+      "skillll4 - \uBCF5\uC0AC\uBCF8_62": 1050869010275655405
+      "skillll4 - \uBCF5\uC0AC\uBCF8_63": -8950682519059301428
+      "skillll4 - \uBCF5\uC0AC\uBCF8_64": -5782401916055023143
+      "skillll4 - \uBCF5\uC0AC\uBCF8_65": -4403779705934554269
+      "skillll4 - \uBCF5\uC0AC\uBCF8_66": -2370736091221628891
+      "skillll4 - \uBCF5\uC0AC\uBCF8_67": -3824130874146022743
+      "skillll4 - \uBCF5\uC0AC\uBCF8_68": -3941323824097353224
+      "skillll4 - \uBCF5\uC0AC\uBCF8_69": 2465216091023068482
+      "skillll4 - \uBCF5\uC0AC\uBCF8_7": -7693296897470463629
+      "skillll4 - \uBCF5\uC0AC\uBCF8_70": 6301899967380617664
+      "skillll4 - \uBCF5\uC0AC\uBCF8_71": -3103371233647757341
+      "skillll4 - \uBCF5\uC0AC\uBCF8_72": -7240446016051920591
+      "skillll4 - \uBCF5\uC0AC\uBCF8_73": 5335356752093544751
+      "skillll4 - \uBCF5\uC0AC\uBCF8_74": -2663017799110254418
+      "skillll4 - \uBCF5\uC0AC\uBCF8_75": 5313496536686785616
+      "skillll4 - \uBCF5\uC0AC\uBCF8_76": -2673324666402793589
+      "skillll4 - \uBCF5\uC0AC\uBCF8_77": -971431142242653158
+      "skillll4 - \uBCF5\uC0AC\uBCF8_78": 5368485242339177
+      "skillll4 - \uBCF5\uC0AC\uBCF8_79": -6216196886060179634
+      "skillll4 - \uBCF5\uC0AC\uBCF8_8": 3991112259444319048
+      "skillll4 - \uBCF5\uC0AC\uBCF8_80": 8908044955527284871
+      "skillll4 - \uBCF5\uC0AC\uBCF8_81": -274710128583180766
+      "skillll4 - \uBCF5\uC0AC\uBCF8_82": -7398969980963269556
+      "skillll4 - \uBCF5\uC0AC\uBCF8_83": -1376610913883480845
+      "skillll4 - \uBCF5\uC0AC\uBCF8_84": -5571563245360097264
+      "skillll4 - \uBCF5\uC0AC\uBCF8_85": 1032259263812709228
+      "skillll4 - \uBCF5\uC0AC\uBCF8_86": 5214432859351554001
+      "skillll4 - \uBCF5\uC0AC\uBCF8_9": 3964625905435778766
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
