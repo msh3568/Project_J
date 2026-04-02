@@ -44547,7 +44547,7 @@ MonoBehaviour:
   onDamageVfxSortingLayer: Default
   onDamageVfxSortingOrder: 0
   useUnscaledTimeForDamageVfx: 1
-  hitVfx: {fileID: 4748681987041982144, guid: 163bff84d78fe024c8bbf143ff97a9fa, type: 3}
+  hitVfx: {fileID: 5161190390699320553, guid: c073210af90d14a49b44a81649fd044c, type: 3}
   hitVfxOffset: {x: 0, y: 0, z: 0}
   hitVfxScale: {x: 1, y: 1, z: 1}
   hitVfxLifetime: 0.5
@@ -46329,10 +46329,10 @@ SceneRoots:
   - {fileID: 666862235}
   - {fileID: 43260250}
   - {fileID: 221254717}
-  - {fileID: 932016892}
-  - {fileID: 1720777330}
   - {fileID: 56645577}
   - {fileID: 1244795924}
+  - {fileID: 932016892}
+  - {fileID: 1720777330}
   - {fileID: 2049881624}
   - {fileID: 757187471}
   - {fileID: 229412610}
