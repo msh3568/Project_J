@@ -173,6 +173,13 @@ public class Player_GrappleState : PlayerState
 
         if (activeTarget != null)
         {
+            // Spawn hit VFX on arrival using the player's existing VFX component
+            Entity_VFX entityVfx = player.GetComponent<Entity_VFX>();
+            if (entityVfx != null)
+            {
+                entityVfx.CreateOnHitVFX(activeTarget.transform);
+            }
+
             activeTarget.OnGrappleArrive(player);
             lockOnSystem?.MarkTargetAsRecentlyUsed(activeTarget);
         }

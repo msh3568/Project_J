@@ -10,7 +10,7 @@ public class Entity_Combat : MonoBehaviour
     [SerializeField] private float targetCheckRadius = 1;
     [SerializeField] private LayerMask whatIsTarget;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         vfx = GetComponent<Entity_VFX>();
     }

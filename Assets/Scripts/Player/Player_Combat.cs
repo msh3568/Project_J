@@ -14,6 +14,7 @@ public class Player_Combat : Entity_Combat
 
     private void Awake()
     {
+        base.Awake();
         player = GetComponent<Player>();
         if (player == null)
         {

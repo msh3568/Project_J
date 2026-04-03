@@ -502,7 +502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
-  onDamageVfxPrefab: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
+  onDamageVfxPrefab: {fileID: 0}
   onDamageVfxOffset: {x: 0, y: 0, z: 0}
   onDamageVfxScale: {x: 2, y: 2, z: 2}
   onDamageVfxLifetime: 0.5
@@ -517,6 +517,8 @@ MonoBehaviour:
   hitVfxLifetime: 0.5
   flipHitVfxWithTargetFacing: 0
   hitVfxFollowTarget: 0
+  randomizeHitVfxZRotation: 1
+  hitVfxRandomZRotationRange: {x: 90, y: 180}
   shieldHitVfxPrefab: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
   shieldHitVfxOffset: {x: 0, y: 0, z: 0}
   shieldHitVfxScale: {x: 1, y: 1, z: 1}
@@ -744,3 +746,4 @@ MonoBehaviour:
   clearOnDisable: 1
   clearOnDestroy: 1
   debugLogs: 0
+  suppressClearOnDisable: 0

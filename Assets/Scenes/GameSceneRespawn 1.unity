@@ -23062,6 +23062,7 @@ MonoBehaviour:
   - rid: 4835877661539303716
   - rid: 4835877661539303717
   - rid: 4835877661539303721
+  - rid: 3249909063481819246
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   RestoreInitialValuesOnDisable: 0
@@ -23073,6 +23074,95 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 3249909063481819246
+      type: {class: MMF_InstantiateObject, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -1241441442
+        Label: Instantiate Object
+        OriginalLabel: Instantiate Object
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 1311995283}
+        DebugActive: 0
+        GameObjectToInstantiate: {fileID: 5161190390699320553, guid: c073210af90d14a49b44a81649fd044c, type: 3}
+        PositionMode: 0
+        AlsoApplyRotation: 0
+        AlsoApplyScale: 0
+        TargetTransform: {fileID: 0}
+        TargetPosition: {x: 0, y: 0, z: 0}
+        PositionOffset: {x: 0, y: 0, z: 0}
+        RandomizePosition: 0
+        RandomizedPositionMin: {x: 0, y: 0, z: 0}
+        RandomizedPositionMax: {x: 1, y: 1, z: 1}
+        ParentTransform: {fileID: 0}
+        CreateObjectPool: 0
+        ObjectPoolSize: 5
+        MutualizePools: 0
+        PoolParentTransform: {fileID: 0}
     - rid: 4835877661539303715
       type: {class: MMF_ChromaticAberration_URP, ns: MoreMountains.FeedbacksForThirdParty, asm: MoreMountains.Tools}
       data:
@@ -44224,7 +44314,7 @@ MonoBehaviour:
     m_Bits: 16384
   requireWallTag: 1
   wallTag: Wall
-  includeGroundInWallCheck: 0
+  includeGroundInWallCheck: 1
   groundCheckDistance: 1.4
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
@@ -44549,8 +44639,8 @@ MonoBehaviour:
   useUnscaledTimeForDamageVfx: 1
   hitVfx: {fileID: 5161190390699320553, guid: c073210af90d14a49b44a81649fd044c, type: 3}
   hitVfxOffset: {x: 0, y: 0, z: 0}
-  hitVfxScale: {x: 1, y: 1, z: 1}
-  hitVfxLifetime: 0.5
+  hitVfxScale: {x: 0.5, y: 0.5, z: 0.5}
+  hitVfxLifetime: 0.3
   flipHitVfxWithTargetFacing: 0
   hitVfxFollowTarget: 0
   randomizeHitVfxZRotation: 1
@@ -44997,7 +45087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db70f48b27243748bb682c9e0d1bc84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrappleLockOnSystem
-  config: {fileID: 11400000, guid: 82ecd5df0a885df48b4bf4e3ca1feebe, type: 2}
+  config: {fileID: 11400000, guid: 7bf8350274967f342af63d00435ca5d1, type: 2}
   forceGroundWallOcclusion: 1
 --- !u!114 &2049881649
 MonoBehaviour:

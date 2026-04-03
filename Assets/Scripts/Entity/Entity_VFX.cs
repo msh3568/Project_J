@@ -96,6 +96,15 @@ public class Entity_VFX : MonoBehaviour
             Debug.LogError("SpriteRenderer is not found on this object or its children!");
         }
         originalMaterial = sr.material;
+
+        if (hitVfx != null)
+        {
+            Debug.Log($"[VFX] {name}: hitVfx is assigned to '{hitVfx.name}'", this);
+        }
+        else
+        {
+            Debug.LogWarning($"[VFX] {name}: hitVfx is NOT assigned!", this);
+        }
     }
 
     public void CreateOnHitVFX(Transform target)
@@ -103,10 +112,17 @@ public class Entity_VFX : MonoBehaviour
         CreateOnHitVFX(target, target != null ? (Vector2)target.position : (Vector2)transform.position);
     }
 
+    private static int hitVfxCounter = 0;
     public void CreateOnHitVFX(Transform target, Vector2 hitPoint)
     {
         if (hitVfx == null || target == null)
+        {
+            if (hitVfx == null) Debug.LogWarning($"[VFX] {name}: hitVfx is null!");
             return;
+        }
+
+        hitVfxCounter++;
+        Debug.Log($"[VFX][#{hitVfxCounter}] {name}: Creating Hit VFX '{hitVfx.name}' at {hitPoint} on target '{target.name}' (Frame: {Time.frameCount})");
 
         Vector3 spawnPosition = new Vector3(hitPoint.x, hitPoint.y, target.position.z) + hitVfxOffset;
         Transform parent = hitVfxFollowTarget ? target : null;
@@ -219,6 +235,8 @@ public class Entity_VFX : MonoBehaviour
         GameObject prefab = GetAttackVfxPrefab(comboIndex, out bool flipWithFacing, out bool invert);
         if (prefab == null)
             return;
+
+        Debug.Log($"[VFX] {name}: Playing Attack Vfx '{prefab.name}' for combo {comboIndex} (Frame: {Time.frameCount})");
 
         int facingDir = entity != null ? entity.facingDir : 1;
         Vector3 basePosition = attackVfxAnchor != null ? attackVfxAnchor.position : transform.position;

@@ -457,7 +457,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         health -= damage;
         Debug.Log($"[Drone Damage] Drone took {damage} damage from {damageSource.name}. Remaining HP: {health}");
-        SpawnVfx(onHitVfxPrefab, onHitVfxOffset, onHitVfxLifetime);
+        
+        // Skip internal hit VFX if it's a massive hit (like from a grapple),
+        // to avoid clashing with the player's grapple arrival VFX.
+        if (damage < 1000f)
+        {
+            SpawnVfx(onHitVfxPrefab, onHitVfxOffset, onHitVfxLifetime);
+        }
 
         if (health <= 0)
         {
