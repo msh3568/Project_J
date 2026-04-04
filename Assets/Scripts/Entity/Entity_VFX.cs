@@ -26,10 +26,18 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private Vector3 hitVfxOffset;
     [SerializeField] private Vector3 hitVfxScale = Vector3.one;
     [SerializeField] private float hitVfxLifetime = 0.5f;
+    [SerializeField] private bool useHitVfxAnimationLength = true;
+    [SerializeField] private bool flipHitVfxWithOwnerFacing = true;
     [SerializeField] private bool flipHitVfxWithTargetFacing;
+    [SerializeField] private bool invertHitVfxFlip;
     [SerializeField] private bool hitVfxFollowTarget;
+    [SerializeField] private float hitVfxBaseZRotation;
     [SerializeField] private bool randomizeHitVfxZRotation = true;
     [SerializeField] private Vector2 hitVfxRandomZRotationRange = new Vector2(90f, 180f);
+    [SerializeField, Min(0f)] private float hitVfxRepeatBlockWindow = 0.05f;
+    private int lastHitVfxFrame = -1;
+    private int lastHitVfxTargetId;
+    private float lastHitVfxTime = float.NegativeInfinity;
 
     [Header("Player Shield Hit VFX")]
     [SerializeField] private GameObject shieldHitVfxPrefab;
@@ -121,6 +129,10 @@ public class Entity_VFX : MonoBehaviour
             return;
         }
 
+        int targetId = target.GetInstanceID();
+        if (ShouldSuppressHitVfx(targetId))
+            return;
+
         hitVfxCounter++;
         Debug.Log($"[VFX][#{hitVfxCounter}] {name}: Creating Hit VFX '{hitVfx.name}' at {hitPoint} on target '{target.name}' (Frame: {Time.frameCount})");
 
@@ -128,20 +140,98 @@ public class Entity_VFX : MonoBehaviour
         Transform parent = hitVfxFollowTarget ? target : null;
         GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, GetHitVfxRotation(), parent);
         newHitVfx.transform.localScale = new Vector3(Mathf.Abs(hitVfxScale.x), hitVfxScale.y, hitVfxScale.z);
-        ApplyVfxFlipAndPlay(newHitVfx, flipHitVfxWithTargetFacing && target.localScale.x < 0);
-        if (hitVfxLifetime > 0f)
-            Destroy(newHitVfx, hitVfxLifetime);
+        ApplyVfxFlipAndPlay(newHitVfx, ResolveHitVfxFlip(target));
+
+        float resolvedLifetime = ResolveHitVfxLifetime(newHitVfx);
+        if (resolvedLifetime > 0f)
+            Destroy(newHitVfx, resolvedLifetime);
+
+        lastHitVfxFrame = Time.frameCount;
+        lastHitVfxTargetId = targetId;
+        lastHitVfxTime = Time.time;
     }
 
     private Quaternion GetHitVfxRotation()
     {
-        if (!randomizeHitVfxZRotation)
-            return Quaternion.identity;
+        float zRotation = hitVfxBaseZRotation;
 
-        float min = Mathf.Min(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
-        float max = Mathf.Max(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
-        float zRotation = Random.Range(min, max);
+        if (randomizeHitVfxZRotation)
+        {
+            float min = Mathf.Min(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
+            float max = Mathf.Max(hitVfxRandomZRotationRange.x, hitVfxRandomZRotationRange.y);
+            zRotation += Random.Range(min, max);
+        }
+
         return Quaternion.Euler(0f, 0f, zRotation);
+    }
+
+    private bool ShouldSuppressHitVfx(int targetId)
+    {
+        if (targetId != lastHitVfxTargetId)
+            return false;
+
+        if (Time.frameCount == lastHitVfxFrame)
+            return true;
+
+        return hitVfxRepeatBlockWindow > 0f && Time.time < lastHitVfxTime + hitVfxRepeatBlockWindow;
+    }
+
+    private bool ResolveHitVfxFlip(Transform target)
+    {
+        bool flip = false;
+
+        if (flipHitVfxWithOwnerFacing)
+            flip ^= GetOwnerFacingDir() < 0;
+
+        if (flipHitVfxWithTargetFacing && target != null)
+            flip ^= target.lossyScale.x < 0f;
+
+        if (invertHitVfxFlip)
+            flip = !flip;
+
+        return flip;
+    }
+
+    private int GetOwnerFacingDir()
+    {
+        if (entity != null)
+            return entity.facingDir;
+
+        return transform.lossyScale.x < 0f ? -1 : 1;
+    }
+
+    private float ResolveHitVfxLifetime(GameObject vfxInstance)
+    {
+        if (useHitVfxAnimationLength && TryGetAnimatorClipLength(vfxInstance, out float clipLength))
+            return clipLength;
+
+        return hitVfxLifetime;
+    }
+
+    private static bool TryGetAnimatorClipLength(GameObject vfxInstance, out float clipLength)
+    {
+        clipLength = 0f;
+        if (vfxInstance == null)
+            return false;
+
+        Animator animator = vfxInstance.GetComponent<Animator>();
+        if (animator == null || animator.runtimeAnimatorController == null)
+            return false;
+
+        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        if (clips == null || clips.Length == 0)
+            return false;
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            AnimationClip clip = clips[i];
+            if (clip == null)
+                continue;
+
+            clipLength = Mathf.Max(clipLength, clip.length);
+        }
+
+        return clipLength > 0f;
     }
 
     public void PlayOnDamageVfx()
