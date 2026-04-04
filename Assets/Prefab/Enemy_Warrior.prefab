@@ -511,7 +511,7 @@ MonoBehaviour:
   onDamageVfxSortingLayer: Enemy
   onDamageVfxSortingOrder: 15
   useUnscaledTimeForDamageVfx: 1
-  hitVfx: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
+  hitVfx: {fileID: 0}
   hitVfxOffset: {x: 0, y: 0, z: 0}
   hitVfxScale: {x: 1, y: 1, z: 1}
   hitVfxLifetime: 0.5
@@ -519,7 +519,7 @@ MonoBehaviour:
   hitVfxFollowTarget: 0
   randomizeHitVfxZRotation: 1
   hitVfxRandomZRotationRange: {x: 90, y: 180}
-  shieldHitVfxPrefab: {fileID: 4748681987041982144, guid: be071f408c625a147aa5421e747bb036, type: 3}
+  shieldHitVfxPrefab: {fileID: 0}
   shieldHitVfxOffset: {x: 0, y: 0, z: 0}
   shieldHitVfxScale: {x: 1, y: 1, z: 1}
   shieldHitVfxLifetime: 0.5
