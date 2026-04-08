@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
 public class ObjectDestroyCondition : RoomClearConditionBase
@@ -14,7 +15,8 @@ public class ObjectDestroyCondition : RoomClearConditionBase
 
     [Header("Behavior")]
     [SerializeField] private bool completeWhenNoObjectives = false;
-    [SerializeField] private bool debugLogs = false;
+    [FormerlySerializedAs("debugLogs")]
+    [SerializeField] private bool conditionDebugLogs = false;
 
     private readonly List<RoomDestroyObjective> runtimeObjectives = new List<RoomDestroyObjective>();
 
@@ -124,7 +126,7 @@ public class ObjectDestroyCondition : RoomClearConditionBase
         if (total == 0)
         {
             SetComplete(completeWhenNoObjectives);
-            if (debugLogs)
+            if (conditionDebugLogs)
                 Debug.Log("[ObjectDestroyCondition] No objectives. Complete = " + completeWhenNoObjectives, this);
             return;
         }
@@ -140,7 +142,7 @@ public class ObjectDestroyCondition : RoomClearConditionBase
         bool completed = destroyed >= total;
         SetComplete(completed);
 
-        if (debugLogs)
+        if (conditionDebugLogs)
             Debug.Log("[ObjectDestroyCondition] " + destroyed + "/" + total + " destroyed", this);
     }
 }

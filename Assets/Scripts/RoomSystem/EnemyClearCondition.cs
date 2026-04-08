@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
 public class EnemyClearCondition : RoomClearConditionBase
@@ -14,7 +15,8 @@ public class EnemyClearCondition : RoomClearConditionBase
 
     [Header("Behavior")]
     [SerializeField] private bool completeWhenNoUnits = true;
-    [SerializeField] private bool debugLogs = false;
+    [FormerlySerializedAs("debugLogs")]
+    [SerializeField] private bool conditionDebugLogs = false;
 
     private readonly List<RoomTrackedUnit> runtimeUnits = new List<RoomTrackedUnit>();
 
@@ -70,7 +72,7 @@ public class EnemyClearCondition : RoomClearConditionBase
                     runtimeUnits.Add(found[i]);
             }
             
-            if (debugLogs)
+            if (conditionDebugLogs)
                 Debug.Log($"[EnemyClearCondition] {name} Auto-collected {runtimeUnits.Count} units from {root.name}", this);
             return;
         }
@@ -81,7 +83,7 @@ public class EnemyClearCondition : RoomClearConditionBase
                 runtimeUnits.Add(trackedUnits[i]);
         }
 
-        if (debugLogs)
+        if (conditionDebugLogs)
             Debug.Log($"[EnemyClearCondition] {name} Manual-registered {runtimeUnits.Count} units", this);
     }
 
@@ -132,7 +134,7 @@ public class EnemyClearCondition : RoomClearConditionBase
         if (total == 0)
         {
             SetComplete(completeWhenNoUnits);
-            if (debugLogs)
+            if (conditionDebugLogs)
                 Debug.Log("[EnemyClearCondition] No tracked units. Complete = " + completeWhenNoUnits, this);
             return;
         }
@@ -148,7 +150,7 @@ public class EnemyClearCondition : RoomClearConditionBase
         bool completed = cleared >= total;
         SetComplete(completed);
 
-        if (debugLogs)
+        if (conditionDebugLogs)
             Debug.Log("[EnemyClearCondition] " + cleared + "/" + total + " cleared", this);
     }
 }

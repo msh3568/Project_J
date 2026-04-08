@@ -511,7 +511,7 @@ MonoBehaviour:
   onDamageVfxSortingLayer: Enemy
   onDamageVfxSortingOrder: 15
   useUnscaledTimeForDamageVfx: 1
-  hitVfx: {fileID: 0}
+  hitVfx: {fileID: 1345081126871789188, guid: 2b326e96230651545b7370ddcf2a86e5, type: 3}
   hitVfxOffset: {x: 0, y: 0, z: 0}
   hitVfxScale: {x: 1, y: 1, z: 1}
   hitVfxLifetime: 0.5

@@ -23,16 +23,16 @@ public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
 
         triggered = true;
 
-        // Reuse the drone's existing death pipeline (explosion/sound/cleanup).
-        LatencyDroneWeak drone = GetComponentInParent<LatencyDroneWeak>();
-        if (drone != null)
+        // Reuse the parent enemy's own death pipeline (explosion/sound/cleanup).
+        IDamageable damageable = GetComponentInParent<IDamageable>();
+        if (damageable != null)
         {
-            drone.TakeDamage(9999f, player != null ? player.transform : transform);
+            damageable.TakeDamage(9999f, player != null ? player.transform : transform);
             GameManager.Instance?.RequestHitSlowMoAndShake();
         }
         else
         {
-            // Fallback: keep prior kill-impact feel if this target is on a non-drone object.
+            // Fallback: keep prior kill-impact feel if this target is on a non-damageable object.
             GameManager.Instance?.RequestHitSlowMoAndShake();
             Destroy(gameObject);
         }

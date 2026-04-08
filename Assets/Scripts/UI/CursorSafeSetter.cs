@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CursorSafeSetter : MonoBehaviour
@@ -11,6 +12,9 @@ public class CursorSafeSetter : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool enableDebugLogs = false;
 
+    private Texture2D runtimeCursorTexture;
+    private int runtimeCursorSourceId;
+
     private void OnEnable()
     {
         if (applyOnEnable)
@@ -19,30 +23,119 @@ public class CursorSafeSetter : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        ReleaseRuntimeCursorTexture();
+    }
+
     public void ApplyCursor()
     {
         if (cursorTexture == null)
         {
+            ReleaseRuntimeCursorTexture();
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             if (enableDebugLogs)
                 Debug.Log("[CursorSafeSetter] Cursor reset to default (null texture).", this);
             return;
         }
 
-        if (!cursorTexture.isReadable)
+        Texture2D safeCursorTexture = PrepareCursorTexture(cursorTexture);
+        if (safeCursorTexture == null)
         {
             if (enableDebugLogs)
-                Debug.LogWarning($"[CursorSafeSetter] Texture '{cursorTexture.name}' is not readable. Skipping Cursor.SetCursor.", this);
+                Debug.LogWarning($"[CursorSafeSetter] Failed to prepare a compliant cursor texture from '{cursorTexture.name}'. Falling back to default cursor.", this);
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             return;
         }
 
-        if (cursorTexture.mipmapCount > 1 && enableDebugLogs)
-        {
-            Debug.LogWarning($"[CursorSafeSetter] Texture '{cursorTexture.name}' has mipmaps. Cursor expects no mip chain.", this);
-        }
-
-        Cursor.SetCursor(cursorTexture, hotspot, cursorMode);
+        Cursor.SetCursor(safeCursorTexture, hotspot, cursorMode);
         if (enableDebugLogs)
-            Debug.Log($"[CursorSafeSetter] Applied cursor '{cursorTexture.name}'.", this);
+            Debug.Log($"[CursorSafeSetter] Applied cursor '{safeCursorTexture.name}'.", this);
+    }
+
+    private Texture2D PrepareCursorTexture(Texture2D source)
+    {
+        if (source == null)
+            return null;
+
+        if (IsCursorTextureCompliant(source))
+            return source;
+
+        int sourceId = source.GetInstanceID();
+        if (runtimeCursorTexture != null && runtimeCursorSourceId == sourceId)
+            return runtimeCursorTexture;
+
+        ReleaseRuntimeCursorTexture();
+        runtimeCursorTexture = CreateReadableCursorCopy(source);
+        runtimeCursorSourceId = sourceId;
+        return runtimeCursorTexture;
+    }
+
+    private static bool IsCursorTextureCompliant(Texture2D texture)
+    {
+        return texture != null &&
+               texture.isReadable &&
+               texture.mipmapCount <= 1 &&
+               texture.format == TextureFormat.RGBA32;
+    }
+
+    private Texture2D CreateReadableCursorCopy(Texture2D source)
+    {
+        if (source == null || source.width <= 0 || source.height <= 0)
+            return null;
+
+        RenderTexture temporary = RenderTexture.GetTemporary(
+            source.width,
+            source.height,
+            0,
+            RenderTextureFormat.ARGB32,
+            RenderTextureReadWrite.Linear);
+
+        RenderTexture previousActive = RenderTexture.active;
+        try
+        {
+            Graphics.Blit(source, temporary);
+            RenderTexture.active = temporary;
+
+            Texture2D copy = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false, false)
+            {
+                name = source.name + "_CursorCopy",
+                filterMode = source.filterMode,
+                wrapMode = TextureWrapMode.Clamp
+            };
+
+            copy.ReadPixels(new Rect(0f, 0f, source.width, source.height), 0, 0, false);
+            copy.Apply(false, false);
+
+            if (enableDebugLogs)
+                Debug.LogWarning($"[CursorSafeSetter] Built runtime RGBA32 cursor copy for '{source.name}'.", this);
+
+            return copy;
+        }
+        catch (Exception ex)
+        {
+            if (enableDebugLogs)
+                Debug.LogWarning($"[CursorSafeSetter] Failed to create runtime cursor copy for '{source.name}': {ex.Message}", this);
+            return null;
+        }
+        finally
+        {
+            RenderTexture.active = previousActive;
+            RenderTexture.ReleaseTemporary(temporary);
+        }
+    }
+
+    private void ReleaseRuntimeCursorTexture()
+    {
+        if (runtimeCursorTexture == null)
+            return;
+
+        if (Application.isPlaying)
+            Destroy(runtimeCursorTexture);
+        else
+            DestroyImmediate(runtimeCursorTexture);
+
+        runtimeCursorTexture = null;
+        runtimeCursorSourceId = 0;
     }
 }

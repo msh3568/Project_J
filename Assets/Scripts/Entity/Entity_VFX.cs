@@ -35,9 +35,12 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private bool randomizeHitVfxZRotation = true;
     [SerializeField] private Vector2 hitVfxRandomZRotationRange = new Vector2(90f, 180f);
     [SerializeField, Min(0f)] private float hitVfxRepeatBlockWindow = 0.05f;
+    [SerializeField] private bool warnIfHitVfxMissing;
+    [SerializeField] private bool logHitVfxLifecycle;
     private int lastHitVfxFrame = -1;
     private int lastHitVfxTargetId;
     private float lastHitVfxTime = float.NegativeInfinity;
+    private bool hasLoggedMissingHitVfxWarning;
 
     [Header("Player Shield Hit VFX")]
     [SerializeField] private GameObject shieldHitVfxPrefab;
@@ -102,17 +105,19 @@ public class Entity_VFX : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         if (sr == null) {
             Debug.LogError("SpriteRenderer is not found on this object or its children!");
+            return;
         }
         originalMaterial = sr.material;
 
         if (hitVfx != null)
         {
-            Debug.Log($"[VFX] {name}: hitVfx is assigned to '{hitVfx.name}'", this);
+            if (logHitVfxLifecycle)
+                Debug.Log($"[VFX] {name}: hitVfx is assigned to '{hitVfx.name}'", this);
+            return;
         }
-        else
-        {
-            Debug.LogWarning($"[VFX] {name}: hitVfx is NOT assigned!", this);
-        }
+
+        if (warnIfHitVfxMissing)
+            LogMissingHitVfxWarning("Awake");
     }
 
     public void CreateOnHitVFX(Transform target)
@@ -123,9 +128,13 @@ public class Entity_VFX : MonoBehaviour
     private static int hitVfxCounter = 0;
     public void CreateOnHitVFX(Transform target, Vector2 hitPoint)
     {
-        if (hitVfx == null || target == null)
+        if (target == null)
+            return;
+
+        if (hitVfx == null)
         {
-            if (hitVfx == null) Debug.LogWarning($"[VFX] {name}: hitVfx is null!");
+            if (warnIfHitVfxMissing)
+                LogMissingHitVfxWarning("CreateOnHitVFX");
             return;
         }
 
@@ -134,7 +143,8 @@ public class Entity_VFX : MonoBehaviour
             return;
 
         hitVfxCounter++;
-        Debug.Log($"[VFX][#{hitVfxCounter}] {name}: Creating Hit VFX '{hitVfx.name}' at {hitPoint} on target '{target.name}' (Frame: {Time.frameCount})");
+        if (logHitVfxLifecycle)
+            Debug.Log($"[VFX][#{hitVfxCounter}] {name}: Creating Hit VFX '{hitVfx.name}' at {hitPoint} on target '{target.name}' (Frame: {Time.frameCount})");
 
         Vector3 spawnPosition = new Vector3(hitPoint.x, hitPoint.y, target.position.z) + hitVfxOffset;
         Transform parent = hitVfxFollowTarget ? target : null;
@@ -149,6 +159,15 @@ public class Entity_VFX : MonoBehaviour
         lastHitVfxFrame = Time.frameCount;
         lastHitVfxTargetId = targetId;
         lastHitVfxTime = Time.time;
+    }
+
+    private void LogMissingHitVfxWarning(string context)
+    {
+        if (hasLoggedMissingHitVfxWarning)
+            return;
+
+        hasLoggedMissingHitVfxWarning = true;
+        Debug.LogWarning($"[VFX] {name}: hitVfx is not assigned ({context}).", this);
     }
 
     private Quaternion GetHitVfxRotation()
