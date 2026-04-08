@@ -6,6 +6,23 @@ using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
+    private enum MovementMode
+    {
+        Chase,
+        Stationary
+    }
+
+    private enum ProjectileImpactMode
+    {
+        Health,
+        Firewall
+    }
+
+    [Header("Behavior")]
+    [SerializeField] private MovementMode movementMode = MovementMode.Chase;
+    [SerializeField] private ProjectileImpactMode projectileImpactMode = ProjectileImpactMode.Health;
+    [SerializeField, Min(1)] private int projectileFirewallDamage = 1;
+
     [Header("Drone Settings")]
     [SerializeField] private float health = 1f; // Drone HP: 1
     [SerializeField] private float detectionRange = 10f; // Default 10 units if camera based calculation is hard
@@ -133,6 +150,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private Color baseSpriteColor = Color.white;
     private float hoverBaseY; // Store the base Y position for hovering
     private float initialHealth;
+    private Vector3 stationaryAnchorPosition;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolMoveRangeX = 5f; // X축으�??�동??최�? 범위
@@ -144,6 +162,8 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float minHorizontalDistance = 2f; // ?�레?�어?�??최소 X�?거리
     [SerializeField] private float followHeightOffset = 3f; // ?�레?�어 머리 ?�에???��????�이 (?�레?�어 Y + followHeightOffset)
     [SerializeField] private float verticalAdjustSpeed = 2f; // Y�?조정 ?�도
+
+    private bool IsStationaryMode => movementMode == MovementMode.Stationary;
 
     void Awake()
     {
@@ -238,6 +258,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         hoverBaseY = transform.position.y; // Initialize hoverBaseY
+        stationaryAnchorPosition = transform.position;
         hoverOffset = Random.Range(0f, 2f * Mathf.PI); // Randomize hover start for asynchronous movement
         nextFireTime = Time.time + fireCooldown; // Initial delay before first shot
         nextTelegraphTime = Time.time + telegraphDelayAfterFire;
@@ -285,6 +306,34 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
                 transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z); // Face left (negative scale)
             }
             // --- End Flipping Logic ---
+
+            if (IsStationaryMode)
+            {
+                transform.position = new Vector3(stationaryAnchorPosition.x, stationaryAnchorPosition.y, transform.position.z);
+                rb.linearVelocity = Vector2.zero;
+                hoverBaseY = stationaryAnchorPosition.y;
+
+                if (Time.time >= nextFireTime && !isFiringBurst)
+                {
+                    if (distanceToPlayer >= idealFiringDistance && distanceToPlayer <= maxFiringDistance)
+                    {
+                        if (audioSource != null && preFireSound != null)
+                        {
+                            audioSource.PlayOneShot(preFireSound, preFireVolume);
+                        }
+                        StartCoroutine(FireBurstCoroutine());
+                    }
+                }
+                else if (!isFiringBurst && Time.time >= nextTelegraphTime && Time.time < nextFireTime)
+                {
+                    if (telegraphCoroutine == null && distanceToPlayer >= idealFiringDistance && distanceToPlayer <= maxFiringDistance)
+                    {
+                        telegraphCoroutine = StartCoroutine(ShowTelegraphCoroutine(Time.time, nextFireTime));
+                    }
+                }
+
+                return;
+            }
 
             // --- X�??�동 ---
             float targetX = playerTransform.position.x;
@@ -379,6 +428,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         else // Player out of detection range
         {
             HideTelegraph();
+            if (IsStationaryMode)
+            {
+                rb.linearVelocity = Vector2.zero;
+                transform.position = new Vector3(stationaryAnchorPosition.x, stationaryAnchorPosition.y, transform.position.z);
+                return;
+            }
             // ?�로???�찰(Patrol) 로직
             // ?�재 ?�치?� 초기 ?�찰 ?�치�?기�??�로 ?�동 방향 결정
             if (transform.position.x >= initialPatrolPosition.x + patrolMoveRangeX)
@@ -425,6 +480,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         Vector3 spawnPosition = firePoint.position + (Vector3)direction.normalized * projectileSpawnOffset;
 
         LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+        newProjectile.ConfigureImpactMode(projectileImpactMode == ProjectileImpactMode.Firewall, projectileFirewallDamage);
         newProjectile.Initialize(direction, transform);
 
         // 캡슐 발사 ???�운???�생
@@ -434,7 +490,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         // --- Recoil Effect ---
-        StartCoroutine(ApplyRecoil(-direction.normalized));
+        if (!IsStationaryMode)
+        {
+            StartCoroutine(ApplyRecoil(-direction.normalized));
+        }
         // --- End Recoil Effect ---
     }
 
@@ -879,6 +938,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         hoverBaseY = transform.position.y;
+        stationaryAnchorPosition = transform.position;
         hoverOffset = Random.Range(0f, 2f * Mathf.PI);
         nextFireTime = Time.time + fireCooldown;
         initialPatrolPosition = transform.position;

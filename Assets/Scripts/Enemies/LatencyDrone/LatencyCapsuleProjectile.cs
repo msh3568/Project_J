@@ -5,6 +5,8 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
 {
     [Header("Projectile Settings")]
     [SerializeField] private float damageToPlayer = 1f;
+    [SerializeField] private bool useFirewallDamage = false;
+    [SerializeField] private int firewallDamage = 1;
     [SerializeField] public float projectileSpeed = 12f;
     [SerializeField] private float parriedSpeedMultiplier = 4f;
     [SerializeField] private Color projectileColor = Color.red;
@@ -119,6 +121,12 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         StartCoroutine(MuzzleFlashEffect());
     }
 
+    public void ConfigureImpactMode(bool shouldUseFirewallDamage, int firewallDamageAmount)
+    {
+        useFirewallDamage = shouldUseFirewallDamage;
+        firewallDamage = Mathf.Max(1, firewallDamageAmount);
+    }
+
     private IEnumerator MuzzleFlashEffect()
     {
         if (spriteRenderer == null) yield break;
@@ -165,19 +173,39 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         
         if (other.CompareTag("Player"))
         {
-            Player_Health playerHealth = other.GetComponent<Player_Health>();
-            if (playerHealth != null)
+            if (useFirewallDamage)
             {
-                playerHealth.TakeDamage(damageToPlayer, transform);
+                IFirewallDamageable firewall = other.GetComponent<IFirewallDamageable>();
+                if (firewall != null)
+                {
+                    firewall.TakeFirewallDamage(firewallDamage);
+                }
+                else
+                {
+                    Player_Health playerHealth = other.GetComponent<Player_Health>();
+                    if (playerHealth != null)
+                    {
+                        playerHealth.TakeDamage(Mathf.Max(1f, damageToPlayer), transform);
+                    }
+                }
+            }
+            else
+            {
+                Player_Health playerHealth = other.GetComponent<Player_Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage(damageToPlayer, transform);
+                }
+
+                LatencyDebuffReceiver debuffReceiver = other.GetComponent<LatencyDebuffReceiver>();
+                if (debuffReceiver != null)
+                {
+                    debuffReceiver.ApplyDebuff();
+                    IArmor playerArmor = other.GetComponent<IArmor>();
+                    debuffReceiver.OnHitReduceArmor(playerArmor);
+                }
             }
 
-            LatencyDebuffReceiver debuffReceiver = other.GetComponent<LatencyDebuffReceiver>();
-            if (debuffReceiver != null)
-            {
-                    debuffReceiver.ApplyDebuff();
-                IArmor playerArmor = other.GetComponent<IArmor>();
-                debuffReceiver.OnHitReduceArmor(playerArmor);
-            }
             Destroy(gameObject);
         }
         else if (other.CompareTag("Ground") || other.CompareTag("Wall"))
