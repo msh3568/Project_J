@@ -37,10 +37,16 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     [SerializeField] private float dormantAimOffset = 45f;
     [SerializeField] private float minAimOffset = -60f;
     [SerializeField] private float maxAimOffset = 60f;
+    [SerializeField, Min(0f)] private float fireAimTolerance = 2f;
     [SerializeField, Min(0f)] private float closeRangeBlindDistance = 1.75f;
     [SerializeField] private bool holdAimWhenTargetInBlindZone = true;
     [SerializeField] private bool returnToActiveAngleWhenIdle = true;
     [SerializeField] private bool debugHeadAimLogs = true;
+
+    [Header("Dormant Visuals")]
+    [SerializeField] private bool useDormantGrayscale = true;
+    [SerializeField] private Color dormantBodyTint = new Color(0.38f, 0.38f, 0.38f, 1f);
+    [SerializeField] private Color dormantHeadTint = new Color(0.3f, 0.3f, 0.3f, 1f);
 
     [Header("Damage State Visuals")]
     [SerializeField] private SpriteRenderer bodySpriteRenderer;
@@ -133,6 +139,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private Rigidbody2D rb;
     private AudioSource audioSource;
     private Coroutine telegraphCoroutine;
+    private Coroutine fireSequenceCoroutine;
     private Coroutine activationCoroutine;
     private float nextFireTime = Mathf.Infinity;
     private float nextTelegraphTime = Mathf.Infinity;
@@ -154,10 +161,14 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private Sprite originalHeadSprite;
     private Color originalBodyColor = Color.white;
     private Color originalHeadColor = Color.white;
+    private Material originalBodyMaterial;
+    private Material originalHeadMaterial;
+    private Material dormantGrayscaleMaterial;
     private Vector2 activationAnchorPlayerPosition;
     private bool hasActivationAnchor;
     private float activationAllowedAfterTime;
     private string lastActivationGateLogReason = string.Empty;
+    private bool loggedDormantShaderMissing;
 
     private float BaseForwardAngle => forwardDirection == ForwardDirection.Right ? 0f : 180f;
 
@@ -190,6 +201,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         currentAimOffset = GetInitialAimOffset(startDormant);
         ApplyHeadAimOffset(currentAimOffset, "Awake/InitialPose");
         EnsureTelegraphLine();
+        RefreshSpriteVisualState();
     }
 
     private void Start()
@@ -212,6 +224,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             isActivating = false;
             nextFireTime = Mathf.Infinity;
             nextTelegraphTime = Mathf.Infinity;
+            RefreshSpriteVisualState();
         }
         else
         {
@@ -259,10 +272,18 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         float distanceFromHeadToPlayer = headRotationPivot != null
             ? Vector2.Distance(headRotationPivot.position, playerTransform.position)
             : distanceToPlayer;
-        bool playerDetected = distanceToPlayer <= detectionRange;
+        bool playerWithinTrackingArc = IsPlayerWithinTrackingArc();
+        bool playerDetected = distanceToPlayer <= detectionRange && playerWithinTrackingArc;
         bool canBeginActivation = CanBeginActivation(playerDetected, out string activationGateReason);
         bool tooCloseForAim = closeRangeBlindDistance > 0f && distanceFromHeadToPlayer < closeRangeBlindDistance;
-        bool withinFiringBand = !tooCloseForAim && distanceToPlayer >= idealFiringDistance && distanceToPlayer <= maxFiringDistance;
+        bool canTrackPlayer = playerWithinTrackingArc && !tooCloseForAim;
+        bool withinFiringBand = canTrackPlayer && distanceToPlayer >= idealFiringDistance && distanceToPlayer <= maxFiringDistance;
+
+        if (startDormant && !playerWithinTrackingArc &&
+            (isActivated || isActivating || isFiringBurst || fireSequenceCoroutine != null || telegraphCoroutine != null))
+        {
+            ReturnToPreDetectionState();
+        }
 
         if (!isActivated && !isActivating && playerDetected)
         {
@@ -280,7 +301,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             }
         }
 
-        UpdateHeadAim(playerDetected, !tooCloseForAim);
+        UpdateHeadAim(playerDetected, canTrackPlayer);
 
         if (!isActivated)
         {
@@ -294,24 +315,21 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             return;
         }
 
-        if (Time.time >= nextFireTime && !isFiringBurst)
+        if (!withinFiringBand)
         {
-            if (withinFiringBand)
-            {
-                if (audioSource != null && preFireSound != null)
-                    audioSource.PlayOneShot(preFireSound, preFireVolume);
+            if (fireSequenceCoroutine == null)
+                HideTelegraph();
 
-                StartCoroutine(FireBurstCoroutine());
-            }
+            return;
         }
-        else if (!isFiringBurst && Time.time >= nextTelegraphTime && Time.time < nextFireTime)
+
+        if (!isFiringBurst && fireSequenceCoroutine == null &&
+            Time.time >= nextTelegraphTime && IsAimSettledForShot())
         {
-            if (telegraphCoroutine == null && withinFiringBand)
-                telegraphCoroutine = StartCoroutine(ShowTelegraphCoroutine(Time.time, nextFireTime));
-        }
-        else if (!withinFiringBand)
-        {
-            HideTelegraph();
+            if (audioSource != null && preFireSound != null)
+                audioSource.PlayOneShot(preFireSound, preFireVolume);
+
+            fireSequenceCoroutine = StartCoroutine(FireSequenceCoroutine());
         }
     }
 
@@ -373,12 +391,14 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         {
             originalBodySprite = bodySpriteRenderer.sprite;
             originalBodyColor = bodySpriteRenderer.color;
+            originalBodyMaterial = bodySpriteRenderer.sharedMaterial;
         }
 
         if (headSpriteRenderer != null)
         {
             originalHeadSprite = headSpriteRenderer.sprite;
             originalHeadColor = headSpriteRenderer.color;
+            originalHeadMaterial = headSpriteRenderer.sharedMaterial;
         }
     }
 
@@ -721,6 +741,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private IEnumerator ActivationRoutine()
     {
         isActivating = true;
+        RefreshSpriteVisualState();
         PlayActivationSound();
 
         float startOffset = currentAimOffset;
@@ -753,12 +774,13 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         isActivating = false;
         isActivated = true;
         PlayIdleLoop();
+        RefreshSpriteVisualState();
 
         if (!resetTimers)
             return;
 
         nextFireTime = Time.time + fireCooldown;
-        nextTelegraphTime = Time.time + telegraphDelayAfterFire;
+        nextTelegraphTime = GetNextTelegraphTime(nextFireTime);
     }
 
     private void PlayIdleLoop()
@@ -787,6 +809,97 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         }
     }
 
+    private void ReturnToPreDetectionState()
+    {
+        StopAllCoroutines();
+        activationCoroutine = null;
+        telegraphCoroutine = null;
+        fireSequenceCoroutine = null;
+        isFiringBurst = false;
+        isActivating = false;
+        hasLockedAim = false;
+        HideTelegraph();
+        StopIdleLoop();
+
+        if (!startDormant)
+            return;
+
+        isActivated = false;
+        nextFireTime = Mathf.Infinity;
+        nextTelegraphTime = Mathf.Infinity;
+        ResetActivationGate();
+        RefreshSpriteVisualState();
+    }
+
+    private bool IsAimSettledForShot()
+    {
+        if (playerTransform == null || !isActivated || isActivating || !IsPlayerWithinTrackingArc())
+            return false;
+
+        float desiredAimOffset = ComputeDesiredAimOffset();
+        float remainingAngle = Mathf.Abs(Mathf.DeltaAngle(currentAimOffset, desiredAimOffset));
+        return remainingAngle <= fireAimTolerance;
+    }
+
+    private bool IsPlayerWithinTrackingArc()
+    {
+        return playerTransform != null && IsWorldPointWithinTrackingArc(playerTransform.position);
+    }
+
+    private bool IsPlayerStillInFiringBand()
+    {
+        if (isDead || !isActivated || playerTransform == null || !IsPlayerWithinTrackingArc())
+            return false;
+
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        if (distanceToPlayer > detectionRange)
+            return false;
+
+        float distanceFromHeadToPlayer = headRotationPivot != null
+            ? Vector2.Distance(headRotationPivot.position, playerTransform.position)
+            : distanceToPlayer;
+
+        bool tooCloseForAim = closeRangeBlindDistance > 0f && distanceFromHeadToPlayer < closeRangeBlindDistance;
+        return !tooCloseForAim && distanceToPlayer >= idealFiringDistance && distanceToPlayer <= maxFiringDistance;
+    }
+
+    private float GetNextTelegraphTime(float scheduledFireTime)
+    {
+        float holdDuration = Mathf.Max(0f, telegraphDuration);
+        float fireWindowOpenTime = scheduledFireTime - holdDuration;
+        return Mathf.Max(Time.time + telegraphDelayAfterFire, fireWindowOpenTime);
+    }
+
+    private IEnumerator FireSequenceCoroutine()
+    {
+        float holdDuration = Mathf.Max(0f, telegraphDuration);
+        if (holdDuration > 0f)
+        {
+            telegraphCoroutine = StartCoroutine(ShowTelegraphCoroutine(Time.time, Time.time + holdDuration));
+            while (telegraphCoroutine != null)
+            {
+                if (!IsPlayerStillInFiringBand())
+                {
+                    HideTelegraph();
+                    fireSequenceCoroutine = null;
+                    yield break;
+                }
+
+                yield return null;
+            }
+        }
+
+        if (!IsPlayerStillInFiringBand())
+        {
+            HideTelegraph();
+            fireSequenceCoroutine = null;
+            yield break;
+        }
+
+        yield return StartCoroutine(FireBurstCoroutine());
+        fireSequenceCoroutine = null;
+    }
+
     private IEnumerator FireBurstCoroutine()
     {
         isFiringBurst = true;
@@ -794,7 +907,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
         if (lockAimDuringBurst)
         {
-            lockedAimOffset = ComputeDesiredAimOffset();
+            lockedAimOffset = currentAimOffset;
             hasLockedAim = true;
         }
 
@@ -809,7 +922,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
         isFiringBurst = false;
         nextFireTime = Time.time + burstCooldown;
-        nextTelegraphTime = Time.time + telegraphDelayAfterFire;
+        nextTelegraphTime = GetNextTelegraphTime(nextFireTime);
         hasLockedAim = false;
     }
 
@@ -844,7 +957,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
         if (lockAimDuringTelegraph)
         {
-            lockedAimOffset = ComputeDesiredAimOffset();
+            lockedAimOffset = currentAimOffset;
             hasLockedAim = true;
         }
 
@@ -887,7 +1000,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         }
 
         telegraphLine.enabled = false;
-        if (!isFiringBurst && lockAimDuringTelegraph)
+        if (!isFiringBurst && fireSequenceCoroutine == null && lockAimDuringTelegraph)
             hasLockedAim = false;
         telegraphCoroutine = null;
     }
@@ -919,7 +1032,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         if (damage < instantKillDamageThreshold)
             SpawnVfx(onHitVfxPrefab, onHitVfxOffset, onHitVfxLifetime);
 
-        UpdateDamageVisuals();
+        RefreshSpriteVisualState();
 
         if (health > 0f)
             return;
@@ -929,6 +1042,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         StopAllCoroutines();
         activationCoroutine = null;
         telegraphCoroutine = null;
+        fireSequenceCoroutine = null;
         HideTelegraph();
         isFiringBurst = false;
         hasLockedAim = false;
@@ -945,35 +1059,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
     private void UpdateDamageVisuals()
     {
-        if (health > 0f && health < initialHealth)
-        {
-            if (bodySpriteRenderer != null)
-            {
-                if (damagedBodySprite != null)
-                    bodySpriteRenderer.sprite = damagedBodySprite;
-                bodySpriteRenderer.color = damagedBodyTint;
-            }
-
-            if (headSpriteRenderer != null)
-            {
-                if (damagedHeadSprite != null)
-                    headSpriteRenderer.sprite = damagedHeadSprite;
-                headSpriteRenderer.color = damagedHeadTint;
-            }
-            return;
-        }
-
-        if (bodySpriteRenderer != null)
-        {
-            bodySpriteRenderer.sprite = originalBodySprite;
-            bodySpriteRenderer.color = originalBodyColor;
-        }
-
-        if (headSpriteRenderer != null)
-        {
-            headSpriteRenderer.sprite = originalHeadSprite;
-            headSpriteRenderer.color = originalHeadColor;
-        }
+        RefreshSpriteVisualState();
     }
 
     private IEnumerator PreDeathFlashThenDie()
@@ -1126,6 +1212,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         isActivating = false;
         hasLockedAim = false;
         telegraphCoroutine = null;
+        fireSequenceCoroutine = null;
         activationCoroutine = null;
         currentAimOffset = GetInitialAimOffset(!isActivated);
         ApplyHeadAimOffset(currentAimOffset, "OnCheckpointRespawn/ResetPose");
@@ -1150,8 +1237,6 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         if (headSpriteRenderer != null)
         {
             headSpriteRenderer.enabled = true;
-            headSpriteRenderer.sprite = originalHeadSprite;
-            headSpriteRenderer.color = originalHeadColor;
         }
 
         Collider2D col = GetComponent<Collider2D>();
@@ -1164,7 +1249,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         ResetActivationGate();
 
         nextFireTime = isActivated ? Time.time + fireCooldown : Mathf.Infinity;
-        nextTelegraphTime = isActivated ? Time.time + telegraphDelayAfterFire : Mathf.Infinity;
+        nextTelegraphTime = isActivated ? GetNextTelegraphTime(nextFireTime) : Mathf.Infinity;
 
         if (preDeathFlashFeedback != null)
             preDeathFlashFeedback.StopFeedbacks();
@@ -1174,7 +1259,14 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         else
             StopIdleLoop();
 
+        RefreshSpriteVisualState();
         enabled = !controlledByDormantActivator;
+    }
+
+    private void OnDestroy()
+    {
+        if (Application.isPlaying && dormantGrayscaleMaterial != null)
+            Destroy(dormantGrayscaleMaterial);
     }
 
     private bool IsControlledByDormantActivator()
@@ -1268,6 +1360,98 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         return headRotationPivot != null ? headRotationPivot : transform;
     }
 
+    private bool ShouldUseDormantVisualState()
+    {
+        return startDormant && !isActivated && !isActivating && !isDead && !isDying;
+    }
+
+    private void RefreshSpriteVisualState()
+    {
+        bool isDamaged = health > 0f && health < initialHealth;
+        bool useDormantState = ShouldUseDormantVisualState();
+
+        ApplyRendererVisualState(
+            bodySpriteRenderer,
+            originalBodySprite,
+            damagedBodySprite,
+            originalBodyColor,
+            damagedBodyTint,
+            dormantBodyTint,
+            originalBodyMaterial,
+            isDamaged,
+            useDormantState);
+
+        ApplyRendererVisualState(
+            headSpriteRenderer,
+            originalHeadSprite,
+            damagedHeadSprite,
+            originalHeadColor,
+            damagedHeadTint,
+            dormantHeadTint,
+            originalHeadMaterial,
+            isDamaged,
+            useDormantState);
+    }
+
+    private void ApplyRendererVisualState(
+        SpriteRenderer spriteRenderer,
+        Sprite normalSprite,
+        Sprite damagedSprite,
+        Color normalColor,
+        Color damagedColor,
+        Color dormantColor,
+        Material originalMaterial,
+        bool isDamaged,
+        bool useDormantState)
+    {
+        if (spriteRenderer == null)
+            return;
+
+        spriteRenderer.sprite = isDamaged && damagedSprite != null ? damagedSprite : normalSprite;
+        spriteRenderer.color = useDormantState
+            ? dormantColor
+            : isDamaged ? damagedColor : normalColor;
+
+        Material targetMaterial = originalMaterial;
+        if (useDormantState && useDormantGrayscale)
+        {
+            Material grayscaleMaterial = GetDormantGrayscaleMaterial();
+            if (grayscaleMaterial != null)
+                targetMaterial = grayscaleMaterial;
+        }
+
+        if (spriteRenderer.sharedMaterial != targetMaterial)
+            spriteRenderer.sharedMaterial = targetMaterial;
+    }
+
+    private Material GetDormantGrayscaleMaterial()
+    {
+        if (dormantGrayscaleMaterial != null)
+            return dormantGrayscaleMaterial;
+
+        Shader shader = Shader.Find("Light2D/Sprites/Misc/LitGreyScale");
+        if (shader == null)
+        {
+            if (!loggedDormantShaderMissing)
+            {
+                Debug.LogWarning("[FirewallTurret] Dormant grayscale shader was not found. Falling back to tint-only dormant visuals.", this);
+                loggedDormantShaderMissing = true;
+            }
+
+            return null;
+        }
+
+        dormantGrayscaleMaterial = new Material(shader)
+        {
+            name = $"{name}_DormantGrayscale"
+        };
+
+        if (dormantGrayscaleMaterial.HasProperty("_Lit"))
+            dormantGrayscaleMaterial.SetFloat("_Lit", 1f);
+
+        return dormantGrayscaleMaterial;
+    }
+
     private float GetFinalLocalAngle(float aimOffset)
     {
         return NormalizeSignedAngle(BaseForwardAngle + aimOffset);
@@ -1278,6 +1462,20 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         float min = Mathf.Min(minAimOffset, maxAimOffset);
         float max = Mathf.Max(minAimOffset, maxAimOffset);
         return Mathf.Clamp(NormalizeSignedAngle(aimOffset), min, max);
+    }
+
+    private bool IsWorldPointWithinTrackingArc(Vector2 worldPoint)
+    {
+        if (!TryGetAimOffsetToWorldPoint(worldPoint, out float aimOffset))
+            return false;
+
+        float normalizedAimOffset = NormalizeSignedAngle(aimOffset);
+        if (Mathf.Abs(normalizedAimOffset) > 90f)
+            return false;
+
+        float min = Mathf.Min(minAimOffset, maxAimOffset);
+        float max = Mathf.Max(minAimOffset, maxAimOffset);
+        return normalizedAimOffset >= min && normalizedAimOffset <= max;
     }
 
     private bool TryGetAimOffsetToWorldPoint(Vector2 worldPoint, out float aimOffset)

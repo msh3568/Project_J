@@ -6362,6 +6362,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 9999
+  retriggerCooldown: 0.1
 --- !u!224 &387532773 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
@@ -8732,6 +8734,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 9999
+  retriggerCooldown: 0.1
 --- !u!224 &520235474 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
@@ -9933,6 +9937,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 9999
+  retriggerCooldown: 0.1
 --- !u!224 &569362320 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
@@ -19159,6 +19165,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 9999
+  retriggerCooldown: 0.1
 --- !u!224 &1095544570 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
@@ -25157,6 +25165,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 9999
+  retriggerCooldown: 0.1
 --- !u!224 &1415843818 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8597254867026093334, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}

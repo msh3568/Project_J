@@ -3,8 +3,10 @@ using UnityEngine;
 public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
 {
     [SerializeField] private bool enforceEnemyLayer = true;
+    [SerializeField, Min(0f)] private float grappleDamage = 9999f;
+    [SerializeField, Min(0f)] private float retriggerCooldown = 0.1f;
 
-    private bool triggered;
+    private float nextAllowedTriggerTime;
 
     private void Awake()
     {
@@ -18,16 +20,16 @@ public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
 
     public override void OnGrappleArrive(Player player)
     {
-        if (triggered)
+        if (Time.time < nextAllowedTriggerTime)
             return;
 
-        triggered = true;
+        nextAllowedTriggerTime = Time.time + retriggerCooldown;
 
         // Reuse the parent enemy's own death pipeline (explosion/sound/cleanup).
         IDamageable damageable = GetComponentInParent<IDamageable>();
         if (damageable != null)
         {
-            damageable.TakeDamage(9999f, player != null ? player.transform : transform);
+            damageable.TakeDamage(grappleDamage, player != null ? player.transform : transform);
             GameManager.Instance?.RequestHitSlowMoAndShake();
         }
         else
@@ -39,7 +41,7 @@ public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
     }
     public void OnCheckpointRespawn()
     {
-        triggered = false;
+        nextAllowedTriggerTime = 0f;
     }
 }
 

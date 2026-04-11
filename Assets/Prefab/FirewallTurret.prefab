@@ -319,16 +319,19 @@ MonoBehaviour:
   headRotationPivot: {fileID: 210464838409429139}
   headAimPivot: {fileID: 7341592653589793231}
   headTransform: {fileID: 4124361191931876538}
-  headRotationSpeed: 120
+  headRotationSpeed: 90
   forwardDirection: 0
   activeAimOffset: 0
-  dormantAimOffset: 45
+  dormantAimOffset: -40
   minAimOffset: -60
   maxAimOffset: 60
   closeRangeBlindDistance: 1.75
   holdAimWhenTargetInBlindZone: 1
   returnToActiveAngleWhenIdle: 1
   debugHeadAimLogs: 0
+  useDormantGrayscale: 1
+  dormantBodyTint: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+  dormantHeadTint: {r: 0.86, g: 0.86, b: 0.86, a: 1}
   bodySpriteRenderer: {fileID: 712290437521093938}
   headSpriteRenderer: {fileID: 6570954206652558317}
   damagedBodySprite: {fileID: 0}
@@ -505,6 +508,8 @@ MonoBehaviour:
   aimPoint: {fileID: 0}
   canBeTargeted: 1
   enforceEnemyLayer: 1
+  grappleDamage: 1
+  retriggerCooldown: 0.1
 --- !u!1 &9060766733575666097
 GameObject:
   m_ObjectHideFlags: 0
