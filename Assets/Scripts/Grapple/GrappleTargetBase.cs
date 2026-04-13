@@ -18,7 +18,26 @@ public abstract class GrappleTargetBase : MonoBehaviour
         return transform.position;
     }
 
+    public virtual Vector2 GetArrivalPosition(Player player, LockOnGrappleConfig config, Vector2 startPosition)
+    {
+        return GetAimPosition();
+    }
+
     public virtual void OnGrappleArrive(Player player)
     {
+    }
+
+    protected Vector2 ResolveStopShortArrivalPosition(Vector2 startPosition, float stopShortDistance)
+    {
+        Vector2 aimPosition = GetAimPosition();
+        if (stopShortDistance <= 0f)
+            return aimPosition;
+
+        Vector2 toTarget = aimPosition - startPosition;
+        float distance = toTarget.magnitude;
+        if (distance <= Mathf.Max(0.001f, stopShortDistance))
+            return aimPosition;
+
+        return aimPosition - (toTarget / distance) * stopShortDistance;
     }
 }

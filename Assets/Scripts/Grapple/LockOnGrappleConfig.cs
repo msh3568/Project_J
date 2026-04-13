@@ -39,6 +39,9 @@ public class LockOnGrappleConfig : ScriptableObject
 
     [Header("Travel")]
     [Min(0.01f)] public float travelTime = 0.15f;
+    [Min(0f)] public float enemyArrivalStopShortDistance = 0.75f;
+    [Range(0f, 0.99f)] public float attackAnimationTriggerProgress = 0.55f;
+    [Min(0f)] public float postAttackStateHoldDuration = 0.2f;
     public bool phaseThroughDuringGrapple = true;
     public bool invincibleDuringGrapple = true;
 

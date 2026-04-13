@@ -16,6 +16,12 @@ public class GrappleEnemyTarget : GrappleTargetBase, ICheckpointRespawnable
             gameObject.layer = enemyLayer;
     }
 
+    public override Vector2 GetArrivalPosition(Player player, LockOnGrappleConfig config, Vector2 startPosition)
+    {
+        float stopShortDistance = config != null ? config.enemyArrivalStopShortDistance : 0f;
+        return ResolveStopShortArrivalPosition(startPosition, stopShortDistance);
+    }
+
     public override void OnGrappleArrive(Player player)
     {
         if (triggered)
