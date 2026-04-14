@@ -32,8 +32,10 @@ public class Player_GrappleState : PlayerState
     private bool startupSlowRequested;
     private bool attackAnimationTriggered;
     private float postAttackHoldTimer;
+    private bool playerPresentationBoostApplied;
 
     public bool IsGrapplingActive { get; private set; }
+    public GrappleTargetBase ActiveTarget => IsGrapplingActive ? activeTarget : null;
 
     public Player_GrappleState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
@@ -76,6 +78,12 @@ public class Player_GrappleState : PlayerState
         arrived = false;
         grappleEndNotified = false;
         IsGrapplingActive = true;
+        PlayerPresentationController presentationController = PlayerPresentationController.GetOrAdd(player);
+        if (presentationController != null)
+        {
+            presentationController.PushToFront();
+            playerPresentationBoostApplied = true;
+        }
         movementStarted = config.startSlowDuration <= 0f;
         startSlowTimer = 0f;
         startupSlowRequested = false;
@@ -194,6 +202,12 @@ public class Player_GrappleState : PlayerState
         player.SetMoveInputOverride(false, Vector2.zero);
         player.canFlip = true;
         IsGrapplingActive = false;
+        if (playerPresentationBoostApplied)
+        {
+            PlayerPresentationController presentationController = PlayerPresentationController.GetOrAdd(player);
+            presentationController?.PopToFront();
+            playerPresentationBoostApplied = false;
+        }
         anim.ResetTrigger(GrappleAttackTrigger);
         anim.SetBool(GrappleAnimBool, false);
         LogGrappleAnim($"Exit currentState='{anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.grapple")}' normalizedTime={anim.GetCurrentAnimatorStateInfo(0).normalizedTime:F2}");

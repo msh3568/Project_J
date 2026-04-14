@@ -10,6 +10,8 @@ public class GrappleVisualizer : MonoBehaviour
     [SerializeField] private Material lineMaterialOverride;
     [SerializeField] private Color lockOnLineColor = Color.black;
     [SerializeField] private bool tintMaterialColor = true;
+    [SerializeField] private bool matchPlayerSortingLayer = true;
+    [SerializeField] private int lineSortingOrderOffset = 5;
 
     private GrappleLockOnSystem lockOnSystem;
     private Player player;
@@ -24,13 +26,17 @@ public class GrappleVisualizer : MonoBehaviour
         {
             lineRenderer.positionCount = 2;
             ApplyLineStyle();
+            ApplyLineSorting(createControllerIfMissing: false);
         }
     }
 
     private void OnValidate()
     {
         if (lineRenderer != null)
+        {
             ApplyLineStyle();
+            ApplyLineSorting(createControllerIfMissing: false);
+        }
     }
 
     private void LateUpdate()
@@ -38,19 +44,20 @@ public class GrappleVisualizer : MonoBehaviour
         if (lineRenderer == null)
             return;
 
-        if (hideWhenGrappleUnavailable && player != null && !player.IsGrappleReadyForUI())
+        GrappleTargetBase target = GetTargetToVisualize();
+        if (hideWhenGrappleUnavailable && !ShouldShowVisualizer(target))
         {
             lineRenderer.enabled = false;
             return;
         }
 
-        GrappleTargetBase target = lockOnSystem != null ? lockOnSystem.CurrentTarget : null;
         if (target == null)
         {
             lineRenderer.enabled = false;
             return;
         }
 
+        ApplyLineSorting(createControllerIfMissing: true);
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(0, transform.position + lineStartOffset);
         lineRenderer.SetPosition(1, (Vector3)target.GetAimPosition() + lineEndOffset);
@@ -81,5 +88,45 @@ public class GrappleVisualizer : MonoBehaviour
             Color materialColor = material.color;
             material.color = new Color(lockOnLineColor.r, lockOnLineColor.g, lockOnLineColor.b, materialColor.a);
         }
+    }
+
+    private GrappleTargetBase GetTargetToVisualize()
+    {
+        if (player != null && player.IsGrappling && player.grappleState != null && player.grappleState.ActiveTarget != null)
+            return player.grappleState.ActiveTarget;
+
+        return lockOnSystem != null ? lockOnSystem.CurrentTarget : null;
+    }
+
+    private bool ShouldShowVisualizer(GrappleTargetBase target)
+    {
+        if (target == null)
+            return false;
+
+        if (player != null && player.IsGrappling)
+            return true;
+
+        return player == null || player.IsGrappleReadyForUI();
+    }
+
+    private void ApplyLineSorting(bool createControllerIfMissing)
+    {
+        if (lineRenderer == null || player == null)
+            return;
+
+        PlayerPresentationController presentationController = createControllerIfMissing
+            ? PlayerPresentationController.GetOrAdd(player)
+            : player.GetComponent<PlayerPresentationController>();
+        if (presentationController == null)
+            return;
+
+        SpriteRenderer playerRenderer = presentationController.GetPrimarySpriteRenderer();
+        if (playerRenderer == null)
+            return;
+
+        if (matchPlayerSortingLayer)
+            lineRenderer.sortingLayerID = playerRenderer.sortingLayerID;
+
+        lineRenderer.sortingOrder = playerRenderer.sortingOrder + lineSortingOrderOffset;
     }
 }
