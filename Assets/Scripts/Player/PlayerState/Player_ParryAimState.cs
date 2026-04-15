@@ -154,7 +154,7 @@ public class Player_ParryAimState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        player.ParryInvincibilityCoroutineHandle = player.StartCoroutine(player.ParryInvincibilityCoroutine(_playerHealth));
+        player.StartParryRecoveryInvincibility();
         anim.SetBool("IsParryHold", false);
 
         ParryCameraZoom.Instance?.EndParryZoom();

@@ -70,6 +70,11 @@ public class Enemy : Entity
         Debug.Log($"[Enemy] {gameObject.name} onEntityDeath() called. Changing to DeadState.");
         base.onEntityDeath();
 
+        if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
+        {
+            trackedUnit.NotifyDead();
+        }
+
         if (mediumFireTracePrefab != null)
         {
             Instantiate(mediumFireTracePrefab, transform.position, Quaternion.identity);
@@ -200,6 +205,11 @@ public class Enemy : Entity
         if (health != null)
         {
             health.ResetHealthToMax();
+        }
+
+        if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
+        {
+            trackedUnit.ResetClearedState();
         }
 
         if (anim != null)

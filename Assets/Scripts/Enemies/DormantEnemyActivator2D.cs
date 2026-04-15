@@ -21,6 +21,7 @@ public class DormantEnemyActivator2D : MonoBehaviour, ICheckpointRespawnable
     private Transform playerTransform;
     private float nextCheckTime;
     private bool hasActivated;
+    private bool hasInitializedDormantState;
     private Coroutine respawnRoutine;
 
     public bool KeepsEnemyDormantOnRespawn => startDormantOnEnable && reactivateDormantOnCheckpointRespawn;
@@ -34,15 +35,21 @@ public class DormantEnemyActivator2D : MonoBehaviour, ICheckpointRespawnable
             detectionOrigin = transform;
 
         ResolvePlayer();
-
-        if (startDormantOnEnable)
-            ApplyDormantState();
     }
 
     private void OnEnable()
     {
-        if (startDormantOnEnable && !hasActivated)
+        if (startDormantOnEnable && !hasActivated && hasInitializedDormantState)
             ApplyDormantState();
+    }
+
+    private void Start()
+    {
+        if (!startDormantOnEnable || hasActivated)
+            return;
+
+        ApplyDormantState();
+        hasInitializedDormantState = true;
     }
 
     private void Update()

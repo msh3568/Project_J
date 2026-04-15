@@ -1,14 +1,18 @@
-﻿using Firebase;
-using Firebase.Database;
-using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+#if PROJECTJ_FIREBASE
+using Firebase;
+using Firebase.Database;
+using Firebase.Extensions;
+#endif
 
 public class RankingManager : MonoBehaviour
 {
+    private const string FirebaseDefineSymbol = "PROJECTJ_FIREBASE";
+
     public static RankingManager Instance { get; private set; }
 
     [Header("UI Elements")]
@@ -17,14 +21,19 @@ public class RankingManager : MonoBehaviour
     public Button closeRankingButton;
     public List<TMP_Text> rankUITexts;
 
+#if PROJECTJ_FIREBASE
     private DatabaseReference databaseReference;
+    private bool isFirebaseInitialized = false;
+#endif
 
     void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(Instance.gameObject);
+            Destroy(gameObject);
+            return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
         InitializeFirebase();
@@ -32,63 +41,137 @@ public class RankingManager : MonoBehaviour
 
     void Start()
     {
-        // UI 踰꾪듉?ㅼ? Start?먯꽌 怨꾩냽 泥섎━ (?ъ씠 濡쒕뱶???뚮쭏???ㅼ떆 李얠븘???????덉쑝誘濡?
         if (showRankingButton != null)
+        {
             showRankingButton.onClick.AddListener(ShowRanking);
-        
+        }
+
         if (closeRankingButton != null)
+        {
             closeRankingButton.onClick.AddListener(HideRanking);
+        }
 
         if (rankingPanel != null)
+        {
             rankingPanel.SetActive(false);
+        }
+
+        RefreshRankingUiAvailability();
     }
 
     private void InitializeFirebase()
     {
+#if PROJECTJ_FIREBASE
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Firebase 랭킹 초기화 실패: " + task.Exception);
+                RefreshRankingUiAvailability();
+                return;
+            }
+
             if (task.Result == DependencyStatus.Available)
             {
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("Firebase\uAC00 \uC131\uACF5\uC801\uC73C\uB85C \uCD08\uAE30\uD654\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
+                isFirebaseInitialized = true;
+                Debug.Log("Firebase 랭킹 초기화 완료.");
             }
             else
             {
-                Debug.LogError($"Firebase \uC885\uC18D\uC131 \uD574\uACB0\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: {task.Result}");
+                Debug.LogWarning($"Firebase 랭킹 종속성 해결 실패: {task.Result}");
             }
+
+            RefreshRankingUiAvailability();
         });
+#else
+        Debug.Log($"Firebase 랭킹이 비활성화되어 있습니다. 다시 켜려면 스크립팅 심볼 '{FirebaseDefineSymbol}'을 추가하세요.");
+        RefreshRankingUiAvailability();
+#endif
+    }
+
+    private bool CanUseFirebaseRanking()
+    {
+#if PROJECTJ_FIREBASE
+        return isFirebaseInitialized && databaseReference != null;
+#else
+        return false;
+#endif
+    }
+
+    private void RefreshRankingUiAvailability()
+    {
+        bool isRankingAvailable = CanUseFirebaseRanking();
+
+        if (showRankingButton != null)
+        {
+            showRankingButton.interactable = isRankingAvailable;
+        }
+
+        if (!isRankingAvailable)
+        {
+            ShowDisabledRankingMessage();
+        }
+    }
+
+    private void ShowDisabledRankingMessage()
+    {
+        if (rankUITexts == null || rankUITexts.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var txt in rankUITexts)
+        {
+            if (txt != null)
+            {
+                txt.text = string.Empty;
+            }
+        }
+
+        if (rankUITexts[0] != null)
+        {
+            rankUITexts[0].text = "랭킹이 비활성화되어 있습니다.";
+        }
     }
 
     public void ShowRanking()
     {
-        if (databaseReference == null) return;
-
-        if (rankingPanel != null)
+        if (rankingPanel == null)
         {
-            rankingPanel.SetActive(true);
-            LoadTopScores();
+            return;
         }
+
+        rankingPanel.SetActive(true);
+
+        if (!CanUseFirebaseRanking())
+        {
+            ShowDisabledRankingMessage();
+            return;
+        }
+
+        LoadTopScores();
     }
 
     public void HideRanking()
     {
         if (rankingPanel != null)
+        {
             rankingPanel.SetActive(false);
+        }
     }
 
-    /// <summary>
-    /// "time" ?꾨뱶瑜?湲곗??쇰줈 ?곸쐞 10媛쒖쓽 湲곕줉??媛?몄샃?덈떎.
-    /// </summary>
+#if PROJECTJ_FIREBASE
     private void LoadTopScores()
     {
         databaseReference.Child("scores").OrderByChild("time").LimitToFirst(10).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("\uB7AD\uD0B9 \uB85C\uB529\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4: " + task.Exception);
+                Debug.LogError("랭킹 로딩 실패: " + task.Exception);
                 return;
             }
-            
+
             if (task.IsCompleted)
             {
                 UpdateRankingUI(task.Result);
@@ -100,73 +183,85 @@ public class RankingManager : MonoBehaviour
     {
         foreach (var txt in rankUITexts)
         {
-            txt.text = "";
+            if (txt != null)
+            {
+                txt.text = string.Empty;
+            }
         }
 
         if (!snapshot.Exists)
         {
-            if (rankUITexts.Count > 0)
-                rankUITexts[0].text = "\uC544\uC9C1 \uB7AD\uD0B9 \uB370\uC774\uD130\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.";
+            if (rankUITexts.Count > 0 && rankUITexts[0] != null)
+            {
+                rankUITexts[0].text = "아직 랭킹 데이터가 없습니다.";
+            }
             return;
         }
 
         int rank = 1;
         foreach (DataSnapshot userRecord in snapshot.Children)
         {
-            if (rank > rankUITexts.Count) break;
+            if (rank > rankUITexts.Count)
+            {
+                break;
+            }
 
             try
             {
                 string playerName = userRecord.Child("name").Value.ToString();
                 float clearTimeValue = Convert.ToSingle(userRecord.Child("time").Value);
-
                 TimeSpan timeSpan = TimeSpan.FromSeconds(clearTimeValue);
                 string formattedTime = timeSpan.ToString(@"hh\:mm\:ss");
-                
-                rankUITexts[rank - 1].text = $"{rank}. {playerName} - {formattedTime}";
+
+                if (rankUITexts[rank - 1] != null)
+                {
+                    rankUITexts[rank - 1].text = $"{rank}. {playerName} - {formattedTime}";
+                }
                 rank++;
             }
             catch (Exception e)
             {
-                Debug.LogError($"\uB7AD\uD0B9 \uB370\uC774\uD130 \uD30C\uC2F1 \uC624\uB958: {e.Message}");
+                Debug.LogError($"랭킹 데이터 파싱 오류: {e.Message}");
             }
         }
     }
+#else
+    private void LoadTopScores()
+    {
+    }
+#endif
 
-    /// <summary>
-    /// ?곗씠?곕쿋?댁뒪???덈줈??湲곕줉??異붽??⑸땲??
-    /// </summary>
-    /// <param name="playerName">?뚮젅?댁뼱 ?대쫫</param>
-    /// <param name="clearTime">?대━???쒓컙(珥?</param>
     public void AddScore(string playerName, float clearTime)
     {
-        if (databaseReference == null)
+        if (!CanUseFirebaseRanking())
         {
-            Debug.LogError("Firebase\uAC00 \uCD08\uAE30\uD654\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.");
+            Debug.Log($"Firebase 랭킹이 비활성화되어 기록 저장을 건너뜁니다. player={playerName}, time={clearTime}");
             return;
         }
 
-        // ??ν븷 ?곗씠??媛앹껜 ?앹꽦
-        Dictionary<string, object> scoreData = new Dictionary<string, object>();
-        scoreData["name"] = playerName;
-        scoreData["time"] = clearTime;
+#if PROJECTJ_FIREBASE
+        var scoreData = new Dictionary<string, object>
+        {
+            ["name"] = playerName,
+            ["time"] = clearTime
+        };
 
-        // "scores" 寃쎈줈 ?꾨옒???쒕뜡 ?ㅻ? ?앹꽦?섎ŉ ?곗씠?????
         databaseReference.Child("scores").Push().SetValueAsync(scoreData).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompletedSuccessfully)
             {
-                Debug.Log($"{playerName}\uB2D8 \uAE30\uB85D({clearTime}\uCD08)\uC774 \uC131\uACF5\uC801\uC73C\uB85C \uCD94\uAC00\uB418\uC5C8\uC2B5\uB2C8\uB2E4.");
-                LoadTopScores(); // ?먯닔 異붽? ????궧 ?덈줈怨좎묠
+                Debug.Log($"{playerName}님 기록({clearTime}초)이 성공적으로 추가되었습니다.");
+                LoadTopScores();
             }
             else if (task.IsFaulted)
             {
-                Debug.LogError($"\uAE30\uB85D \uCD94\uAC00 \uC2E4\uD328: {task.Exception}");
+                Debug.LogError($"기록 추가 실패: {task.Exception}");
             }
             else if (task.IsCanceled)
             {
-                Debug.LogWarning("\uAE30\uB85D \uCD94\uAC00 \uCDE8\uC18C\uB428");
+                Debug.LogWarning("기록 추가 취소됨");
             }
         });
+#endif
     }
 }

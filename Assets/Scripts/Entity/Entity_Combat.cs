@@ -88,13 +88,12 @@ public class Entity_Combat : MonoBehaviour
 
     protected bool HasDamageable(Collider2D target)
     {
-        return target != null && target.GetComponent<IDamageable>() != null;
+        return DamageableLookup.TryGetDamageable(target, out _);
     }
 
     protected bool TryGetDamageable(Collider2D target, out IDamageable damagable)
     {
-        damagable = target != null ? target.GetComponent<IDamageable>() : null;
-        return damagable != null;
+        return DamageableLookup.TryGetDamageable(target, out damagable);
     }
 
     protected Collider2D[] GetDetectedColliders()

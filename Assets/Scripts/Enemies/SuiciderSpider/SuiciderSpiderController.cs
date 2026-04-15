@@ -617,6 +617,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
     public float GetParriedSpeedMultiplier() => parrySpeedMultiplier;
 
+    public bool CanAutoReturnToSource => false;
+
     public void SetParriedState(bool isParried)
     {
         if (state == SpiderState.Exploded || state == SpiderState.Attached)
@@ -653,6 +655,11 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         rb.linearVelocity = direction.normalized * parryProjectileSpeed * parrySpeedMultiplier;
         transform.SetParent(null);
         SetState(SpiderState.Launched);
+    }
+
+    public bool TryLaunchParriedToSource(Transform playerTransform)
+    {
+        return false;
     }
 
     private void Log(string message)

@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.59, y: 3.23}
+  m_AnchoredPosition: {x: 0.13, y: 3.23}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &6570954206652558317
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 8240413794234176432, guid: 1d1570b9703b1614988ab067beaa736c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -126,7 +126,44 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.4, y: 2.34}
+  m_AnchoredPosition: {x: 4.3, y: 0.6}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &7341592653589793230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7341592653589793231}
+  m_Layer: 8
+  m_Name: HeadAimPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7341592653589793231
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7341592653589793230}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4124361191931876538}
+  - {fileID: 5710306415227020042}
+  m_Father: {fileID: 210464838409429139}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8720251910834437905
@@ -145,6 +182,8 @@ GameObject:
   - component: {fileID: 733263699217951741}
   - component: {fileID: 9076102701099029881}
   - component: {fileID: 1476315599298557618}
+  - component: {fileID: 9023456712345678901}
+  - component: {fileID: 9023456712345678902}
   m_Layer: 8
   m_Name: FirewallTurret
   m_TagString: Enemy
@@ -161,7 +200,7 @@ RectTransform:
   m_GameObject: {fileID: 8720251910834437905}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5496348, y: 0.5496348, z: 0.5496348}
+  m_LocalScale: {x: 0.6791826, y: 0.6791826, z: 0.6791826}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 210464838409429139}
@@ -238,7 +277,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8720251910834437905}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -256,7 +295,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 7
 --- !u!58 &621224474499449107
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -292,7 +331,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 4
 --- !u!114 &5832271331980095245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,7 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3b40f4d2f81477b84a7ac52616c3fca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirewallTurretController
-  health: 2
+  health: 3
   detectionRange: 18
   idealFiringDistance: 0
   maxFiringDistance: 14
@@ -316,28 +355,40 @@ MonoBehaviour:
   activationStartupGrace: 0.25
   requirePlayerMovementBeforeActivation: 1
   activationPlayerMovementThreshold: 0.2
+  deactivationDelay: 0.55
+  preFireTrackingDuration: 2
+  preFireTrackingRotationSpeed: 42
+  postFireFacingRefreshDelay: 1
+  disablePredictiveAimDuringPreFireTracking: 1
+  facePlayerOnSpawn: 1
   headRotationPivot: {fileID: 210464838409429139}
   headAimPivot: {fileID: 7341592653589793231}
   headTransform: {fileID: 4124361191931876538}
   headRotationSpeed: 90
   forwardDirection: 0
   activeAimOffset: 0
-  dormantAimOffset: -40
-  minAimOffset: -60
-  maxAimOffset: 60
+  dormantAimOffset: -18
+  minAimOffset: -40
+  maxAimOffset: 40
+  fireAimTolerance: 2
   closeRangeBlindDistance: 1.75
   holdAimWhenTargetInBlindZone: 1
   returnToActiveAngleWhenIdle: 1
   debugHeadAimLogs: 0
-  useDormantGrayscale: 1
-  dormantBodyTint: {r: 0.9, g: 0.9, b: 0.9, a: 1}
-  dormantHeadTint: {r: 0.86, g: 0.86, b: 0.86, a: 1}
+  useDormantGrayscale: 0
+  dormantTintBlend: 0.45
+  dormantBodyTint: {r: 0.82, g: 0.82, b: 0.86, a: 1}
+  dormantHeadTint: {r: 0.82, g: 0.82, b: 0.88, a: 1}
   bodySpriteRenderer: {fileID: 712290437521093938}
   headSpriteRenderer: {fileID: 6570954206652558317}
-  damagedBodySprite: {fileID: 0}
-  damagedHeadSprite: {fileID: 0}
+  damagedBodySprite: {fileID: 2336912594569203641, guid: 2376c42c4b382254b9daf58a56c0a687, type: 3}
+  damagedHeadSprite: {fileID: 5922594788716944211, guid: 9a1325c7d4ab60043ad7827e41792120, type: 3}
   damagedBodyTint: {r: 1, g: 0.72, b: 0.72, a: 1}
   damagedHeadTint: {r: 1, g: 0.72, b: 0.72, a: 1}
+  damagedVisualHealthThreshold: 1
+  onDamageFlashMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
+  onDamageFlashDuration: 0.2
+  useUnscaledTimeForDamageFlash: 1
   instantKillDamageThreshold: 9999
   projectilePrefab: {fileID: 6487138611206206000, guid: 53430f6a6ae96ce419826d8a3c6a6d25, type: 3}
   projectileFirewallDamage: 1
@@ -400,22 +451,39 @@ MonoBehaviour:
   idleVolume: 2
   deathVolume: 2
   sfxMixerGroup: {fileID: 0}
-  fragmentPrefab: {fileID: 9157686852220618747, guid: e532fa09356fa554180398984055e3ef, type: 3}
+  leaveWreckVisibleOnDeath: 1
+  destroyedBodySprite: {fileID: -7851218054450418228, guid: 2376c42c4b382254b9daf58a56c0a687, type: 3}
+  destroyedHeadSprite: {fileID: 5922594788716944211, guid: 9a1325c7d4ab60043ad7827e41792120, type: 3}
+  destroyedBodyTint: {r: 0.58, g: 0.58, b: 0.63, a: 1}
+  destroyedHeadTint: {r: 0.54, g: 0.54, b: 0.6, a: 1}
+  alwaysSpawnFragmentExplosion: 1
+  fragmentPrefab: {fileID: 0}
   explosionFragmentCount: 30
   explosionFragmentForce: 150
   explosionFragmentLifetime: 1.5
   explosionFragmentFadeDelay: 1
-  onHitVfxPrefab: {fileID: 0}
+  explosionFragmentScale: 1
+  onHitVfxPrefab: {fileID: 9178752477838292781, guid: 9650ddf86f117264bbe523e9e40d8686, type: 3}
   onHitVfxOffset: {x: 0, y: 0, z: 0}
-  onHitVfxLifetime: 0.5
-  onDeathVfxPrefab: {fileID: 0}
+  onHitVfxLifetime: 0.3
+  onHitVfxScale: 3.5
+  onDeathVfxPrefab: {fileID: 9178752477838292781, guid: 9650ddf86f117264bbe523e9e40d8686, type: 3}
   onDeathVfxOffset: {x: 0, y: 0, z: 0}
-  onDeathVfxLifetime: 1.5
-  onDeathVfxScale: 1
-  onDeathExtraVfxPrefab: {fileID: 0}
+  onDeathVfxLifetime: 0.35
+  onDeathVfxScale: 3.5
+  onDeathExtraVfxPrefab: {fileID: 9178752477838292781, guid: 9650ddf86f117264bbe523e9e40d8686, type: 3}
   onDeathExtraVfxOffset: {x: 0, y: 0, z: 0}
-  onDeathExtraVfxLifetime: 1.5
+  onDeathExtraVfxLifetime: 0.35
   onDeathExtraVfxScale: 1
+  enableHeadEjectOnDeath: 1
+  headEjectForwardSpeed: 14
+  headEjectUpwardSpeed: 2.4
+  headEjectSpinSpeed: 1800
+  headEjectGravityScale: 2.2
+  headEjectLinearDamping: 0.12
+  headEjectLifetime: 2
+  headEjectStartForwardOffset: 0.15
+  headEjectSortingOrderOffset: 1
   enablePreDeathFlash: 1
   useFeelPreDeathFlash: 1
   preDeathFlashFeedback: {fileID: 0}
@@ -510,6 +578,60 @@ MonoBehaviour:
   enforceEnemyLayer: 1
   grappleDamage: 1
   retriggerCooldown: 0.1
+--- !u!114 &9023456712345678901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720251910834437905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5debdaf09f86460e94a737bbfdbcf59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPresentation
+  presentationAnchor: {fileID: 0}
+  appearanceEffectPrefab: {fileID: 9220682859740502033, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
+  appearanceDuration: 0.35
+  revealDelay: 0
+  useAnchorRotation: 1
+  destroyAppearanceEffectAfterDuration: 1
+  autoCollectSpriteRenderers: 1
+  spriteRenderers: []
+  hideSpritesUntilReveal: 1
+  spawnGlowColor: {r: 0.25, g: 1, b: 0.45, a: 1}
+  glowHoldDuration: 0.08
+  glowFadeDuration: 0.2
+  showSpritesWhileDormant: 0
+  dormantSpriteAlpha: 0
+  behavioursToDisable:
+  - {fileID: 5832271331980095245}
+  autoCollectColliders: 1
+  collidersToDisable: []
+  objectsToDisable: []
+  targetRigidbody: {fileID: 3475457427932179225}
+  disableRigidbodySimulation: 1
+  debugLogs: 0
+--- !u!114 &9023456712345678902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720251910834437905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e97c44bd8c4e66955915c3f2227f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DormantEnemyActivator2D
+  spawnPresentation: {fileID: 9023456712345678901}
+  detectionOrigin: {fileID: 0}
+  playerTag: Player
+  activationRange: 12
+  checkInterval: 0.1
+  startDormantOnEnable: 1
+  reactivateDormantOnCheckpointRespawn: 1
+  debugLogs: 0
 --- !u!1 &9060766733575666097
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,42 +666,5 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.52, y: -0.84}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &7341592653589793230
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7341592653589793231}
-  m_Layer: 8
-  m_Name: HeadAimPivot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7341592653589793231
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7341592653589793230}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4124361191931876538}
-  - {fileID: 5710306415227020042}
-  m_Father: {fileID: 210464838409429139}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

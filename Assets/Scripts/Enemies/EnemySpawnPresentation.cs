@@ -113,10 +113,11 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
     private IEnumerator SpawnSequenceRoutine()
     {
         SetSpawnLockedState();
-        SpawnAppearanceEffect();
+        NotifySpawnPresentationPhase("OnSpawnPresentationStarted");
+        float appearanceWaitDuration = SpawnAppearanceEffect();
 
-        if (appearanceDuration > 0f)
-            yield return new WaitForSeconds(appearanceDuration);
+        if (appearanceWaitDuration > 0f)
+            yield return new WaitForSeconds(appearanceWaitDuration);
 
         if (revealDelay > 0f)
             yield return new WaitForSeconds(revealDelay);
@@ -140,6 +141,7 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
         }
 
         RestoreReadyState();
+        NotifySpawnPresentationPhase("OnSpawnPresentationCompleted");
         sequenceRoutine = null;
 
         if (debugLogs)
@@ -245,10 +247,10 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
         RestoreSpriteVisibility();
     }
 
-    private void SpawnAppearanceEffect()
+    private float SpawnAppearanceEffect()
     {
         if (appearanceEffectPrefab == null)
-            return;
+            return Mathf.Max(0f, appearanceDuration);
 
         Quaternion rotation = useAnchorRotation && presentationAnchor != null
             ? presentationAnchor.rotation
@@ -257,14 +259,26 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
 
         GameObject effectInstance = Instantiate(appearanceEffectPrefab, position, rotation);
         RestartEffectPlayback(effectInstance);
+        float resolvedLifetime = ResolveEffectLifetime(effectInstance);
+        float finalLifetime = Mathf.Max(Mathf.Max(0f, appearanceDuration), resolvedLifetime);
 
-        if (destroyAppearanceEffectAfterDuration && appearanceDuration > 0f)
-            Destroy(effectInstance, appearanceDuration);
+        if (destroyAppearanceEffectAfterDuration && finalLifetime > 0f)
+            Destroy(effectInstance, finalLifetime);
+
+        return finalLifetime;
     }
 
     private void RevealSprites()
     {
         RestoreSpriteVisibility();
+    }
+
+    private void NotifySpawnPresentationPhase(string methodName)
+    {
+        if (string.IsNullOrEmpty(methodName))
+            return;
+
+        SendMessage(methodName, SendMessageOptions.DontRequireReceiver);
     }
 
     private void SetBehavioursEnabled(bool enabled)
@@ -428,7 +442,50 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
                 continue;
 
             animator.Rebind();
+            animator.Play(0, 0, 0f);
             animator.Update(0f);
         }
+    }
+
+    private static float ResolveEffectLifetime(GameObject effectInstance)
+    {
+        if (effectInstance == null)
+            return 0f;
+
+        float resolvedLifetime = 0f;
+
+        Animator[] animators = effectInstance.GetComponentsInChildren<Animator>(true);
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator animator = animators[i];
+            if (animator == null || animator.runtimeAnimatorController == null)
+                continue;
+
+            AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+            for (int clipIndex = 0; clipIndex < clips.Length; clipIndex++)
+            {
+                AnimationClip clip = clips[clipIndex];
+                if (clip == null)
+                    continue;
+
+                resolvedLifetime = Mathf.Max(resolvedLifetime, clip.length);
+            }
+        }
+
+        ParticleSystem[] particleSystems = effectInstance.GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            ParticleSystem particleSystem = particleSystems[i];
+            if (particleSystem == null)
+                continue;
+
+            ParticleSystem.MainModule main = particleSystem.main;
+            float startLifetime = main.startLifetime.mode == ParticleSystemCurveMode.TwoConstants
+                ? main.startLifetime.constantMax
+                : main.startLifetime.constant;
+            resolvedLifetime = Mathf.Max(resolvedLifetime, main.duration + startLifetime);
+        }
+
+        return resolvedLifetime;
     }
 }

@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     private RoomController[] cachedRooms = System.Array.Empty<RoomController>();
     private Enemy[] cachedEnemies = System.Array.Empty<Enemy>();
     private RespawnOnCheckpoint[] cachedRespawnables = System.Array.Empty<RespawnOnCheckpoint>();
+    private RoomEventTrigger[] cachedRoomEventTriggers = System.Array.Empty<RoomEventTrigger>();
 
     private Coroutine slowMoCoroutine;
 
@@ -327,6 +328,7 @@ public class GameManager : MonoBehaviour
             ResetRoomsAtRespawn();
             ResetEnemiesAtRespawn();
             ResetRespawnablesAtCheckpoint();
+            ResetRoomEventTriggersAtRespawn();
         }
         else
         {
@@ -377,11 +379,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void ResetRoomEventTriggersAtRespawn()
+    {
+        for (int i = 0; i < cachedRoomEventTriggers.Length; i++)
+        {
+            RoomEventTrigger trigger = cachedRoomEventTriggers[i];
+            if (trigger != null)
+            {
+                trigger.ResetTriggerRuntime();
+            }
+        }
+    }
+
     private void CacheRespawnTargets()
     {
         cachedRooms = FindObjectsByType<RoomController>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         cachedEnemies = FindObjectsByType<Enemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         cachedRespawnables = FindObjectsByType<RespawnOnCheckpoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        cachedRoomEventTriggers = FindObjectsByType<RoomEventTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     private void ResetPlayerShieldAtRespawn()

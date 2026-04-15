@@ -25,6 +25,7 @@ public class RoomEventTrigger : MonoBehaviour
 
     private bool hasTriggered;
     private bool isRoomActive;
+    private bool isSequenceRunning;
     private Player cachedPlayer;
 
     private void Awake()
@@ -62,11 +63,28 @@ public class RoomEventTrigger : MonoBehaviour
         StartRoomEvent(other.GetComponentInParent<Player>());
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (hasTriggered)
+            return;
+
+        if (!IsPlayer(other))
+            return;
+
+        StartRoomEvent(other.GetComponentInParent<Player>());
+    }
+
     private void StartRoomEvent(Player player)
     {
+        if (isSequenceRunning || isRoomActive)
+            return;
+
+        if (hasTriggered && triggerOnlyOnce)
+            return;
+
         hasTriggered = true;
         cachedPlayer = player;
-
+        isSequenceRunning = true;
         StartCoroutine(RoomSequenceRoutine());
     }
 
@@ -108,6 +126,8 @@ public class RoomEventTrigger : MonoBehaviour
                 UnlockRoom();
             }
         }
+
+        isSequenceRunning = false;
     }
 
     private void HandleConditionStateChanged(IRoomClearCondition condition)
@@ -133,6 +153,24 @@ public class RoomEventTrigger : MonoBehaviour
         }
 
         onRoomCleared?.Invoke();
+    }
+
+    public void ResetTriggerRuntime(bool restoreDoorsToInitialState = true)
+    {
+        StopAllCoroutines();
+        hasTriggered = false;
+        isRoomActive = false;
+        isSequenceRunning = false;
+        cachedPlayer = null;
+
+        if (!restoreDoorsToInitialState)
+            return;
+
+        foreach (var door in doorsToLock)
+        {
+            if (door != null)
+                door.ResetToInitialState();
+        }
     }
 
     private bool IsPlayer(Collider2D other)

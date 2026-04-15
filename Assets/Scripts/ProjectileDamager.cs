@@ -6,8 +6,7 @@ public class ProjectileDamager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        IDamageable enemy = other.gameObject.GetComponent<IDamageable>();
-        if (enemy != null)
+        if (DamageableLookup.TryGetDamageable(other, out IDamageable enemy))
         {
             enemy.TakeDamage(damage, transform);
             Destroy(gameObject);
