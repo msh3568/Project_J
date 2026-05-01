@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,31 +16,53 @@ public class PauseManager : MonoBehaviour
     public GameObject pauseGroup;            // ?쇱떆?뺤? UI ?꾩껜瑜?媛먯떥??遺紐?
     public GameObject pauseMenuContent;      // 湲곕낯 硫붾돱 李?(踰꾪듉??
     public GameObject settingsContentsGroup; // ?ㅼ젙 李?
+    [SerializeField] private Button firstSelectedButton;
+    [SerializeField] private int pauseSortingOrder = 32767;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
     public static bool IsGamePaused { get; private set; } = false;
+    private Canvas pauseCanvas;
+    private GraphicRaycaster pauseGraphicRaycaster;
+    private CanvasGroup pauseCanvasGroup;
+    private StandaloneInputModule pauseInputModule;
+    private readonly Dictionary<BaseInputModule, bool> previousInputModuleStates = new Dictionary<BaseInputModule, bool>();
+    private readonly List<RaycastResult> pauseRaycastResults = new List<RaycastResult>();
+    private readonly Vector3[] buttonWorldCorners = new Vector3[4];
+    private PointerEventData pausePointerEventData;
+    private Button hoveredFallbackButton;
+    private Button pressedFallbackButton;
+    private bool inputModulesOverridden;
 
     void Start()
     {
+        CachePauseUiComponents();
+
         // Ensure the game is not paused and the pause menu is hidden at the start
         Time.timeScale = 1f;
-        pauseGroup.SetActive(false);
+        if (pauseGroup != null)
+            pauseGroup.SetActive(false);
         IsGamePaused = false;
 
         // AudioManager?먯꽌 ?꾩옱 蹂쇰ⅷ 媛믪쓣 媛?몄? ?щ씪?대뜑???ㅼ젙
         if (AudioManager.Instance != null)
         {
             // SetValueWithoutNotify瑜??ъ슜?섏뿬 ?대깽?멸? 諛쒖깮?섏? ?딅룄濡?媛믪쓣 ?ㅼ젙
-            bgmSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("BGMVolume", 0.75f));
-            sfxSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
+            if (bgmSlider != null)
+                bgmSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("BGMVolume", 0.75f));
+
+            if (sfxSlider != null)
+                sfxSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat("SFXVolume", 0.75f));
         }
 
         // ?щ씪?대뜑 ?대깽?몄뿉 由ъ뒪??異붽?
-        bgmSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
-        sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+        if (bgmSlider != null)
+            bgmSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+
+        if (sfxSlider != null)
+            sfxSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
     }
 
     void Update()
@@ -62,6 +86,9 @@ public class PauseManager : MonoBehaviour
                 ResumeGame();
             }
         }
+
+        if (IsGamePaused)
+            DrivePausePointerFallback();
     }
 
     private void PauseGame()
@@ -69,9 +96,16 @@ public class PauseManager : MonoBehaviour
         IsGamePaused = true;
         Time.timeScale = 0f; // ?쒓컙 ?먮쫫??硫덉땄
 
-        pauseGroup.SetActive(true);
-        pauseMenuContent.SetActive(true);
-        settingsContentsGroup.SetActive(false);
+        if (pauseGroup != null)
+            pauseGroup.SetActive(true);
+
+        if (pauseMenuContent != null)
+            pauseMenuContent.SetActive(true);
+
+        if (settingsContentsGroup != null)
+            settingsContentsGroup.SetActive(false);
+
+        EnsurePauseUiCanReceiveInput();
     }
 
     // '怨꾩냽?섍린' 踰꾪듉???곌껐???⑥닔
@@ -79,21 +113,35 @@ public class PauseManager : MonoBehaviour
     {
         IsGamePaused = false;
         Time.timeScale = 1f; // ?쒓컙 ?먮쫫???섎룎由?
-        pauseGroup.SetActive(false);
+        if (pauseGroup != null)
+            pauseGroup.SetActive(false);
+
+        ClearPausePointerFallbackState();
+        RestoreInputModules();
     }
 
     // '?ㅼ젙' 踰꾪듉???곌껐???⑥닔
     public void OpenSettings()
     {
-        pauseMenuContent.SetActive(false);
-        settingsContentsGroup.SetActive(true);
+        if (pauseMenuContent != null)
+            pauseMenuContent.SetActive(false);
+
+        if (settingsContentsGroup != null)
+            settingsContentsGroup.SetActive(true);
+
+        EnsurePauseUiCanReceiveInput();
     }
 
     // ?ㅼ젙 李쎌쓽 '?リ린' 踰꾪듉???곌껐???⑥닔
     public void CloseSettings()
     {
-        settingsContentsGroup.SetActive(false);
-        pauseMenuContent.SetActive(true);
+        if (settingsContentsGroup != null)
+            settingsContentsGroup.SetActive(false);
+
+        if (pauseMenuContent != null)
+            pauseMenuContent.SetActive(true);
+
+        EnsurePauseUiCanReceiveInput();
     }
 
     // '寃뚯엫 醫낅즺' 踰꾪듉???곌껐???⑥닔
@@ -163,5 +211,312 @@ public class PauseManager : MonoBehaviour
 
         Debug.Log($"PauseManager.ApplyWindowMode: index={modeIndex}");
         DisplaySettings.ApplyWindowMode((DisplaySettings.WindowMode)modeIndex);
+    }
+
+    private void CachePauseUiComponents()
+    {
+        if (pauseGroup == null)
+            return;
+
+        pauseCanvas = pauseGroup.GetComponent<Canvas>();
+        pauseGraphicRaycaster = pauseGroup.GetComponent<GraphicRaycaster>();
+        pauseCanvasGroup = pauseGroup.GetComponent<CanvasGroup>();
+
+        if (firstSelectedButton == null && pauseMenuContent != null)
+            firstSelectedButton = pauseMenuContent.GetComponentInChildren<Button>(true);
+    }
+
+    private void EnsurePauseUiCanReceiveInput()
+    {
+        if (pauseGroup == null)
+            return;
+
+        CachePauseUiComponents();
+        pauseGroup.transform.SetAsLastSibling();
+
+        if (pauseCanvas == null)
+            pauseCanvas = pauseGroup.AddComponent<Canvas>();
+
+        pauseCanvas.overrideSorting = true;
+        pauseCanvas.sortingOrder = pauseSortingOrder;
+
+        if (pauseGraphicRaycaster == null)
+            pauseGraphicRaycaster = pauseGroup.AddComponent<GraphicRaycaster>();
+
+        pauseGraphicRaycaster.enabled = true;
+
+        if (pauseCanvasGroup == null)
+            pauseCanvasGroup = pauseGroup.AddComponent<CanvasGroup>();
+
+        pauseCanvasGroup.alpha = 1f;
+        pauseCanvasGroup.interactable = true;
+        pauseCanvasGroup.blocksRaycasts = true;
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        if (EventSystem.current == null)
+            CreateFallbackEventSystem();
+
+        EventSystem.current.enabled = true;
+        UseLegacyMouseInputWhilePaused(EventSystem.current);
+        EventSystem.current.SetSelectedGameObject(null);
+
+        if (firstSelectedButton != null && firstSelectedButton.gameObject.activeInHierarchy)
+            EventSystem.current.SetSelectedGameObject(firstSelectedButton.gameObject);
+    }
+
+    private void UseLegacyMouseInputWhilePaused(EventSystem eventSystem)
+    {
+        if (eventSystem == null)
+            return;
+
+        if (pauseInputModule == null)
+            pauseInputModule = eventSystem.GetComponent<StandaloneInputModule>();
+
+        if (pauseInputModule == null)
+            pauseInputModule = eventSystem.gameObject.AddComponent<StandaloneInputModule>();
+
+        if (!inputModulesOverridden)
+        {
+            previousInputModuleStates.Clear();
+            BaseInputModule[] inputModules = eventSystem.GetComponents<BaseInputModule>();
+            for (int i = 0; i < inputModules.Length; i++)
+            {
+                if (inputModules[i] != null)
+                    previousInputModuleStates[inputModules[i]] = inputModules[i].enabled;
+            }
+
+            inputModulesOverridden = true;
+        }
+
+        BaseInputModule[] modules = eventSystem.GetComponents<BaseInputModule>();
+        for (int i = 0; i < modules.Length; i++)
+        {
+            if (modules[i] != null)
+                modules[i].enabled = modules[i] == pauseInputModule;
+        }
+    }
+
+    private void DrivePausePointerFallback()
+    {
+        if (EventSystem.current != null && pausePointerEventData == null)
+            pausePointerEventData = new PointerEventData(EventSystem.current);
+
+        if (pausePointerEventData != null)
+        {
+            pausePointerEventData.Reset();
+            pausePointerEventData.position = Input.mousePosition;
+            pausePointerEventData.button = PointerEventData.InputButton.Left;
+        }
+
+        Button currentButton = FindButtonUnderMouse();
+        if (currentButton != hoveredFallbackButton)
+        {
+            if (hoveredFallbackButton != null)
+            {
+                ExecutePausePointerEvent(hoveredFallbackButton.gameObject, ExecuteEvents.pointerExitHandler);
+                SetButtonFallbackColor(hoveredFallbackButton, false, false);
+            }
+
+            hoveredFallbackButton = currentButton;
+
+            if (hoveredFallbackButton != null)
+            {
+                ExecutePausePointerEvent(hoveredFallbackButton.gameObject, ExecuteEvents.pointerEnterHandler);
+                SetButtonFallbackColor(hoveredFallbackButton, false, true);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            pressedFallbackButton = currentButton;
+
+            if (pressedFallbackButton != null)
+            {
+                ExecutePausePointerEvent(pressedFallbackButton.gameObject, ExecuteEvents.pointerDownHandler);
+                SetButtonFallbackColor(pressedFallbackButton, true, true);
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            Button releasedButton = pressedFallbackButton;
+
+            if (releasedButton != null)
+            {
+                ExecutePausePointerEvent(releasedButton.gameObject, ExecuteEvents.pointerUpHandler);
+                SetButtonFallbackColor(releasedButton, false, releasedButton == hoveredFallbackButton);
+            }
+
+            if (releasedButton != null && releasedButton == currentButton)
+                releasedButton.onClick.Invoke();
+
+            pressedFallbackButton = null;
+        }
+    }
+
+    private void ExecutePausePointerEvent<T>(GameObject target, ExecuteEvents.EventFunction<T> eventFunction)
+        where T : IEventSystemHandler
+    {
+        if (target == null || pausePointerEventData == null)
+            return;
+
+        ExecuteEvents.Execute(target, pausePointerEventData, eventFunction);
+    }
+
+    private static void SetButtonFallbackColor(Button button, bool pressed, bool hovered)
+    {
+        if (button == null || button.targetGraphic == null)
+            return;
+
+        ColorBlock colors = button.colors;
+        Color color = colors.normalColor;
+        if (pressed)
+            color = colors.pressedColor;
+        else if (hovered)
+            color = colors.highlightedColor;
+
+        button.targetGraphic.color = color * colors.colorMultiplier;
+    }
+
+    private Button FindButtonUnderMouse()
+    {
+        Button directButton = FindButtonUnderMouseByRect();
+        if (directButton != null)
+            return directButton;
+
+        pauseRaycastResults.Clear();
+        if (pauseGraphicRaycaster != null && pausePointerEventData != null)
+            pauseGraphicRaycaster.Raycast(pausePointerEventData, pauseRaycastResults);
+        return FindFirstInteractableButton(pauseRaycastResults);
+    }
+
+    private static void CreateFallbackEventSystem()
+    {
+        GameObject eventSystemObject = new GameObject("EventSystem");
+        eventSystemObject.AddComponent<EventSystem>();
+        eventSystemObject.AddComponent<StandaloneInputModule>();
+    }
+
+    private Button FindButtonUnderMouseByRect()
+    {
+        Transform searchRoot = null;
+
+        if (pauseMenuContent != null && pauseMenuContent.activeInHierarchy)
+            searchRoot = pauseMenuContent.transform;
+        else if (settingsContentsGroup != null && settingsContentsGroup.activeInHierarchy)
+            searchRoot = settingsContentsGroup.transform;
+        else if (pauseGroup != null)
+            searchRoot = pauseGroup.transform;
+
+        if (searchRoot == null)
+            return null;
+
+        Button[] buttons = searchRoot.GetComponentsInChildren<Button>(false);
+        for (int i = buttons.Length - 1; i >= 0; i--)
+        {
+            Button button = buttons[i];
+            if (button == null || !button.gameObject.activeInHierarchy || !button.IsInteractable())
+                continue;
+
+            RectTransform rectTransform = button.transform as RectTransform;
+            Camera eventCamera = GetEventCamera(rectTransform);
+            if (rectTransform != null &&
+                (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, eventCamera) ||
+                 ContainsScreenPointByWorldCorners(rectTransform, Input.mousePosition, eventCamera)))
+            {
+                return button;
+            }
+        }
+
+        return null;
+    }
+
+    private bool ContainsScreenPointByWorldCorners(RectTransform rectTransform, Vector2 screenPosition, Camera eventCamera)
+    {
+        if (rectTransform == null)
+            return false;
+
+        rectTransform.GetWorldCorners(buttonWorldCorners);
+
+        float minX = float.PositiveInfinity;
+        float minY = float.PositiveInfinity;
+        float maxX = float.NegativeInfinity;
+        float maxY = float.NegativeInfinity;
+
+        for (int i = 0; i < buttonWorldCorners.Length; i++)
+        {
+            Vector2 corner = RectTransformUtility.WorldToScreenPoint(eventCamera, buttonWorldCorners[i]);
+            minX = Mathf.Min(minX, corner.x);
+            minY = Mathf.Min(minY, corner.y);
+            maxX = Mathf.Max(maxX, corner.x);
+            maxY = Mathf.Max(maxY, corner.y);
+        }
+
+        return screenPosition.x >= minX &&
+               screenPosition.x <= maxX &&
+               screenPosition.y >= minY &&
+               screenPosition.y <= maxY;
+    }
+
+    private static Camera GetEventCamera(RectTransform rectTransform)
+    {
+        if (rectTransform == null)
+            return null;
+
+        Canvas canvas = rectTransform.GetComponentInParent<Canvas>();
+        if (canvas == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            return null;
+
+        if (canvas.worldCamera != null)
+            return canvas.worldCamera;
+
+        return Camera.main;
+    }
+
+    private static Button FindFirstInteractableButton(List<RaycastResult> results)
+    {
+        for (int i = 0; i < results.Count; i++)
+        {
+            Button button = results[i].gameObject.GetComponentInParent<Button>();
+            if (button != null && button.gameObject.activeInHierarchy && button.IsInteractable())
+                return button;
+        }
+
+        return null;
+    }
+
+    private void ClearPausePointerFallbackState()
+    {
+        if (hoveredFallbackButton != null)
+        {
+            if (EventSystem.current != null && pausePointerEventData == null)
+                pausePointerEventData = new PointerEventData(EventSystem.current);
+
+            ExecutePausePointerEvent(hoveredFallbackButton.gameObject, ExecuteEvents.pointerExitHandler);
+            SetButtonFallbackColor(hoveredFallbackButton, false, false);
+        }
+
+        hoveredFallbackButton = null;
+        pressedFallbackButton = null;
+    }
+
+    private void RestoreInputModules()
+    {
+        if (!inputModulesOverridden)
+            return;
+
+        foreach (var moduleState in previousInputModuleStates)
+        {
+            if (moduleState.Key != null)
+                moduleState.Key.enabled = moduleState.Value;
+        }
+
+        if (pauseInputModule != null && !previousInputModuleStates.ContainsKey(pauseInputModule))
+            pauseInputModule.enabled = false;
+
+        previousInputModuleStates.Clear();
+        inputModulesOverridden = false;
     }
 }

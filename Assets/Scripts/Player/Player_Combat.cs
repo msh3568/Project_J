@@ -89,6 +89,18 @@ public class Player_Combat : Entity_Combat
         GameManager.Instance?.RequestHitSlowMoAndShake();
     }
 
+    protected override bool ShouldDamageTarget(Collider2D target, IDamageable damageable)
+    {
+        if (player != null && player.IsGrappling && player.grappleState != null)
+        {
+            GrappleTargetBase activeTarget = player.grappleState.ActiveTarget;
+            if (activeTarget != null && activeTarget.ShouldSuppressGrappleAttackHit(player, target, damageable))
+                return false;
+        }
+
+        return base.ShouldDamageTarget(target, damageable);
+    }
+
     protected override bool AllowMultiHit => false;
 
     protected override Collider2D GetPrimaryTarget(Collider2D[] detectedColliders)

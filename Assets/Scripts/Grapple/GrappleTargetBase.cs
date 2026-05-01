@@ -27,6 +27,23 @@ public abstract class GrappleTargetBase : MonoBehaviour
     {
     }
 
+    public virtual float GetLockOnScore(Player player, LockOnGrappleConfig config, float normalizedDistance, float normalizedAngle)
+    {
+        float distWeight = config != null ? config.distWeight : 1f;
+        float angleWeight = config != null ? config.angleWeight : 1f;
+        return distWeight * normalizedDistance + angleWeight * normalizedAngle;
+    }
+
+    public virtual bool ShouldPlayArrivalVfx(Player player)
+    {
+        return true;
+    }
+
+    public virtual bool ShouldSuppressGrappleAttackHit(Player player, Collider2D hitTarget, IDamageable damageable)
+    {
+        return false;
+    }
+
     protected Vector2 ResolveStopShortArrivalPosition(Vector2 startPosition, float stopShortDistance)
     {
         Vector2 aimPosition = GetAimPosition();

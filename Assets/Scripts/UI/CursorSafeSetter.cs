@@ -58,16 +58,34 @@ public class CursorSafeSetter : MonoBehaviour
         if (source == null)
             return null;
 
+        if (Application.isPlaying)
+        {
+            // Unity cursor textures must already be imported in a cursor-safe format.
+            // Do not call Cursor.SetCursor with a compressed/non-readable source because
+            // that logs every time play mode starts.
+            if (!IsCursorTextureCompliant(source))
+                return null;
+
+            int sourceId = source.GetInstanceID();
+            if (runtimeCursorTexture != null && runtimeCursorSourceId == sourceId)
+                return runtimeCursorTexture;
+
+            ReleaseRuntimeCursorTexture();
+            runtimeCursorTexture = CreateReadableCursorCopy(source);
+            runtimeCursorSourceId = sourceId;
+            return runtimeCursorTexture;
+        }
+
         if (IsCursorTextureCompliant(source))
             return source;
 
-        int sourceId = source.GetInstanceID();
-        if (runtimeCursorTexture != null && runtimeCursorSourceId == sourceId)
+        int editorSourceId = source.GetInstanceID();
+        if (runtimeCursorTexture != null && runtimeCursorSourceId == editorSourceId)
             return runtimeCursorTexture;
 
         ReleaseRuntimeCursorTexture();
         runtimeCursorTexture = CreateReadableCursorCopy(source);
-        runtimeCursorSourceId = sourceId;
+        runtimeCursorSourceId = editorSourceId;
         return runtimeCursorTexture;
     }
 

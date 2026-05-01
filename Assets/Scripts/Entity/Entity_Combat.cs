@@ -63,12 +63,20 @@ public class Entity_Combat : MonoBehaviour
         if (!TryGetDamageable(target, out IDamageable damagable))
             return false;
 
+        if (!ShouldDamageTarget(target, damagable))
+            return false;
+
         damagable.TakeDamage(damage, transform);
 
         if (vfx != null)
             vfx.CreateOnHitVFX(target.transform, GetHitPoint(target));
 
         OnSuccessfulHit(target, damagable);
+        return true;
+    }
+
+    protected virtual bool ShouldDamageTarget(Collider2D target, IDamageable damageable)
+    {
         return true;
     }
 

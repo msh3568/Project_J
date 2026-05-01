@@ -254,7 +254,7 @@ public class GrappleLockOnSystem : MonoBehaviour
 
                 if (insidePrimary)
                 {
-                    float score = config.distWeight * normDist + config.angleWeight * normAnglePrimary;
+                    float score = target.GetLockOnScore(player, config, normDist, normAnglePrimary);
                     if (score < bestPrimaryScore)
                     {
                         bestPrimaryScore = score;
@@ -263,7 +263,7 @@ public class GrappleLockOnSystem : MonoBehaviour
                 }
                 else
                 {
-                    float score = config.distWeight * normDist + config.angleWeight * normAngleFallback;
+                    float score = target.GetLockOnScore(player, config, normDist, normAngleFallback);
                     if (score < bestFallbackScore)
                     {
                         bestFallbackScore = score;

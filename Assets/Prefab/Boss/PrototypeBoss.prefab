@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 100001}
+  - component: {fileID: 100002}
+  - component: {fileID: 100003}
+  m_Layer: 8
+  m_Name: PrototypeBoss
+  m_TagString: Enemy
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &100001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &100002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc05bd7ffed49b19a35c312d7fd69cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  playerTag: Player
+  leftArmOnlyTargetsLeftSide: 1
+  enableBossGrappleTargets: 1
+  body: {fileID: 0}
+  leftArm: {fileID: 0}
+  rightArm: {fileID: 0}
+  bodyOffset: {x: 0, y: 1.2}
+  leftArmRestOffset: {x: -1.2, y: 1.25}
+  rightArmRestOffset: {x: 1.2, y: 1.25}
+  bodySize: {x: 1.4, y: 2}
+  armSize: {x: 0.65, y: 0.65}
+  bodyColor: {r: 0.15, g: 0.15, b: 0.18, a: 1}
+  idleArmColor: {r: 0.35, g: 0.35, b: 0.4, a: 1}
+  windupArmColor: {r: 1, g: 0.62, b: 0.15, a: 1}
+  slamArmColor: {r: 1, g: 0.15, b: 0.08, a: 1}
+  sortingOrder: 30
+  activationRange: 12
+  attackCooldown: 1.8
+  windupDuration: 0.35
+  trackingDuration: 1.5
+  snatchDuration: 0.45
+  holdBeforeSlamDuration: 0.65
+  recoverDuration: 0.3
+  trackingSpeed: 6
+  aimHoldDistance: 0.45
+  aimSwayAmount: 0.12
+  aimSwaySpeed: 9
+  snatchSpeed: 24
+  liftSpeed: 10
+  slamSpeed: 22
+  recoverSpeed: 9
+  grabRadius: 0.7
+  grabOffset: {x: 0, y: 0.55}
+  liftHeight: 2.2
+  slamDistance: 3.1
+  heldPlayerOffset: {x: 0, y: -0.15}
+  rightArmOnlyTargetsRightSide: 1
+  rightArmWindupDuration: 0.75
+  rightArmSlamDuration: 0.45
+  rightArmImpactHoldDuration: 0.12
+  rightArmSlamSpeed: 34
+  rightArmRecoverSpeed: 10
+  rightArmSlamDropHeight: 6
+  rightArmAimSnapSize: 1.25
+  rightArmSlamAreaOffset: {x: 0, y: 2.1}
+  rightArmSlamAreaSize: {x: 2.4, y: 5.2}
+  rightArmSlamDamage: 1
+  rightArmSlamDamageMask:
+    serializedVersion: 2
+    m_Bits: 128
+  rightArmTelegraphColor: {r: 1, g: 0.1, b: 0.05, a: 0.25}
+  rightArmImpactColor: {r: 1, g: 0.05, b: 0.02, a: 0.45}
+  rightArmGrappleSwatSpeed: 46
+  rightArmGrappleSwatDuration: 0.08
+  rightArmGrappleSwatDistance: 1.1
+  rightArmGrappleSwatLift: 0.15
+  rightArmGrappleKnockback: {x: 34, y: 12}
+  rightArmGrappleKnockbackDuration: 0.38
+  rightArmGrappleSwatDamage: 1
+  maxHealth: 100
+  grabDamage: 1
+  slamDamage: 1
+  slamDamageIgnoresGrabInvulnerability: 1
+  deactivateOnDeath: 1
+  damageFlashColor: {r: 1, g: 1, b: 1, a: 1}
+  damageFlashDuration: 0.08
+--- !u!114 &100003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df880d2f171b4944aa05a968b58e596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clearOnDisable: 1
+  clearOnDestroy: 1
+  debugLogs: 0
+  suppressClearOnDisable: 0

@@ -259,6 +259,12 @@ public class Player_Health : Entity_Health
         }
     }
 
+    public void ClearShieldHitInvulnerability()
+    {
+        isShieldHitInvuln = false;
+        shieldHitInvulnTimer = 0f;
+    }
+
     public void ClearHitEffectForGrappleStart()
     {
         if (traceFeelVolumeLogs)
