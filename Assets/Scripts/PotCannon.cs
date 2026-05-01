@@ -44,6 +44,12 @@ public class PotCannon : Entity_Health
         }
 
         GameObject spikeBall = Instantiate(spikeBallPrefab, firePoint.position, firePoint.rotation);
+        SpikeBall spikeBallComponent = spikeBall.GetComponent<SpikeBall>();
+        if (spikeBallComponent != null)
+        {
+            spikeBallComponent.SetSourceTransform(transform);
+        }
+
         Rigidbody2D rb = spikeBall.GetComponent<Rigidbody2D>();
         if (rb != null)
         {

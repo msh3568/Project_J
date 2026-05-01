@@ -3,12 +3,14 @@ using UnityEngine;
 public class Player_CounterAttackState : PlayerState
 {
     private Player_Combat combat;
+    private Player_Health playerHealth;
     private bool parrySucceeded;
     private float parryAttemptStartedAt;
 
     public Player_CounterAttackState(Player player, StateMachine statemachine, string animBoolName) : base(player, statemachine, animBoolName)
     {
         combat = player.GetComponent<Player_Combat>();
+        playerHealth = player.GetComponent<Player_Health>();
     }
 
     public override void Enter()
@@ -36,10 +38,36 @@ public class Player_CounterAttackState : PlayerState
             // A parry was successful. Now, decide what to do based on the type of object parried.
             if (parriedObject.GetComponentInParent<IParryable>() != null)
             {
-                // This was a projectile that can be aimed and returned. Go to the slow-mo aim state.
-                // The projectile itself was already set inside CounterAttackPerformed.
-                ParryCameraZoom.Instance?.BeginParryZoom();
-                stateMachine.ChangeState(player.parryAimState);
+                IParryable parryable = parriedObject.GetComponentInParent<IParryable>();
+                if (parryable != null)
+                    parryable.SetParriedState(true);
+
+                bool launchedToSource = player.ShouldAutoReturnParriedProjectiles()
+                    && parryable != null
+                    && parryable.CanAutoReturnToSource
+                    && parryable.TryLaunchParriedToSource(player.transform);
+
+                if (launchedToSource)
+                {
+                    if (player.parryFireSound != null)
+                    {
+                        AudioManager.Instance.PlaySFX(player.parryFireSound, player.parryFireVolume);
+                    }
+
+                    if (playerHealth != null)
+                        player.StartParryRecoveryInvincibility();
+
+                    ParryCameraZoom.Instance?.Pulse();
+                    player.anim.SetTrigger("counterAttackPerformed");
+                    stateMachine.ChangeState(player.idleState);
+                }
+                else
+                {
+                    // This was a projectile that can be aimed and returned. Go to the slow-mo aim state.
+                    // The projectile itself was already set inside CounterAttackPerformed.
+                    ParryCameraZoom.Instance?.BeginParryZoom();
+                    stateMachine.ChangeState(player.parryAimState);
+                }
             }
             else
             {

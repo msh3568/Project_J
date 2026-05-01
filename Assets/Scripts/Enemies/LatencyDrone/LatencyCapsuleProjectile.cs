@@ -23,12 +23,24 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     [SerializeField] private float hitRadius = 0.5f; // Keep hitRadius for OverlapCircle
     [SerializeField] private LayerMask whatIsTarget; // NEW: LayerMask for OverlapCircle
 
+    [Header("Parry Auto Return")]
+    [SerializeField, Min(0.05f)] private float autoReturnImpactRadius = 0.35f;
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private TrailRenderer trailRenderer;
+    private Collider2D cachedCollider;
+    private Transform autoReturnTarget;
+    private bool isAutoReturningToSource;
     
     void Update()
     {
+        if (isAutoReturningToSource)
+        {
+            UpdateAutoReturnToSource();
+            return;
+        }
+
         if (isParried && GetComponent<Collider2D>().enabled)
         {
             // Active hit detection using whatIsTarget LayerMask
@@ -38,8 +50,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
                 // Only damage if it's not the player and it's damageable
                 if (!hit.CompareTag("Player"))
                 {
-                    IDamageable damageable = hit.GetComponent<IDamageable>();
-                    if (damageable != null && damageSource != null)
+                    if (DamageableLookup.TryGetDamageable(hit, out IDamageable damageable) && damageSource != null)
                     {
                         Debug.Log($"[LatencyCapsule Active] Parried projectile hitting '{hit.name}'. Dealing 1000 damage from source '{damageSource.name}'.");
                         damageable.TakeDamage(1000f, damageSource);
@@ -66,6 +77,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     public GameObject GetGameObject() => gameObject;
     public float GetProjectileSpeed() => projectileSpeed;
     public float GetParriedSpeedMultiplier() => parriedSpeedMultiplier;
+    public bool CanAutoReturnToSource => originalDroneTransform != null;
 
     void Awake()
     {
@@ -112,6 +124,8 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
             trailRenderer.startColor = projectileColor;
             trailRenderer.endColor = new Color(projectileColor.r, projectileColor.g, projectileColor.b, 0);
         }
+
+        cachedCollider = GetComponent<Collider2D>();
     }
 
     public void Initialize(Vector2 direction, Transform droneTransform)
@@ -146,6 +160,11 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     void OnCollisionEnter2D(Collision2D collision)
     {
         HandleCollision(collision.gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        HandleCollision(other != null ? other.gameObject : null);
     }
 
     private void HandleCollision(GameObject other)
@@ -219,6 +238,11 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         if (this.isParried == parried) return;
 
         this.isParried = parried;
+        isAutoReturningToSource = false;
+        autoReturnTarget = null;
+        if (cachedCollider != null)
+            cachedCollider.isTrigger = parried;
+
         if (parried)
         {
             rb.linearVelocity = Vector2.zero;
@@ -239,5 +263,62 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         Debug.Log($"Projectile LAUNCHED by player in direction {direction}.");
 
         Destroy(gameObject, 5f);
+    }
+
+    public bool TryLaunchParriedToSource(Transform playerTransform)
+    {
+        if (!isParried || originalDroneTransform == null)
+            return false;
+
+        damageSource = playerTransform;
+        autoReturnTarget = originalDroneTransform;
+        isAutoReturningToSource = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
+        return true;
+    }
+
+    private void UpdateAutoReturnToSource()
+    {
+        if (autoReturnTarget == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Vector2 targetPosition = autoReturnTarget.position;
+        Vector2 nextPosition = Vector2.MoveTowards(
+            transform.position,
+            targetPosition,
+            projectileSpeed * parriedSpeedMultiplier * Time.deltaTime);
+
+        transform.position = nextPosition;
+
+        if (((Vector2)transform.position - targetPosition).sqrMagnitude <= autoReturnImpactRadius * autoReturnImpactRadius)
+        {
+            ExplodeOnAutoReturnTarget();
+        }
+    }
+
+    private void ExplodeOnAutoReturnTarget()
+    {
+        if (autoReturnTarget == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        IDamageable damageable = autoReturnTarget.GetComponentInParent<IDamageable>();
+        if (damageable != null && damageSource != null)
+        {
+            damageable.TakeDamage(1000f, damageSource);
+            GameManager.Instance?.RequestHitSlowMoAndShake();
+        }
+
+        if (cachedCollider != null)
+            cachedCollider.enabled = false;
+
+        Destroy(gameObject);
     }
 }

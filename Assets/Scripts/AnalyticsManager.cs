@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+#if PROJECTJ_FIREBASE
 using Firebase;
 using Firebase.Database;
 using Firebase.Analytics;
 using Firebase.Extensions;
+#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,12 +16,19 @@ using Unity.Services.Analytics;
 
 public class AnalyticsManager : MonoBehaviour
 {
+    private const string FirebaseDefineSymbol = "PROJECTJ_FIREBASE";
+
     public static AnalyticsManager Instance { get; private set; }
+#if PROJECTJ_FIREBASE
     private DatabaseReference reference;
+#endif
     private DateTime sessionStartTime;
 
     // State Flags
     private bool isInitialized = false;
+#if PROJECTJ_FIREBASE
+    private bool isFirebaseInitialized = false;
+#endif
     private bool isSessionStarted = false;
     private bool isSessionEnded = false;
     private bool isQuitting = false;
@@ -62,20 +71,7 @@ public class AnalyticsManager : MonoBehaviour
             Debug.Log("Firebase \uBC0F UGS \uCD08\uAE30\uD654\uB97C \uC2DC\uC791\uD569\uB2C8\uB2E4..");
 
             // 1. Initialize Firebase
-            var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
-            if (dependencyStatus == DependencyStatus.Available)
-            {
-                FirebaseApp app = FirebaseApp.DefaultInstance;
-                reference = FirebaseDatabase.DefaultInstance.RootReference;
-                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                Debug.Log("Firebase \uCD08\uAE30\uD654 \uC644\uB8CC.");
-            }
-            else
-            {
-                Debug.LogError($"Firebase \uC758\uC874\uC131 \uBB38\uC81C: {dependencyStatus}");
-                // Initialization failed, do not proceed.
-                return;
-            }
+            await InitializeFirebaseBackendAsync();
 
             // 2. Initialize UGS
             await UnityServices.InitializeAsync();
@@ -96,6 +92,45 @@ public class AnalyticsManager : MonoBehaviour
             Debug.LogError($"\uBD84\uC11D \uC900\uBE44 \uCD08\uAE30\uD654 \uC911 \uC608\uC678 \uBC1C\uC0DD: {e}");
             // isInitialized remains false
         }
+    }
+
+    private async Task InitializeFirebaseBackendAsync()
+    {
+#if PROJECTJ_FIREBASE
+        var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
+        if (dependencyStatus == DependencyStatus.Available)
+        {
+            FirebaseApp app = FirebaseApp.DefaultInstance;
+            reference = FirebaseDatabase.DefaultInstance.RootReference;
+            FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+            isFirebaseInitialized = true;
+            Debug.Log("Firebase 초기화 완료.");
+            return;
+        }
+
+        Debug.LogWarning($"Firebase 의존성 문제로 Firebase 백엔드만 비활성화합니다: {dependencyStatus}");
+#else
+        await Task.CompletedTask;
+        Debug.Log($"Firebase 백엔드가 비활성화되어 있습니다. 다시 켜려면 스크립팅 심볼 '{FirebaseDefineSymbol}'을 추가하세요.");
+#endif
+    }
+
+    private object CreateEventTimestamp()
+    {
+#if PROJECTJ_FIREBASE
+        return ServerValue.Timestamp;
+#else
+        return DateTime.UtcNow.ToString("o");
+#endif
+    }
+
+    private bool CanUseFirebaseDatabase()
+    {
+#if PROJECTJ_FIREBASE
+        return isFirebaseInitialized && reference != null;
+#else
+        return false;
+#endif
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -141,7 +176,7 @@ public class AnalyticsManager : MonoBehaviour
         {
             ["x"] = position.x,
             ["y"] = position.y,
-            ["timestamp"] = ServerValue.Timestamp
+            ["timestamp"] = CreateEventTimestamp()
         };
         rKeyPressLocations.Add(locationData);
 
@@ -160,17 +195,22 @@ public class AnalyticsManager : MonoBehaviour
         var trapLog = new Dictionary<string, object>
         {
             ["trap_type"] = trapType,
-            ["timestamp"] = ServerValue.Timestamp,
+            ["timestamp"] = CreateEventTimestamp(),
             ["position"] = new Dictionary<string, object> { ["x"] = position.x, ["y"] = position.y, ["z"] = position.z }
         };
         trapEventsDuringSession.Add(trapLog);
 
-        reference.Child("trap_counts").Child(trapType).RunTransaction(mutableData =>
+#if PROJECTJ_FIREBASE
+        if (CanUseFirebaseDatabase())
         {
-            long count = (mutableData.Value != null && long.TryParse(mutableData.Value.ToString(), out long c)) ? c : 0;
-            mutableData.Value = count + 1;
-            return TransactionResult.Success(mutableData);
-        });
+            reference.Child("trap_counts").Child(trapType).RunTransaction(mutableData =>
+            {
+                long count = (mutableData.Value != null && long.TryParse(mutableData.Value.ToString(), out long c)) ? c : 0;
+                mutableData.Value = count + 1;
+                return TransactionResult.Success(mutableData);
+            });
+        }
+#endif
 
         var parameters = new Dictionary<string, object>
         {
@@ -187,7 +227,7 @@ public class AnalyticsManager : MonoBehaviour
 
         var checkpointLog = new Dictionary<string, object>
         {
-            ["timestamp"] = ServerValue.Timestamp,
+            ["timestamp"] = CreateEventTimestamp(),
             ["?쒖꽦?뷀븳_泥댄겕?ъ씤??媛?닔"] = count
         };
         checkpointActivationsDuringSession.Add(checkpointLog);
@@ -284,6 +324,13 @@ public class AnalyticsManager : MonoBehaviour
         
         isSessionEnded = true;
 
+        if (!CanUseFirebaseDatabase())
+        {
+            SaveSessionData(0);
+            return;
+        }
+
+#if PROJECTJ_FIREBASE
         reference.Child("session_counter").RunTransaction(mutableData =>
         {
             long currentCount = (mutableData.Value != null && long.TryParse(mutableData.Value.ToString(), out long c)) ? c : 0;
@@ -300,6 +347,7 @@ public class AnalyticsManager : MonoBehaviour
             long sessionId = (long)task.Result.Value;
             SaveSessionData(sessionId);
         });
+#endif
     }
 
     private void SaveSessionData(long sessionId)
@@ -335,6 +383,14 @@ public class AnalyticsManager : MonoBehaviour
         };
         LogDualEvent("session_end", parameters);
 
+#if PROJECTJ_FIREBASE
+        if (!CanUseFirebaseDatabase())
+        {
+            Debug.Log("Firebase 세션 저장이 비활성화되어 세션 데이터 저장을 건너뜁니다.");
+            isSessionDataSaved = true;
+            return;
+        }
+
         reference.Child("sessions").Child(sessionId.ToString())
             .UpdateChildrenAsync(sessionData)
             .ContinueWithOnMainThread(updateTask =>
@@ -349,6 +405,9 @@ public class AnalyticsManager : MonoBehaviour
                 }
                 isSessionDataSaved = true;
             });
+#else
+        isSessionDataSaved = true;
+#endif
     }
 
     private void LogDualEvent(string eventName, Dictionary<string, object> parameters = null)
@@ -376,7 +435,13 @@ public class AnalyticsManager : MonoBehaviour
             Debug.LogError($"UGS \uC774\uBCA4\uD2B8 '{eventName}' \uB85C\uAE45 \uC2E4\uD328: {e.Message}");
         }
 
+#if PROJECTJ_FIREBASE
         // 2. Log to Firebase
+        if (!isFirebaseInitialized)
+        {
+            return;
+        }
+
         try
         {
             if (parameters != null && parameters.Count > 0)
@@ -400,7 +465,8 @@ public class AnalyticsManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"Firebase \uC774\uBCA4\uD2B8 '{eventName}' \uB85C\uAE45 \uC2E4\uD328: {e.Message}");
+            Debug.LogError($"Firebase 이벤트 '{eventName}' 로깅 실패: {e.Message}");
         }
+#endif
     }
 }

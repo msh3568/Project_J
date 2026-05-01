@@ -10,6 +10,7 @@ public class SimpleExplosion : MonoBehaviour
     public float fragmentFadeDelay = 1.0f;
     public Color fragmentColor = Color.black;
     public float fragmentAngularVelocity = 360f;
+    public float fragmentScaleMultiplier = 1f;
 
     void Start()
     {
@@ -37,6 +38,7 @@ public class SimpleExplosion : MonoBehaviour
         // Instantiate the user-created prefab
         GameObject fragmentGO = Instantiate(fragmentPrefab, transform.position, Quaternion.identity);
         fragmentGO.name = "ExplosionFragment (Clone)"; // Rename for easier identification in Hierarchy
+        fragmentGO.transform.localScale *= Mathf.Max(0.01f, fragmentScaleMultiplier);
 
         // Get components from the prefab instance
         Rigidbody2D rb = fragmentGO.GetComponent<Rigidbody2D>();

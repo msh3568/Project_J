@@ -440,6 +440,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
         Log("Attach to player");
         AttachToTarget(playerTransform, playerColliders, true);
+        if (playerTransform.TryGetComponent(out Player player))
+            PlayerPresentationController.GetOrAdd(player)?.KeepToFrontForSeconds(attachDuration + 0.35f);
 
         if (playerStatus != null)
         {
@@ -482,6 +484,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
         Log("Explode");
         hasExploded = true;
+        if (playerTransform != null && playerTransform.TryGetComponent(out Player player))
+            PlayerPresentationController.GetOrAdd(player)?.KeepToFrontForSeconds(0.35f);
 
         // Notify room tracking if component exists
         if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))
@@ -613,6 +617,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
 
     public float GetParriedSpeedMultiplier() => parrySpeedMultiplier;
 
+    public bool CanAutoReturnToSource => false;
+
     public void SetParriedState(bool isParried)
     {
         if (state == SpiderState.Exploded || state == SpiderState.Attached)
@@ -649,6 +655,11 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
         rb.linearVelocity = direction.normalized * parryProjectileSpeed * parrySpeedMultiplier;
         transform.SetParent(null);
         SetState(SpiderState.Launched);
+    }
+
+    public bool TryLaunchParriedToSource(Transform playerTransform)
+    {
+        return false;
     }
 
     private void Log(string message)

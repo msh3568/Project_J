@@ -64,6 +64,11 @@ public class DoorController : MonoBehaviour
         ApplyLockedState(value, false);
     }
 
+    public void ResetToInitialState()
+    {
+        ApplyLockedState(lockOnAwake, true);
+    }
+
     private void ApplyLockedState(bool shouldLock, bool force)
     {
         if (!force && IsLocked == shouldLock)

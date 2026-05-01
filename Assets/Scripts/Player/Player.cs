@@ -1,4 +1,4 @@
-using NUnit.Framework.Constraints;
+﻿using NUnit.Framework.Constraints;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
@@ -6,6 +6,11 @@ using UnityEngine.Rendering;
 
 public class Player : Entity
 {
+    public enum ParriedProjectileReturnMode
+    {
+        ManualAim = 0,
+        AutoReturnToSource = 1
+    }
     private enum MovementVfxLifecycleMode
     {
         DestroyInstance = 0,
@@ -198,6 +203,9 @@ public class Player : Entity
         [SerializeField, Min(0f)] private float normalParryCooldown = 0.7f;
         [SerializeField, Min(0f)] private float perfectParryWindow = 0.2f;
         [SerializeField] private bool logParryCooldownDebug = false;
+
+        [Header("Parried Projectile Return")]
+        [SerializeField] private ParriedProjectileReturnMode parriedProjectileReturnMode = ParriedProjectileReturnMode.ManualAim;
 
         [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
@@ -1328,6 +1336,8 @@ public class Player : Entity
 
             public float GetPerfectParryWindow() => Mathf.Max(0f, perfectParryWindow);
 
+            public bool ShouldAutoReturnParriedProjectiles() => parriedProjectileReturnMode == ParriedProjectileReturnMode.AutoReturnToSource;
+
             public void ApplyParryCooldownOnSuccess(bool wasPerfectParry)
             {
                 if (wasPerfectParry)
@@ -1361,6 +1371,22 @@ public class Player : Entity
                 return true;
             }
 
+            public void StartParryRecoveryInvincibility()
+            {
+                Player_Health playerHealth = GetComponent<Player_Health>();
+                if (playerHealth == null)
+                    return;
+
+                if (ParryInvincibilityCoroutineHandle != null)
+                {
+                    StopCoroutine(ParryInvincibilityCoroutineHandle);
+                    ParryInvincibilityCoroutineHandle = null;
+                }
+
+                playerHealth.IsInvincible = true;
+                ParryInvincibilityCoroutineHandle = StartCoroutine(ParryInvincibilityCoroutine(playerHealth));
+            }
+
     
 
         
@@ -1390,24 +1416,24 @@ public class Player : Entity
 
         if (Mathf.Abs(inputX) > 0.01f)
         {
-            // �Է��� ���� ��
+            // Detect when the player is reversing direction.
             bool changingDirection = Mathf.Sign(targetSpeed) != Mathf.Sign(currentSpeed)
                                      && Mathf.Abs(currentSpeed) > 0.1f;
 
             if (isGrounded)
             {
-                // ����: ���� ��ȯ �� �� ���� �극��ũ
+                // On the ground, swap between acceleration and braking.
                 accel = changingDirection ? groundDecel : groundAccel;
             }
             else
             {
-                // ����: ���� ��ȯ�� ���� ����
+                // In the air, use the air acceleration and deceleration values.
                 accel = changingDirection ? airDecel : airAccel;
             }
         }
         else
         {
-            // �Է��� ���� ��: 0���� ����
+            // No input means we decelerate toward zero speed.
             if (isGrounded)
                 accel = groundDecel;
             else
@@ -1416,7 +1442,7 @@ public class Player : Entity
             targetSpeed = 0f;
         }
 
-        // ���� �ӵ���ŭ�� targetSpeed �� ���������?�� (����/����)
+        // Smoothly move the current horizontal speed toward the target speed.
         float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accel * Time.deltaTime);
 
         SetVelocity(newSpeed, rb.linearVelocity.y);
@@ -1451,9 +1477,3 @@ public class Player : Entity
         // Removed OnDestroy related to color changes
 
 }
-
-    
-
-
-
-

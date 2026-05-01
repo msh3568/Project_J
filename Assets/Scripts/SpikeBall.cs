@@ -14,21 +14,27 @@ public class SpikeBall : MonoBehaviour, IParryable
     public float parriedDamage = 1000f;
     [SerializeField] private float hitRadius = 0.5f; // Keep hitRadius for OverlapCircle
     [SerializeField] private LayerMask whatIsTarget; // NEW: LayerMask for OverlapCircle
+    [SerializeField, Min(0.05f)] private float autoReturnImpactRadius = 0.4f;
 
     public bool isParried = false; // Now public for temporary fix, will revert later
     private Rigidbody2D rb;
     private Transform damageSource; // To store who parried us
+    private Transform sourceTransform;
+    private Collider2D cachedCollider;
+    private bool isAutoReturningToSource;
 
     #region IParryable Implementation
     public GameObject GetGameObject() => gameObject;
     public float GetProjectileSpeed() => speed;
     public float GetParriedSpeedMultiplier() => parriedSpeedMultiplier;
+    public bool CanAutoReturnToSource => sourceTransform != null;
 
     public void SetParriedState(bool parried)
     {
         if (this.isParried == parried) return;
 
         this.isParried = parried;
+        isAutoReturningToSource = false;
         if (parried)
         {
             if (rb == null) rb = GetComponent<Rigidbody2D>();
@@ -51,11 +57,26 @@ public class SpikeBall : MonoBehaviour, IParryable
         // Make sure it doesn't get destroyed by its original lifetime timer after being parried
         Destroy(gameObject, lifetime * 2); 
     }
+
+    public bool TryLaunchParriedToSource(Transform playerTransform)
+    {
+        if (!isParried || sourceTransform == null)
+            return false;
+
+        damageSource = playerTransform;
+        isAutoReturningToSource = true;
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        gameObject.layer = LayerMask.NameToLayer("PlayerProjectile");
+        return true;
+    }
     #endregion
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        cachedCollider = GetComponent<Collider2D>();
         if (rb != null)
         {
             rb.gravityScale = 0;
@@ -69,6 +90,12 @@ public class SpikeBall : MonoBehaviour, IParryable
 
     void Update()
     {
+        if (isAutoReturningToSource)
+        {
+            UpdateAutoReturnToSource();
+            return;
+        }
+
         if (isParried && GetComponent<Collider2D>().enabled)
         {
             // Active hit detection using whatIsTarget LayerMask
@@ -78,8 +105,7 @@ public class SpikeBall : MonoBehaviour, IParryable
                 // Only damage if it's not the player and it's damageable
                 if (!hit.CompareTag("Player"))
                 {
-                    IDamageable damageable = hit.GetComponent<IDamageable>();
-                    if (damageable != null && damageSource != null)
+                    if (DamageableLookup.TryGetDamageable(hit, out IDamageable damageable) && damageSource != null)
                     {
                         Debug.Log($"[SpikeBall Active] Parried projectile hitting '{hit.name}'. Dealing {parriedDamage} damage from source '{damageSource.name}'.");
                         damageable.TakeDamage(parriedDamage, damageSource);
@@ -97,6 +123,55 @@ public class SpikeBall : MonoBehaviour, IParryable
                 }
             }
         }
+    }
+
+    public void SetSourceTransform(Transform source)
+    {
+        sourceTransform = source;
+    }
+
+    private void UpdateAutoReturnToSource()
+    {
+        if (sourceTransform == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Vector2 targetPosition = sourceTransform.position;
+        Vector2 nextPosition = Vector2.MoveTowards(
+            transform.position,
+            targetPosition,
+            speed * parriedSpeedMultiplier * Time.deltaTime);
+
+        transform.position = nextPosition;
+
+        if (((Vector2)transform.position - targetPosition).sqrMagnitude <= autoReturnImpactRadius * autoReturnImpactRadius)
+        {
+            ExplodeOnAutoReturnTarget();
+        }
+    }
+
+    private void ExplodeOnAutoReturnTarget()
+    {
+        if (sourceTransform == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        IDamageable damageable = sourceTransform.GetComponentInParent<IDamageable>();
+        if (damageable != null && damageSource != null)
+        {
+            Debug.Log($"[SpikeBall AutoReturn] Hitting source '{sourceTransform.name}'. Dealing {parriedDamage} damage from source '{damageSource.name}'.");
+            damageable.TakeDamage(parriedDamage, damageSource);
+            GameManager.Instance?.RequestHitSlowMoAndShake();
+        }
+
+        if (cachedCollider != null)
+            cachedCollider.enabled = false;
+
+        Destroy(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

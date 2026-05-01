@@ -7,6 +7,7 @@ public class Player_ParryAimState : PlayerState
     private Vector2 lastAimDirection;
     private LineRenderer lineRenderer;
     private readonly Player_Health _playerHealth;
+    private Coroutine parrySequenceCoroutine;
 
     public Player_ParryAimState(Player player, StateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
@@ -22,14 +23,22 @@ public class Player_ParryAimState : PlayerState
     {
         base.Enter();
 
+        if (parrySequenceCoroutine != null)
+        {
+            player.StopCoroutine(parrySequenceCoroutine);
+            parrySequenceCoroutine = null;
+        }
+
         if (player.ParryInvincibilityCoroutineHandle != null)
         {
             player.StopCoroutine(player.ParryInvincibilityCoroutineHandle);
+            player.ParryInvincibilityCoroutineHandle = null;
         }
 
-        _playerHealth.IsInvincible = true;
+        if (_playerHealth != null)
+            _playerHealth.IsInvincible = true;
 
-        if (parriedProjectile == null)
+        if (!TryGetParriedProjectileGameObject(out _))
         {
             stateMachine.ChangeState(player.idleState);
             return;
@@ -38,16 +47,22 @@ public class Player_ParryAimState : PlayerState
         // Ensure we have a LineRenderer component, and get a reference to it.
         GetOrAddLineRenderer();
 
-        player.StartCoroutine(ParrySequenceCoroutine());
+        lastAimDirection = player.facingDir >= 0 ? Vector2.right : Vector2.left;
+        parrySequenceCoroutine = player.StartCoroutine(ParrySequenceCoroutine());
     }
 
     private IEnumerator ParrySequenceCoroutine()
     {
         // 1. Setup and Time Slow
-        parriedProjectile.SetParriedState(true);
-        GameManager.Instance.RequestSlowMotion(player.slow_scale, player.slow_duration);
+        if (!TrySetParriedProjectileState(true))
+        {
+            ReturnToIdleFromCoroutine();
+            yield break;
+        }
+
+        GameManager.Instance?.RequestSlowMotion(player.slow_scale, player.slow_duration);
         
-        if (player.slowMotionSound != null)
+        if (player.slowMotionSound != null && AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(player.slowMotionSound, player.slowMotionVolume);
         }
@@ -61,8 +76,18 @@ public class Player_ParryAimState : PlayerState
             lineRenderer.enabled = true;
         }
 
-        while (player.IsCounterAttackBeingHeld())
+        UpdateTrajectory();
+
+        float aimStartedAt = Time.unscaledTime;
+        float maxAimDuration = Mathf.Max(0.05f, player.slow_duration);
+        while (player.IsCounterAttackBeingHeld() && Time.unscaledTime - aimStartedAt < maxAimDuration)
         {
+            if (!TryGetParriedProjectileGameObject(out _))
+            {
+                ReturnToIdleFromCoroutine();
+                yield break;
+            }
+
             player.SetVelocity(0, 0);
             UpdateTrajectory();
             yield return null;
@@ -74,21 +99,25 @@ public class Player_ParryAimState : PlayerState
             lineRenderer.enabled = false;
         }
         
-        if (player.parryFireSound != null)
+        if (player.parryFireSound != null && AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(player.parryFireSound, player.parryFireVolume);
         }
-        
-        parriedProjectile.LaunchParried(lastAimDirection, player.transform);
-        GameManager.Instance.EndSlowMotion();
+
+        if (TryGetParriedProjectileGameObject(out _))
+        {
+            TryLaunchParriedProjectile(lastAimDirection);
+        }
+
+        GameManager.Instance?.EndSlowMotion();
 
         // 4. Exit State
-        stateMachine.ChangeState(player.idleState);
+        ReturnToIdleFromCoroutine();
     }
     
     private void UpdateTrajectory()
     {
-        if (parriedProjectile == null || lineRenderer == null) return;
+        if (lineRenderer == null || !TryGetParriedProjectileGameObject(out GameObject projectileObject)) return;
 
         float angle_0_to_1 = (Mathf.Sin(Time.unscaledTime * player.aimSweepSpeed) + 1) / 2.0f;
         float targetAngle;
@@ -104,7 +133,7 @@ public class Player_ParryAimState : PlayerState
 
         lastAimDirection = new Vector2(Mathf.Cos(targetAngle * Mathf.Deg2Rad), Mathf.Sin(targetAngle * Mathf.Deg2Rad));
 
-        Vector2 startPos = parriedProjectile.GetGameObject().transform.position;
+        Vector2 startPos = projectileObject.transform.position;
         float speed = parriedProjectile.GetProjectileSpeed() * parriedProjectile.GetParriedSpeedMultiplier();
         DrawParabolicArc(startPos, lastAimDirection * speed);
     }
@@ -154,7 +183,16 @@ public class Player_ParryAimState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        player.ParryInvincibilityCoroutineHandle = player.StartCoroutine(player.ParryInvincibilityCoroutine(_playerHealth));
+
+        if (parrySequenceCoroutine != null)
+        {
+            player.StopCoroutine(parrySequenceCoroutine);
+            parrySequenceCoroutine = null;
+        }
+
+        if (_playerHealth != null)
+            player.StartParryRecoveryInvincibility();
+
         anim.SetBool("IsParryHold", false);
 
         ParryCameraZoom.Instance?.EndParryZoom();
@@ -165,7 +203,71 @@ public class Player_ParryAimState : PlayerState
             lineRenderer.enabled = false;
         }
         
-        GameManager.Instance.EndSlowMotion();
+        GameManager.Instance?.EndSlowMotion();
+        parriedProjectile = null;
+    }
+
+    private bool TryGetParriedProjectileGameObject(out GameObject projectileObject)
+    {
+        projectileObject = null;
+
+        if (parriedProjectile == null)
+            return false;
+
+        if (parriedProjectile is UnityEngine.Object unityObject && unityObject == null)
+            return false;
+
+        try
+        {
+            projectileObject = parriedProjectile.GetGameObject();
+        }
+        catch (MissingReferenceException)
+        {
+            return false;
+        }
+
+        return projectileObject != null;
+    }
+
+    private bool TrySetParriedProjectileState(bool isParried)
+    {
+        if (!TryGetParriedProjectileGameObject(out _))
+            return false;
+
+        try
+        {
+            parriedProjectile.SetParriedState(isParried);
+        }
+        catch (MissingReferenceException)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool TryLaunchParriedProjectile(Vector2 direction)
+    {
+        if (!TryGetParriedProjectileGameObject(out _))
+            return false;
+
+        try
+        {
+            parriedProjectile.LaunchParried(direction, player.transform);
+        }
+        catch (MissingReferenceException)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void ReturnToIdleFromCoroutine()
+    {
+        parrySequenceCoroutine = null;
+        if (stateMachine.currentState == this)
+            stateMachine.ChangeState(player.idleState);
     }
 }
 

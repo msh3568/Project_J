@@ -19,6 +19,7 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private bool overrideOnDamageVfxSorting = false;
     [SerializeField] private string onDamageVfxSortingLayer = "Default";
     [SerializeField] private int onDamageVfxSortingOrder = 0;
+    [SerializeField, Min(0)] private int onDamageVfxFrontOrderOffset = 2;
     [SerializeField] private bool useUnscaledTimeForDamageVfx = true;
 
     [Header("On Doing Damage VFX")]
@@ -35,6 +36,10 @@ public class Entity_VFX : MonoBehaviour
     [SerializeField] private bool randomizeHitVfxZRotation = true;
     [SerializeField] private Vector2 hitVfxRandomZRotationRange = new Vector2(90f, 180f);
     [SerializeField, Min(0f)] private float hitVfxRepeatBlockWindow = 0.05f;
+    [SerializeField] private bool overrideHitVfxSorting = false;
+    [SerializeField] private string hitVfxSortingLayer = "Default";
+    [SerializeField] private int hitVfxSortingOrder = 0;
+    [SerializeField, Min(0)] private int hitVfxFrontOrderOffset = 2;
     [SerializeField] private bool warnIfHitVfxMissing;
     [SerializeField] private bool logHitVfxLifecycle;
     private int lastHitVfxFrame = -1;
@@ -102,7 +107,7 @@ public class Entity_VFX : MonoBehaviour
     private void Awake()
     {
         entity = GetComponentInParent<Entity>();
-        sr = GetComponentInChildren<SpriteRenderer>();
+        sr = ResolvePrimarySpriteRenderer(transform);
         if (sr == null) {
             Debug.LogError("SpriteRenderer is not found on this object or its children!");
             return;
@@ -150,6 +155,8 @@ public class Entity_VFX : MonoBehaviour
         Transform parent = hitVfxFollowTarget ? target : null;
         GameObject newHitVfx = Instantiate(hitVfx, spawnPosition, GetHitVfxRotation(), parent);
         newHitVfx.transform.localScale = new Vector3(Mathf.Abs(hitVfxScale.x), hitVfxScale.y, hitVfxScale.z);
+        ResolveHitVfxSorting(target, out string sortingLayer, out int sortingOrder);
+        ApplySortingToVfx(newHitVfx, sortingLayer, sortingOrder);
         ApplyVfxFlipAndPlay(newHitVfx, ResolveHitVfxFlip(target));
 
         float resolvedLifetime = ResolveHitVfxLifetime(newHitVfx);
@@ -280,7 +287,7 @@ public class Entity_VFX : MonoBehaviour
         if (!overrideOnDamageVfxSorting && sr != null)
         {
             sortingLayer = sr.sortingLayerName;
-            sortingOrder = sr.sortingOrder + 1;
+            sortingOrder = sr.sortingOrder + onDamageVfxFrontOrderOffset;
         }
 
         Vector3 spawnPosition = transform.position + onDamageVfxOffset;
@@ -288,24 +295,7 @@ public class Entity_VFX : MonoBehaviour
         GameObject vfx = Instantiate(onDamageVfxPrefab, spawnPosition, Quaternion.identity, parent);
         vfx.transform.localScale = new Vector3(Mathf.Abs(onDamageVfxScale.x), onDamageVfxScale.y, onDamageVfxScale.z);
         ApplyUnscaledTimeToParticles(vfx, useUnscaledTimeForDamageVfx);
-        foreach (var psRenderer in vfx.GetComponentsInChildren<ParticleSystemRenderer>(true))
-        {
-            psRenderer.enabled = true;
-            if (psRenderer.sharedMaterial == null)
-            {
-                Shader defaultShader = Shader.Find("Sprites/Default");
-                if (defaultShader != null)
-                    psRenderer.material = new Material(defaultShader);
-            }
-            psRenderer.sortingLayerName = sortingLayer;
-            psRenderer.sortingOrder = sortingOrder;
-        }
-        foreach (var spriteRenderer in vfx.GetComponentsInChildren<SpriteRenderer>(true))
-        {
-            spriteRenderer.enabled = true;
-            spriteRenderer.sortingLayerName = sortingLayer;
-            spriteRenderer.sortingOrder = sortingOrder;
-        }
+        ApplySortingToVfx(vfx, sortingLayer, sortingOrder);
         ApplyVfxFlipAndPlay(vfx, false);
         Destroy(vfx, onDamageVfxLifetime);
         Debug.Log($"[VFX] {name} spawned onDamageVfxPrefab '{onDamageVfxPrefab.name}' at {spawnPosition}.", this);
@@ -398,6 +388,94 @@ public class Entity_VFX : MonoBehaviour
             if (!ps.isPlaying)
                 ps.Play(true);
         }
+    }
+
+    private void ResolveHitVfxSorting(Transform target, out string sortingLayer, out int sortingOrder)
+    {
+        sortingLayer = hitVfxSortingLayer;
+        sortingOrder = hitVfxSortingOrder;
+        if (overrideHitVfxSorting)
+            return;
+
+        SpriteRenderer frontmost = ChooseFrontmostRenderer(sr, ResolvePrimarySpriteRenderer(target));
+        if (frontmost == null)
+            return;
+
+        sortingLayer = frontmost.sortingLayerName;
+        sortingOrder = frontmost.sortingOrder + hitVfxFrontOrderOffset;
+    }
+
+    private static void ApplySortingToVfx(GameObject vfx, string sortingLayer, int sortingOrder)
+    {
+        if (vfx == null)
+            return;
+
+        foreach (ParticleSystemRenderer psRenderer in vfx.GetComponentsInChildren<ParticleSystemRenderer>(true))
+        {
+            psRenderer.enabled = true;
+            if (psRenderer.sharedMaterial == null)
+            {
+                Shader defaultShader = Shader.Find("Sprites/Default");
+                if (defaultShader != null)
+                    psRenderer.material = new Material(defaultShader);
+            }
+
+            psRenderer.sortingLayerName = sortingLayer;
+            psRenderer.sortingOrder = sortingOrder;
+        }
+
+        foreach (SpriteRenderer spriteRenderer in vfx.GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.sortingLayerName = sortingLayer;
+            spriteRenderer.sortingOrder = sortingOrder;
+        }
+    }
+
+    private static SpriteRenderer ResolvePrimarySpriteRenderer(Transform root)
+    {
+        if (root == null)
+            return null;
+
+        SpriteRenderer[] renderers = root.GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer best = null;
+        int bestPriority = int.MinValue;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SpriteRenderer candidate = renderers[i];
+            if (candidate == null)
+                continue;
+
+            int priority = GetSortingPriority(candidate.sortingLayerID, candidate.sortingOrder);
+            if (candidate.sprite != null)
+                priority += 1000000;
+
+            if (best != null && priority <= bestPriority)
+                continue;
+
+            best = candidate;
+            bestPriority = priority;
+        }
+
+        return best;
+    }
+
+    private static SpriteRenderer ChooseFrontmostRenderer(SpriteRenderer primary, SpriteRenderer secondary)
+    {
+        if (primary == null)
+            return secondary;
+        if (secondary == null)
+            return primary;
+
+        int primaryPriority = GetSortingPriority(primary.sortingLayerID, primary.sortingOrder);
+        int secondaryPriority = GetSortingPriority(secondary.sortingLayerID, secondary.sortingOrder);
+        return secondaryPriority > primaryPriority ? secondary : primary;
+    }
+
+    private static int GetSortingPriority(int sortingLayerID, int sortingOrder)
+    {
+        return SortingLayer.GetLayerValueFromID(sortingLayerID) * 10000 + sortingOrder;
     }
 
     public void PlayBaldoVfx()

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class RoomTrackedUnit : MonoBehaviour, IRoomClearUnit
+public class RoomTrackedUnit : MonoBehaviour, IRoomClearUnit, ICheckpointRespawnable
 {
     [Header("Clear Triggers")]
     [SerializeField] private bool clearOnDisable = true;
@@ -32,6 +32,11 @@ public class RoomTrackedUnit : MonoBehaviour, IRoomClearUnit
     {
         IsCleared = false;
         suppressClearOnDisable = false;
+    }
+
+    public void OnCheckpointRespawn()
+    {
+        ResetClearedState();
     }
 
     private void OnDisable()
