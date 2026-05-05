@@ -1,4 +1,5 @@
 using System.Collections;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -103,6 +104,17 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
     [SerializeField] private Color damageFlashColor = Color.white;
     [SerializeField, Min(0f)] private float damageFlashDuration = 0.08f;
 
+    [Header("Feel - Left Arm Slam Impact")]
+    [SerializeField] private MMF_Player leftArmSlamImpactFeedback;
+    [SerializeField] private bool autoCreateLeftArmSlamImpactFeedback = true;
+    [SerializeField] private string leftArmSlamImpactFeedbackObjectName = "MMF_BossLeftArmSlamImpact";
+    [SerializeField, Min(0.01f)] private float leftArmSlamShakeDuration = 0.18f;
+    [SerializeField, Min(0f)] private float leftArmSlamShakeAmplitude = 0.9f;
+    [SerializeField, Min(0f)] private float leftArmSlamShakeFrequency = 28f;
+    [SerializeField, Min(0f)] private float leftArmSlamImpactIntensity = 1.35f;
+    [SerializeField] private bool useCinemachineImpulseFallback = true;
+    [SerializeField, Min(0f)] private float leftArmSlamImpulseForce = 2.2f;
+
     private AttackState state = AttackState.Waiting;
     private SpriteRenderer bodyRenderer;
     private SpriteRenderer leftArmRenderer;
@@ -137,6 +149,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
         EnsurePrototypeVisuals();
+        ResolveLeftArmSlamImpactFeedback();
         SetLeftArmColor(idleArmColor);
         SetRightArmColor(idleArmColor);
         MoveLeftArmToWorldPosition(GetLeftArmRestWorldPosition());
@@ -400,6 +413,8 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
         if (Vector2.Distance(leftArm.position, slamTargetPosition) > 0.06f)
             return;
 
+        PlayLeftArmSlamImpactFeedback();
+
         Player_Health healthToDamage = grabbedHealth;
         ReleaseGrabbedPlayer();
 
@@ -462,6 +477,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
             return;
 
         MoveRightArmToWorldPosition(rightArmSlamImpactPosition);
+        PlayLeftArmSlamImpactFeedback(rightArm);
         ApplyRightArmSlamDamage();
         EnterState(AttackState.RightImpact);
     }
@@ -557,6 +573,181 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
         ResetRightArmRotation();
         ShowRightArmSlamMarker(rightArmTelegraphColor);
         EnterState(AttackState.RightWindup);
+    }
+
+    private void ResolveLeftArmSlamImpactFeedback()
+    {
+        if (leftArmSlamImpactFeedback != null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(leftArmSlamImpactFeedbackObjectName))
+        {
+            Transform child = transform.Find(leftArmSlamImpactFeedbackObjectName);
+            if (child != null)
+                leftArmSlamImpactFeedback = child.GetComponent<MMF_Player>();
+        }
+
+        if (leftArmSlamImpactFeedback == null && !string.IsNullOrWhiteSpace(leftArmSlamImpactFeedbackObjectName))
+        {
+            MMF_Player[] sceneFeedbacks = FindObjectsByType<MMF_Player>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < sceneFeedbacks.Length; i++)
+            {
+                MMF_Player feedback = sceneFeedbacks[i];
+                if (feedback == null || feedback.gameObject == null)
+                    continue;
+
+                PrototypeBossController feedbackOwner = feedback.GetComponentInParent<PrototypeBossController>();
+                if (feedbackOwner != null && feedbackOwner != this)
+                    continue;
+
+                if (string.Equals(feedback.gameObject.name, leftArmSlamImpactFeedbackObjectName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    leftArmSlamImpactFeedback = feedback;
+                    break;
+                }
+            }
+        }
+
+        if (leftArmSlamImpactFeedback == null && autoCreateLeftArmSlamImpactFeedback)
+            leftArmSlamImpactFeedback = CreateLeftArmSlamImpactFeedback();
+    }
+
+    private MMF_Player CreateLeftArmSlamImpactFeedback()
+    {
+        GameObject feedbackObject = new GameObject(string.IsNullOrWhiteSpace(leftArmSlamImpactFeedbackObjectName)
+            ? "MMF_BossLeftArmSlamImpact"
+            : leftArmSlamImpactFeedbackObjectName);
+        feedbackObject.transform.SetParent(transform, false);
+
+        MMF_Player feedback = feedbackObject.AddComponent<MMF_Player>();
+        feedback.FeedbacksList = new System.Collections.Generic.List<MMF_Feedback>();
+        ConfigureLeftArmSlamImpactFeedback(feedback);
+        return feedback;
+    }
+
+    private void ConfigureLeftArmSlamImpactFeedback(MMF_Player feedback)
+    {
+        if (feedback == null)
+            return;
+
+        if (!feedback.gameObject.activeInHierarchy)
+            feedback.gameObject.SetActive(true);
+        if (!feedback.enabled)
+            feedback.enabled = true;
+
+        MMF_Player.GlobalMMFeedbacksActive = true;
+        feedback.CanPlay = true;
+        feedback.CanPlayWhileAlreadyPlaying = true;
+        feedback.CooldownDuration = 0f;
+        feedback.OnlyPlayIfWithinRange = false;
+        feedback.ForceTimescaleMode = true;
+        feedback.ForcedTimescaleMode = TimescaleModes.Unscaled;
+
+        if (feedback.FeedbacksList == null)
+            feedback.FeedbacksList = new System.Collections.Generic.List<MMF_Feedback>();
+
+        MMF_CameraShake cameraShake = null;
+        for (int i = 0; i < feedback.FeedbacksList.Count; i++)
+        {
+            cameraShake = feedback.FeedbacksList[i] as MMF_CameraShake;
+            if (cameraShake != null)
+                break;
+        }
+
+        if (cameraShake == null)
+        {
+            cameraShake = new MMF_CameraShake();
+            feedback.FeedbacksList.Add(cameraShake);
+        }
+
+        cameraShake.Label = "Left Arm Slam Camera Shake";
+        cameraShake.RepeatUntilStopped = false;
+        cameraShake.Timing = new MMFeedbackTiming { TimescaleMode = TimescaleModes.Unscaled };
+        cameraShake.CameraShakeProperties = new MMCameraShakeProperties(
+            leftArmSlamShakeDuration,
+            leftArmSlamShakeAmplitude,
+            leftArmSlamShakeFrequency);
+
+        MMF_Events impulseFallback = null;
+        for (int i = 0; i < feedback.FeedbacksList.Count; i++)
+        {
+            impulseFallback = feedback.FeedbacksList[i] as MMF_Events;
+            if (impulseFallback != null && impulseFallback.Label == "Left Arm Slam Cinemachine Impulse")
+                break;
+
+            impulseFallback = null;
+        }
+
+        if (impulseFallback == null)
+        {
+            impulseFallback = new MMF_Events
+            {
+                Label = "Left Arm Slam Cinemachine Impulse"
+            };
+            feedback.FeedbacksList.Add(impulseFallback);
+        }
+
+        if (impulseFallback.PlayEvents == null)
+            impulseFallback.PlayEvents = new UnityEngine.Events.UnityEvent();
+        impulseFallback.PlayEvents.RemoveListener(PlayLeftArmSlamImpulseFallback);
+        impulseFallback.PlayEvents.AddListener(PlayLeftArmSlamImpulseFallback);
+    }
+
+    private void PlayLeftArmSlamImpactFeedback(Transform impactSource = null)
+    {
+        ResolveLeftArmSlamImpactFeedback();
+        bool playedFeel = false;
+        Transform source = impactSource != null ? impactSource : leftArm;
+        Vector3 impactPosition = source != null ? source.position : transform.position;
+
+        if (leftArmSlamImpactFeedback != null)
+        {
+            EnsureFeelCameraShaker();
+            ConfigureLeftArmSlamImpactFeedback(leftArmSlamImpactFeedback);
+            leftArmSlamImpactFeedback.Initialization(forceInitIfPlaying: true);
+            leftArmSlamImpactFeedback.ResetAllCooldowns();
+            leftArmSlamImpactFeedback.StopFeedbacks();
+            leftArmSlamImpactFeedback.RestoreInitialValues();
+            leftArmSlamImpactFeedback.PlayFeedbacks(
+                impactPosition,
+                leftArmSlamImpactIntensity);
+            playedFeel = true;
+        }
+
+        if (!playedFeel)
+            PlayLeftArmSlamImpulseFallback();
+    }
+
+    private static void EnsureFeelCameraShaker()
+    {
+        MMCameraShaker shaker = FindFirstObjectByType<MMCameraShaker>(FindObjectsInactive.Include);
+        if (shaker == null)
+        {
+            Camera mainCamera = Camera.main;
+            if (mainCamera == null)
+                return;
+
+            shaker = mainCamera.gameObject.AddComponent<MMCameraShaker>();
+        }
+
+        MMWiggle wiggle = shaker.GetComponent<MMWiggle>();
+        if (wiggle == null)
+            wiggle = shaker.gameObject.AddComponent<MMWiggle>();
+
+        wiggle.UpdateMode = MMWiggle.UpdateModes.LateUpdate;
+        wiggle.PositionActive = true;
+        if (wiggle.PositionWiggleProperties == null)
+            wiggle.PositionWiggleProperties = new WiggleProperties();
+        wiggle.PositionWiggleProperties.WiggleType = WiggleTypes.Noise;
+        wiggle.PositionWiggleProperties.LimitedTimeResetValue = true;
+    }
+
+    private void PlayLeftArmSlamImpulseFallback()
+    {
+        if (!useCinemachineImpulseFallback || CameraShakeManager.instance == null)
+            return;
+
+        CameraShakeManager.instance.Shake(leftArmSlamImpulseForce);
     }
 
     private bool CanLeftArmTargetPlayer()
