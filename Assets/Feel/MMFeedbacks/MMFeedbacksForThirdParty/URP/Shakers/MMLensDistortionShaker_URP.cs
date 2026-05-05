@@ -61,6 +61,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		{
 			base.Initialization();
 			_volume = this.gameObject.GetComponent<Volume>();
+			if (_volume == null || _volume.profile == null)
+			{
+				_lensDistortion = null;
+				return;
+			}
 			_volume.profile.TryGet(out _lensDistortion);
 		}
 
@@ -77,6 +82,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void Shake()
 		{
+			if (!HasValidLensDistortion())
+			{
+				return;
+			}
+
 			float newValue = ShakeFloat(ShakeIntensity, RemapIntensityZero, RemapIntensityOne, RelativeIntensity, _initialIntensity);
 			_lensDistortion.intensity.Override(newValue);
 		}
@@ -86,7 +96,23 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void GrabInitialValues()
 		{
+			if (!HasValidLensDistortion())
+			{
+				return;
+			}
+
 			_initialIntensity = _lensDistortion.intensity.value;
+		}
+
+		protected virtual bool HasValidLensDistortion()
+		{
+			if (_lensDistortion != null)
+			{
+				return true;
+			}
+
+			Initialization();
+			return _lensDistortion != null;
 		}
 
 		/// <summary>
@@ -103,6 +129,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 			bool forwardDirection = true, TimescaleModes timescaleMode = TimescaleModes.Scaled, bool stop = false, bool restore = false)
 		{
 			if (!CheckEventAllowed(channelData) || (!Interruptible && Shaking))
+			{
+				return;
+			}
+
+			if (!HasValidLensDistortion())
 			{
 				return;
 			}
@@ -151,6 +182,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
+			if (!HasValidLensDistortion())
+			{
+				return;
+			}
+
 			_lensDistortion.intensity.Override(_initialIntensity);
 		}
 

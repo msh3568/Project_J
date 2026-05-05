@@ -3,7 +3,7 @@ using MoreMountains.Feedbacks;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class PrototypeBossController : MonoBehaviour, IDamageable
+public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRespawnable
 {
     private enum AttackState
     {
@@ -30,6 +30,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private bool leftArmOnlyTargetsLeftSide = true;
     [SerializeField] private bool enableBossGrappleTargets = true;
+    [SerializeField] private bool resetOnCheckpointRespawn = true;
 
     [Header("Prototype Visuals")]
     [SerializeField] private Transform body;
@@ -147,6 +148,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
 
     private void Awake()
     {
+        EnsureCheckpointRespawnable();
         currentHealth = maxHealth;
         EnsurePrototypeVisuals();
         ResolveLeftArmSlamImpactFeedback();
@@ -247,6 +249,45 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0f)
             Die();
+    }
+
+    public void OnCheckpointRespawn()
+    {
+        if (!resetOnCheckpointRespawn)
+            return;
+
+        if (leftArmGrapplePunishCoroutine != null)
+        {
+            StopCoroutine(leftArmGrapplePunishCoroutine);
+            leftArmGrapplePunishCoroutine = null;
+        }
+        if (rightArmGrappleSwatCoroutine != null)
+        {
+            StopCoroutine(rightArmGrappleSwatCoroutine);
+            rightArmGrappleSwatCoroutine = null;
+        }
+        if (damageFlashCoroutine != null)
+        {
+            StopCoroutine(damageFlashCoroutine);
+            damageFlashCoroutine = null;
+        }
+
+        ReleaseGrabbedPlayer();
+        isDead = false;
+        currentHealth = maxHealth;
+        state = AttackState.Waiting;
+        stateTimer = 0f;
+        cooldownTimer = attackCooldown;
+        rightArmSlamDamageApplied = false;
+
+        EnsurePrototypeVisuals();
+        SetLeftArmColor(idleArmColor);
+        SetRightArmColor(idleArmColor);
+        ResetLeftArmRotation();
+        ResetRightArmRotation();
+        MoveLeftArmToWorldPosition(GetLeftArmRestWorldPosition());
+        MoveRightArmToWorldPosition(GetRightArmRestWorldPosition());
+        HideRightArmSlamMarker();
     }
 
     public bool CanBeGrappled(Player player)
@@ -573,6 +614,15 @@ public class PrototypeBossController : MonoBehaviour, IDamageable
         ResetRightArmRotation();
         ShowRightArmSlamMarker(rightArmTelegraphColor);
         EnterState(AttackState.RightWindup);
+    }
+
+    private void EnsureCheckpointRespawnable()
+    {
+        if (!resetOnCheckpointRespawn)
+            return;
+
+        if (GetComponent<RespawnOnCheckpoint>() == null)
+            gameObject.AddComponent<RespawnOnCheckpoint>();
     }
 
     private void ResolveLeftArmSlamImpactFeedback()

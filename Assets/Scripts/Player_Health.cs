@@ -683,7 +683,7 @@ public class Player_Health : Entity_Health
                 continue;
 
             EnsureFeelVolumeRuntimeComponents(volume);
-            EnsureFeelShakersOnVolume(volume.gameObject);
+            EnsureFeelShakersOnVolume(volume);
         }
     }
 
@@ -701,22 +701,57 @@ public class Player_Health : Entity_Health
         }
     }
 
-    private static void EnsureFeelShakersOnVolume(GameObject volumeObject)
+    private static void EnsureFeelShakersOnVolume(Volume volume)
     {
+        GameObject volumeObject = volume != null ? volume.gameObject : null;
         if (volumeObject == null)
             return;
 
-        if (volumeObject.GetComponent<MMChromaticAberrationShaker_URP>() == null)
+        if (EnsureVolumeOverride<ChromaticAberration>(volume)
+            && volumeObject.GetComponent<MMChromaticAberrationShaker_URP>() == null)
+        {
             volumeObject.AddComponent<MMChromaticAberrationShaker_URP>();
-        if (volumeObject.GetComponent<MMLensDistortionShaker_URP>() == null)
+        }
+        if (EnsureVolumeOverride<LensDistortion>(volume)
+            && volumeObject.GetComponent<MMLensDistortionShaker_URP>() == null)
+        {
             volumeObject.AddComponent<MMLensDistortionShaker_URP>();
-        if (volumeObject.GetComponent<MMPaniniProjectionShaker_URP>() == null)
+        }
+        if (EnsureVolumeOverride<PaniniProjection>(volume)
+            && volumeObject.GetComponent<MMPaniniProjectionShaker_URP>() == null)
+        {
             volumeObject.AddComponent<MMPaniniProjectionShaker_URP>();
-        if (volumeObject.GetComponent<MMFilmGrainShaker_URP>() == null)
+        }
+        if (EnsureVolumeOverride<FilmGrain>(volume)
+            && volumeObject.GetComponent<MMFilmGrainShaker_URP>() == null)
+        {
             volumeObject.AddComponent<MMFilmGrainShaker_URP>();
+        }
 
         DisableLegacyShakerByTypeName(volumeObject, "MoreMountains.FeedbacksForThirdParty.MMChromaticAberrationShaker");
         DisableLegacyShakerByTypeName(volumeObject, "MoreMountains.FeedbacksForThirdParty.MMLensDistortionShaker");
+    }
+
+    private static bool EnsureVolumeOverride<T>(Volume volume) where T : VolumeComponent
+    {
+        if (volume == null)
+            return false;
+
+        VolumeProfile profile = volume.profile;
+        if (profile == null)
+        {
+            profile = ScriptableObject.CreateInstance<VolumeProfile>();
+            profile.name = volume.gameObject != null ? volume.gameObject.name + "_RuntimeFeelProfile" : "RuntimeFeelProfile";
+            volume.profile = profile;
+        }
+
+        if (profile == null)
+            return false;
+
+        if (!profile.TryGet<T>(out _))
+            profile.Add<T>(true);
+
+        return true;
     }
 
     private static void EnsureFeelVolumeRuntimeComponents(Volume volume)

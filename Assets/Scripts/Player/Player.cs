@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class Player : Entity
@@ -271,6 +272,7 @@ public class Player : Entity
                 gameObject.AddComponent<Entity_VFX>();
 
             input = new PlayerInputSet();
+            input.Player.Checkpoint.performed += OnCheckpointPerformed;
 
             skillManager = GetComponent<Player_SkillManager>();
 
@@ -340,8 +342,17 @@ public class Player : Entity
     
 
         public bool isImmobilized { get; private set; }
+        private Coroutine immobilizeCoroutine;
 
     
+
+        private void OnCheckpointPerformed(InputAction.CallbackContext context)
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RequestManualRespawn();
+            }
+        }
 
         protected override void Update()
 
@@ -445,8 +456,22 @@ public class Player : Entity
 
         {
 
-            StartCoroutine(ImmobilizeCoroutine(duration));
+            if (immobilizeCoroutine != null)
+                StopCoroutine(immobilizeCoroutine);
 
+            immobilizeCoroutine = StartCoroutine(ImmobilizeCoroutine(duration));
+
+        }
+
+        public void ClearImmobilize()
+        {
+            if (immobilizeCoroutine != null)
+            {
+                StopCoroutine(immobilizeCoroutine);
+                immobilizeCoroutine = null;
+            }
+
+            isImmobilized = false;
         }
 
         private System.Collections.IEnumerator ImmobilizeCoroutine(float duration)
@@ -474,6 +499,7 @@ public class Player : Entity
             yield return new WaitForSeconds(duration);
 
             isImmobilized = false;
+            immobilizeCoroutine = null;
 
         }
 

@@ -2,6 +2,9 @@
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 // [RequireComponent(typeof(AudioSource))] // Removed to allow multiple AudioSources
 public class GameManager : MonoBehaviour
@@ -35,8 +38,19 @@ public class GameManager : MonoBehaviour
     private Enemy[] cachedEnemies = System.Array.Empty<Enemy>();
     private RespawnOnCheckpoint[] cachedRespawnables = System.Array.Empty<RespawnOnCheckpoint>();
     private RoomEventTrigger[] cachedRoomEventTriggers = System.Array.Empty<RoomEventTrigger>();
+    private int lastManualRespawnFrame = -1;
 
     private Coroutine slowMoCoroutine;
+
+    public static bool IsGameplaySceneName(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+            return false;
+
+        return string.Equals(sceneName, "GameSceneHardMode", System.StringComparison.OrdinalIgnoreCase)
+            || string.Equals(sceneName, "GameScene", System.StringComparison.OrdinalIgnoreCase)
+            || sceneName.StartsWith("GameSceneRespawn", System.StringComparison.OrdinalIgnoreCase);
+    }
 
     [Header("Hit Slow Motion")]
     [SerializeField] private bool enableHitSlowMo = true;
@@ -134,9 +148,51 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (WasManualRespawnPressed())
+        {
+            RequestManualRespawn();
+        }
+    }
+
+    public void RequestManualRespawn()
+    {
+        if (lastManualRespawnFrame == Time.frameCount)
+            return;
+
+        lastManualRespawnFrame = Time.frameCount;
+        Debug.Log("[GameManager] Manual respawn requested.");
+        RespawnPlayerAtLastCheckpoint(false, true);
+    }
+
+    private bool WasManualRespawnPressed()
+    {
+        bool pressed = false;
+
+        try
+        {
+            pressed |= Input.GetKeyDown(KeyCode.R);
+        }
+        catch (System.InvalidOperationException)
+        {
+        }
+
+#if ENABLE_INPUT_SYSTEM
+        pressed |= Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame;
+#endif
+
+        return pressed;
+    }
+
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    public void InitializeForCurrentScene()
+    {
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -153,7 +209,7 @@ public class GameManager : MonoBehaviour
             }
         }
         // Only play music on the specific game scenes
-        else if (scene.name == "GameSceneRespawn" || scene.name == "GameSceneHardMode")
+        else if (IsGameplaySceneName(scene.name))
         {
             if (bgmSource != null && !bgmSource.isPlaying)
             {
@@ -169,7 +225,7 @@ public class GameManager : MonoBehaviour
         timeManager = FindFirstObjectByType<TimeManager>();
 
         // Use the more specific check for game scenes
-        if (scene.name == "GameSceneRespawn" || scene.name == "GameSceneHardMode")
+        if (IsGameplaySceneName(scene.name))
         {
             fireTracePoints = 0;
             extraRespawns = 0;
@@ -274,7 +330,7 @@ public class GameManager : MonoBehaviour
         UpdateRespawnUI();
     }
 
-    public void RespawnPlayerAtLastCheckpoint(bool isVoidFall = false)
+    public void RespawnPlayerAtLastCheckpoint(bool isVoidFall = false, bool ignoreRespawnLimit = false)
     {
         EndSlowMotion();
 
@@ -289,9 +345,9 @@ public class GameManager : MonoBehaviour
         }
 
         string currentSceneName = SceneManager.GetActiveScene().name;
-        if (currentSceneName == "GameSceneHardMode" || currentSceneName == "GameSceneRespawn")
+        if (IsGameplaySceneName(currentSceneName))
         {
-            if (respawnCount >= (maxRespawns + extraRespawns))
+            if (!ignoreRespawnLimit && respawnCount >= (maxRespawns + extraRespawns))
             {
                 Debug.Log("\uB354 \uC774\uC0C1 \uBD80\uD65C\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.");
 
@@ -311,24 +367,26 @@ public class GameManager : MonoBehaviour
                 }
                 return; // 由ъ뒪??濡쒖쭅 以묐떒
             }
-            respawnCount++;
-            Debug.Log($"\uBD80\uD65C \uD69F\uC218: {respawnCount}/{maxRespawns + extraRespawns}");
-            UpdateRespawnUI();
+            if (!ignoreRespawnLimit)
+            {
+                respawnCount++;
+                Debug.Log($"\uBD80\uD65C \uD69F\uC218: {respawnCount}/{maxRespawns + extraRespawns}");
+                UpdateRespawnUI();
+            }
         }
 
 
         if (activeCheckpointPosition.HasValue)
         {
             // Respawn at checkpoint
-            if (player != null)
-            {
-                player.transform.position = activeCheckpointPosition.Value;
-            }
+            MovePlayerToRespawnPosition(activeCheckpointPosition.Value);
             ResetPlayerShieldAtRespawn();
             ResetRoomsAtRespawn();
             ResetEnemiesAtRespawn();
             ResetRespawnablesAtCheckpoint();
             ResetRoomEventTriggersAtRespawn();
+            // Respawnables can release the player from grabs, so lock in the final checkpoint position after resets.
+            MovePlayerToRespawnPosition(activeCheckpointPosition.Value);
         }
         else
         {
@@ -340,6 +398,28 @@ public class GameManager : MonoBehaviour
             activatedCheckpointCount = 0; // Reset checkpoint count on full scene reset
             respawnCount = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    private void MovePlayerToRespawnPosition(Vector3 position)
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        player.transform.position = position;
+
+        var playerRigidbody = player.GetComponent<Rigidbody2D>();
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.linearVelocity = Vector2.zero;
+            playerRigidbody.angularVelocity = 0f;
         }
     }
 
@@ -415,6 +495,12 @@ public class GameManager : MonoBehaviour
         if (health != null)
         {
             health.ResetShieldToMax();
+        }
+
+        var playerComponent = player.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            playerComponent.ClearImmobilize();
         }
     }
 
