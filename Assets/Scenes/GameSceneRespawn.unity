@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
@@ -17905,7 +17905,81 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Entity_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
+  onDamageVfxPrefab: {fileID: 0}
+  onDamageVfxOffset: {x: 0, y: 0, z: 0}
+  onDamageVfxScale: {x: 1, y: 1, z: 1}
+  onDamageVfxLifetime: 0.5
+  onDamageVfxFollowOwner: 1
+  overrideOnDamageVfxSorting: 0
+  onDamageVfxSortingLayer: Default
+  onDamageVfxSortingOrder: 0
+  onDamageVfxFrontOrderOffset: 2
+  useUnscaledTimeForDamageVfx: 1
   hitVfx: {fileID: 1345081126871789188, guid: 2b326e96230651545b7370ddcf2a86e5, type: 3}
+  hitVfxOffset: {x: 0, y: 0, z: 0}
+  hitVfxScale: {x: 1, y: 1, z: 1}
+  hitVfxLifetime: 0.5
+  useHitVfxAnimationLength: 1
+  flipHitVfxWithOwnerFacing: 1
+  flipHitVfxWithTargetFacing: 0
+  invertHitVfxFlip: 0
+  hitVfxFollowTarget: 0
+  hitVfxBaseZRotation: 0
+  randomizeHitVfxZRotation: 1
+  hitVfxRandomZRotationRange: {x: 90, y: 180}
+  hitVfxRepeatBlockWindow: 0.05
+  overrideHitVfxSorting: 0
+  hitVfxSortingLayer: Default
+  hitVfxSortingOrder: 0
+  hitVfxFrontOrderOffset: 2
+  warnIfHitVfxMissing: 0
+  logHitVfxLifecycle: 0
+  shieldHitVfxPrefab: {fileID: 0}
+  shieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  shieldHitVfxScale: {x: 1, y: 1, z: 1}
+  shieldHitVfxLifetime: 0.5
+  shieldHitVfxFollowOwner: 1
+  lastShieldHitVfxPrefab: {fileID: 0}
+  lastShieldHitVfxOffset: {x: 0, y: 0, z: 0}
+  lastShieldHitVfxScale: {x: 1, y: 1, z: 1}
+  lastShieldHitVfxLifetime: 0.6
+  lastShieldHitVfxFollowOwner: 1
+  attackVfxPrefab1: {fileID: 0}
+  attackVfxPrefab2: {fileID: 0}
+  attackVfxPrefab3: {fileID: 0}
+  flipAttackVfx1WithFacing: 1
+  flipAttackVfx2WithFacing: 1
+  flipAttackVfx3WithFacing: 1
+  invertAttackVfx1: 0
+  invertAttackVfx2: 1
+  invertAttackVfx3: 0
+  attackVfxOffset: {x: 0, y: 0, z: 0}
+  attackVfxScale: {x: 1, y: 1, z: 1}
+  attackVfxLifetime: 0.5
+  attackVfxAnchor: {fileID: 0}
+  baldoVfxPrefab: {fileID: 0}
+  baldoVfxOffset: {x: 0, y: 0, z: 0}
+  baldoVfxScale: {x: 1, y: 1, z: 1}
+  baldoVfxLifetime: 0.8
+  flipBaldoVfxWithFacing: 1
+  invertBaldoVfx: 0
+  spawnBaldoVfxOnBothSides: 1
+  mirrorBaldoVfxFlip: 1
+  baldoVfxAnchor: {fileID: 0}
+  dashVfxPrefab: {fileID: 0}
+  dashVfxOffset: {x: 0, y: 0, z: 0}
+  dashVfxUseLeftOffset: 0
+  dashVfxLeftOffset: {x: 0, y: 0, z: 0}
+  dashVfxScale: {x: 1, y: 1, z: 1}
+  dashVfxLifetime: 0.5
+  dashVfxFollowOwner: 0
+  dashVfxAnchor: {fileID: 0}
+  dashVfxForceWorldSimulation: 1
+  dashVfxForceSorting: 0
+  dashVfxSortingLayer: Default
+  dashVfxSortingOrder: 0
+  dashVfxCooldown: 0.05
+  dashVfxBaseFacingDir: -1
 --- !u!1 &914897366
 GameObject:
   m_ObjectHideFlags: 0
@@ -30585,6 +30659,8 @@ MonoBehaviour:
   pauseGroup: {fileID: 1428805229}
   pauseMenuContent: {fileID: 295455225}
   settingsContentsGroup: {fileID: 492398152}
+  firstSelectedButton: {fileID: 0}
+  pauseSortingOrder: 32767
   bgmSlider: {fileID: 792059659}
   sfxSlider: {fileID: 980602795}
 --- !u!4 &1461138712
@@ -120414,6 +120490,11 @@ MonoBehaviour:
   checkpointSoundVolume: 0.49
   respawnCountText: {fileID: 1146349603}
   respawnPointsText: {fileID: 1707525827}
+  enableHitSlowMo: 1
+  hitSlowScale: 0.2
+  hitSlowDuration: 0.1
+  enableHitShakeOnSuccess: 1
+  hitShakeForce: 0.8
 --- !u!4 &1621857251
 Transform:
   m_ObjectHideFlags: 0
@@ -130659,10 +130740,18 @@ MonoBehaviour:
   whatIsWall:
     serializedVersion: 2
     m_Bits: 64
+  requireWallTag: 1
+  wallTag: Wall
+  includeGroundInWallCheck: 0
   groundCheckDistance: 1.4
   groundCheckSize: {x: 0.5, y: 0.2}
   wallCheckDistance: 0.4
   groundCheckPositionOffset: {x: 0, y: 0}
+  grappleConfig: {fileID: 0}
+  grappleLockOnSystem: {fileID: 0}
+  grappleVisualizer: {fileID: 0}
+  grappleHitCooldown: 1.5
+  awakeningManager: {fileID: 0}
   attackVelocity:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}
@@ -130721,6 +130810,7 @@ MonoBehaviour:
   wallSlideSlowMultiplier: 0.4
   wallAssistJumpKickOffForce: 10
   wallAssistJumpUpForce: 15
+  wallAssistJumpUpMultiplier: 1.2
   wallAssistJumpDuration: 0.2
   wallAssistJumpReturnForce: 10
   wallAssistJumpSpeed: 20
@@ -130758,6 +130848,22 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: faae4ce2a9ef3a1489f00d2fcf00ff8f, type: 3}
     volume: 0.63
   screamTriggerFallDistance: 9.5
+  jumpVfxPrefab: {fileID: 0}
+  jumpVfxOffset: {x: 0, y: 0, z: 0}
+  jumpVfxScale: {x: 1, y: 1, z: 1}
+  mirrorJumpVfxWithFacing: 1
+  landingVfxPrefab: {fileID: 0}
+  landingVfxOffset: {x: 0, y: 0, z: 0}
+  landingVfxScale: {x: 1, y: 1, z: 1}
+  mirrorLandingVfxWithFacing: 1
+  forceMovementVfxBehindPlayer: 1
+  movementVfxSortingOrderOffset: -1
+  movementVfxMatchPlayerSortingLayer: 1
+  movementVfxZOffset: 0
+  movementVfxLifecycleMode: 1
+  jumpVfxPlaybackDuration: 0.25
+  landingVfxPlaybackDuration: 0.25
+  stopMovementParticlesOnHide: 1
   slowMotionSound: {fileID: 8300000, guid: 59dd3ac3f96ec74438e065ad5977248e, type: 3}
   slowMotionVolume: 1.473
   parryFireSound: {fileID: 8300000, guid: 601e28c018095404cb35192c3d4a265c, type: 3}
@@ -130769,6 +130875,10 @@ MonoBehaviour:
   trajectoryPointSpacing: 0.1
   trajectoryLineMaterial: {fileID: 2100000, guid: 46c78a8fac930a443be8f4c51d2dab25, type: 2}
   parryInvincibilityDuration: 0.25
+  normalParryCooldown: 0.7
+  perfectParryWindow: 0.2
+  logParryCooldownDebug: 0
+  parriedProjectileReturnMode: 0
   sfxMixerGroup: {fileID: 5105433721476265319, guid: dfd43f9b6a0fe0b45b039d62dded5c7d, type: 2}
 --- !u!4 &2049881624
 Transform:
@@ -130942,17 +131052,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Entity_VFX
   onDamageMaterial: {fileID: 2100000, guid: 74c6a1db0defd5f4ca3333a768847809, type: 2}
   onDamageVfxDuration: 0.2
-  hitVfx: {fileID: 0}
   onDamageVfxPrefab: {fileID: 0}
   onDamageVfxOffset: {x: 0, y: 0, z: 0}
   onDamageVfxScale: {x: 1, y: 1, z: 1}
   onDamageVfxLifetime: 0.5
   onDamageVfxFollowOwner: 1
+  overrideOnDamageVfxSorting: 0
+  onDamageVfxSortingLayer: Default
+  onDamageVfxSortingOrder: 0
+  onDamageVfxFrontOrderOffset: 2
+  useUnscaledTimeForDamageVfx: 1
+  hitVfx: {fileID: 0}
   hitVfxOffset: {x: 0, y: 0, z: 0}
   hitVfxScale: {x: 1, y: 1, z: 1}
   hitVfxLifetime: 0.5
+  useHitVfxAnimationLength: 1
+  flipHitVfxWithOwnerFacing: 1
   flipHitVfxWithTargetFacing: 0
+  invertHitVfxFlip: 0
   hitVfxFollowTarget: 0
+  hitVfxBaseZRotation: 0
+  randomizeHitVfxZRotation: 1
+  hitVfxRandomZRotationRange: {x: 90, y: 180}
+  hitVfxRepeatBlockWindow: 0.05
+  overrideHitVfxSorting: 0
+  hitVfxSortingLayer: Default
+  hitVfxSortingOrder: 0
+  hitVfxFrontOrderOffset: 2
+  warnIfHitVfxMissing: 0
+  logHitVfxLifecycle: 0
   shieldHitVfxPrefab: {fileID: 4748681987041982144, guid: 163bff84d78fe024c8bbf143ff97a9fa, type: 3}
   shieldHitVfxOffset: {x: 0, y: 0, z: 0}
   shieldHitVfxScale: {x: 1, y: 1, z: 1}
@@ -130963,6 +131091,42 @@ MonoBehaviour:
   lastShieldHitVfxScale: {x: 1, y: 1, z: 1}
   lastShieldHitVfxLifetime: 0.6
   lastShieldHitVfxFollowOwner: 1
+  attackVfxPrefab1: {fileID: 0}
+  attackVfxPrefab2: {fileID: 0}
+  attackVfxPrefab3: {fileID: 0}
+  flipAttackVfx1WithFacing: 1
+  flipAttackVfx2WithFacing: 1
+  flipAttackVfx3WithFacing: 1
+  invertAttackVfx1: 0
+  invertAttackVfx2: 1
+  invertAttackVfx3: 0
+  attackVfxOffset: {x: 0, y: 0, z: 0}
+  attackVfxScale: {x: 1, y: 1, z: 1}
+  attackVfxLifetime: 0.5
+  attackVfxAnchor: {fileID: 0}
+  baldoVfxPrefab: {fileID: 0}
+  baldoVfxOffset: {x: 0, y: 0, z: 0}
+  baldoVfxScale: {x: 1, y: 1, z: 1}
+  baldoVfxLifetime: 0.8
+  flipBaldoVfxWithFacing: 1
+  invertBaldoVfx: 0
+  spawnBaldoVfxOnBothSides: 1
+  mirrorBaldoVfxFlip: 1
+  baldoVfxAnchor: {fileID: 0}
+  dashVfxPrefab: {fileID: 0}
+  dashVfxOffset: {x: 0, y: 0, z: 0}
+  dashVfxUseLeftOffset: 0
+  dashVfxLeftOffset: {x: 0, y: 0, z: 0}
+  dashVfxScale: {x: 1, y: 1, z: 1}
+  dashVfxLifetime: 0.5
+  dashVfxFollowOwner: 0
+  dashVfxAnchor: {fileID: 0}
+  dashVfxForceWorldSimulation: 1
+  dashVfxForceSorting: 0
+  dashVfxSortingLayer: Default
+  dashVfxSortingOrder: 0
+  dashVfxCooldown: 0.05
+  dashVfxBaseFacingDir: -1
 --- !u!82 &2049881637
 AudioSource:
   m_ObjectHideFlags: 0
@@ -131213,6 +131377,26 @@ MonoBehaviour:
   currentShield: 0
   regenerationTime: 10
   regenerationDelayAfterHit: 3
+  screenHitEffect: {fileID: 0}
+  hitFeedback: {fileID: 0}
+  preferFeelHitFeedback: 1
+  alwaysPlayLegacyScreenHitFallback: 0
+  hitFeedbackMaxDuration: 0.2
+  debugLogBlockedDamage: 1
+  forceHitShakeFallbackWhenFeelFails: 1
+  autoFixFeelRuntime: 1
+  enforceHitFeedbackDuration: 1
+  hitFeedbackStandardDuration: 0.2
+  feelVolumeWeightDuringHit: 1
+  feelVolumeLiftDuration: 0.2
+  traceFeelVolumeLogs: 1
+  autoAttachSaturationTraceWatcher: 1
+  firewallBlackoutDuration: 0.25
+  firewallBlackoutColor: {r: 0, g: 0, b: 0, a: 1}
+  freezePlayerDuringRespawn: 1
+  shieldHitInvulnDuration: 1
+  lowShieldThreshold: 2
+  lowShieldColor: {r: 1, g: 0.2, b: 0.2, a: 1}
 --- !u!114 &2049881643
 MonoBehaviour:
   m_ObjectHideFlags: 0
