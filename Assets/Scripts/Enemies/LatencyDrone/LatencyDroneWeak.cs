@@ -108,6 +108,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private float nextTelegraphTime = Mathf.Infinity;
     private Vector2 lockedAimDirection;
     private bool hasLockedAim;
+    private bool cutsceneCombatSuppressed;
 
     [Header("Destruction Settings")]
     [SerializeField] private GameObject fragmentPrefab; // This prefab should have Fragment.cs attached
@@ -279,6 +280,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     void Update()
     {
         if (isDead || playerTransform == null) return;
+        if (cutsceneCombatSuppressed)
+        {
+            MaintainCutsceneCombatSuppression();
+            return;
+        }
+
         UpdatePlayerVelocity();
 
         // Player Detection and Movement
@@ -470,6 +477,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     void FireProjectile(Vector2 direction)
     {
+        if (cutsceneCombatSuppressed)
+            return;
+
         if (projectilePrefab == null || firePoint == null)
         {
             Debug.LogError("Projectile Prefab or Fire Point is not assigned for LatencyDroneWeak.");
@@ -778,8 +788,65 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         direction = (aimPoint - origin).normalized;
         return direction.sqrMagnitude > 0.0001f;
     }
+
+    public void SetCutsceneCombatSuppressed(bool suppressed)
+    {
+        if (isDead || isDying)
+            return;
+
+        if (cutsceneCombatSuppressed == suppressed)
+        {
+            if (suppressed)
+                MaintainCutsceneCombatSuppression();
+            return;
+        }
+
+        cutsceneCombatSuppressed = suppressed;
+        StopCombatActionsForCutscene();
+
+        if (suppressed)
+        {
+            nextFireTime = Mathf.Infinity;
+            nextTelegraphTime = Mathf.Infinity;
+            MaintainCutsceneCombatSuppression();
+            return;
+        }
+
+        nextFireTime = Time.time + fireCooldown;
+        nextTelegraphTime = Time.time + telegraphDelayAfterFire;
+    }
+
+    private void MaintainCutsceneCombatSuppression()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        if (telegraphCoroutine != null || isFiringBurst || isRetreating || hasLockedAim)
+            StopCombatActionsForCutscene();
+
+        nextFireTime = Mathf.Infinity;
+        nextTelegraphTime = Mathf.Infinity;
+    }
+
+    private void StopCombatActionsForCutscene()
+    {
+        StopAllCoroutines();
+        telegraphCoroutine = null;
+        isFiringBurst = false;
+        isRetreating = false;
+        if (telegraphLine != null)
+            telegraphLine.enabled = false;
+        hasLockedAim = false;
+    }
+
     private IEnumerator ApplyRetreat(float directionSign) // -1 or 1 (?��e???��i?�� e��?e? e�ƨ�i?��)
     {
+        if (cutsceneCombatSuppressed)
+            yield break;
+
         isRetreating = true;
 
         if (retreatKickSpeed > 0f)
@@ -802,6 +869,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     private IEnumerator FireBurstCoroutine()
     {
+        if (cutsceneCombatSuppressed)
+            yield break;
+
         isFiringBurst = true;
         HideTelegraph();
         if (lockAimDuringBurst)
@@ -812,6 +882,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
         for (int i = 0; i < capsulesPerBurst; i++)
         {
+            if (cutsceneCombatSuppressed) break;
             if (isDead) break;
             if (playerTransform == null) break; // ?�레?�어가 ?�라졌으�?발사 중�?
             Vector2 direction = lockAimDuringBurst ? lockedAimDirection : GetAimDirection();
@@ -826,6 +897,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     private IEnumerator ShowTelegraphCoroutine(float startTime, float endTime)
     {
+        if (cutsceneCombatSuppressed)
+        {
+            telegraphCoroutine = null;
+            yield break;
+        }
+
         if (telegraphLine == null)
         {
             telegraphCoroutine = null;
@@ -844,7 +921,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         float flashPhase = 0f;
         while (Time.time < endTime)
         {
-            if (isDead || playerTransform == null)
+            if (cutsceneCombatSuppressed || isDead || playerTransform == null)
                 break;
 
             Vector2 direction = GetAimDirection();
@@ -895,6 +972,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     {
         bool controlledByDormantActivator = IsControlledByDormantActivator();
 
+        cutsceneCombatSuppressed = false;
         health = initialHealth;
         isDead = false;
         isDying = false;

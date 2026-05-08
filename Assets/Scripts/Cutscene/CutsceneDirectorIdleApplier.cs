@@ -39,6 +39,8 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     private Animator playerAnimator;
     private Animator npcAnimator;
     private Player player;
+    private CutsceneDialoguePlayer dialoguePlayer;
+    private float sampledIdleTime;
 
     private void Reset()
     {
@@ -72,6 +74,12 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     {
         if (!keepIdleWhileDirectorRuns || director == null || director.state != PlayState.Playing)
             return;
+
+        if (ShouldSampleIdleWhileDialogueWaits())
+        {
+            SampleIdleWhileDialogueWaits();
+            return;
+        }
 
         ApplyIdle();
     }
@@ -122,6 +130,7 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
         if (!applyWhenDirectorPlays)
             return;
 
+        sampledIdleTime = 0f;
         ApplyIdle();
     }
 
@@ -142,6 +151,9 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
         playerAnimator = ResolveSpriteAnimator(playerObject);
         npcAnimator = ResolveSpriteAnimator(npcObject);
         player = playerObject != null ? playerObject.GetComponent<Player>() : null;
+
+        if (dialoguePlayer == null)
+            dialoguePlayer = GetComponent<CutsceneDialoguePlayer>();
     }
 
     private static Animator ResolveSpriteAnimator(GameObject targetObject)
@@ -257,6 +269,33 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     {
         ApplyPlayerAnimatorFallback();
         ApplyNpcAnimatorFallback();
+    }
+
+    private bool ShouldSampleIdleWhileDialogueWaits()
+    {
+        return dialoguePlayer != null && dialoguePlayer.IsWaitingForManualDialogueAdvance;
+    }
+
+    private void SampleIdleWhileDialogueWaits()
+    {
+        ResolveTargets();
+        LoadDefaultClipsInEditor();
+
+        sampledIdleTime += Time.unscaledDeltaTime;
+        SampleIdleClip(playerIdleClip, playerAnimator, sampledIdleTime);
+        SampleIdleClip(npcIdleClip, npcAnimator, sampledIdleTime);
+
+        if (holdPlayerMovementInputAtZero && player != null)
+            player.SetMoveInputOverride(true, Vector2.zero);
+    }
+
+    private static void SampleIdleClip(AnimationClip clip, Animator animator, float time)
+    {
+        if (clip == null || animator == null)
+            return;
+
+        float sampleTime = clip.length > 0f ? Mathf.Repeat(time, clip.length) : 0f;
+        clip.SampleAnimation(animator.gameObject, sampleTime);
     }
 
     private void ApplyPlayerAnimatorFallback()

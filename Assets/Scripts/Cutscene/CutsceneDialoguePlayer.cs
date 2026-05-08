@@ -1,56 +1,32 @@
-using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+#endif
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+[ExecuteAlways]
 [DisallowMultipleComponent]
 [RequireComponent(typeof(PlayableDirector))]
 public class CutsceneDialoguePlayer : MonoBehaviour
 {
-    public enum CameraAction
+    public enum Speaker
     {
-        None,
-        ZoomToSpeaker,
-        ZoomOut
+        Player,
+        NPC
     }
 
-    [System.Serializable]
-    public class DialogueStep
-    {
-        public string speakerName;
-        [TextArea(2, 4)] public string text;
-
-        [Header("Dialogue Timing")]
-        [Min(0f)] public float waitBeforeLine;
-        public bool autoAdvance;
-        [Min(0f)] public float autoAdvanceDelay = 1.5f;
-
-        [Header("Camera Before This Line")]
-        public CameraAction beforeLineCameraAction;
-        [Min(0.1f)] public float cameraOrthographicSize = 7f;
-        [Min(0f)] public float cameraBlendDuration = 0.35f;
-        [Min(0f)] public float waitAfterBeforeLineCamera;
-
-        [Header("Camera After Space")]
-        public CameraAction afterAdvanceCameraAction;
-        [Min(0f)] public float waitBeforeAfterAdvanceCamera;
-        [Min(0f)] public float waitAfterAdvanceCamera;
-        public bool hideBubbleDuringAfterAdvanceCamera = true;
-    }
-
-    [Header("Timeline")]
+    [Header("Timeline Start")]
     [SerializeField] private PlayableDirector director;
-    [SerializeField] private bool playDirectorWhenDialogueStarts = true;
-    [SerializeField] private bool stopDirectorWhenDialogueEnds = true;
-
-    [Header("Start Trigger")]
-    [SerializeField] private bool startAfterPlayerMoves = true;
+    [SerializeField, FormerlySerializedAs("playDirectorWhenDialogueStarts")] private bool playDirectorWhenTimelineStarts = true;
+    [SerializeField, FormerlySerializedAs("startAfterPlayerMoves")] private bool startTimelineAfterPlayerMoves = true;
     [SerializeField, Min(0f)] private float moveDistanceToStart = 0.35f;
-    [SerializeField] private Key advanceKeyboardKey = Key.Space;
-    [SerializeField] private bool lockPlayerWhileDialogueRuns = true;
+    [SerializeField, FormerlySerializedAs("lockPlayerWhileDialogueRuns")] private bool lockPlayerWhileTimelineRuns = true;
+    [SerializeField] private bool disableRoomCameraManagerWhileTimelineRuns = true;
+    [SerializeField] private bool enterCompletesAndAdvancesDialogue = true;
 
     [Header("Actors")]
     [SerializeField] private GameObject playerObject;
@@ -62,23 +38,20 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private CinemachineCamera cinemachineCamera;
-    [SerializeField] private float zoomOutBlendDuration = 0.45f;
 
     [Header("Dialogue UI")]
     [SerializeField] private Sprite bubbleSprite;
     [SerializeField] private TMP_FontAsset fontAsset;
     [SerializeField] private Font dynamicFontSource;
     [SerializeField] private bool preferDynamicFontSource = true;
-    [SerializeField] private Vector2 bubbleSize = new Vector2(760f, 230f);
+    [SerializeField] private Vector2 bubbleSize = new Vector2(620f, 190f);
     [SerializeField] private Vector4 textPadding = new Vector4(86f, 58f, 86f, 74f);
-    [SerializeField, Min(1f)] private float fontSize = 34f;
+    [SerializeField, Min(1f)] private float fontSize = 40f;
     [SerializeField] private Vector3 worldCanvasScale = new Vector3(0.01f, 0.01f, 0.01f);
 
-    [Header("Dialogue")]
-    [SerializeField] private DialogueStep[] steps = new DialogueStep[0];
-
     private Canvas runtimeCanvas;
-    private RectTransform bubbleRect;
+    private RectTransform runtimeCanvasRect;
+    private RectTransform textRect;
     private Image bubbleImage;
     private TextMeshProUGUI dialogueText;
     private GameObject runtimeUiRoot;
@@ -86,20 +59,33 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
     private Player player;
     private RoomCameraManager roomCameraManager;
-    private Transform originalCameraFollow;
-    private float originalCameraOrthographicSize;
-    private bool hasOriginalCameraState;
     private bool roomCameraManagerWasEnabled;
     private bool disabledRoomCameraManager;
     private Vector3 initialPlayerPosition;
-    private int currentStepIndex = -1;
-    private bool sequenceStarted;
-    private bool sequenceFinished;
-    private bool waitingForAdvance;
-    private bool isCameraBlending;
+    private bool timelineStartedByTrigger;
+    private bool timelineFinished;
+    private bool showingTimelineDialogue;
+    private Speaker activeSpeaker;
+    private bool activeUsesCustomOffset;
+    private Vector3 activeCustomOffset;
+    private bool activeOverridesBubbleSize;
+    private Vector2 activeBubbleSize;
+    private bool activeOverridesTextLayout;
+    private float activeFontSize;
+    private Vector2 activeTextOffset;
+    private Vector4 activeTextPadding;
+    private string activeFullText = string.Empty;
+    private double activeClipStartTime = double.NaN;
+    private double activeClipEndTime = double.NaN;
+    private bool activeTypewriterDisabled;
+    private float activeTypewriterCharactersPerSecond;
+    private float activeTypewriterStartDelay;
+    private float activeManualRevealStartTime;
+    private bool activeManualForceFullText;
+    private bool pausedForManualDialogueAdvance;
     private Transform activeBubbleTarget;
-    private Coroutine cameraBlendRoutine;
-    private Coroutine autoAdvanceRoutine;
+
+    public bool IsWaitingForManualDialogueAdvance => pausedForManualDialogueAdvance;
 
     private void Reset()
     {
@@ -109,67 +95,166 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private void Awake()
     {
         ResolveReferences();
-        EnsureRuntimeUi();
-        HideDialogue();
 
-        if (playerObject != null)
+        if (Application.isPlaying && playerObject != null)
             initialPlayerPosition = playerObject.transform.position;
+    }
+
+    private void OnEnable()
+    {
+        ResolveReferences();
+
+        if (director != null)
+            director.stopped += OnDirectorStopped;
     }
 
     private void Start()
     {
+        if (!Application.isPlaying)
+            return;
+
         ResolveReferences();
 
         if (playerObject != null)
             initialPlayerPosition = playerObject.transform.position;
 
-        if (!startAfterPlayerMoves)
-            StartSequence();
+        if (!startTimelineAfterPlayerMoves)
+            StartTimelineSequence();
     }
 
     private void Update()
     {
-        if (sequenceFinished)
+        if (!Application.isPlaying)
             return;
 
-        if (!sequenceStarted)
-        {
-            if (ShouldStartAfterMovement())
-                StartSequence();
+        HandleDialogueAdvanceInput();
+        UpdateManualDialogueText();
 
+        if (timelineFinished || timelineStartedByTrigger)
             return;
-        }
 
-        if (waitingForAdvance && !isCameraBlending && WasAdvancePressed())
-            Advance();
+        if (ShouldStartAfterMovement())
+            StartTimelineSequence();
     }
 
     private void LateUpdate()
     {
-        if (!sequenceStarted || sequenceFinished)
-            return;
-
-        UpdateBubblePosition();
+        if (showingTimelineDialogue)
+            UpdateBubblePosition();
     }
 
     private void OnDisable()
     {
-        if (sequenceStarted && !sequenceFinished)
-            EndSequence();
+        if (director != null)
+            director.stopped -= OnDirectorStopped;
+
+        HideTimelineDialogue();
+
+        if (Application.isPlaying)
+            EndTimelineSequence();
     }
 
     private void OnDestroy()
     {
-        if (runtimeUiRoot != null)
-            Destroy(runtimeUiRoot);
+        DestroyRuntimeObjects();
+    }
 
-        if (runtimeFontAsset != null)
-            Destroy(runtimeFontAsset);
+    public void ShowTimelineDialogue(
+        Speaker speaker,
+        string fullText,
+        string timelineVisibleText,
+        double clipLocalTime,
+        double clipDuration,
+        bool useCustomOffset,
+        Vector3 customOffset,
+        bool overrideBubbleSize,
+        Vector2 clipBubbleSize,
+        bool typewriterDisabled,
+        float typewriterCharactersPerSecond,
+        float typewriterStartDelay,
+        bool overrideTextLayout,
+        float clipFontSize,
+        Vector2 clipTextOffset,
+        Vector4 clipTextPadding)
+    {
+        ResolveReferences();
+        EnsureRuntimeUi();
+
+        double clipStartTime = ResolveActiveClipStartTime(clipLocalTime);
+        double clipEndTime = ResolveActiveClipEndTime(clipStartTime, clipDuration);
+        bool isNewDialogue = IsNewTimelineDialogue(speaker, fullText, clipStartTime);
+
+        activeSpeaker = speaker;
+        activeUsesCustomOffset = useCustomOffset;
+        activeCustomOffset = customOffset;
+        activeOverridesBubbleSize = overrideBubbleSize;
+        activeBubbleSize = clipBubbleSize;
+        activeOverridesTextLayout = overrideTextLayout;
+        activeFontSize = clipFontSize;
+        activeTextOffset = clipTextOffset;
+        activeTextPadding = clipTextPadding;
+        activeBubbleTarget = ResolveSpeakerTransform(speaker);
+        showingTimelineDialogue = activeBubbleTarget != null;
+        if (isNewDialogue)
+            BeginManualDialogue(fullText, typewriterDisabled, typewriterCharactersPerSecond, typewriterStartDelay, clipStartTime, clipEndTime);
+
+        ApplyUiStyle();
+
+        if (!showingTimelineDialogue)
+        {
+            RestoreDirectorPlaybackSpeed();
+            HideDialogue();
+            return;
+        }
+
+        SetDialogueText(ResolveDisplayText(timelineVisibleText));
+        ShowDialogue();
+        UpdateBubblePosition();
+
+        if (isNewDialogue)
+            PauseDirectorForManualDialogueAdvance();
+    }
+
+    public void HideTimelineDialogue()
+    {
+        RestoreDirectorPlaybackSpeed();
+        showingTimelineDialogue = false;
+        activeBubbleTarget = null;
+        activeFullText = string.Empty;
+        activeClipStartTime = double.NaN;
+        activeClipEndTime = double.NaN;
+        activeManualForceFullText = false;
+        pausedForManualDialogueAdvance = false;
+        HideDialogue();
+    }
+
+    private void HandleDialogueAdvanceInput()
+    {
+        if (!enterCompletesAndAdvancesDialogue || !showingTimelineDialogue || !WasEnterPressedThisFrame())
+            return;
+
+        if (!IsManualDialogueFullyVisible())
+        {
+            activeManualForceFullText = true;
+            SetDialogueText(activeFullText);
+            PauseDirectorForManualDialogueAdvance();
+            return;
+        }
+
+        ResumeTimelineAfterCurrentDialogue();
+    }
+
+    private void UpdateManualDialogueText()
+    {
+        if (!enterCompletesAndAdvancesDialogue || !showingTimelineDialogue || string.IsNullOrEmpty(activeFullText))
+            return;
+
+        SetDialogueText(ResolveManualDialogueText());
     }
 
     private bool ShouldStartAfterMovement()
     {
-        if (!startAfterPlayerMoves)
+        if (!startTimelineAfterPlayerMoves)
             return true;
 
         ResolveReferences();
@@ -180,14 +265,12 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return movedDistance >= moveDistanceToStart;
     }
 
-    private void StartSequence()
+    private void StartTimelineSequence()
     {
-        if (sequenceStarted || steps == null || steps.Length == 0)
+        if (timelineStartedByTrigger)
             return;
 
         ResolveReferences();
-        EnsureRuntimeUi();
-        CacheCameraState();
         LockRoomCameraManager(true);
         LockPlayer(true);
 
@@ -195,175 +278,201 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (idleApplier != null)
             idleApplier.ApplyIdle();
 
-        if (director != null && playDirectorWhenDialogueStarts)
-        {
-            director.time = 0d;
-            director.Play();
-        }
-
         CutsceneNpcActor npcActor = npcObject != null ? npcObject.GetComponent<CutsceneNpcActor>() : null;
         if (npcActor != null && playerObject != null)
             npcActor.LookAt(playerObject.transform);
 
-        sequenceStarted = true;
-        ShowStep(0);
-    }
+        timelineStartedByTrigger = true;
+        timelineFinished = false;
 
-    private void Advance()
-    {
-        StopAutoAdvanceRoutine();
-
-        DialogueStep step = steps[currentStepIndex];
-
-        if (step != null && step.afterAdvanceCameraAction != CameraAction.None)
+        if (director != null && playDirectorWhenTimelineStarts)
         {
-            StartCoroutine(RunAfterAdvanceThenContinue(step));
-            return;
+            director.time = 0d;
+            director.Play();
         }
-
-        ShowStep(currentStepIndex + 1);
     }
 
-    private IEnumerator RunAfterAdvanceThenContinue(DialogueStep step)
+    private void EndTimelineSequence()
     {
-        waitingForAdvance = false;
-        activeBubbleTarget = null;
-
-        if (step.hideBubbleDuringAfterAdvanceCamera)
-            HideDialogue();
-
-        if (step.waitBeforeAfterAdvanceCamera > 0f)
-            yield return new WaitForSeconds(step.waitBeforeAfterAdvanceCamera);
-
-        yield return RunCameraAction(step.afterAdvanceCameraAction, step);
-
-        if (step.waitAfterAdvanceCamera > 0f)
-            yield return new WaitForSeconds(step.waitAfterAdvanceCamera);
-
-        ShowStep(currentStepIndex + 1);
-    }
-
-    private void ShowStep(int index)
-    {
-        if (index >= steps.Length)
-        {
-            EndSequence();
-            return;
-        }
-
-        currentStepIndex = index;
-        DialogueStep step = steps[index];
-        if (step == null)
-        {
-            ShowStep(index + 1);
-            return;
-        }
-
-        StartCoroutine(ShowStepRoutine(step));
-    }
-
-    private IEnumerator ShowStepRoutine(DialogueStep step)
-    {
-        waitingForAdvance = false;
-        activeBubbleTarget = null;
-        HideDialogue();
-
-        if (step.waitBeforeLine > 0f)
-            yield return new WaitForSeconds(step.waitBeforeLine);
-
-        yield return RunCameraAction(step.beforeLineCameraAction, step);
-
-        if (step.waitAfterBeforeLineCamera > 0f)
-            yield return new WaitForSeconds(step.waitAfterBeforeLineCamera);
-
-        activeBubbleTarget = ResolveSpeakerTransform(step.speakerName);
-        SetDialogueText(step.text);
-        ShowDialogue();
-        UpdateBubblePosition();
-        waitingForAdvance = true;
-
-        if (step.autoAdvance)
-            autoAdvanceRoutine = StartCoroutine(AutoAdvanceAfterDelay(step.autoAdvanceDelay));
-    }
-
-    private IEnumerator AutoAdvanceAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (waitingForAdvance && !isCameraBlending)
-            Advance();
-    }
-
-    private void StopAutoAdvanceRoutine()
-    {
-        if (autoAdvanceRoutine == null)
-            return;
-
-        StopCoroutine(autoAdvanceRoutine);
-        autoAdvanceRoutine = null;
-    }
-
-    private IEnumerator RunCameraAction(CameraAction action, DialogueStep step)
-    {
-        if (action == CameraAction.None)
-            yield break;
-
-        Transform target = action == CameraAction.ZoomToSpeaker ? ResolveSpeakerTransform(step.speakerName) : originalCameraFollow;
-        float size = action == CameraAction.ZoomToSpeaker ? step.cameraOrthographicSize : originalCameraOrthographicSize;
-        float duration = action == CameraAction.ZoomToSpeaker ? step.cameraBlendDuration : zoomOutBlendDuration;
-
-        if (cameraBlendRoutine != null)
-            StopCoroutine(cameraBlendRoutine);
-
-        cameraBlendRoutine = StartCoroutine(BlendCamera(target, size, duration));
-        yield return cameraBlendRoutine;
-    }
-
-    private IEnumerator BlendCamera(Transform target, float targetOrthographicSize, float duration)
-    {
-        if (cinemachineCamera == null)
-            yield break;
-
-        isCameraBlending = true;
-
-        if (target != null)
-            cinemachineCamera.Follow = target;
-
-        float startSize = GetCameraOrthographicSize();
-        float elapsed = 0f;
-
-        if (duration <= 0f)
-        {
-            SetCameraOrthographicSize(targetOrthographicSize);
-            isCameraBlending = false;
-            yield break;
-        }
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            t = Mathf.SmoothStep(0f, 1f, t);
-            SetCameraOrthographicSize(Mathf.Lerp(startSize, targetOrthographicSize, t));
-            yield return null;
-        }
-
-        SetCameraOrthographicSize(targetOrthographicSize);
-        isCameraBlending = false;
-    }
-
-    private void EndSequence()
-    {
-        sequenceFinished = true;
-        waitingForAdvance = false;
-        StopAutoAdvanceRoutine();
-        HideDialogue();
-        RestoreCameraState();
+        HideTimelineDialogue();
         LockRoomCameraManager(false);
         LockPlayer(false);
+        timelineFinished = true;
+    }
 
-        if (director != null && stopDirectorWhenDialogueEnds)
+    private void OnDirectorStopped(PlayableDirector stoppedDirector)
+    {
+        if (stoppedDirector != director)
+            return;
+
+        if (Application.isPlaying)
+            EndTimelineSequence();
+        else
+            HideTimelineDialogue();
+    }
+
+    private void BeginManualDialogue(
+        string fullText,
+        bool typewriterDisabled,
+        float typewriterCharactersPerSecond,
+        float typewriterStartDelay,
+        double clipStartTime,
+        double clipEndTime)
+    {
+        activeFullText = fullText ?? string.Empty;
+        activeClipStartTime = clipStartTime;
+        activeClipEndTime = clipEndTime;
+        activeTypewriterDisabled = typewriterDisabled;
+        activeTypewriterCharactersPerSecond = typewriterCharactersPerSecond;
+        activeTypewriterStartDelay = Mathf.Max(0f, typewriterStartDelay);
+        activeManualRevealStartTime = Time.unscaledTime;
+        activeManualForceFullText = typewriterDisabled;
+        pausedForManualDialogueAdvance = false;
+    }
+
+    private string ResolveDisplayText(string timelineVisibleText)
+    {
+        if (Application.isPlaying && enterCompletesAndAdvancesDialogue)
+            return ResolveManualDialogueText();
+
+        return timelineVisibleText ?? activeFullText;
+    }
+
+    private string ResolveManualDialogueText()
+    {
+        if (activeTypewriterDisabled || activeManualForceFullText || string.IsNullOrEmpty(activeFullText))
+            return activeFullText;
+
+        float charactersPerSecond = activeTypewriterCharactersPerSecond > 0f ? activeTypewriterCharactersPerSecond : 28f;
+        float elapsed = Time.unscaledTime - activeManualRevealStartTime - activeTypewriterStartDelay;
+        if (elapsed < 0f)
+            return string.Empty;
+
+        int visibleCharacters = Mathf.CeilToInt(elapsed * charactersPerSecond);
+        if (activeFullText.Length > 0)
+            visibleCharacters = Mathf.Max(1, visibleCharacters);
+
+        visibleCharacters = Mathf.Clamp(visibleCharacters, 0, activeFullText.Length);
+        return visibleCharacters >= activeFullText.Length ? activeFullText : activeFullText.Substring(0, visibleCharacters);
+    }
+
+    private bool IsManualDialogueFullyVisible()
+    {
+        return ResolveManualDialogueText().Length >= activeFullText.Length;
+    }
+
+    private bool IsNewTimelineDialogue(Speaker speaker, string fullText, double clipStartTime)
+    {
+        if (!showingTimelineDialogue)
+            return true;
+
+        if (activeSpeaker != speaker || activeFullText != (fullText ?? string.Empty))
+            return true;
+
+        if (double.IsNaN(activeClipStartTime) || double.IsNaN(clipStartTime))
+            return false;
+
+        return Mathf.Abs((float)(activeClipStartTime - clipStartTime)) > 0.001f;
+    }
+
+    private double ResolveActiveClipStartTime(double clipLocalTime)
+    {
+        if (director == null)
+            return double.NaN;
+
+        if (double.IsNaN(clipLocalTime) || double.IsInfinity(clipLocalTime))
+            return director.time;
+
+        return director.time - clipLocalTime;
+    }
+
+    private static double ResolveActiveClipEndTime(double clipStartTime, double clipDuration)
+    {
+        if (double.IsNaN(clipStartTime) || double.IsInfinity(clipStartTime))
+            return double.NaN;
+
+        if (double.IsNaN(clipDuration) || double.IsInfinity(clipDuration) || clipDuration < 0d)
+            return double.NaN;
+
+        return clipStartTime + clipDuration;
+    }
+
+    private void PauseDirectorForManualDialogueAdvance()
+    {
+        if (!Application.isPlaying || !enterCompletesAndAdvancesDialogue || pausedForManualDialogueAdvance || director == null)
+            return;
+
+        SetDirectorPlaybackSpeed(0d);
+        pausedForManualDialogueAdvance = true;
+    }
+
+    private void RestoreDirectorPlaybackSpeed()
+    {
+        if (!pausedForManualDialogueAdvance || director == null)
+            return;
+
+        SetDirectorPlaybackSpeed(1d);
+        pausedForManualDialogueAdvance = false;
+    }
+
+    private void SetDirectorPlaybackSpeed(double speed)
+    {
+        PlayableGraph graph = director.playableGraph;
+        if (!graph.IsValid() || graph.GetRootPlayableCount() == 0)
+            return;
+
+        graph.GetRootPlayable(0).SetSpeed(speed);
+    }
+
+    private void ResumeTimelineAfterCurrentDialogue()
+    {
+        if (director == null)
+            return;
+
+        double resumeTime = ResolveResumeTimeAfterActiveDialogue();
+        if (double.IsNaN(resumeTime))
+        {
+            HideTimelineDialogue();
             director.Stop();
+            return;
+        }
+
+        activeManualForceFullText = false;
+        HideTimelineDialogue();
+
+        if (ShouldStopTimelineAt(resumeTime))
+        {
+            director.Stop();
+            return;
+        }
+
+        director.time = resumeTime;
+        director.Play();
+        director.Evaluate();
+    }
+
+    private double ResolveResumeTimeAfterActiveDialogue()
+    {
+        if (director == null)
+            return double.NaN;
+
+        double resumeTime = activeClipEndTime;
+        if (double.IsNaN(resumeTime) || double.IsInfinity(resumeTime))
+            resumeTime = director.time;
+
+        return resumeTime + 0.001d;
+    }
+
+    private bool ShouldStopTimelineAt(double time)
+    {
+        if (director == null)
+            return true;
+
+        double duration = director.duration;
+        if (double.IsNaN(duration) || double.IsInfinity(duration) || duration <= 0d)
+            return false;
+
+        return time >= duration - 0.0005d;
     }
 
     private void ResolveReferences()
@@ -432,30 +541,30 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return null;
     }
 
-    private Transform ResolveSpeakerTransform(string speakerName)
+    private Transform ResolveSpeakerTransform(Speaker speaker)
     {
-        if (IsNpcSpeaker(speakerName))
+        if (speaker == Speaker.NPC)
             return npcObject != null ? npcObject.transform : null;
 
         return playerObject != null ? playerObject.transform : null;
     }
 
-    private Vector3 ResolveSpeakerOffset(string speakerName)
+    private Vector3 ResolveSpeakerOffset()
     {
-        return IsNpcSpeaker(speakerName) ? npcBubbleOffset : playerBubbleOffset;
-    }
+        if (activeUsesCustomOffset)
+            return activeCustomOffset;
 
-    private static bool IsNpcSpeaker(string speakerName)
-    {
-        return speakerName == "N" || speakerName == "NPC" || speakerName == "Npc";
+        return activeSpeaker == Speaker.NPC ? npcBubbleOffset : playerBubbleOffset;
     }
 
     private void EnsureRuntimeUi()
     {
-        if (runtimeCanvas != null && bubbleRect != null && dialogueText != null)
+        if (runtimeCanvas != null && dialogueText != null && bubbleImage != null)
             return;
 
         runtimeUiRoot = new GameObject("CutsceneDialogueRuntimeCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        runtimeUiRoot.hideFlags = HideFlags.HideAndDontSave;
+
         runtimeCanvas = runtimeUiRoot.GetComponent<Canvas>();
         runtimeCanvas.renderMode = RenderMode.WorldSpace;
         runtimeCanvas.overrideSorting = true;
@@ -467,12 +576,13 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         scaler.referenceResolution = new Vector2(1920f, 1080f);
         scaler.matchWidthOrHeight = 0.5f;
 
-        RectTransform canvasRect = runtimeUiRoot.GetComponent<RectTransform>();
-        canvasRect.sizeDelta = bubbleSize;
+        runtimeCanvasRect = runtimeUiRoot.GetComponent<RectTransform>();
 
         GameObject bubbleObject = new GameObject("SpeechBubble", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        bubbleObject.hideFlags = HideFlags.HideAndDontSave;
         bubbleObject.transform.SetParent(runtimeUiRoot.transform, false);
-        bubbleRect = bubbleObject.GetComponent<RectTransform>();
+
+        RectTransform bubbleRect = bubbleObject.GetComponent<RectTransform>();
         bubbleRect.anchorMin = Vector2.zero;
         bubbleRect.anchorMax = Vector2.one;
         bubbleRect.pivot = new Vector2(0.5f, 0.5f);
@@ -480,21 +590,17 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         bubbleRect.offsetMax = Vector2.zero;
 
         bubbleImage = bubbleObject.GetComponent<Image>();
-        bubbleImage.sprite = bubbleSprite;
-        bubbleImage.preserveAspect = true;
         bubbleImage.raycastTarget = false;
 
         GameObject textObject = new GameObject("DialogueText", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textObject.hideFlags = HideFlags.HideAndDontSave;
         textObject.transform.SetParent(bubbleObject.transform, false);
-        RectTransform textRect = textObject.GetComponent<RectTransform>();
+
+        textRect = textObject.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = new Vector2(textPadding.x, textPadding.w);
-        textRect.offsetMax = new Vector2(-textPadding.z, -textPadding.y);
 
         dialogueText = textObject.GetComponent<TextMeshProUGUI>();
-        dialogueText.font = ResolveDialogueFont();
-        dialogueText.fontSize = fontSize;
         dialogueText.color = Color.black;
         dialogueText.alignment = TextAlignmentOptions.Center;
         dialogueText.enableWordWrapping = true;
@@ -502,13 +608,65 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         dialogueText.text = string.Empty;
     }
 
+    private void ApplyUiStyle()
+    {
+        if (runtimeCanvasRect != null)
+            runtimeCanvasRect.sizeDelta = ResolveBubbleSize();
+
+        if (bubbleImage != null)
+        {
+            bubbleImage.sprite = bubbleSprite;
+            bubbleImage.preserveAspect = false;
+        }
+
+        if (textRect != null)
+        {
+            Vector4 resolvedPadding = ResolveTextPadding();
+            textRect.offsetMin = new Vector2(resolvedPadding.x, resolvedPadding.w);
+            textRect.offsetMax = new Vector2(-resolvedPadding.z, -resolvedPadding.y);
+            Vector2 resolvedOffset = ResolveTextOffset();
+            textRect.localPosition = new Vector3(resolvedOffset.x, resolvedOffset.y, 0f);
+        }
+
+        if (dialogueText != null)
+        {
+            dialogueText.font = ResolveDialogueFont();
+            dialogueText.fontSize = ResolveFontSize();
+        }
+    }
+
+    private Vector4 ResolveTextPadding()
+    {
+        return activeOverridesTextLayout ? activeTextPadding : textPadding;
+    }
+
+    private Vector2 ResolveBubbleSize()
+    {
+        if (!activeOverridesBubbleSize)
+            return bubbleSize;
+
+        float width = activeBubbleSize.x > 0f ? activeBubbleSize.x : bubbleSize.x;
+        float height = activeBubbleSize.y > 0f ? activeBubbleSize.y : bubbleSize.y;
+        return new Vector2(width, height);
+    }
+
+    private float ResolveFontSize()
+    {
+        if (!activeOverridesTextLayout)
+            return fontSize;
+
+        return activeFontSize > 0f ? activeFontSize : fontSize;
+    }
+
+    private Vector2 ResolveTextOffset()
+    {
+        return activeOverridesTextLayout ? activeTextOffset : Vector2.zero;
+    }
+
     private void ShowDialogue()
     {
         if (runtimeUiRoot != null)
             runtimeUiRoot.SetActive(true);
-
-        if (bubbleRect != null)
-            bubbleRect.gameObject.SetActive(true);
     }
 
     private void HideDialogue()
@@ -533,46 +691,41 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (runtimeUiRoot == null || activeBubbleTarget == null)
             return;
 
-        DialogueStep step = currentStepIndex >= 0 && currentStepIndex < steps.Length ? steps[currentStepIndex] : null;
-        Vector3 offset = step != null ? ResolveSpeakerOffset(step.speakerName) : playerBubbleOffset;
         Transform bubbleTransform = runtimeUiRoot.transform;
         if (bubbleTransform.parent != activeBubbleTarget)
             bubbleTransform.SetParent(activeBubbleTarget, false);
 
-        bubbleTransform.localPosition = offset;
+        bubbleTransform.localPosition = ResolveSpeakerOffset();
         bubbleTransform.localRotation = Quaternion.identity;
-        bubbleTransform.localScale = worldCanvasScale;
+        bubbleTransform.localScale = ResolveBubbleLocalScale();
 
         if (runtimeCanvas != null && runtimeCanvas.worldCamera == null)
             runtimeCanvas.worldCamera = Camera.main;
     }
 
-    private void CacheCameraState()
+    private Vector3 ResolveBubbleLocalScale()
     {
-        if (cinemachineCamera == null || hasOriginalCameraState)
-            return;
+        if (activeBubbleTarget == null)
+            return worldCanvasScale;
 
-        originalCameraFollow = cinemachineCamera.Follow;
-        originalCameraOrthographicSize = GetCameraOrthographicSize();
-        hasOriginalCameraState = true;
+        Vector3 parentScale = activeBubbleTarget.lossyScale;
+        return new Vector3(
+            ResolveScaleAxis(worldCanvasScale.x, parentScale.x),
+            ResolveScaleAxis(worldCanvasScale.y, parentScale.y),
+            ResolveScaleAxis(worldCanvasScale.z, parentScale.z));
     }
 
-    private void RestoreCameraState()
+    private static float ResolveScaleAxis(float targetWorldScale, float parentWorldScale)
     {
-        if (cinemachineCamera == null || !hasOriginalCameraState)
-            return;
+        if (Mathf.Approximately(parentWorldScale, 0f))
+            return targetWorldScale;
 
-        if (cameraBlendRoutine != null)
-            StopCoroutine(cameraBlendRoutine);
-
-        cinemachineCamera.Follow = originalCameraFollow;
-        SetCameraOrthographicSize(originalCameraOrthographicSize);
-        isCameraBlending = false;
+        return targetWorldScale / parentWorldScale;
     }
 
     private void LockRoomCameraManager(bool locked)
     {
-        if (roomCameraManager == null)
+        if (!disableRoomCameraManagerWhileTimelineRuns || roomCameraManager == null)
             return;
 
         if (locked)
@@ -593,12 +746,23 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         disabledRoomCameraManager = false;
     }
 
+    private void LockPlayer(bool locked)
+    {
+        if (!lockPlayerWhileTimelineRuns || player == null)
+            return;
+
+        player.SetMoveInputOverride(locked, Vector2.zero);
+    }
+
     private TMP_FontAsset ResolveDialogueFont()
     {
         if (preferDynamicFontSource && dynamicFontSource != null)
         {
             if (runtimeFontAsset == null)
+            {
                 runtimeFontAsset = TMP_FontAsset.CreateFontAsset(dynamicFontSource);
+                runtimeFontAsset.hideFlags = HideFlags.HideAndDontSave;
+            }
 
             return runtimeFontAsset;
         }
@@ -606,29 +770,41 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return fontAsset;
     }
 
-    private float GetCameraOrthographicSize()
+    private void DestroyRuntimeObjects()
     {
-        var lens = cinemachineCamera.Lens;
-        return lens.OrthographicSize;
+        if (runtimeUiRoot != null)
+        {
+            if (Application.isPlaying)
+                Destroy(runtimeUiRoot);
+            else
+                DestroyImmediate(runtimeUiRoot);
+        }
+
+        if (runtimeFontAsset != null)
+        {
+            if (Application.isPlaying)
+                Destroy(runtimeFontAsset);
+            else
+                DestroyImmediate(runtimeFontAsset);
+        }
+
+        runtimeUiRoot = null;
+        runtimeFontAsset = null;
     }
 
-    private void SetCameraOrthographicSize(float size)
+    private static bool WasEnterPressedThisFrame()
     {
-        var lens = cinemachineCamera.Lens;
-        lens.OrthographicSize = Mathf.Max(0.1f, size);
-        cinemachineCamera.Lens = lens;
-    }
+        bool pressed = false;
 
-    private bool WasAdvancePressed()
-    {
-        return Keyboard.current != null && Keyboard.current[advanceKeyboardKey].wasPressedThisFrame;
-    }
+#if ENABLE_INPUT_SYSTEM
+        Keyboard keyboard = Keyboard.current;
+        pressed |= keyboard != null && (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame);
+#endif
 
-    private void LockPlayer(bool locked)
-    {
-        if (!lockPlayerWhileDialogueRuns || player == null)
-            return;
+#if ENABLE_LEGACY_INPUT_MANAGER
+        pressed |= Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+#endif
 
-        player.SetMoveInputOverride(locked, Vector2.zero);
+        return pressed;
     }
 }

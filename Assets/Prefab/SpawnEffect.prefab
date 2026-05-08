@@ -126,3 +126,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9a4d4480bb209543be9af40f3217c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestroyAfterAnimation
+  destroyOnEnable: 1
+  fallbackLifetime: 0.5
