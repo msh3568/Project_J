@@ -305,10 +305,12 @@ public static class CutsceneDroneRevealAutoSetup
         }
 
         TimelineClip animationTimelineClip = FindAnimationClip(track, animationClip);
+        bool createdAnimationClip = false;
         if (animationTimelineClip == null)
         {
             animationTimelineClip = track.CreateClip<AnimationPlayableAsset>();
             changed |= ConfigureClipTiming(animationTimelineClip, clipDisplayName, RevealStart, RevealDuration);
+            createdAnimationClip = true;
             changed = true;
         }
 
@@ -343,6 +345,27 @@ public static class CutsceneDroneRevealAutoSetup
             {
                 playableAsset.applyFootIK = false;
                 changed = true;
+            }
+
+            if (createdAnimationClip)
+            {
+                if (playableAsset.position != Vector3.zero)
+                {
+                    playableAsset.position = Vector3.zero;
+                    changed = true;
+                }
+
+                if (playableAsset.eulerAngles != Vector3.zero)
+                {
+                    playableAsset.eulerAngles = Vector3.zero;
+                    changed = true;
+                }
+
+                if (playableAsset.removeStartOffset)
+                {
+                    playableAsset.removeStartOffset = false;
+                    changed = true;
+                }
             }
 
             EditorUtility.SetDirty(playableAsset);
@@ -485,18 +508,16 @@ public static class CutsceneDroneRevealAutoSetup
         if (rectTransform != null)
         {
             Vector2 start = rectTransform.anchoredPosition;
-            Vector2 end = start + new Vector2(1.2f, 0.35f);
-            SetCurve(clip, typeof(RectTransform), "m_AnchoredPosition.x", start.x, end.x, duration);
-            SetCurve(clip, typeof(RectTransform), "m_AnchoredPosition.y", start.y, end.y, duration);
+            SetCurve(clip, typeof(RectTransform), "m_AnchoredPosition.x", start.x, start.x, duration);
+            SetCurve(clip, typeof(RectTransform), "m_AnchoredPosition.y", start.y, start.y, duration);
             SetCurve(clip, typeof(Transform), "m_LocalPosition.z", rectTransform.localPosition.z, rectTransform.localPosition.z, duration);
         }
         else
         {
             Vector3 start = droneObject.transform.localPosition;
-            Vector3 end = start + new Vector3(1.2f, 0.35f, 0f);
-            SetCurve(clip, typeof(Transform), "m_LocalPosition.x", start.x, end.x, duration);
-            SetCurve(clip, typeof(Transform), "m_LocalPosition.y", start.y, end.y, duration);
-            SetCurve(clip, typeof(Transform), "m_LocalPosition.z", start.z, end.z, duration);
+            SetCurve(clip, typeof(Transform), "m_LocalPosition.x", start.x, start.x, duration);
+            SetCurve(clip, typeof(Transform), "m_LocalPosition.y", start.y, start.y, duration);
+            SetCurve(clip, typeof(Transform), "m_LocalPosition.z", start.z, start.z, duration);
         }
 
         clip.EnsureQuaternionContinuity();

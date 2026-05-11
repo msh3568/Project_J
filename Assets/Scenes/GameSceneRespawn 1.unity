@@ -16422,7 +16422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalRotation.x
@@ -16430,7 +16430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalRotation.z
@@ -16442,7 +16442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -16458,7 +16458,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: d52e410a23dc9df41869ef0eeaec30ec, type: 2}
     - target: {fileID: 21200000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_FlipX
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 21200000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
       propertyPath: m_Size.x
@@ -59109,6 +59109,14 @@ MonoBehaviour:
   npcObjectName: NPC_CutsceneActor
   playerBubbleOffset: {x: 0, y: 2.4, z: 0}
   npcBubbleOffset: {x: 0, y: 2.2, z: 0}
+  forceConversationFacing: 1
+  keepConversationFacingWhileTimelineRuns: 1
+  playerFacesRight: 1
+  npcLooksAtPlayer: 1
+  npcFacesRight: 0
+  invertNpcFacing: 1
+  overrideNpcSpriteFlipX: 1
+  npcSpriteFlipX: 0
   cinemachineCamera: {fileID: 751552179}
   bubbleSprite: {fileID: -9019347588574621644, guid: 578139d632966c641ac9bfdacec80ac0, type: 3}
   fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
@@ -59118,6 +59126,11 @@ MonoBehaviour:
   textPadding: {x: 86, y: 58, z: 86, w: 74}
   fontSize: 40
   worldCanvasScale: {x: 0.01, y: 0.01, z: 0.01}
+  keepBubbleReadableWhenActorFlipped: 1
+  playerBubbleFlipX: 0
+  playerTextFlipX: 0
+  npcBubbleFlipX: 1
+  npcTextFlipX: 0
 --- !u!1001 &1613994925
 PrefabInstance:
   m_ObjectHideFlags: 0

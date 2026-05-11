@@ -36,6 +36,23 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     [SerializeField] private Vector3 playerBubbleOffset = new Vector3(0f, 2.4f, 0f);
     [SerializeField] private Vector3 npcBubbleOffset = new Vector3(0f, 2.2f, 0f);
 
+    [Header("Facing")]
+    [Tooltip("Forces the player/NPC facing settings below when this cutscene starts.")]
+    [SerializeField] private bool forceConversationFacing = true;
+    [SerializeField] private bool keepConversationFacingWhileTimelineRuns = true;
+    [Tooltip("Forced player direction during this cutscene.")]
+    [SerializeField] private bool playerFacesRight = true;
+    [Tooltip("When enabled, NPC direction is calculated from the player position. Turn this off to use Npc Faces Right manually.")]
+    [SerializeField] private bool npcLooksAtPlayer = true;
+    [Tooltip("Manual NPC direction used when Npc Looks At Player is off.")]
+    [SerializeField] private bool npcFacesRight;
+    [Tooltip("Inverts the NPC Transform-facing result if the authored sprite faces the opposite way.")]
+    [SerializeField] private bool invertNpcFacing;
+    [Tooltip("Overrides the NPC SpriteRenderer Flip X value from this cutscene.")]
+    [SerializeField] private bool overrideNpcSpriteFlipX = true;
+    [Tooltip("NPC SpriteRenderer Flip X value applied when Override Npc Sprite Flip X is enabled.")]
+    [SerializeField] private bool npcSpriteFlipX;
+
     [Header("Camera")]
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
@@ -48,6 +65,11 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     [SerializeField] private Vector4 textPadding = new Vector4(86f, 58f, 86f, 74f);
     [SerializeField, Min(1f)] private float fontSize = 40f;
     [SerializeField] private Vector3 worldCanvasScale = new Vector3(0.01f, 0.01f, 0.01f);
+    [SerializeField] private bool keepBubbleReadableWhenActorFlipped = true;
+    [SerializeField] private bool playerBubbleFlipX;
+    [SerializeField] private bool playerTextFlipX;
+    [SerializeField] private bool npcBubbleFlipX;
+    [SerializeField] private bool npcTextFlipX;
 
     private Canvas runtimeCanvas;
     private RectTransform runtimeCanvasRect;
@@ -58,6 +80,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private TMP_FontAsset runtimeFontAsset;
 
     private Player player;
+    private CutsceneNpcActor npcActor;
     private RoomCameraManager roomCameraManager;
     private bool roomCameraManagerWasEnabled;
     private bool disabledRoomCameraManager;
@@ -84,6 +107,19 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private bool activeManualForceFullText;
     private bool pausedForManualDialogueAdvance;
     private Transform activeBubbleTarget;
+    private bool playerLockApplied;
+
+#if ENABLE_INPUT_SYSTEM
+    private bool playerGameplayActionsLocked;
+    private bool movementActionWasEnabled;
+    private bool jumpActionWasEnabled;
+    private bool dashActionWasEnabled;
+    private bool attackActionWasEnabled;
+    private bool baldoActionWasEnabled;
+    private bool paryActionWasEnabled;
+    private bool counterAttackActionWasEnabled;
+    private bool checkpointActionWasEnabled;
+#endif
 
     public bool IsWaitingForManualDialogueAdvance => pausedForManualDialogueAdvance;
 
@@ -105,7 +141,10 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         ResolveReferences();
 
         if (director != null)
+        {
+            director.played += OnDirectorPlayed;
             director.stopped += OnDirectorStopped;
+        }
     }
 
     private void Start()
@@ -141,12 +180,18 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     {
         if (showingTimelineDialogue)
             UpdateBubblePosition();
+
+        if (ShouldKeepConversationFacing())
+            ApplyConversationFacing();
     }
 
     private void OnDisable()
     {
         if (director != null)
+        {
+            director.played -= OnDirectorPlayed;
             director.stopped -= OnDirectorStopped;
+        }
 
         HideTimelineDialogue();
 
@@ -278,9 +323,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (idleApplier != null)
             idleApplier.ApplyIdle();
 
-        CutsceneNpcActor npcActor = npcObject != null ? npcObject.GetComponent<CutsceneNpcActor>() : null;
-        if (npcActor != null && playerObject != null)
-            npcActor.LookAt(playerObject.transform);
+        ApplyConversationFacing();
 
         timelineStartedByTrigger = true;
         timelineFinished = false;
@@ -298,6 +341,14 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         LockRoomCameraManager(false);
         LockPlayer(false);
         timelineFinished = true;
+    }
+
+    private void OnDirectorPlayed(PlayableDirector playedDirector)
+    {
+        if (!Application.isPlaying || playedDirector != director)
+            return;
+
+        ApplyConversationFacing();
     }
 
     private void OnDirectorStopped(PlayableDirector stoppedDirector)
@@ -489,6 +540,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (player == null && playerObject != null)
             player = playerObject.GetComponent<Player>();
 
+        if (npcObject != null && (npcActor == null || npcActor.gameObject != npcObject))
+            npcActor = npcObject.GetComponent<CutsceneNpcActor>();
+
         if (cinemachineCamera == null)
         {
             roomCameraManager = FindFirstObjectByType<RoomCameraManager>();
@@ -505,6 +559,105 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         if (cinemachineCamera == null)
             cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
+    }
+
+    private void ApplyConversationFacing()
+    {
+        if (!forceConversationFacing)
+            return;
+
+        ResolveReferences();
+
+        int desiredPlayerDirection = playerFacesRight ? 1 : -1;
+        if (player != null)
+        {
+            if (player.facingDir != desiredPlayerDirection || !IsTransformFacing(player.transform, playerFacesRight))
+                player.ForceFacingDirection(desiredPlayerDirection);
+        }
+        else if (playerObject != null)
+        {
+            ForceTransformFacing(playerObject.transform, playerFacesRight);
+        }
+
+        bool resolvedNpcFacesRight = ResolveNpcFacesRight();
+        ApplyNpcSpriteFlip();
+        if (npcActor != null)
+        {
+            npcActor.SetFacing(resolvedNpcFacesRight);
+            return;
+        }
+
+        if (npcObject != null)
+            ForceTransformFacing(npcObject.transform, resolvedNpcFacesRight);
+    }
+
+    private bool ResolveNpcFacesRight()
+    {
+        bool facesRight = npcFacesRight;
+        if (npcLooksAtPlayer)
+        {
+            Transform playerTransform = playerObject != null ? playerObject.transform : player != null ? player.transform : null;
+            Transform npcTransform = npcActor != null ? npcActor.transform : npcObject != null ? npcObject.transform : null;
+            if (playerTransform != null && npcTransform != null)
+            {
+                float deltaX = playerTransform.position.x - npcTransform.position.x;
+                if (!Mathf.Approximately(deltaX, 0f))
+                    facesRight = deltaX > 0f;
+            }
+        }
+
+        return invertNpcFacing ? !facesRight : facesRight;
+    }
+
+    private void ApplyNpcSpriteFlip()
+    {
+        if (!overrideNpcSpriteFlipX)
+            return;
+
+        if (npcActor != null)
+        {
+            npcActor.SetSpriteFlipX(npcSpriteFlipX);
+            return;
+        }
+
+        if (npcObject == null)
+            return;
+
+        SpriteRenderer[] spriteRenderers = npcObject.GetComponentsInChildren<SpriteRenderer>(true);
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+                spriteRenderers[i].flipX = npcSpriteFlipX;
+        }
+    }
+
+    private bool ShouldKeepConversationFacing()
+    {
+        if (!Application.isPlaying || !forceConversationFacing || !keepConversationFacingWhileTimelineRuns)
+            return false;
+
+        if (showingTimelineDialogue)
+            return true;
+
+        return director != null && director.state == PlayState.Playing && timelineStartedByTrigger && !timelineFinished;
+    }
+
+    private static void ForceTransformFacing(Transform target, bool right)
+    {
+        if (target == null)
+            return;
+
+        Vector3 scale = target.localScale;
+        scale.x = Mathf.Abs(scale.x) * (right ? 1f : -1f);
+        target.localScale = scale;
+    }
+
+    private static bool IsTransformFacing(Transform target, bool right)
+    {
+        if (target == null || Mathf.Approximately(target.localScale.x, 0f))
+            return true;
+
+        return (target.localScale.x > 0f) == right;
     }
 
     private GameObject FindSceneObject(string objectName)
@@ -633,6 +786,8 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             dialogueText.font = ResolveDialogueFont();
             dialogueText.fontSize = ResolveFontSize();
         }
+
+        ApplyBubbleFlipSettings();
     }
 
     private Vector4 ResolveTextPadding()
@@ -692,15 +847,57 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return;
 
         Transform bubbleTransform = runtimeUiRoot.transform;
-        if (bubbleTransform.parent != activeBubbleTarget)
-            bubbleTransform.SetParent(activeBubbleTarget, false);
+        Vector3 speakerOffset = ResolveSpeakerOffset();
+        if (keepBubbleReadableWhenActorFlipped)
+        {
+            if (bubbleTransform.parent != null)
+                bubbleTransform.SetParent(null, true);
 
-        bubbleTransform.localPosition = ResolveSpeakerOffset();
-        bubbleTransform.localRotation = Quaternion.identity;
-        bubbleTransform.localScale = ResolveBubbleLocalScale();
+            bubbleTransform.position = activeBubbleTarget.TransformPoint(speakerOffset);
+            bubbleTransform.rotation = Quaternion.identity;
+            bubbleTransform.localScale = worldCanvasScale;
+        }
+        else
+        {
+            if (bubbleTransform.parent != activeBubbleTarget)
+                bubbleTransform.SetParent(activeBubbleTarget, false);
+
+            bubbleTransform.localPosition = speakerOffset;
+            bubbleTransform.localRotation = Quaternion.identity;
+            bubbleTransform.localScale = ResolveBubbleLocalScale();
+        }
+
+        ApplyBubbleFlipSettings();
 
         if (runtimeCanvas != null && runtimeCanvas.worldCamera == null)
             runtimeCanvas.worldCamera = Camera.main;
+    }
+
+    private void ApplyBubbleFlipSettings()
+    {
+        bool bubbleFlipX = ResolveSpeakerBubbleFlipX();
+        bool textFlipX = ResolveSpeakerTextFlipX();
+        float bubbleScaleX = bubbleFlipX ? -1f : 1f;
+        float textScaleX = (textFlipX ? -1f : 1f) * bubbleScaleX;
+
+        if (bubbleImage != null)
+        {
+            RectTransform bubbleRect = bubbleImage.rectTransform;
+            bubbleRect.localScale = new Vector3(bubbleScaleX, 1f, 1f);
+        }
+
+        if (textRect != null)
+            textRect.localScale = new Vector3(textScaleX, 1f, 1f);
+    }
+
+    private bool ResolveSpeakerBubbleFlipX()
+    {
+        return activeSpeaker == Speaker.NPC ? npcBubbleFlipX : playerBubbleFlipX;
+    }
+
+    private bool ResolveSpeakerTextFlipX()
+    {
+        return activeSpeaker == Speaker.NPC ? npcTextFlipX : playerTextFlipX;
     }
 
     private Vector3 ResolveBubbleLocalScale()
@@ -709,6 +906,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return worldCanvasScale;
 
         Vector3 parentScale = activeBubbleTarget.lossyScale;
+        if (!keepBubbleReadableWhenActorFlipped)
+            parentScale = new Vector3(Mathf.Abs(parentScale.x), Mathf.Abs(parentScale.y), Mathf.Abs(parentScale.z));
+
         return new Vector3(
             ResolveScaleAxis(worldCanvasScale.x, parentScale.x),
             ResolveScaleAxis(worldCanvasScale.y, parentScale.y),
@@ -748,11 +948,97 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
     private void LockPlayer(bool locked)
     {
-        if (!lockPlayerWhileTimelineRuns || player == null)
+        if (player == null || (!lockPlayerWhileTimelineRuns && locked))
             return;
 
-        player.SetMoveInputOverride(locked, Vector2.zero);
+        if (locked)
+        {
+            if (playerLockApplied)
+                return;
+
+            playerLockApplied = true;
+            player.SetMoveInputOverride(true, Vector2.zero);
+            LockPlayerGameplayActions(true);
+            player.SetVelocity(0f, 0f);
+            return;
+        }
+
+        if (!playerLockApplied)
+            return;
+
+        LockPlayerGameplayActions(false);
+        player.SetMoveInputOverride(false, Vector2.zero);
+        playerLockApplied = false;
     }
+
+    private void LockPlayerGameplayActions(bool locked)
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (player == null || player.input == null)
+            return;
+
+        PlayerInputSet.PlayerActions actions = player.input.Player;
+        if (locked)
+        {
+            if (playerGameplayActionsLocked)
+                return;
+
+            movementActionWasEnabled = actions.Movement.enabled;
+            jumpActionWasEnabled = actions.Jump.enabled;
+            dashActionWasEnabled = actions.Dash.enabled;
+            attackActionWasEnabled = actions.Attack.enabled;
+            baldoActionWasEnabled = actions.Baldo.enabled;
+            paryActionWasEnabled = actions.Pary.enabled;
+            counterAttackActionWasEnabled = actions.CounterAttack.enabled;
+            checkpointActionWasEnabled = actions.Checkpoint.enabled;
+
+            DisableAction(actions.Movement);
+            DisableAction(actions.Jump);
+            DisableAction(actions.Dash);
+            DisableAction(actions.Attack);
+            DisableAction(actions.Baldo);
+            DisableAction(actions.Pary);
+            DisableAction(actions.CounterAttack);
+            DisableAction(actions.Checkpoint);
+
+            playerGameplayActionsLocked = true;
+            return;
+        }
+
+        if (!playerGameplayActionsLocked)
+            return;
+
+        RestoreAction(actions.Movement, movementActionWasEnabled);
+        RestoreAction(actions.Jump, jumpActionWasEnabled);
+        RestoreAction(actions.Dash, dashActionWasEnabled);
+        RestoreAction(actions.Attack, attackActionWasEnabled);
+        RestoreAction(actions.Baldo, baldoActionWasEnabled);
+        RestoreAction(actions.Pary, paryActionWasEnabled);
+        RestoreAction(actions.CounterAttack, counterAttackActionWasEnabled);
+        RestoreAction(actions.Checkpoint, checkpointActionWasEnabled);
+
+        playerGameplayActionsLocked = false;
+#endif
+    }
+
+#if ENABLE_INPUT_SYSTEM
+    private static void DisableAction(InputAction action)
+    {
+        if (action != null && action.enabled)
+            action.Disable();
+    }
+
+    private static void RestoreAction(InputAction action, bool wasEnabled)
+    {
+        if (action == null)
+            return;
+
+        if (wasEnabled && !action.enabled)
+            action.Enable();
+        else if (!wasEnabled && action.enabled)
+            action.Disable();
+    }
+#endif
 
     private TMP_FontAsset ResolveDialogueFont()
     {

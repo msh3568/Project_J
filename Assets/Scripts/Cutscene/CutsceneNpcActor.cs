@@ -55,6 +55,20 @@ public class CutsceneNpcActor : MonoBehaviour
         target.localScale = scale;
     }
 
+    public void SetSpriteFlipX(bool flipX)
+    {
+        CacheMissingReferences();
+
+        if (spriteRenderers == null)
+            return;
+
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+                spriteRenderers[i].flipX = flipX;
+        }
+    }
+
     public void LookAt(Transform target)
     {
         if (target == null)
