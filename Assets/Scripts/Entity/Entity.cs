@@ -44,12 +44,28 @@ public class Entity : MonoBehaviour
 
     protected virtual void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
+        anim = ResolveAnimator();
         rb = GetComponent<Rigidbody2D>();
         enemyRef = GetComponent<Enemy>(); // Initialize enemyRef
 
         stateMachine = new StateMachine();
         
+    }
+
+    private Animator ResolveAnimator()
+    {
+        Animator[] animators = GetComponentsInChildren<Animator>();
+        if (animators == null || animators.Length == 0)
+            return null;
+
+        for (int i = 0; i < animators.Length; i++)
+        {
+            Animator candidate = animators[i];
+            if (candidate != null && candidate.runtimeAnimatorController != null)
+                return candidate;
+        }
+
+        return animators[0];
     }
 
     

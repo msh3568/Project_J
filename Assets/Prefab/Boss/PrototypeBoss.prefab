@@ -49,6 +49,7 @@ MonoBehaviour:
   playerTag: Player
   leftArmOnlyTargetsLeftSide: 1
   enableBossGrappleTargets: 1
+  resetOnCheckpointRespawn: 1
   body: {fileID: 0}
   leftArm: {fileID: 0}
   rightArm: {fileID: 0}
@@ -62,6 +63,165 @@ MonoBehaviour:
   windupArmColor: {r: 1, g: 0.62, b: 0.15, a: 1}
   slamArmColor: {r: 1, g: 0.15, b: 0.08, a: 1}
   sortingOrder: 30
+  hidePrototypeBlocksWhenArtAssigned: 1
+  bossArtScale: 0.3
+  bodyArtSourceAnchor: {x: 750, y: 750}
+  leftArmArtSourceAnchor: {x: 350, y: 766.6667}
+  rightArmArtSourceAnchor: {x: 1150, y: 766.6667}
+  bodyArtParts:
+  - name: Body
+    sprite: {fileID: 418123330050389947, guid: 72dd990b01cfdf2488b6abf746741cf5, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 0
+  - name: Head
+    sprite: {fileID: -9215679872552952564, guid: f77f4b2cea2b91f48bee8b5085fbc510, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 2
+  leftArmArtParts:
+  - name: LeftShoulder
+    sprite: {fileID: -7077935519191539529, guid: a10508b3e4f7c8a4d907784a90801465, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 0
+  - name: LeftArm1
+    sprite: {fileID: 4687318061194556069, guid: 57c0d6dde5a66e04f8c47ff63e5955cf, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 1
+  - name: LeftArm2
+    sprite: {fileID: 415019139426967476, guid: b9eb81879301ed54fba06387dc742a41, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 2
+  - name: LeftArm3
+    sprite: {fileID: -8678687777706228336, guid: 762e31582d4153e499e3c151ccbff837, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 3
+  - name: LeftArm4
+    sprite: {fileID: -6959725305586499703, guid: 1a6b805453582f74998e63c87c6ae4d6, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 4
+  - name: LeftArm5
+    sprite: {fileID: -2651871249209393677, guid: 1b0adc14389a36c4da9cd862a9613392, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  - name: LeftHand
+    sprite: {fileID: -3000572546997347259, guid: c47e288d61f70004c84c6a29e319fc2f, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 6
+  - name: LeftFinger1
+    sprite: {fileID: 424351189024696401, guid: 65bd73bd0cdbcf941818585999ea6c57, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 7
+  - name: LeftFinger2
+    sprite: {fileID: 8585849728886877243, guid: 1d3588249746f1e4d8aa12de01f01ec0, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 7
+  - name: LeftFinger3
+    sprite: {fileID: -8850868197871284597, guid: bff62d4b67883ab4eabbf7b439e6c2ea, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 7
+  - name: LeftFinger4
+    sprite: {fileID: -6906466483554845255, guid: 4856c18c6a1956844adeb81ff7fce9a9, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 7
+  rightArmArtParts:
+  - name: RightShoulder
+    sprite: {fileID: 4593403175177999081, guid: 70ff204e71168184eba7d8e70c431904, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 0
+  - name: RightArm1
+    sprite: {fileID: 1666530532600415768, guid: dd3da5e3796d01e40b8f11e46822df30, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 1
+  - name: RightArm2
+    sprite: {fileID: 1487705803540808095, guid: e0a58eea0fc4a144d901933986325ee6, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 2
+  - name: RightArm3
+    sprite: {fileID: 5742279643327271745, guid: 4095f676bc4d05347853cb4a78df1e1d, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 3
+  - name: RightHand
+    sprite: {fileID: 3927869758523747417, guid: 5e648ae8e00432e4c85408de8e613c49, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 4
+  - name: RightFinger1
+    sprite: {fileID: -4604373394092782948, guid: 7a899f86281eabe46a9fc8876bc6864a, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  - name: RightFinger2
+    sprite: {fileID: -2783678299793843827, guid: 4ff21c4b757f28f439eb804d4b8418dd, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  - name: RightFinger3
+    sprite: {fileID: -4415538965746487916, guid: f42f7ea72a75d9942990efffd6b2735e, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  - name: RightFinger4
+    sprite: {fileID: -5061989693375231452, guid: 66dc1a1df4090424b8ac8581989e8a7e, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  - name: RightFinger5
+    sprite: {fileID: -4231019106401838976, guid: ea82b44c55d442941bb391a2db8dcafb, type: 3}
+    localOffset: {x: 0, y: 0}
+    localScaleMultiplier: {x: 1, y: 1}
+    sortingOrderOffset: 5
+  animateLeftHandGrabPose: 1
+  leftGrabPoseSpeed: 14
+  leftFingerCurlAngle: 38
+  leftFingerGrabPinchOffset: {x: 0.08, y: 0.04}
+  leftPalmGrabOffset: {x: 0.02, y: -0.04}
+  leftPalmGrabAngle: -8
+  leftGrabPalmSortingOrderOffset: -1
+  leftGrabFingerSortingOrderOffset: 3
+  attachGrabbedPlayerToLeftHandArt: 1
+  leftHandArtHeldPlayerOffset: {x: 0, y: 0}
+  stretchLeftArmArtFromBody: 1
+  leftArmStretchInfluence: 1
+  animateRightHandFistPose: 1
+  rightFistPoseSpeed: 16
+  rightFingerCurlAngle: 48
+  rightFingerFistPinchOffset: {x: 0.06, y: 0.03}
+  rightPalmFistOffset: {x: -0.01, y: -0.03}
+  rightPalmFistAngle: 6
+  rightArmMovesAsSingleRoot: 0
+  stretchRightArmArtFromBody: 1
+  rightArmStretchInfluence: 1
+  rightArmUsesChainLag: 0
+  rightArmUpperFollowSpeed: 28
+  rightArmLowerFollowSpeed: 12
+  rightHandFollowSpeed: 8
+  rightArmMaxChainLagDistance: 1
+  rightShoulderChainMaxRotation: 12
+  rightShoulderChainRotationInfluence: 0.35
+  rightArmUsesHammerElbowBend: 1
+  rightArmAdaptiveHammerElbowBend: 1
+  rightArmHammerElbowBendOffset: {x: 0.45, y: 0.18}
+  rightArmHammerCloseBendDistance: 2.2
+  rightArmHammerFarBendDistance: 4.6
+  rightArmHammerUpperArmAngle: -5
+  rightArmHammerForearmAngle: 8
+  rightHandHammerStrikeAngle: -45
   activationRange: 12
   attackCooldown: 1.8
   windupDuration: 0.35
@@ -73,6 +233,10 @@ MonoBehaviour:
   aimHoldDistance: 0.45
   aimSwayAmount: 0.12
   aimSwaySpeed: 9
+  limitLeftArmAimRotation: 1
+  maxLeftArmAimRotation: 16
+  leftArmAimVerticalInfluence: 0.65
+  leftArmAimRotationSpeed: 540
   snatchSpeed: 24
   liftSpeed: 10
   slamSpeed: 22
@@ -83,12 +247,19 @@ MonoBehaviour:
   slamDistance: 3.1
   heldPlayerOffset: {x: 0, y: -0.15}
   rightArmOnlyTargetsRightSide: 1
+  limitRightArmRangeToArtEnd: 1
+  rightArmArtReachPadding: 1.15
   rightArmWindupDuration: 0.75
   rightArmSlamDuration: 0.45
   rightArmImpactHoldDuration: 0.12
   rightArmSlamSpeed: 34
   rightArmRecoverSpeed: 10
   rightArmSlamDropHeight: 6
+  rightArmUsesHammerSwing: 1
+  rightArmHammerWindupOffset: {x: -1.15, y: 5.7}
+  rightArmHammerArcControlOffset: {x: 1.35, y: 1.65}
+  rightArmHammerWindupAngle: -18
+  rightArmHammerImpactAngle: 10
   rightArmAimSnapSize: 1.25
   rightArmSlamAreaOffset: {x: 0, y: 2.1}
   rightArmSlamAreaSize: {x: 2.4, y: 5.2}
