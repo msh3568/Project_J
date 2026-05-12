@@ -54,6 +54,20 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     [SerializeField] private bool returnToActiveAngleWhenIdle = true;
     [SerializeField] private bool debugHeadAimLogs = true;
 
+    [Header("Joint Aim Motion")]
+    [SerializeField] private bool useJointAimMotion = true;
+    [SerializeField, Min(0.01f)] private float jointAimSmoothTime = 0.14f;
+    [SerializeField, Range(0f, 1f)] private float jointBaseRotationShare = 0.35f;
+    [SerializeField, Range(0f, 45f)] private float jointBaseMaxAngle = 16f;
+    [SerializeField, Range(0f, 20f)] private float jointFollowThroughMaxAngle = 4.5f;
+    [SerializeField, Min(0f)] private float jointBendBackOffset = 0.06f;
+    [SerializeField, Min(0f)] private float jointBendLiftOffset = 0.035f;
+    [SerializeField, Min(0f)] private float jointSettleSpeed = 18f;
+    [SerializeField] private bool useHeadLookPose = true;
+    [SerializeField, Range(0f, 1f)] private float headLookTiltStrength = 0.55f;
+    [SerializeField, Range(0f, 45f)] private float headLookMaxTilt = 18f;
+    [SerializeField, Min(0f)] private float headLookSettleSpeed = 24f;
+
     [Header("Dormant Visuals")]
     [SerializeField] private bool useDormantGrayscale = true;
     [SerializeField, Range(0f, 1f)] private float dormantTintBlend = 0.65f;
@@ -188,8 +202,17 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private bool isActivated;
     private bool isActivating;
     private float initialHealth;
+    private Quaternion headRotationBaseLocalRotation = Quaternion.identity;
     private Quaternion headAimBaseLocalRotation = Quaternion.identity;
+    private Vector3 headAimBaseLocalPosition = Vector3.zero;
+    private Quaternion headVisualBaseLocalRotation = Quaternion.identity;
     private float authoredMuzzleLocalAngle;
+    private float aimOffsetVelocity;
+    private float currentJointBaseAngle;
+    private float currentJointFollowThroughAngle;
+    private float currentHeadLookAngle;
+    private bool hasAppliedJointAimPose;
+    private bool hasAppliedHeadLookPose;
     private float lastAppliedAimPivotLocalZ = float.NaN;
     private float lastObservedAimPivotLocalZ = float.NaN;
     private string lastHeadAimApplyReason = string.Empty;
@@ -229,6 +252,8 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
     private bool IsAimLockedPhase =>
         hasLockedAim && ((lockAimDuringTelegraph && telegraphCoroutine != null) || (lockAimDuringBurst && isFiringBurst));
+
+    private bool IsFacingFlipLocked => hasLockedAim || isFiringBurst;
 
     private void Awake()
     {
@@ -316,6 +341,11 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         preFireTrackingDuration = Mathf.Max(0f, preFireTrackingDuration);
         preFireTrackingRotationSpeed = Mathf.Max(0f, preFireTrackingRotationSpeed);
         postFireFacingRefreshDelay = Mathf.Max(0f, postFireFacingRefreshDelay);
+        jointAimSmoothTime = Mathf.Max(0.01f, jointAimSmoothTime);
+        jointSettleSpeed = Mathf.Max(0f, jointSettleSpeed);
+        jointBendBackOffset = Mathf.Max(0f, jointBendBackOffset);
+        jointBendLiftOffset = Mathf.Max(0f, jointBendLiftOffset);
+        headLookSettleSpeed = Mathf.Max(0f, headLookSettleSpeed);
         activeAimOffset = NormalizeSignedAngle(activeAimOffset);
         dormantAimOffset = NormalizeSignedAngle(dormantAimOffset);
         minAimOffset = NormalizeSignedAngle(minAimOffset);
@@ -514,7 +544,11 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private void CaptureAuthoringPose()
     {
         Transform aimPivot = GetAimPivot();
+        headRotationBaseLocalRotation = headRotationPivot != null ? headRotationPivot.localRotation : Quaternion.identity;
         headAimBaseLocalRotation = aimPivot != null ? aimPivot.localRotation : Quaternion.identity;
+        headAimBaseLocalPosition = aimPivot != null ? aimPivot.localPosition : Vector3.zero;
+        headVisualBaseLocalRotation = headTransform != null ? headTransform.localRotation : Quaternion.identity;
+        ResetAimMotionState();
 
         if (headRotationPivot == null || firePoint == null)
         {
@@ -531,7 +565,9 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         LogHeadAim(
             $"CaptureAuthoringPose headRotationPivot={(headRotationPivot != null ? headRotationPivot.name : "null")}, " +
             $"headAimPivot={(aimPivot != null ? aimPivot.name : "null")}, " +
+            $"headRotationBaseLocalZ={NormalizeSignedAngle(headRotationBaseLocalRotation.eulerAngles.z):F2}, " +
             $"headAimBaseLocalZ={NormalizeSignedAngle(headAimBaseLocalRotation.eulerAngles.z):F2}, " +
+            $"headVisualBaseLocalZ={NormalizeSignedAngle(headVisualBaseLocalRotation.eulerAngles.z):F2}, " +
             $"forwardDirection={forwardDirection}, baseForwardAngle={NormalizeSignedAngle(BaseForwardAngle):F2}, " +
             $"authoredMuzzleLocalAngle={authoredMuzzleLocalAngle:F2}");
     }
@@ -643,7 +679,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
     private void UpdateFacingDirectionFromPlayer()
     {
-        if (playerTransform == null || isDead || isDying || isActivating || isFacingLockedForShotCycle || isFacingLockedUntilNextFire)
+        if (playerTransform == null || isDead || isDying || isActivating || IsFacingFlipLocked)
             return;
 
         if (Time.time < nextFacingRefreshAllowedTime)
@@ -682,6 +718,12 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private void ApplyFacingDirection(ForwardDirection newDirection, string reason)
     {
         bool directionChanged = forwardDirection != newDirection;
+        if (directionChanged && Application.isPlaying && IsFacingFlipLocked)
+            return;
+
+        if (directionChanged)
+            MirrorAimStateForFacingFlip();
+
         forwardDirection = newDirection;
 
         Transform facingMirror = GetFacingMirrorTransform();
@@ -705,6 +747,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             isFacingLockedUntilNextFire = true;
             hasShotCycleFallbackAim = false;
             preFireCommittedAimOffset = currentAimOffset;
+            ResetAimMotionState();
         }
 
         if (!directionChanged)
@@ -713,6 +756,15 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         LogHeadAim(
             $"ApplyFacingDirection reason={reason}, forwardDirection={forwardDirection}, " +
             $"mirrorScaleX={(facingMirror != null ? facingMirror.localScale.x : 0f):F2}, bodyFlipX={(bodySpriteRenderer != null ? bodySpriteRenderer.flipX : false)}");
+    }
+
+    private void MirrorAimStateForFacingFlip()
+    {
+        currentAimOffset = ClampAimOffset(-currentAimOffset);
+        preFireCommittedAimOffset = ClampAimOffset(-preFireCommittedAimOffset);
+        lockedAimOffset = ClampAimOffset(-lockedAimOffset);
+        shotCycleFallbackAimOffset = ClampAimOffset(-shotCycleFallbackAimOffset);
+        aimOffsetVelocity = -aimOffsetVelocity;
     }
 
     private void OnSpawnPresentationStarted()
@@ -742,7 +794,12 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
         float desiredOffset = currentAimOffset;
         string reason = "UpdateHeadAim/Hold";
-        if (isFacingLockedForShotCycle && hasShotCycleFallbackAim && !playerDetected)
+        if (IsAimLockedPhase)
+        {
+            desiredOffset = lockedAimOffset;
+            reason = "UpdateHeadAim/LockedAim";
+        }
+        else if (isFacingLockedForShotCycle && hasShotCycleFallbackAim && !playerDetected)
         {
             desiredOffset = shotCycleFallbackAimOffset;
             reason = "UpdateHeadAim/ShotCycleLastSeen";
@@ -760,11 +817,6 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             reason = holdAimWhenTargetInBlindZone
                 ? "UpdateHeadAim/BlindZoneHold"
                 : "UpdateHeadAim/BlindZoneClamp";
-        }
-        else if (IsAimLockedPhase)
-        {
-            desiredOffset = lockedAimOffset;
-            reason = "UpdateHeadAim/LockedAim";
         }
         else if (playerDetected && isActivated && canTrackPlayer)
         {
@@ -792,12 +844,35 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         float activeRotationSpeed = isPreFireTracking
             ? preFireTrackingRotationSpeed
             : headRotationSpeed;
-        float maxStep = Mathf.Max(0f, activeRotationSpeed) * Time.deltaTime;
-        currentAimOffset = Mathf.MoveTowards(currentAimOffset, desiredOffset, maxStep);
+        currentAimOffset = MoveAimOffsetTowards(currentAimOffset, desiredOffset, activeRotationSpeed);
         ApplyHeadAimOffset(
             currentAimOffset,
             $"{reason} desiredOffset={desiredOffset:F2} finalLocalAngle={GetFinalLocalAngle(currentAimOffset):F2} " +
             $"playerDetected={playerDetected} canTrack={canTrackPlayer} activated={isActivated} activating={isActivating}");
+    }
+
+    private float MoveAimOffsetTowards(float currentOffset, float desiredOffset, float rotationSpeed)
+    {
+        float maxSpeed = Mathf.Max(0f, rotationSpeed);
+        if (!useJointAimMotion || jointAimSmoothTime <= 0f)
+        {
+            aimOffsetVelocity = 0f;
+            float maxStep = maxSpeed * Time.deltaTime;
+            return Mathf.MoveTowards(currentOffset, desiredOffset, maxStep);
+        }
+
+        if (maxSpeed <= 0f || Time.deltaTime <= 0f)
+            return currentOffset;
+
+        float smoothedOffset = Mathf.SmoothDampAngle(
+            currentOffset,
+            desiredOffset,
+            ref aimOffsetVelocity,
+            Mathf.Max(0.01f, jointAimSmoothTime),
+            maxSpeed,
+            Time.deltaTime);
+
+        return ClampAimOffset(smoothedOffset);
     }
 
     private float ComputeDesiredAimOffset()
@@ -899,7 +974,14 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             float beforeLocalZ = NormalizeSignedAngle(aimPivot.localEulerAngles.z);
             float finalLocalAngle = GetFinalLocalAngle(aimOffset);
             float deltaAngle = Mathf.DeltaAngle(authoredMuzzleLocalAngle, finalLocalAngle);
-            aimPivot.localRotation = headAimBaseLocalRotation * Quaternion.Euler(0f, 0f, deltaAngle);
+
+            if (ShouldUseJointAimPose(aimPivot))
+                ApplyJointAimPose(aimPivot, deltaAngle);
+            else
+                ApplySinglePivotAimPose(aimPivot, deltaAngle);
+
+            ApplyHeadLookPose(aimPivot, aimOffset);
+
             float afterLocalZ = NormalizeSignedAngle(aimPivot.localEulerAngles.z);
 
             bool rotationChanged = Mathf.Abs(Mathf.DeltaAngle(beforeLocalZ, afterLocalZ)) > 0.01f;
@@ -916,6 +998,153 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             lastObservedAimPivotLocalZ = afterLocalZ;
             lastHeadAimApplyReason = reason;
         }
+    }
+
+    private bool ShouldUseJointAimPose(Transform aimPivot)
+    {
+        return useJointAimMotion
+            && headRotationPivot != null
+            && aimPivot != null
+            && aimPivot != headRotationPivot;
+    }
+
+    private void ApplySinglePivotAimPose(Transform aimPivot, float deltaAngle)
+    {
+        if (headRotationPivot != null && headRotationPivot != aimPivot)
+            headRotationPivot.localRotation = headRotationBaseLocalRotation;
+
+        aimPivot.localPosition = headAimBaseLocalPosition;
+        aimPivot.localRotation = headAimBaseLocalRotation * Quaternion.Euler(0f, 0f, deltaAngle);
+        currentJointBaseAngle = 0f;
+        currentJointFollowThroughAngle = 0f;
+        hasAppliedJointAimPose = false;
+    }
+
+    private void ApplyHeadLookPose(Transform aimPivot, float aimOffset)
+    {
+        if (!ShouldUseHeadLookPose(aimPivot))
+        {
+            ResetHeadLookPose();
+            return;
+        }
+
+        float targetLookAngle = GetHeadLookAngle(aimOffset);
+        if (!hasAppliedHeadLookPose)
+        {
+            currentHeadLookAngle = targetLookAngle;
+            hasAppliedHeadLookPose = true;
+        }
+        else
+        {
+            float settleT = GetJointSmoothingFactor(headLookSettleSpeed);
+            currentHeadLookAngle = Mathf.LerpAngle(currentHeadLookAngle, targetLookAngle, settleT);
+        }
+
+        headTransform.localRotation = headVisualBaseLocalRotation * Quaternion.Euler(0f, 0f, currentHeadLookAngle);
+    }
+
+    private bool ShouldUseHeadLookPose(Transform aimPivot)
+    {
+        return useHeadLookPose
+            && headTransform != null
+            && aimPivot != null
+            && headTransform != aimPivot
+            && headLookTiltStrength > 0f
+            && headLookMaxTilt > 0f;
+    }
+
+    private float GetHeadLookAngle(float aimOffset)
+    {
+        float visualAimOffset = GetFacingAdjustedAimOffset(aimOffset);
+        return Mathf.Clamp(
+            visualAimOffset * headLookTiltStrength,
+            -headLookMaxTilt,
+            headLookMaxTilt);
+    }
+
+    private void ResetHeadLookPose()
+    {
+        currentHeadLookAngle = 0f;
+        hasAppliedHeadLookPose = false;
+
+        if (headTransform != null)
+            headTransform.localRotation = headVisualBaseLocalRotation;
+    }
+
+    private void ApplyJointAimPose(Transform aimPivot, float deltaAngle)
+    {
+        float desiredBaseAngle = GetDesiredJointBaseAngle(deltaAngle);
+        if (!hasAppliedJointAimPose)
+        {
+            currentJointBaseAngle = desiredBaseAngle;
+            currentJointFollowThroughAngle = 0f;
+            hasAppliedJointAimPose = true;
+        }
+        else
+        {
+            float settleT = GetJointSmoothingFactor(jointSettleSpeed);
+            currentJointBaseAngle = Mathf.LerpAngle(currentJointBaseAngle, desiredBaseAngle, settleT);
+
+            float followThroughTarget = GetJointFollowThroughTarget();
+            currentJointFollowThroughAngle = Mathf.LerpAngle(
+                currentJointFollowThroughAngle,
+                followThroughTarget,
+                settleT);
+        }
+
+        float childAngle = deltaAngle - currentJointBaseAngle + currentJointFollowThroughAngle;
+        headRotationPivot.localRotation = headRotationBaseLocalRotation * Quaternion.Euler(0f, 0f, currentJointBaseAngle);
+        aimPivot.localPosition = headAimBaseLocalPosition + GetJointBendLocalOffset();
+        aimPivot.localRotation = headAimBaseLocalRotation * Quaternion.Euler(0f, 0f, childAngle);
+    }
+
+    private float GetDesiredJointBaseAngle(float deltaAngle)
+    {
+        float sharedAngle = deltaAngle * Mathf.Clamp01(jointBaseRotationShare);
+        float maxAngle = Mathf.Max(0f, jointBaseMaxAngle);
+        return maxAngle > 0f ? Mathf.Clamp(sharedAngle, -maxAngle, maxAngle) : 0f;
+    }
+
+    private float GetJointFollowThroughTarget()
+    {
+        if (!useJointAimMotion || jointFollowThroughMaxAngle <= 0f)
+            return 0f;
+
+        float velocityReference = Mathf.Max(1f, headRotationSpeed);
+        float visualVelocity = forwardDirection == ForwardDirection.Right ? aimOffsetVelocity : -aimOffsetVelocity;
+        float normalizedVelocity = Mathf.Clamp(visualVelocity / velocityReference, -1f, 1f);
+        return -normalizedVelocity * jointFollowThroughMaxAngle;
+    }
+
+    private Vector3 GetJointBendLocalOffset()
+    {
+        float maxAngle = Mathf.Max(0.01f, jointBaseMaxAngle);
+        float bendAmount = Mathf.Clamp(currentJointBaseAngle / maxAngle, -1f, 1f);
+        float compression = Mathf.Abs(bendAmount) * jointBendBackOffset;
+        float lift = bendAmount * jointBendLiftOffset;
+
+        if (jointFollowThroughMaxAngle > 0f)
+            lift += (currentJointFollowThroughAngle / jointFollowThroughMaxAngle) * jointBendLiftOffset * 0.35f;
+
+        return new Vector3(-compression, lift, 0f);
+    }
+
+    private float GetJointSmoothingFactor(float speed)
+    {
+        if (!Application.isPlaying || Time.deltaTime <= 0f || speed <= 0f)
+            return 1f;
+
+        return 1f - Mathf.Exp(-speed * Time.deltaTime);
+    }
+
+    private void ResetAimMotionState()
+    {
+        aimOffsetVelocity = 0f;
+        currentJointBaseAngle = 0f;
+        currentJointFollowThroughAngle = 0f;
+        currentHeadLookAngle = 0f;
+        hasAppliedJointAimPose = false;
+        hasAppliedHeadLookPose = false;
     }
 
     private Vector2 GetCurrentAimDirection()
@@ -945,17 +1174,20 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         float elapsed = 0f;
         float duration = Mathf.Max(0.01f, activationWarmup);
         float targetOffset = GetActiveAimOffset();
+        aimOffsetVelocity = 0f;
 
         while (elapsed < duration)
         {
             float t = Mathf.Clamp01(elapsed / duration);
-            currentAimOffset = Mathf.Lerp(startOffset, targetOffset, t);
+            float easedT = Mathf.SmoothStep(0f, 1f, t);
+            currentAimOffset = ClampAimOffset(Mathf.LerpAngle(startOffset, targetOffset, easedT));
             ApplyHeadAimOffset(currentAimOffset, $"ActivationRoutine/Blend t={t:F2}");
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         currentAimOffset = targetOffset;
+        aimOffsetVelocity = 0f;
         ApplyHeadAimOffset(currentAimOffset, "ActivationRoutine/Complete");
         activationCoroutine = null;
         CompleteActivation(resetTimers: true);
@@ -1022,6 +1254,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         isFiringBurst = false;
         isActivating = false;
         hasLockedAim = false;
+        ResetAimMotionState();
         HideTelegraph();
         StopIdleLoop();
         deactivateAtTime = Mathf.Infinity;
@@ -1456,6 +1689,7 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
         activationCoroutine = null;
         StopDamageFlash(resetVisuals: false);
         currentAimOffset = GetInitialAimOffset(!isActivated);
+        ResetAimMotionState();
         deactivateAtTime = Mathf.Infinity;
         nextFacingRefreshAllowedTime = 0f;
         HideTelegraph();
@@ -1611,6 +1845,13 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
 
     private Quaternion GetAimBasisRotation()
     {
+        if (useJointAimMotion && headRotationPivot != null)
+        {
+            Transform parent = headRotationPivot.parent;
+            Quaternion parentRotation = parent != null ? parent.rotation : Quaternion.identity;
+            return parentRotation * headRotationBaseLocalRotation;
+        }
+
         Transform aimBasis = GetAimBasisTransform();
         return aimBasis != null ? aimBasis.rotation : transform.rotation;
     }

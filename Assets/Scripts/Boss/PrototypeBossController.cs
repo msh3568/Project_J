@@ -105,10 +105,10 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [Header("Left Hand Grab Pose")]
     [SerializeField] private bool animateLeftHandGrabPose = true;
     [SerializeField, Min(0f)] private float leftGrabPoseSpeed = 14f;
-    [SerializeField, Range(0f, 80f)] private float leftFingerCurlAngle = 38f;
-    [SerializeField] private Vector2 leftFingerGrabPinchOffset = new Vector2(0.08f, 0.04f);
-    [SerializeField] private Vector2 leftPalmGrabOffset = new Vector2(0.02f, -0.04f);
-    [SerializeField, Range(-30f, 30f)] private float leftPalmGrabAngle = -8f;
+    [SerializeField, Range(0f, 80f)] private float leftFingerCurlAngle = 24f;
+    [SerializeField] private Vector2 leftFingerGrabPinchOffset = new Vector2(0.035f, 0.018f);
+    [SerializeField] private Vector2 leftPalmGrabOffset = new Vector2(0.015f, -0.025f);
+    [SerializeField, Range(-30f, 30f)] private float leftPalmGrabAngle = -5f;
     [SerializeField] private int leftGrabPalmSortingOrderOffset = -1;
     [SerializeField] private int leftGrabFingerSortingOrderOffset = 3;
     [SerializeField] private bool attachGrabbedPlayerToLeftHandArt = true;
