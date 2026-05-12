@@ -32,6 +32,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     private Collider2D cachedCollider;
     private Transform autoReturnTarget;
     private bool isAutoReturningToSource;
+    private bool suppressPlayerImpact;
     
     void Update()
     {
@@ -141,6 +142,13 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         firewallDamage = Mathf.Max(1, firewallDamageAmount);
     }
 
+    public void ConfigureCutscenePlayerImpactSuppression(bool suppress)
+    {
+        suppressPlayerImpact = suppress;
+        if (cachedCollider != null && suppressPlayerImpact && !isParried)
+            cachedCollider.isTrigger = true;
+    }
+
     private IEnumerator MuzzleFlashEffect()
     {
         if (spriteRenderer == null) yield break;
@@ -192,6 +200,12 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         
         if (other.CompareTag("Player"))
         {
+            if (suppressPlayerImpact)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (useFirewallDamage)
             {
                 IFirewallDamageable firewall = other.GetComponent<IFirewallDamageable>();

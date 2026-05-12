@@ -41,6 +41,7 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     private Player player;
     private CutsceneDialoguePlayer dialoguePlayer;
     private float sampledIdleTime;
+    private int playerSkillControlUnlockCount;
 
     private void Reset()
     {
@@ -73,6 +74,9 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     private void LateUpdate()
     {
         if (!keepIdleWhileDirectorRuns || director == null || director.state != PlayState.Playing)
+            return;
+
+        if (IsPlayerControlReleasedForSkill)
             return;
 
         if (ShouldSampleIdleWhileDialogueWaits())
@@ -108,6 +112,9 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     [ContextMenu("Apply Idle Now")]
     public void ApplyIdle()
     {
+        if (IsPlayerControlReleasedForSkill)
+            return;
+
         ResolveTargets();
         LoadDefaultClipsInEditor();
 
@@ -123,6 +130,25 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
     {
         if (holdPlayerMovementInputAtZero && player != null)
             player.SetMoveInputOverride(false, Vector2.zero);
+    }
+
+    public void ReleasePlayerControlForCutsceneSkill()
+    {
+        ResolveTargets();
+        playerSkillControlUnlockCount++;
+        StopIdle();
+    }
+
+    public void RestorePlayerControlAfterCutsceneSkill()
+    {
+        if (playerSkillControlUnlockCount > 0)
+            playerSkillControlUnlockCount--;
+
+        if (playerSkillControlUnlockCount > 0)
+            return;
+
+        if (director != null && director.state == PlayState.Playing)
+            ApplyIdle();
     }
 
     private void OnDirectorPlayed(PlayableDirector playedDirector)
@@ -155,6 +181,8 @@ public class CutsceneDirectorIdleApplier : MonoBehaviour
         if (dialoguePlayer == null)
             dialoguePlayer = GetComponent<CutsceneDialoguePlayer>();
     }
+
+    private bool IsPlayerControlReleasedForSkill => playerSkillControlUnlockCount > 0;
 
     private static Animator ResolveSpriteAnimator(GameObject targetObject)
     {

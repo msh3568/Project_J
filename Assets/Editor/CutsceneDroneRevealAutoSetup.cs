@@ -94,6 +94,7 @@ public static class CutsceneDroneRevealAutoSetup
 
         Undo.RegisterCompleteObjectUndo(timelineAsset, "Setup drone reveal Timeline clips");
         bool changed = false;
+        changed |= ConfigureSpawnEffectObject(spawnEffectObject, droneObject);
         changed |= ConfigureActivationTrack(timelineAsset, director, droneObject);
         changed |= ConfigureSpawnEffectTrack(timelineAsset, director, spawnEffectObject);
         changed |= ConfigureCombatLockTrack(timelineAsset, director, droneCombat);
@@ -449,6 +450,46 @@ public static class CutsceneDroneRevealAutoSetup
         EditorUtility.SetDirty(spawnEffectObject);
         EditorSceneManager.MarkSceneDirty(spawnEffectObject.scene);
         return spawnEffectObject;
+    }
+
+    private static bool ConfigureSpawnEffectObject(GameObject spawnEffectObject, GameObject droneObject)
+    {
+        if (spawnEffectObject == null)
+            return false;
+
+        bool changed = false;
+
+        DestroyAfterAnimation destroyAfterAnimation = spawnEffectObject.GetComponent<DestroyAfterAnimation>();
+        if (destroyAfterAnimation != null && destroyAfterAnimation.enabled)
+        {
+            Undo.RecordObject(destroyAfterAnimation, "Disable cutscene spawn effect destroy");
+            destroyAfterAnimation.enabled = false;
+            EditorUtility.SetDirty(destroyAfterAnimation);
+            changed = true;
+        }
+
+        CutsceneSpawnEffectReplayer replayer = spawnEffectObject.GetComponent<CutsceneSpawnEffectReplayer>();
+        if (replayer == null)
+        {
+            replayer = Undo.AddComponent<CutsceneSpawnEffectReplayer>(spawnEffectObject);
+            changed = true;
+        }
+
+        Transform target = droneObject != null ? droneObject.transform : null;
+        Vector3 targetOffset = Vector3.zero;
+        if (replayer != null && replayer.Configure(target, true, false, targetOffset))
+        {
+            EditorUtility.SetDirty(replayer);
+            changed = true;
+        }
+
+        if (changed)
+        {
+            EditorUtility.SetDirty(spawnEffectObject);
+            EditorSceneManager.MarkSceneDirty(spawnEffectObject.scene);
+        }
+
+        return changed;
     }
 
     private static AnimationClip EnsureMovementClip(GameObject droneObject)

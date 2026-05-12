@@ -152,6 +152,10 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private float hoverBaseY; // Store the base Y position for hovering
     private float initialHealth;
     private Vector3 stationaryAnchorPosition;
+    private Renderer[] deathRenderers;
+    private bool[] deathRendererEnabledStates;
+    private Collider2D[] deathColliders;
+    private bool[] deathColliderEnabledStates;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolMoveRangeX = 5f; // X축으�??�동??최�? 범위
@@ -240,6 +244,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         // Ensure SimpleExplosion script is present in project for destruction to work
         // It's not added here, but referenced later.
         // It expects a fragmentPrefab which itself needs Fragment.cs
+        CacheDeathVisibilityState();
     }
 
     void Start()
@@ -477,20 +482,39 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     void FireProjectile(Vector2 direction)
     {
-        if (cutsceneCombatSuppressed)
-            return;
+        FireProjectileInternal(direction, false, true, false);
+    }
+
+    public LatencyCapsuleProjectile FireCutsceneProjectileAt(Transform target)
+    {
+        if (target == null)
+            return null;
+
+        Vector2 origin = firePoint != null ? (Vector2)firePoint.position : (Vector2)transform.position;
+        Vector2 direction = ((Vector2)target.position - origin).normalized;
+        return FireProjectileInternal(direction, true, false, true);
+    }
+
+    private LatencyCapsuleProjectile FireProjectileInternal(Vector2 direction, bool ignoreCutsceneSuppression, bool applyRecoil, bool suppressPlayerImpact)
+    {
+        if (cutsceneCombatSuppressed && !ignoreCutsceneSuppression)
+            return null;
 
         if (projectilePrefab == null || firePoint == null)
         {
             Debug.LogError("Projectile Prefab or Fire Point is not assigned for LatencyDroneWeak.");
-            return;
+            return null;
         }
+
+        if (direction.sqrMagnitude <= 0.0001f)
+            direction = transform.localScale.x < 0f ? Vector2.right : Vector2.left;
 
         // Calculate spawn position slightly offset from firePoint in the firing direction
         Vector3 spawnPosition = firePoint.position + (Vector3)direction.normalized * projectileSpawnOffset;
 
         LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
         newProjectile.ConfigureImpactMode(projectileImpactMode == ProjectileImpactMode.Firewall, projectileFirewallDamage);
+        newProjectile.ConfigureCutscenePlayerImpactSuppression(suppressPlayerImpact);
         newProjectile.Initialize(direction, transform);
 
         // 캡슐 발사 ???�운???�생
@@ -500,11 +524,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         // --- Recoil Effect ---
-        if (!IsStationaryMode)
+        if (applyRecoil && !IsStationaryMode)
         {
             StartCoroutine(ApplyRecoil(-direction.normalized));
         }
         // --- End Recoil Effect ---
+
+        return newProjectile;
     }
 
     private IEnumerator ApplyRecoil(Vector2 recoilDirection)
@@ -612,8 +638,12 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         // Stop all movement
-        rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Kinematic; // 물리???�호?�용???�전??멈춤
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.bodyType = RigidbodyType2D.Kinematic; // 물리???�호?�용???�전??멈춤
+        }
         enabled = false; 
         isFiringBurst = false;
         HideTelegraph();
@@ -637,9 +667,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
 
         // 즉시 ?�론??보이지 ?�게 ?�고 충돌??비활?�화
-        if (sr != null) sr.enabled = false;
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
+        HideDestroyedDrone();
         
         // ???�브?�트 ?�체??즉시 ?�괴?��? ?�고, ?�운??코루?�이 ?�립?�으�??�행?�도�???
         // ?�요??모든 컴포?�트(?�프?�이?? 콜라?�더)�?비활?�화?�으므�?보이지 ?�고 ?�호?�용?��? ?�음
@@ -670,8 +698,125 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         tempAudioSource.Play();
 
         // 4. ?�운???�립??길이만큼 기다�????�시 ?�브?�트 ?�괴
-        yield return new WaitForSeconds(clip.length);
-        Destroy(audioObject);
+        Destroy(audioObject, clip.length);
+        yield break;
+    }
+
+    private void CacheDeathVisibilityState()
+    {
+        deathRenderers = GetComponentsInChildren<Renderer>(true);
+        deathRendererEnabledStates = new bool[deathRenderers.Length];
+        for (int i = 0; i < deathRenderers.Length; i++)
+        {
+            deathRendererEnabledStates[i] = deathRenderers[i] != null && deathRenderers[i].enabled;
+        }
+
+        deathColliders = GetComponentsInChildren<Collider2D>(true);
+        deathColliderEnabledStates = new bool[deathColliders.Length];
+        for (int i = 0; i < deathColliders.Length; i++)
+        {
+            deathColliderEnabledStates[i] = deathColliders[i] != null && deathColliders[i].enabled;
+        }
+    }
+
+    private void HideDestroyedDrone()
+    {
+        if (preDeathFlashFeedback != null)
+            preDeathFlashFeedback.StopFeedbacks();
+
+        HideTelegraph();
+
+        Renderer[] renderers = deathRenderers != null && deathRenderers.Length > 0
+            ? deathRenderers
+            : GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+                renderers[i].enabled = false;
+        }
+
+        Collider2D[] colliders = deathColliders != null && deathColliders.Length > 0
+            ? deathColliders
+            : GetComponentsInChildren<Collider2D>(true);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i] != null)
+                colliders[i].enabled = false;
+        }
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = false;
+        }
+
+        if (audioSource != null)
+            audioSource.Stop();
+    }
+
+    private void RestoreDroneVisibilityAfterRespawn()
+    {
+        if (deathRenderers != null && deathRendererEnabledStates != null &&
+            deathRenderers.Length == deathRendererEnabledStates.Length)
+        {
+            for (int i = 0; i < deathRenderers.Length; i++)
+            {
+                if (deathRenderers[i] != null)
+                    deathRenderers[i].enabled = deathRendererEnabledStates[i];
+            }
+        }
+
+        if (deathColliders != null && deathColliderEnabledStates != null &&
+            deathColliders.Length == deathColliderEnabledStates.Length)
+        {
+            for (int i = 0; i < deathColliders.Length; i++)
+            {
+                if (deathColliders[i] != null)
+                    deathColliders[i].enabled = deathColliderEnabledStates[i];
+            }
+        }
+
+        if (rb != null)
+            rb.simulated = true;
+    }
+
+    public void RestoreForCutsceneReveal()
+    {
+        if (isDead || isDying)
+        {
+            health = initialHealth;
+            isDead = false;
+            isDying = false;
+        }
+
+        isFiringBurst = false;
+        isRetreating = false;
+        hasLockedAim = false;
+        telegraphCoroutine = null;
+        HideTelegraph();
+        StopAllCoroutines();
+        RestoreDroneVisibilityAfterRespawn();
+
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = true;
+        }
+
+        if (sr != null)
+        {
+            sr.enabled = true;
+            sr.color = baseSpriteColor;
+        }
+
+        if (preDeathFlashFeedback != null)
+            preDeathFlashFeedback.StopFeedbacks();
+
+        if (!IsControlledByDormantActivator() && !cutsceneCombatSuppressed)
+            enabled = true;
     }
 
     private void SpawnVfx(GameObject prefab, Vector3 offset, float lifetime)
@@ -984,6 +1129,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         nextTelegraphTime = Time.time + telegraphDelayAfterFire;
         HideTelegraph();
         StopAllCoroutines();
+        RestoreDroneVisibilityAfterRespawn();
 
         if (rb != null)
         {

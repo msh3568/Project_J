@@ -80,6 +80,7 @@ public class Player_Combat : Entity_Combat
     }
 
     public float GetCounterRecoveryDuration() => counterRecovery;
+    public float GetParryCheckRadius() => parryCheckRadius;
 
     protected override void OnSuccessfulHit(Collider2D target, IDamageable damagable)
     {

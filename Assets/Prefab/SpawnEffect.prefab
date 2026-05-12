@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5593129682578333026}
   - component: {fileID: 3005219701896479734}
   - component: {fileID: 4062257990042352957}
+  - component: {fileID: 6894276743770180234}
   m_Layer: 0
   m_Name: SpawnEffect
   m_TagString: Untagged
@@ -124,7 +125,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9a4d4480bb209543be9af40f3217c73, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::DestroyAfterAnimation
   destroyOnEnable: 1
   fallbackLifetime: 0.5
+--- !u!114 &6894276743770180234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9220682859740502033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c548feef19d94ca0a165136e1f1f70c1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneSpawnEffectReplayer
+  target: {fileID: 0}
+  fallbackTargetName: LatencyDroneStrong2
+  snapToTargetOnEnable: 0
+  followTargetWhileActive: 0
+  targetOffset: {x: 0, y: 0, z: 0}
+  restartAnimatorsOnEnable: 1
+  restartParticleSystemsOnEnable: 1

@@ -108,6 +108,8 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private bool pausedForManualDialogueAdvance;
     private Transform activeBubbleTarget;
     private bool playerLockApplied;
+    private int playerSkillControlUnlockCount;
+    private bool playerLockSuspendedForSkill;
 
 #if ENABLE_INPUT_SYSTEM
     private bool playerGameplayActionsLocked;
@@ -969,6 +971,39 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         LockPlayerGameplayActions(false);
         player.SetMoveInputOverride(false, Vector2.zero);
         playerLockApplied = false;
+    }
+
+    public void ReleasePlayerControlForCutsceneSkill()
+    {
+        ResolveReferences();
+        playerSkillControlUnlockCount++;
+
+        if (player == null || !playerLockApplied || playerLockSuspendedForSkill)
+            return;
+
+        LockPlayerGameplayActions(false);
+        player.SetMoveInputOverride(false, Vector2.zero);
+        playerLockSuspendedForSkill = true;
+    }
+
+    public void RestorePlayerControlAfterCutsceneSkill()
+    {
+        ResolveReferences();
+
+        if (playerSkillControlUnlockCount > 0)
+            playerSkillControlUnlockCount--;
+
+        if (playerSkillControlUnlockCount > 0 || !playerLockSuspendedForSkill)
+            return;
+
+        if (player != null && playerLockApplied)
+        {
+            player.SetMoveInputOverride(true, Vector2.zero);
+            LockPlayerGameplayActions(true);
+            player.SetVelocity(0f, 0f);
+        }
+
+        playerLockSuspendedForSkill = false;
     }
 
     private void LockPlayerGameplayActions(bool locked)
