@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -52,10 +53,17 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
     [SerializeField] private bool waitForTargetHiddenBeforeComplete = true;
     [SerializeField, Min(0f)] private float targetHiddenWaitTimeout = 1.5f;
 
+    [Header("Cutscene Camera")]
+    [SerializeField] private bool forceCameraOnGrapple = true;
+    [SerializeField] private string grappleCameraObjectName = "Cam_D";
+    [SerializeField] private int forcedGrappleCameraPriority = 1000;
+
     private CutsceneGrapplePromptBehaviour activePrompt;
     private Player_Health playerHealth;
     private CutsceneDialoguePlayer dialoguePlayer;
     private CutsceneDirectorIdleApplier idleApplier;
+    private RoomCameraManager forcedRoomCameraManager;
+    private CinemachineCamera forcedGrappleCamera;
     private Canvas runtimeCanvas;
     private GameObject runtimeUiRoot;
     private Image panelImage;
@@ -75,6 +83,11 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
     private bool scriptedGrappleActive;
     private bool scriptedGrapplePositionValid;
     private Vector3 scriptedGrapplePosition;
+    private LatencyDroneWeak activeGrappleTargetDrone;
+    private bool forcedGrappleCameraApplied;
+    private bool forcedRoomCameraManagerWasEnabled;
+    private int forcedGrappleCameraPreviousPriority;
+    private Transform forcedGrappleCameraPreviousFollow;
     private double activePromptEndTime = double.NaN;
     private int altTapCount;
     private float lastAltTapTime = -999f;
@@ -143,6 +156,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
 
         CancelPrompt();
         ResolveReferences();
+        ApplyForcedGrappleCamera();
         RestoreGrappleTargetDroneForReveal();
         CapturePlayerPositionForSkill();
         ReleasePlayerControlForSkill();
@@ -171,6 +185,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
             !slowTimeApplied &&
             !directorSpeedPaused &&
             !cutsceneInvincibilityApplied &&
+            !forcedGrappleCameraApplied &&
             !playerControlReleasedForSkill &&
             !capturedPlayerPositionValid
 #if ENABLE_INPUT_SYSTEM
@@ -185,6 +200,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         RestoreDirectorPlaybackSpeed();
         RestoreTimeScale();
         StopScriptedGrapple();
+        RestoreForcedGrappleCamera();
         RestoreJumpActionAfterPrompt();
         RestorePlayerAfterSkill();
         HidePrompt();
@@ -195,6 +211,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         altTapCount = 0;
         lastAltTapTime = -999f;
         altWasDown = false;
+        activeGrappleTargetDrone = null;
     }
 
     private void UpdateWaitingForDoubleTap()
@@ -225,6 +242,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
             grappleTarget = target;
 
         RestoreGrappleTargetDroneForReveal(target);
+        activeGrappleTargetDrone = ResolveTargetDrone(target);
 
         if (useScriptedCutsceneGrapple)
         {
@@ -262,7 +280,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         promptState = PromptState.WaitingForGrappleEnd;
         LogDebug($"Grapple started. target='{target.name}'.");
 
-        if (!activePrompt.waitForGrappleEnd)
+        if (!activePrompt.waitForGrappleEnd && activeGrappleTargetDrone == null)
             CompletePrompt();
     }
 
@@ -272,6 +290,9 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
             return;
 
         if (player != null && player.IsGrappling)
+            return;
+
+        if (activeGrappleTargetDrone != null && !activeGrappleTargetDrone.HasDeathExplosionCompleted)
             return;
 
         CompletePrompt();
@@ -287,6 +308,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         StopScriptedGrapple();
         RestoreCutsceneInvincibility();
         RestoreTimeScale();
+        RestoreForcedGrappleCamera();
         RestoreJumpActionAfterPrompt();
         RestorePlayerAfterSkill();
         HidePrompt();
@@ -297,6 +319,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         altTapCount = 0;
         lastAltTapTime = -999f;
         altWasDown = false;
+        activeGrappleTargetDrone = null;
 
         ResumeDirectorAfterPrompt(promptEndTime);
     }
@@ -320,6 +343,11 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
 
         if (idleApplier == null)
             idleApplier = GetComponent<CutsceneDirectorIdleApplier>();
+
+        if (forcedRoomCameraManager == null)
+            forcedRoomCameraManager = FindFirstObjectByType<RoomCameraManager>();
+
+        ResolveGrappleCamera();
 
         if (grappleTarget == null || !IsTargetAvailableForPrompt(grappleTarget))
         {
@@ -368,10 +396,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         if (resolvedTarget == null)
             return;
 
-        LatencyDroneWeak targetDrone = resolvedTarget.GetComponentInParent<LatencyDroneWeak>();
-        if (targetDrone == null)
-            targetDrone = resolvedTarget.GetComponentInChildren<LatencyDroneWeak>(true);
-
+        LatencyDroneWeak targetDrone = ResolveTargetDrone(resolvedTarget);
         targetDrone?.RestoreForCutsceneReveal();
     }
 
@@ -459,9 +484,15 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         scriptedGrapplePosition = new Vector3(targetPosition.x, targetPosition.y, startPosition.z);
         ApplyPlayerPosition(scriptedGrapplePosition);
         PlayGrappleArriveFeedback(target);
+        LatencyDroneWeak targetDrone = activeGrappleTargetDrone != null ? activeGrappleTargetDrone : ResolveTargetDrone(target);
+        if (targetDrone != null)
+            activeGrappleTargetDrone = targetDrone;
+
         target?.OnGrappleArrive(player);
 
-        if (waitForTargetHiddenBeforeComplete)
+        if (targetDrone != null)
+            yield return WaitForTargetDroneExplosion(targetDrone);
+        else if (waitForTargetHiddenBeforeComplete)
             yield return WaitForTargetHiddenOrTimeout(target);
 
         if (scriptedArrivalHoldDuration > 0f)
@@ -472,6 +503,12 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         scriptedGrapplePositionValid = false;
         scriptedGrappleCoroutine = null;
         CompletePrompt();
+    }
+
+    private IEnumerator WaitForTargetDroneExplosion(LatencyDroneWeak targetDrone)
+    {
+        while (targetDrone != null && !targetDrone.HasDeathExplosionCompleted)
+            yield return null;
     }
 
     private IEnumerator WaitForTargetHiddenOrTimeout(GrappleTargetBase target)
@@ -494,7 +531,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         if (target == null)
             return true;
 
-        LatencyDroneWeak targetDrone = target.GetComponentInParent<LatencyDroneWeak>();
+        LatencyDroneWeak targetDrone = ResolveTargetDrone(target);
         if (targetDrone == null)
             return !target.gameObject.activeInHierarchy;
 
@@ -510,6 +547,18 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         }
 
         return true;
+    }
+
+    private static LatencyDroneWeak ResolveTargetDrone(GrappleTargetBase target)
+    {
+        if (target == null)
+            return null;
+
+        LatencyDroneWeak targetDrone = target.GetComponentInParent<LatencyDroneWeak>();
+        if (targetDrone == null)
+            targetDrone = target.GetComponentInChildren<LatencyDroneWeak>(true);
+
+        return targetDrone;
     }
 
     private Vector2 ResolveScriptedArrivalPosition(GrappleTargetBase target, Vector3 startPosition)
@@ -608,6 +657,83 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
 
         Entity_VFX entityVfx = player.GetComponent<Entity_VFX>();
         entityVfx?.CreateOnHitVFX(target.transform);
+    }
+
+    private void ApplyForcedGrappleCamera()
+    {
+        if (!forceCameraOnGrapple || forcedGrappleCameraApplied)
+            return;
+
+        ResolveGrappleCamera();
+        if (forcedGrappleCamera == null)
+        {
+            LogDebug($"Grapple camera '{grappleCameraObjectName}' was not found.");
+            return;
+        }
+
+        forcedGrappleCameraPreviousPriority = GetCameraPriority(forcedGrappleCamera);
+        forcedGrappleCameraPreviousFollow = forcedGrappleCamera.Follow;
+
+        if (forcedRoomCameraManager == null)
+            forcedRoomCameraManager = FindFirstObjectByType<RoomCameraManager>();
+
+        if (forcedRoomCameraManager != null)
+        {
+            forcedRoomCameraManagerWasEnabled = forcedRoomCameraManager.enabled;
+            forcedRoomCameraManager.enabled = false;
+        }
+
+        forcedGrappleCamera.Follow = null;
+        SetCameraPriority(forcedGrappleCamera, forcedGrappleCameraPriority);
+        forcedGrappleCameraApplied = true;
+        LogDebug($"Grapple camera locked to '{forcedGrappleCamera.name}'.");
+    }
+
+    private void RestoreForcedGrappleCamera()
+    {
+        if (!forcedGrappleCameraApplied)
+            return;
+
+        if (forcedGrappleCamera != null)
+        {
+            forcedGrappleCamera.Follow = forcedGrappleCameraPreviousFollow;
+            SetCameraPriority(forcedGrappleCamera, forcedGrappleCameraPreviousPriority);
+        }
+
+        if (forcedRoomCameraManager != null)
+            forcedRoomCameraManager.enabled = forcedRoomCameraManagerWasEnabled;
+
+        forcedGrappleCameraApplied = false;
+        forcedGrappleCameraPreviousFollow = null;
+    }
+
+    private void ResolveGrappleCamera()
+    {
+        if (forcedGrappleCamera != null || string.IsNullOrWhiteSpace(grappleCameraObjectName))
+            return;
+
+        GameObject cameraObject = FindSceneObject(grappleCameraObjectName);
+        if (cameraObject == null)
+            return;
+
+        forcedGrappleCamera = cameraObject.GetComponent<CinemachineCamera>();
+        if (forcedGrappleCamera == null)
+            forcedGrappleCamera = cameraObject.GetComponentInChildren<CinemachineCamera>(true);
+    }
+
+    private static int GetCameraPriority(CinemachineCamera camera)
+    {
+        return camera != null ? camera.Priority.Value : 0;
+    }
+
+    private static void SetCameraPriority(CinemachineCamera camera, int value)
+    {
+        if (camera == null)
+            return;
+
+        var priority = camera.Priority;
+        priority.Value = value;
+        camera.Priority = priority;
     }
 
     private void ApplyCutsceneInvincibility()

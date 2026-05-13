@@ -78,6 +78,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     public GameObject GetGameObject() => gameObject;
     public float GetProjectileSpeed() => projectileSpeed;
     public float GetParriedSpeedMultiplier() => parriedSpeedMultiplier;
+    public bool IsParried => isParried;
     public bool CanAutoReturnToSource => originalDroneTransform != null;
 
     void Awake()

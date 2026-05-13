@@ -148,6 +148,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private float nextFireTime;
     private bool isDead = false;
     private bool isDying = false;
+    private bool deathExplosionCompleted;
     private Color baseSpriteColor = Color.white;
     private float hoverBaseY; // Store the base Y position for hovering
     private float initialHealth;
@@ -169,6 +170,8 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float verticalAdjustSpeed = 2f; // Y�?조정 ?�도
 
     private bool IsStationaryMode => movementMode == MovementMode.Stationary;
+    public bool IsDeathInProgress => isDead || isDying;
+    public bool HasDeathExplosionCompleted => deathExplosionCompleted;
 
     void Awake()
     {
@@ -564,6 +567,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         {
             isDying = true;
             isDead = true;
+            deathExplosionCompleted = false;
             StopAllCoroutines();
             HideTelegraph();
             isFiringBurst = false;
@@ -668,6 +672,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         // 즉시 ?�론??보이지 ?�게 ?�고 충돌??비활?�화
         HideDestroyedDrone();
+        deathExplosionCompleted = true;
         
         // ???�브?�트 ?�체??즉시 ?�괴?��? ?�고, ?�운??코루?�이 ?�립?�으�??�행?�도�???
         // ?�요??모든 컴포?�트(?�프?�이?? 콜라?�더)�?비활?�화?�으므�?보이지 ?�고 ?�호?�용?��? ?�음
@@ -788,6 +793,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             health = initialHealth;
             isDead = false;
             isDying = false;
+            deathExplosionCompleted = false;
         }
 
         isFiringBurst = false;
@@ -1121,6 +1127,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         health = initialHealth;
         isDead = false;
         isDying = false;
+        deathExplosionCompleted = false;
         enabled = !controlledByDormantActivator;
         isFiringBurst = false;
         isRetreating = false;

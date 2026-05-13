@@ -13,7 +13,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
     {
         Inactive,
         WaitingForParry,
-        WaitingForRelease
+        WaitingForDroneExplosion
     }
 
     [Header("Timeline")]
@@ -61,6 +61,10 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
     private bool playerControlReleasedForSkill;
     private bool capturedPlayerPositionValid;
     private Vector3 capturedPlayerPosition;
+    private bool cutsceneParrySuccessRangePaddingApplied;
+    private float appliedCutsceneParrySuccessRangePadding;
+    private bool parrySucceededThisAttempt;
+    private bool timeRestoredAfterParrySuccess;
 #if ENABLE_INPUT_SYSTEM
     private bool counterActionWasEnabled;
 #endif
@@ -87,8 +91,8 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
             return;
         }
 
-        if (promptState == PromptState.WaitingForRelease)
-            UpdateWaitingForRelease();
+        if (promptState == PromptState.WaitingForDroneExplosion)
+            UpdateWaitingForDroneExplosion();
     }
 
     private void OnDisable()
@@ -122,9 +126,12 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         activePrompt.runtimeTriggered = true;
         promptState = PromptState.WaitingForParry;
         retryPending = false;
+        parrySucceededThisAttempt = false;
+        timeRestoredAfterParrySuccess = false;
 
         ApplyCutsceneInvincibility();
         EnableCounterAttackAction();
+        ApplyCutsceneParrySuccessRangePadding(prompt.cutsceneParrySuccessRangePadding);
         ApplySlowTime(prompt.slowTimeScale);
         ShowPrompt(prompt.promptText);
         StartParryAttempt();
@@ -141,12 +148,14 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
             !directorSpeedPaused &&
             !cutsceneInvincibilityApplied &&
             !playerControlReleasedForSkill &&
-            !capturedPlayerPositionValid)
+            !capturedPlayerPositionValid &&
+            !cutsceneParrySuccessRangePaddingApplied)
         {
             return;
         }
 
         RestoreCounterAttackAction();
+        RestoreCutsceneParrySuccessRangePadding();
         RestoreCutsceneInvincibility();
         RestoreDirectorPlaybackSpeed();
         RestoreTimeScale();
@@ -158,15 +167,22 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         activeProjectile = null;
         activeProjectileWasFired = false;
         retryPending = false;
+        parrySucceededThisAttempt = false;
+        timeRestoredAfterParrySuccess = false;
     }
 
     private void UpdateWaitingForParry()
     {
-        if (player != null && player.IsParryAiming)
+        if (HasTargetDroneExploded())
         {
-            promptState = PromptState.WaitingForRelease;
-            if (activePrompt.showReleasePrompt)
-                ShowPrompt(activePrompt.parryWindowText);
+            if (parrySucceededThisAttempt)
+                CompletePrompt();
+            return;
+        }
+
+        if (HasParrySucceededThisAttempt())
+        {
+            BeginWaitingForDroneExplosion();
             return;
         }
 
@@ -184,20 +200,35 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         }
 
         if (activeProjectileWasFired && activeProjectile == null)
+        {
+            if (IsTargetDroneDeathInProgress())
+            {
+                BeginWaitingForDroneExplosion();
+                return;
+            }
+
             ScheduleRetry(activePrompt.tooLateText);
+        }
     }
 
-    private void UpdateWaitingForRelease()
+    private void UpdateWaitingForDroneExplosion()
     {
-        if (player == null || !player.IsParryAiming)
+        if (HasTargetDroneExploded())
         {
             CompletePrompt();
             return;
         }
 
-        bool windowExpired = Time.unscaledTime - parryWindowStartedAt >= activePrompt.parryWindowDuration;
-        if (windowExpired)
-            CompletePrompt();
+        if (HasParrySucceededThisAttempt())
+            parrySucceededThisAttempt = true;
+
+        RestoreTimeScaleAfterParryLaunch();
+
+        if (IsTargetDroneDeathInProgress())
+            return;
+
+        if (activeProjectileWasFired && activeProjectile == null)
+            ScheduleRetry(activePrompt.missedDroneText);
     }
 
     private void StartParryAttempt()
@@ -206,11 +237,16 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
             return;
 
         ResolveReferences();
+        if (!slowTimeApplied)
+            ApplySlowTime(activePrompt.slowTimeScale);
+
         retryPending = false;
         activeProjectile = null;
         activeProjectileWasFired = false;
         promptState = PromptState.WaitingForParry;
         parryWindowStartedAt = Time.unscaledTime;
+        parrySucceededThisAttempt = false;
+        timeRestoredAfterParrySuccess = false;
 
         if (activePrompt.clearParryCooldown && player != null)
             player.ClearParryCooldown();
@@ -247,6 +283,78 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         return Mathf.Max(0.05f, baseDistance + activePrompt.earlyPressDistancePadding);
     }
 
+    private bool HasParrySucceededThisAttempt()
+    {
+        if (parrySucceededThisAttempt)
+            return true;
+
+        if (player != null && player.IsParryAiming)
+            return true;
+
+        if (activeProjectile != null && activeProjectile.IsParried)
+            return true;
+
+        return activeProjectileWasFired && IsTargetDroneDeathInProgress();
+    }
+
+    private void BeginWaitingForDroneExplosion()
+    {
+        parrySucceededThisAttempt = true;
+        promptState = PromptState.WaitingForDroneExplosion;
+        retryPending = false;
+        RestoreTimeScaleAfterParryLaunch();
+
+        if (activePrompt.showReleasePrompt)
+            ShowPrompt(activePrompt.parryWindowText);
+    }
+
+    private void RestoreTimeScaleAfterParryLaunch()
+    {
+        if (timeRestoredAfterParrySuccess)
+            return;
+
+        if (player != null && player.IsParryAiming)
+            return;
+
+        RestoreTimeScale();
+        timeRestoredAfterParrySuccess = true;
+    }
+
+    private bool IsTargetDroneDeathInProgress()
+    {
+        return drone != null && drone.IsDeathInProgress;
+    }
+
+    private bool HasTargetDroneExploded()
+    {
+        return drone != null && drone.HasDeathExplosionCompleted;
+    }
+
+    private void ApplyCutsceneParrySuccessRangePadding(float padding)
+    {
+        if (cutsceneParrySuccessRangePaddingApplied || playerCombat == null)
+            return;
+
+        appliedCutsceneParrySuccessRangePadding = Mathf.Max(0f, padding);
+        if (appliedCutsceneParrySuccessRangePadding <= 0f)
+            return;
+
+        playerCombat.AddParryCheckRadiusPadding(appliedCutsceneParrySuccessRangePadding);
+        cutsceneParrySuccessRangePaddingApplied = true;
+    }
+
+    private void RestoreCutsceneParrySuccessRangePadding()
+    {
+        if (!cutsceneParrySuccessRangePaddingApplied)
+            return;
+
+        if (playerCombat != null)
+            playerCombat.RemoveParryCheckRadiusPadding(appliedCutsceneParrySuccessRangePadding);
+
+        appliedCutsceneParrySuccessRangePadding = 0f;
+        cutsceneParrySuccessRangePaddingApplied = false;
+    }
+
     private void FailCurrentAttempt(string feedbackText)
     {
         if (activeProjectile != null)
@@ -270,6 +378,9 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         activeProjectile = null;
         activeProjectileWasFired = false;
         retryPending = true;
+        promptState = PromptState.WaitingForParry;
+        parrySucceededThisAttempt = false;
+        timeRestoredAfterParrySuccess = false;
         float delay = activePrompt.retryDelay;
         if (!string.IsNullOrEmpty(feedbackText))
             delay = Mathf.Max(delay, activePrompt.timingFeedbackDuration);
@@ -284,6 +395,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
             activePrompt.runtimeCompleted = true;
 
         RestoreCounterAttackAction();
+        RestoreCutsceneParrySuccessRangePadding();
         RestoreCutsceneInvincibility();
         RestoreTimeScale();
         RestorePlayerAfterSkill();
@@ -295,6 +407,8 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         activeProjectile = null;
         activeProjectileWasFired = false;
         retryPending = false;
+        parrySucceededThisAttempt = false;
+        timeRestoredAfterParrySuccess = false;
     }
 
     private void ResolveReferences()

@@ -17,6 +17,9 @@ public class CutsceneParryPromptBehaviour : PlayableBehaviour
     [TextArea(1, 3)]
     public string tooLateText = "\uB108\uBB34 \uB290\uB824\uC694!";
 
+    [TextArea(1, 3)]
+    public string missedDroneText = "\uB4DC\uB860\uC5D0 \uB9DE\uCDB0\uC8FC\uC138\uC694!";
+
     public bool fireProjectileOnStart = true;
     public bool pauseTimelineUntilSuccess = true;
     public bool showReleasePrompt = true;
@@ -39,6 +42,11 @@ public class CutsceneParryPromptBehaviour : PlayableBehaviour
 
     [Min(0f)]
     public float earlyPressDistancePadding = 0.2f;
+
+    [Header("Cutscene Parry Range")]
+    [Tooltip("Extra radius added to the player's normal parry radius while this prompt is active.")]
+    [Min(0f)]
+    public float cutsceneParrySuccessRangePadding = 0.4f;
 
     [NonSerialized] internal bool runtimeTriggered;
     [NonSerialized] internal bool runtimeCompleted;

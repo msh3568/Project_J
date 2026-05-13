@@ -62024,6 +62024,9 @@ MonoBehaviour:
   scriptedArrivalHoldDuration: 0.08
   waitForTargetHiddenBeforeComplete: 1
   targetHiddenWaitTimeout: 1.5
+  forceCameraOnGrapple: 1
+  grappleCameraObjectName: Cam_D
+  forcedGrappleCameraPriority: 1000
 --- !u!1001 &1613994925
 PrefabInstance:
   m_ObjectHideFlags: 0

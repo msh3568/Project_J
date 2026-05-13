@@ -11,6 +11,7 @@ public class Player_Combat : Entity_Combat
     [SerializeField] private bool enableParryDebugLogs = false;
 
     private Player player;
+    private float parryCheckRadiusPadding;
 
     private void Awake()
     {
@@ -24,8 +25,10 @@ public class Player_Combat : Entity_Combat
     
     public Collider2D CounterAttackPerformed()
     {
+        float effectiveParryCheckRadius = GetParryCheckRadius();
+
         // --- 1. Check for Parriable Entities (Projectiles that can be aimed and returned) ---
-        Collider2D[] parryTargets = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
+        Collider2D[] parryTargets = Physics2D.OverlapCircleAll(transform.position, effectiveParryCheckRadius, whatIsParriable);
         if (enableParryDebugLogs)
             Debug.Log($"[Parry] Candidates: {parryTargets.Length}", this);
         foreach (var target in parryTargets)
@@ -43,7 +46,7 @@ public class Player_Combat : Entity_Combat
 
         // --- 2. Check for Counterable Entities (Melee, Spikes, etc. that just get knocked back) ---
         // We can combine the checks for simplicity
-        Collider2D[] counterTargets = Physics2D.OverlapCircleAll(transform.position, parryCheckRadius, whatIsParriable);
+        Collider2D[] counterTargets = Physics2D.OverlapCircleAll(transform.position, effectiveParryCheckRadius, whatIsParriable);
         foreach (var target in counterTargets)
         {
             ICounterable counterable = target.GetComponentInParent<ICounterable>();
@@ -80,7 +83,17 @@ public class Player_Combat : Entity_Combat
     }
 
     public float GetCounterRecoveryDuration() => counterRecovery;
-    public float GetParryCheckRadius() => parryCheckRadius;
+    public float GetParryCheckRadius() => Mathf.Max(0.05f, parryCheckRadius + parryCheckRadiusPadding);
+
+    public void AddParryCheckRadiusPadding(float padding)
+    {
+        parryCheckRadiusPadding += Mathf.Max(0f, padding);
+    }
+
+    public void RemoveParryCheckRadiusPadding(float padding)
+    {
+        parryCheckRadiusPadding = Mathf.Max(0f, parryCheckRadiusPadding - Mathf.Max(0f, padding));
+    }
 
     protected override void OnSuccessfulHit(Collider2D target, IDamageable damagable)
     {
@@ -135,6 +148,6 @@ public class Player_Combat : Entity_Combat
         base.OnDrawGizmos();
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, parryCheckRadius);
+        Gizmos.DrawWireSphere(transform.position, GetParryCheckRadius());
     }
 }
