@@ -43,6 +43,12 @@ public class CutsceneParryPromptBehaviour : PlayableBehaviour
     [Min(0f)]
     public float earlyPressDistancePadding = 0.2f;
 
+    [Header("Cutscene Drone Attack")]
+    public bool overrideProjectileSpeed;
+
+    [Min(0.05f)]
+    public float cutsceneProjectileSpeed = 12f;
+
     [Header("Cutscene Parry Range")]
     [Tooltip("Extra radius added to the player's normal parry radius while this prompt is active.")]
     [Min(0f)]

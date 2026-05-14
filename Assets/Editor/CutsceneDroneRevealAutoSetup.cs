@@ -94,6 +94,7 @@ public static class CutsceneDroneRevealAutoSetup
 
         Undo.RegisterCompleteObjectUndo(timelineAsset, "Setup drone reveal Timeline clips");
         bool changed = false;
+        changed |= EnsureRevealFade(droneObject);
         changed |= ConfigureSpawnEffectObject(spawnEffectObject, droneObject);
         changed |= ConfigureActivationTrack(timelineAsset, director, droneObject);
         changed |= ConfigureSpawnEffectTrack(timelineAsset, director, spawnEffectObject);
@@ -111,6 +112,39 @@ public static class CutsceneDroneRevealAutoSetup
         AssetDatabase.SaveAssets();
         TimelineEditor.Refresh(RefreshReason.ContentsAddedOrRemoved | RefreshReason.WindowNeedsRedraw);
         Debug.Log("Drone reveal clips are set up on Cutscene_Director. Edit Spawn Effect, Drone Visible, Drone No Attack, Drone Idle, and Drone Movement on the Timeline.", directorObject);
+    }
+
+    private static bool EnsureRevealFade(GameObject droneObject)
+    {
+        if (droneObject == null)
+            return false;
+
+        bool changed = false;
+        CutsceneDroneRevealFade revealFade = droneObject.GetComponent<CutsceneDroneRevealFade>();
+
+        if (revealFade == null)
+        {
+            revealFade = Undo.AddComponent<CutsceneDroneRevealFade>(droneObject);
+            changed = true;
+        }
+
+        if (revealFade != null)
+        {
+            Undo.RecordObject(revealFade, "Configure drone reveal fade");
+            if (revealFade.ConfigureReturnToOriginalColor())
+            {
+                EditorUtility.SetDirty(revealFade);
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            EditorUtility.SetDirty(droneObject);
+            EditorSceneManager.MarkSceneDirty(droneObject.scene);
+        }
+
+        return changed;
     }
 
     private static bool ConfigureActivationTrack(TimelineAsset timelineAsset, PlayableDirector director, GameObject droneObject)

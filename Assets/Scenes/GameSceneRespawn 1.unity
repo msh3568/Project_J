@@ -15104,6 +15104,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534b15f3b02bf1c4cb882658670b7421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrappleDroneTarget
+--- !u!114 &520235491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520235455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9741efe118a4ceb8f33eb0dae8981d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDroneRevealFade
+  playOnEnable: 1
+  fadeDuration: 0.6
+  revealColor: {r: 0.15, g: 1, b: 0.35, a: 1}
+  startAlpha: 0
+  endAlpha: 1
+  greenHoldDuration: 0.08
+  fadeToOriginalColor: 1
+  returnToOriginalDuration: 0.35
 --- !u!1 &522415792
 GameObject:
   m_ObjectHideFlags: 0
@@ -18188,6 +18208,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4419452560728899010, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 520235486}
+    - targetCorrespondingSourceObject: {fileID: 4419452560728899010, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 520235491}
   m_SourcePrefab: {fileID: 100100000, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
 --- !u!1 &623724629
 GameObject:
@@ -62008,8 +62031,10 @@ MonoBehaviour:
   fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
   dynamicFontSource: {fileID: 12800000, guid: 1a923220d1e5c19468671e9533851a3d, type: 3}
   preferDynamicFontSource: 1
-  panelSize: {x: 780, y: 170}
-  fontSize: 42
+  panelSize: {x: 650, y: 90}
+  promptPositionMode: 0
+  panelAnchoredPosition: {x: 0, y: 320}
+  fontSize: 35
   panelColor: {r: 0, g: 0, b: 0, a: 0.72}
   textColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1603505575
@@ -62033,8 +62058,10 @@ MonoBehaviour:
   fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
   dynamicFontSource: {fileID: 12800000, guid: 1a923220d1e5c19468671e9533851a3d, type: 3}
   preferDynamicFontSource: 1
-  panelSize: {x: 860, y: 170}
-  fontSize: 42
+  panelSize: {x: 650, y: 90}
+  promptPositionMode: 0
+  panelAnchoredPosition: {x: 0, y: 320}
+  fontSize: 35
   panelColor: {r: 0, g: 0, b: 0, a: 0.72}
   textColor: {r: 1, g: 1, b: 1, a: 1}
   minimumDoubleTapMaxInterval: 0.6

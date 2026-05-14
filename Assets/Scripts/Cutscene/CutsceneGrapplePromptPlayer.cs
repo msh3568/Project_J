@@ -12,6 +12,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayableDirector))]
 public class CutsceneGrapplePromptPlayer : MonoBehaviour
 {
+    private enum PromptPositionMode
+    {
+        BottomAnchored,
+        CenterAnchored
+    }
+
     private enum PromptState
     {
         Inactive,
@@ -34,6 +40,9 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
     [SerializeField] private Font dynamicFontSource;
     [SerializeField] private bool preferDynamicFontSource = true;
     [SerializeField] private Vector2 panelSize = new Vector2(860f, 170f);
+    [SerializeField] private PromptPositionMode promptPositionMode = PromptPositionMode.BottomAnchored;
+    [Tooltip("BottomAnchored: X is from screen center and Y is from screen bottom. CenterAnchored: X/Y are from screen center.")]
+    [SerializeField] private Vector2 panelAnchoredPosition = new Vector2(0f, 130f);
     [SerializeField] private float fontSize = 42f;
     [SerializeField] private Color panelColor = new Color(0f, 0f, 0f, 0.72f);
     [SerializeField] private Color textColor = Color.white;
@@ -115,6 +124,8 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
 
         if (activePrompt == null)
             return;
+
+        ApplyPromptLayout();
 
         if (promptState == PromptState.WaitingForDoubleTap)
         {
@@ -1044,16 +1055,10 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         panelObject.hideFlags = HideFlags.HideAndDontSave;
         panelObject.transform.SetParent(runtimeUiRoot.transform, false);
 
-        RectTransform panelRect = panelObject.GetComponent<RectTransform>();
-        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-        panelRect.pivot = new Vector2(0.5f, 0.5f);
-        panelRect.anchoredPosition = new Vector2(0f, 130f);
-        panelRect.sizeDelta = panelSize;
-
         panelImage = panelObject.GetComponent<Image>();
         panelImage.color = panelColor;
         panelImage.raycastTarget = false;
+        ApplyPromptLayout();
 
         GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
         textObject.hideFlags = HideFlags.HideAndDontSave;
@@ -1081,7 +1086,7 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
         if (panelImage != null)
         {
             panelImage.color = panelColor;
-            panelImage.rectTransform.sizeDelta = panelSize;
+            ApplyPromptLayout();
         }
 
         if (promptText != null)
@@ -1091,6 +1096,23 @@ public class CutsceneGrapplePromptPlayer : MonoBehaviour
             promptText.color = textColor;
             promptText.text = text ?? string.Empty;
         }
+    }
+
+    private void ApplyPromptLayout()
+    {
+        if (panelImage == null)
+            return;
+
+        RectTransform panelRect = panelImage.rectTransform;
+        Vector2 anchor = promptPositionMode == PromptPositionMode.BottomAnchored
+            ? new Vector2(0.5f, 0f)
+            : new Vector2(0.5f, 0.5f);
+
+        panelRect.anchorMin = anchor;
+        panelRect.anchorMax = anchor;
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.anchoredPosition = panelAnchoredPosition;
+        panelRect.sizeDelta = panelSize;
     }
 
     private void HidePrompt()

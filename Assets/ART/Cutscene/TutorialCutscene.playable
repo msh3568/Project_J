@@ -766,25 +766,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1042,13 +1024,49 @@ MonoBehaviour:
     m_BlendOutDuration: 1.2666666666666657
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1075,13 +1093,49 @@ MonoBehaviour:
     m_BlendOutDuration: 0.5166666666666657
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -2995,10 +3049,10 @@ MonoBehaviour:
   template:
     promptText: "X\uD0A4\uB97C \uB20C\uB7EC \uD328\uB9C1\uD558\uC138\uC694."
     parryWindowText: "X\uD0A4\uB97C \uB5BC\uBA70 \uD0C0\uC774\uBC0D\uC5D0 \uB9DE\uAC8C
-      \uD29C\uACA8\uB0B4\uC138\uC694!"
+      \uD295\uAE30\uC138\uC694!"
     tooEarlyText: "\uB108\uBB34 \uBE68\uB77C\uC694!"
     tooLateText: "\uB108\uBB34 \uB290\uB824\uC694!"
-    missedDroneText: "\uB4DC\uB860\uC744 \uB9DE\uCDB0\uC8FC\uC138\uC694!"
+    missedDroneText: "\uB4DC\uB860\uC744 \uB9DE\uCD94\uC138\uC694!"
     fireProjectileOnStart: 1
     pauseTimelineUntilSuccess: 1
     showReleasePrompt: 1
@@ -3009,6 +3063,8 @@ MonoBehaviour:
     timingFeedbackDuration: 0.8
     fallbackParryDistance: 1.5
     earlyPressDistancePadding: 0.2
+    overrideProjectileSpeed: 1
+    cutsceneProjectileSpeed: 30
     cutsceneParrySuccessRangePadding: 0.7
 --- !u!114 &1037413637081862512
 MonoBehaviour:
@@ -8806,7 +8862,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
   template:
     speaker: 1
-    text: "\uAF2D \uC131\uACF5\uD588\uC73C\uBA74..."
+    text: "<color=#DB0000>\uAF2D \uC131\uACF5\uD588\uC73C\uBA74...</color>"
     useCustomOffset: 1
     customOffset: {x: 0, y: 3.5, z: 0}
     overrideBubbleSize: 1

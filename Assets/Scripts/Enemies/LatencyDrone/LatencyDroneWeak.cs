@@ -499,15 +499,26 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     public LatencyCapsuleProjectile FireCutsceneProjectileAt(Transform target)
     {
+        return FireCutsceneProjectileAt(target, false, 0f);
+    }
+
+    public LatencyCapsuleProjectile FireCutsceneProjectileAt(Transform target, bool overrideProjectileSpeed, float projectileSpeed)
+    {
         if (target == null)
             return null;
 
         Vector2 origin = firePoint != null ? (Vector2)firePoint.position : (Vector2)transform.position;
         Vector2 direction = ((Vector2)target.position - origin).normalized;
-        return FireProjectileInternal(direction, true, false, true);
+        float projectileSpeedOverride = overrideProjectileSpeed ? Mathf.Max(0.05f, projectileSpeed) : -1f;
+        return FireProjectileInternal(direction, true, false, true, projectileSpeedOverride);
     }
 
-    private LatencyCapsuleProjectile FireProjectileInternal(Vector2 direction, bool ignoreCutsceneSuppression, bool applyRecoil, bool suppressPlayerImpact)
+    private LatencyCapsuleProjectile FireProjectileInternal(
+        Vector2 direction,
+        bool ignoreCutsceneSuppression,
+        bool applyRecoil,
+        bool suppressPlayerImpact,
+        float projectileSpeedOverride = -1f)
     {
         if (cutsceneCombatSuppressed && !ignoreCutsceneSuppression)
             return null;
@@ -525,6 +536,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         Vector3 spawnPosition = firePoint.position + (Vector3)direction.normalized * projectileSpawnOffset;
 
         LatencyCapsuleProjectile newProjectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+        if (projectileSpeedOverride > 0f)
+            newProjectile.ConfigureProjectileSpeed(projectileSpeedOverride);
+
         newProjectile.ConfigureImpactMode(projectileImpactMode == ProjectileImpactMode.Firewall, projectileFirewallDamage);
         newProjectile.ConfigureCutscenePlayerImpactSuppression(suppressPlayerImpact);
         newProjectile.Initialize(direction, transform);

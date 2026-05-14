@@ -137,6 +137,11 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         StartCoroutine(MuzzleFlashEffect());
     }
 
+    public void ConfigureProjectileSpeed(float speed)
+    {
+        projectileSpeed = Mathf.Max(0.05f, speed);
+    }
+
     public void ConfigureImpactMode(bool shouldUseFirewallDamage, int firewallDamageAmount)
     {
         useFirewallDamage = shouldUseFirewallDamage;
