@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -71,6 +72,22 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     [SerializeField] private bool npcBubbleFlipX;
     [SerializeField] private bool npcTextFlipX;
 
+    [Header("Ending NPC Vanish")]
+    [SerializeField] private bool enableEndingNpcVanish = true;
+    [SerializeField, Min(0f)] private float endingNpcVanishSecondsBeforeEnd = 1.1f;
+    [SerializeField, Min(0.01f)] private float endingNpcVanishFadeDuration = 0.8f;
+    [SerializeField] private string endingNpcVanishEffectObjectName = "Cutscene_SpawnEffect";
+    [SerializeField] private Vector3 endingNpcVanishEffectOffset;
+    [SerializeField, Min(0f)] private float endingNpcVanishEffectActiveDuration = 0.7f;
+    [SerializeField] private bool deactivateNpcAfterEndingVanish = true;
+
+    [Header("Ending Letterbox Exit")]
+    [SerializeField] private bool enableEndingLetterboxExit = true;
+    [SerializeField] private string endingTopBarObjectName = "TopBar";
+    [SerializeField] private string endingBottomBarObjectName = "BottomBar";
+    [SerializeField, Min(0.01f)] private float endingLetterboxExitDuration = 0.65f;
+    [SerializeField, Min(0f)] private float endingLetterboxExitPadding = 24f;
+
     private Canvas runtimeCanvas;
     private RectTransform runtimeCanvasRect;
     private RectTransform textRect;
@@ -98,6 +115,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private Vector2 activeTextOffset;
     private Vector4 activeTextPadding;
     private string activeFullText = string.Empty;
+    private int activeFullTextVisibleCharacterCount;
     private double activeClipStartTime = double.NaN;
     private double activeClipEndTime = double.NaN;
     private bool activeTypewriterDisabled;
@@ -110,6 +128,24 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private bool playerLockApplied;
     private int playerSkillControlUnlockCount;
     private bool playerLockSuspendedForSkill;
+    private Coroutine endingNpcVanishRoutine;
+    private Coroutine endingNpcEffectRoutine;
+    private bool endingNpcVanishStarted;
+    private SpriteRenderer[] endingNpcRenderers;
+    private Color[] endingNpcOriginalColors;
+    private bool endingNpcOriginalActiveSelf;
+    private bool endingNpcStateCached;
+    private GameObject endingNpcVanishEffectRuntimeObject;
+    private Coroutine endingCutsceneSequenceRoutine;
+    private bool endingCutsceneSequenceStarted;
+    private bool endingCutsceneSequenceCompleting;
+    private RectTransform endingTopBarRect;
+    private RectTransform endingBottomBarRect;
+    private Vector2 endingTopBarExitStartPosition;
+    private Vector2 endingBottomBarExitStartPosition;
+    private Vector2 endingTopBarExitTargetPosition;
+    private Vector2 endingBottomBarExitTargetPosition;
+    private bool endingLetterboxExitPositionsCached;
 
 #if ENABLE_INPUT_SYSTEM
     private bool playerGameplayActionsLocked;
@@ -170,6 +206,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         HandleDialogueAdvanceInput();
         UpdateManualDialogueText();
+        UpdateEndingCutsceneSequence();
 
         if (timelineFinished || timelineStartedByTrigger)
             return;
@@ -196,6 +233,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         }
 
         HideTimelineDialogue();
+        StopEndingCutsceneSequenceRoutine();
+        StopEndingNpcVanishRoutines();
+        DisableEndingNpcVanishEffect();
 
         if (Application.isPlaying)
             EndTimelineSequence();
@@ -209,7 +249,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     public void ShowTimelineDialogue(
         Speaker speaker,
         string fullText,
-        string timelineVisibleText,
+        int timelineVisibleCharacters,
         double clipLocalTime,
         double clipDuration,
         bool useCustomOffset,
@@ -254,7 +294,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return;
         }
 
-        SetDialogueText(ResolveDisplayText(timelineVisibleText));
+        SetDialogueText(activeFullText, ResolveDisplayVisibleCharacters(timelineVisibleCharacters));
         ShowDialogue();
         UpdateBubblePosition();
 
@@ -268,6 +308,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         showingTimelineDialogue = false;
         activeBubbleTarget = null;
         activeFullText = string.Empty;
+        activeFullTextVisibleCharacterCount = 0;
         activeClipStartTime = double.NaN;
         activeClipEndTime = double.NaN;
         activeManualForceFullText = false;
@@ -283,7 +324,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (!IsManualDialogueFullyVisible())
         {
             activeManualForceFullText = true;
-            SetDialogueText(activeFullText);
+            SetDialogueText(activeFullText, int.MaxValue);
             PauseDirectorForManualDialogueAdvance();
             return;
         }
@@ -296,7 +337,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (!enterCompletesAndAdvancesDialogue || !showingTimelineDialogue || string.IsNullOrEmpty(activeFullText))
             return;
 
-        SetDialogueText(ResolveManualDialogueText());
+        SetDialogueText(activeFullText, ResolveManualVisibleCharacters());
     }
 
     private bool ShouldStartAfterMovement()
@@ -318,6 +359,8 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return;
 
         ResolveReferences();
+        ResetEndingCutsceneSequenceState();
+        ResetEndingNpcVanishState();
         LockRoomCameraManager(true);
         LockPlayer(true);
 
@@ -359,9 +402,19 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return;
 
         if (Application.isPlaying)
+        {
+            if (endingCutsceneSequenceStarted)
+                return;
+
+            if (ShouldStopTimelineAt(stoppedDirector.time) && StartEndingCutsceneSequence())
+                return;
+
             EndTimelineSequence();
+        }
         else
+        {
             HideTimelineDialogue();
+        }
     }
 
     private void BeginManualDialogue(
@@ -373,6 +426,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         double clipEndTime)
     {
         activeFullText = fullText ?? string.Empty;
+        activeFullTextVisibleCharacterCount = CountDialogueVisibleCharacters(activeFullText);
         activeClipStartTime = clipStartTime;
         activeClipEndTime = clipEndTime;
         activeTypewriterDisabled = typewriterDisabled;
@@ -383,35 +437,34 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         pausedForManualDialogueAdvance = false;
     }
 
-    private string ResolveDisplayText(string timelineVisibleText)
+    private int ResolveDisplayVisibleCharacters(int timelineVisibleCharacters)
     {
         if (Application.isPlaying && enterCompletesAndAdvancesDialogue)
-            return ResolveManualDialogueText();
+            return ResolveManualVisibleCharacters();
 
-        return timelineVisibleText ?? activeFullText;
+        return timelineVisibleCharacters < 0 ? int.MaxValue : timelineVisibleCharacters;
     }
 
-    private string ResolveManualDialogueText()
+    private int ResolveManualVisibleCharacters()
     {
         if (activeTypewriterDisabled || activeManualForceFullText || string.IsNullOrEmpty(activeFullText))
-            return activeFullText;
+            return int.MaxValue;
 
         float charactersPerSecond = activeTypewriterCharactersPerSecond > 0f ? activeTypewriterCharactersPerSecond : 28f;
         float elapsed = Time.unscaledTime - activeManualRevealStartTime - activeTypewriterStartDelay;
         if (elapsed < 0f)
-            return string.Empty;
+            return 0;
 
         int visibleCharacters = Mathf.CeilToInt(elapsed * charactersPerSecond);
-        if (activeFullText.Length > 0)
+        if (activeFullTextVisibleCharacterCount > 0)
             visibleCharacters = Mathf.Max(1, visibleCharacters);
 
-        visibleCharacters = Mathf.Clamp(visibleCharacters, 0, activeFullText.Length);
-        return visibleCharacters >= activeFullText.Length ? activeFullText : activeFullText.Substring(0, visibleCharacters);
+        return Mathf.Clamp(visibleCharacters, 0, activeFullTextVisibleCharacterCount);
     }
 
     private bool IsManualDialogueFullyVisible()
     {
-        return ResolveManualDialogueText().Length >= activeFullText.Length;
+        return ResolveManualVisibleCharacters() >= activeFullTextVisibleCharacterCount;
     }
 
     private bool IsNewTimelineDialogue(Speaker speaker, string fullText, double clipStartTime)
@@ -495,7 +548,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         if (ShouldStopTimelineAt(resumeTime))
         {
-            director.Stop();
+            if (!StartEndingCutsceneSequence())
+                director.Stop();
+
             return;
         }
 
@@ -526,6 +581,354 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return false;
 
         return time >= duration - 0.0005d;
+    }
+
+    private void UpdateEndingCutsceneSequence()
+    {
+        if (endingCutsceneSequenceStarted || timelineFinished || pausedForManualDialogueAdvance || !CanRunEndingCutsceneSequence())
+            return;
+
+        if (director == null || director.state != PlayState.Playing)
+            return;
+
+        double duration = director.duration;
+        if (double.IsNaN(duration) || double.IsInfinity(duration) || duration <= 0d)
+            return;
+
+        double triggerTime = duration - Mathf.Max(0f, endingNpcVanishSecondsBeforeEnd);
+        if (triggerTime < 0d)
+            triggerTime = 0d;
+
+        if (director.time + 0.0005d < triggerTime)
+            return;
+
+        StartEndingCutsceneSequence();
+    }
+
+    private bool CanRunEndingCutsceneSequence()
+    {
+        return enableEndingNpcVanish || enableEndingLetterboxExit;
+    }
+
+    private bool StartEndingCutsceneSequence()
+    {
+        if (!Application.isPlaying || endingCutsceneSequenceStarted || !CanRunEndingCutsceneSequence())
+            return false;
+
+        endingCutsceneSequenceStarted = true;
+        endingCutsceneSequenceCompleting = false;
+        HideTimelineDialogue();
+
+        if (director != null && director.state == PlayState.Playing)
+            director.Pause();
+
+        if (endingCutsceneSequenceRoutine != null)
+            StopCoroutine(endingCutsceneSequenceRoutine);
+
+        endingCutsceneSequenceRoutine = StartCoroutine(RunEndingCutsceneSequence());
+        return true;
+    }
+
+    private IEnumerator RunEndingCutsceneSequence()
+    {
+        if (enableEndingNpcVanish)
+        {
+            StartEndingNpcVanish();
+            while (endingNpcVanishRoutine != null)
+                yield return null;
+        }
+
+        if (enableEndingLetterboxExit)
+            yield return SlideEndingLetterboxBarsOut();
+
+        FinishEndingCutsceneSequence();
+    }
+
+    private void FinishEndingCutsceneSequence()
+    {
+        endingCutsceneSequenceRoutine = null;
+        endingCutsceneSequenceCompleting = true;
+
+        if (director != null)
+            director.Stop();
+
+        ApplyEndingLetterboxExitTargetPositions();
+        EndTimelineSequence();
+        endingCutsceneSequenceCompleting = false;
+    }
+
+    private void ResetEndingCutsceneSequenceState()
+    {
+        StopEndingCutsceneSequenceRoutine();
+        endingCutsceneSequenceStarted = false;
+        endingCutsceneSequenceCompleting = false;
+        endingLetterboxExitPositionsCached = false;
+    }
+
+    private void StopEndingCutsceneSequenceRoutine()
+    {
+        if (endingCutsceneSequenceRoutine == null)
+            return;
+
+        StopCoroutine(endingCutsceneSequenceRoutine);
+        endingCutsceneSequenceRoutine = null;
+    }
+
+    private void StartEndingNpcVanish()
+    {
+        endingNpcVanishStarted = true;
+
+        ResolveReferences();
+        if (npcObject == null)
+            return;
+
+        CacheEndingNpcState();
+        ReplayEndingNpcVanishEffect();
+
+        if (endingNpcVanishRoutine != null)
+            StopCoroutine(endingNpcVanishRoutine);
+
+        endingNpcVanishRoutine = StartCoroutine(FadeOutEndingNpc());
+    }
+
+    private IEnumerator FadeOutEndingNpc()
+    {
+        float fadeDuration = Mathf.Max(0.01f, endingNpcVanishFadeDuration);
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            ApplyEndingNpcAlpha(1f - Mathf.Clamp01(elapsed / fadeDuration));
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        ApplyEndingNpcAlpha(0f);
+
+        if (deactivateNpcAfterEndingVanish && npcObject != null)
+            npcObject.SetActive(false);
+
+        endingNpcVanishRoutine = null;
+    }
+
+    private void ResetEndingNpcVanishState()
+    {
+        StopEndingNpcVanishRoutines();
+        DisableEndingNpcVanishEffect();
+        endingNpcVanishStarted = false;
+
+        ResolveReferences();
+        if (npcObject == null)
+            return;
+
+        CacheEndingNpcState();
+
+        if (npcObject.activeSelf != endingNpcOriginalActiveSelf)
+            npcObject.SetActive(endingNpcOriginalActiveSelf);
+
+        RestoreEndingNpcRendererColors();
+    }
+
+    private void CacheEndingNpcState()
+    {
+        if (endingNpcStateCached || npcObject == null)
+            return;
+
+        endingNpcOriginalActiveSelf = npcObject.activeSelf;
+        endingNpcRenderers = npcObject.GetComponentsInChildren<SpriteRenderer>(true);
+        endingNpcOriginalColors = new Color[endingNpcRenderers.Length];
+        for (int i = 0; i < endingNpcRenderers.Length; i++)
+            endingNpcOriginalColors[i] = endingNpcRenderers[i] != null ? endingNpcRenderers[i].color : Color.white;
+
+        endingNpcStateCached = true;
+    }
+
+    private void RestoreEndingNpcRendererColors()
+    {
+        if (!endingNpcStateCached || endingNpcRenderers == null || endingNpcOriginalColors == null)
+            return;
+
+        int count = Mathf.Min(endingNpcRenderers.Length, endingNpcOriginalColors.Length);
+        for (int i = 0; i < count; i++)
+        {
+            if (endingNpcRenderers[i] != null)
+                endingNpcRenderers[i].color = endingNpcOriginalColors[i];
+        }
+    }
+
+    private void ApplyEndingNpcAlpha(float alphaMultiplier)
+    {
+        if (!endingNpcStateCached || endingNpcRenderers == null || endingNpcOriginalColors == null)
+            return;
+
+        int count = Mathf.Min(endingNpcRenderers.Length, endingNpcOriginalColors.Length);
+        for (int i = 0; i < count; i++)
+        {
+            SpriteRenderer spriteRenderer = endingNpcRenderers[i];
+            if (spriteRenderer == null)
+                continue;
+
+            Color color = endingNpcOriginalColors[i];
+            color.a *= Mathf.Clamp01(alphaMultiplier);
+            spriteRenderer.color = color;
+        }
+    }
+
+    private void ReplayEndingNpcVanishEffect()
+    {
+        if (npcObject == null)
+            return;
+
+        GameObject effectObject = EnsureEndingNpcVanishEffectObject();
+        if (effectObject == null)
+            return;
+
+        if (endingNpcEffectRoutine != null)
+            StopCoroutine(endingNpcEffectRoutine);
+
+        effectObject.SetActive(false);
+
+        CutsceneSpawnEffectReplayer replayer = effectObject.GetComponent<CutsceneSpawnEffectReplayer>();
+        if (replayer != null)
+            replayer.Configure(npcObject.transform, true, false, endingNpcVanishEffectOffset);
+
+        effectObject.transform.position = npcObject.transform.position + endingNpcVanishEffectOffset;
+        effectObject.SetActive(true);
+
+        if (endingNpcVanishEffectActiveDuration > 0f)
+            endingNpcEffectRoutine = StartCoroutine(DisableEndingNpcVanishEffectAfterDelay());
+    }
+
+    private GameObject EnsureEndingNpcVanishEffectObject()
+    {
+        if (endingNpcVanishEffectRuntimeObject != null)
+            return endingNpcVanishEffectRuntimeObject;
+
+        GameObject sourceEffect = FindSceneObject(endingNpcVanishEffectObjectName);
+        if (sourceEffect == null)
+            return null;
+
+        endingNpcVanishEffectRuntimeObject = Instantiate(sourceEffect, sourceEffect.transform.parent);
+        endingNpcVanishEffectRuntimeObject.name = "Cutscene_NpcVanishSpawnEffect";
+        endingNpcVanishEffectRuntimeObject.SetActive(false);
+        return endingNpcVanishEffectRuntimeObject;
+    }
+
+    private IEnumerator DisableEndingNpcVanishEffectAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(endingNpcVanishEffectActiveDuration);
+        DisableEndingNpcVanishEffect();
+        endingNpcEffectRoutine = null;
+    }
+
+    private void StopEndingNpcVanishRoutines()
+    {
+        if (endingNpcVanishRoutine != null)
+        {
+            StopCoroutine(endingNpcVanishRoutine);
+            endingNpcVanishRoutine = null;
+        }
+
+        if (endingNpcEffectRoutine != null)
+        {
+            StopCoroutine(endingNpcEffectRoutine);
+            endingNpcEffectRoutine = null;
+        }
+    }
+
+    private void DisableEndingNpcVanishEffect()
+    {
+        if (endingNpcVanishEffectRuntimeObject != null)
+            endingNpcVanishEffectRuntimeObject.SetActive(false);
+    }
+
+    private IEnumerator SlideEndingLetterboxBarsOut()
+    {
+        ResolveEndingLetterboxBars();
+        if (endingTopBarRect == null && endingBottomBarRect == null)
+            yield break;
+
+        CacheEndingLetterboxExitPositions();
+
+        float duration = Mathf.Max(0.01f, endingLetterboxExitDuration);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float progress = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
+            ApplyEndingLetterboxExitPositions(progress);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        ApplyEndingLetterboxExitTargetPositions();
+    }
+
+    private void ResolveEndingLetterboxBars()
+    {
+        if (endingTopBarRect == null)
+            endingTopBarRect = ResolveRectTransform(endingTopBarObjectName);
+
+        if (endingBottomBarRect == null)
+            endingBottomBarRect = ResolveRectTransform(endingBottomBarObjectName);
+    }
+
+    private RectTransform ResolveRectTransform(string objectName)
+    {
+        GameObject foundObject = FindSceneObject(objectName);
+        return foundObject != null ? foundObject.GetComponent<RectTransform>() : null;
+    }
+
+    private void CacheEndingLetterboxExitPositions()
+    {
+        if (endingLetterboxExitPositionsCached)
+            return;
+
+        if (endingTopBarRect != null)
+        {
+            endingTopBarExitStartPosition = endingTopBarRect.anchoredPosition;
+            endingTopBarExitTargetPosition = endingTopBarExitStartPosition + Vector2.up * ResolveEndingLetterboxExitDistance(endingTopBarRect);
+        }
+
+        if (endingBottomBarRect != null)
+        {
+            endingBottomBarExitStartPosition = endingBottomBarRect.anchoredPosition;
+            endingBottomBarExitTargetPosition = endingBottomBarExitStartPosition + Vector2.down * ResolveEndingLetterboxExitDistance(endingBottomBarRect);
+        }
+
+        endingLetterboxExitPositionsCached = true;
+    }
+
+    private float ResolveEndingLetterboxExitDistance(RectTransform barRect)
+    {
+        if (barRect == null)
+            return 0f;
+
+        float height = Mathf.Abs(barRect.rect.height);
+        if (height <= 0.001f)
+            height = Mathf.Abs(barRect.sizeDelta.y);
+
+        float scaleY = Mathf.Abs(barRect.localScale.y);
+        if (scaleY > 0.001f)
+            height *= scaleY;
+
+        return height + endingLetterboxExitPadding;
+    }
+
+    private void ApplyEndingLetterboxExitPositions(float progress)
+    {
+        if (!endingLetterboxExitPositionsCached)
+            return;
+
+        if (endingTopBarRect != null)
+            endingTopBarRect.anchoredPosition = Vector2.LerpUnclamped(endingTopBarExitStartPosition, endingTopBarExitTargetPosition, progress);
+
+        if (endingBottomBarRect != null)
+            endingBottomBarRect.anchoredPosition = Vector2.LerpUnclamped(endingBottomBarExitStartPosition, endingBottomBarExitTargetPosition, progress);
+    }
+
+    private void ApplyEndingLetterboxExitTargetPositions()
+    {
+        ApplyEndingLetterboxExitPositions(1f);
     }
 
     private void ResolveReferences()
@@ -757,6 +1160,8 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         dialogueText = textObject.GetComponent<TextMeshProUGUI>();
         dialogueText.color = Color.black;
+        dialogueText.richText = true;
+        dialogueText.maxVisibleCharacters = int.MaxValue;
         dialogueText.alignment = TextAlignmentOptions.Center;
         dialogueText.enableWordWrapping = true;
         dialogueText.raycastTarget = false;
@@ -820,6 +1225,30 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return activeOverridesTextLayout ? activeTextOffset : Vector2.zero;
     }
 
+    public static int CountDialogueVisibleCharacters(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return 0;
+
+        int visibleCharacters = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '<')
+            {
+                int tagEndIndex = text.IndexOf('>', i + 1);
+                if (tagEndIndex > i)
+                {
+                    i = tagEndIndex;
+                    continue;
+                }
+            }
+
+            visibleCharacters++;
+        }
+
+        return visibleCharacters;
+    }
+
     private void ShowDialogue()
     {
         if (runtimeUiRoot != null)
@@ -832,15 +1261,19 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             runtimeUiRoot.SetActive(false);
 
         if (dialogueText != null)
+        {
             dialogueText.text = string.Empty;
+            dialogueText.maxVisibleCharacters = int.MaxValue;
+        }
     }
 
-    private void SetDialogueText(string text)
+    private void SetDialogueText(string text, int maxVisibleCharacters = int.MaxValue)
     {
         if (dialogueText == null)
             return;
 
         dialogueText.text = text ?? string.Empty;
+        dialogueText.maxVisibleCharacters = maxVisibleCharacters < 0 ? int.MaxValue : maxVisibleCharacters;
     }
 
     private void UpdateBubblePosition()
@@ -1093,6 +1526,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
     private void DestroyRuntimeObjects()
     {
+        StopEndingCutsceneSequenceRoutine();
+        StopEndingNpcVanishRoutines();
+
         if (runtimeUiRoot != null)
         {
             if (Application.isPlaying)
@@ -1109,8 +1545,17 @@ public class CutsceneDialoguePlayer : MonoBehaviour
                 DestroyImmediate(runtimeFontAsset);
         }
 
+        if (endingNpcVanishEffectRuntimeObject != null)
+        {
+            if (Application.isPlaying)
+                Destroy(endingNpcVanishEffectRuntimeObject);
+            else
+                DestroyImmediate(endingNpcVanishEffectRuntimeObject);
+        }
+
         runtimeUiRoot = null;
         runtimeFontAsset = null;
+        endingNpcVanishEffectRuntimeObject = null;
     }
 
     private static bool WasEnterPressedThisFrame()

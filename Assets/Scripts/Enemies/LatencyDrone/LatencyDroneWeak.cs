@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections; // For Coroutines
 using UnityEngine.Audio;
+using UnityEngine.Serialization;
 using MoreMountains.Feedbacks;
 
 public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
@@ -47,6 +48,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float hoverAmplitude = 0.2f; // How high it floats up and down
     [SerializeField] private float hoverFrequency = 1f; // How fast it floats up and down
     [SerializeField] private float hoverOffset = 0f;
+
+    [Header("Cutscene Hover")]
+    [SerializeField] private bool enableCutsceneHover = true;
+    [SerializeField, Min(0f)] private float cutsceneHoverAmplitude = 0.06f;
+    [SerializeField, FormerlySerializedAs("cutsceneHoverFrequency"), Min(0.01f)] private float cutsceneHoverSpeed = 0.45f;
 
     [Header("Movement Feel")]
     [SerializeField] private float approachAcceleration = 20f;
@@ -157,6 +163,9 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     private bool[] deathRendererEnabledStates;
     private Collider2D[] deathColliders;
     private bool[] deathColliderEnabledStates;
+    private bool cutsceneHoverApplied;
+    private float cutsceneHoverLastOffsetX;
+    private float cutsceneHoverBaseLocalX;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolMoveRangeX = 5f; // X축으�??�동??최�? 범위
@@ -724,6 +733,22 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         }
     }
 
+    private void LateUpdate()
+    {
+        if (cutsceneCombatSuppressed && enableCutsceneHover)
+        {
+            ApplyCutsceneHover();
+            return;
+        }
+
+        ClearCutsceneHover();
+    }
+
+    private void OnDisable()
+    {
+        ClearCutsceneHover();
+    }
+
     private void HideDestroyedDrone()
     {
         if (preDeathFlashFeedback != null)
@@ -821,7 +846,11 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
         if (preDeathFlashFeedback != null)
             preDeathFlashFeedback.StopFeedbacks();
 
-        if (!IsControlledByDormantActivator() && !cutsceneCombatSuppressed)
+        DormantEnemyActivator2D dormantActivator = GetDormantActivator();
+        if (dormantActivator != null)
+            dormantActivator.MarkActivatedForCutsceneReveal();
+
+        if (dormantActivator == null && !cutsceneCombatSuppressed)
             enabled = true;
     }
 
@@ -963,6 +992,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
             return;
         }
 
+        ClearCutsceneHover();
         nextFireTime = Time.time + fireCooldown;
         nextTelegraphTime = Time.time + telegraphDelayAfterFire;
     }
@@ -980,6 +1010,38 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
         nextFireTime = Mathf.Infinity;
         nextTelegraphTime = Mathf.Infinity;
+    }
+
+    private void ApplyCutsceneHover()
+    {
+        float currentLocalX = transform.localPosition.x;
+        if (cutsceneHoverApplied && Mathf.Abs(currentLocalX - (cutsceneHoverBaseLocalX + cutsceneHoverLastOffsetX)) < 0.0001f)
+            currentLocalX -= cutsceneHoverLastOffsetX;
+
+        float offsetX = Mathf.Sin((Time.time * cutsceneHoverSpeed * Mathf.PI * 2f) + hoverOffset) * cutsceneHoverAmplitude;
+        Vector3 localPosition = transform.localPosition;
+        localPosition.x = currentLocalX + offsetX;
+        transform.localPosition = localPosition;
+
+        cutsceneHoverBaseLocalX = currentLocalX;
+        cutsceneHoverLastOffsetX = offsetX;
+        cutsceneHoverApplied = true;
+    }
+
+    private void ClearCutsceneHover()
+    {
+        if (!cutsceneHoverApplied)
+            return;
+
+        Vector3 localPosition = transform.localPosition;
+        if (Mathf.Abs(localPosition.x - (cutsceneHoverBaseLocalX + cutsceneHoverLastOffsetX)) < 0.0001f)
+        {
+            localPosition.x = cutsceneHoverBaseLocalX;
+            transform.localPosition = localPosition;
+        }
+
+        cutsceneHoverApplied = false;
+        cutsceneHoverLastOffsetX = 0f;
     }
 
     private void StopCombatActionsForCutscene()
@@ -1194,8 +1256,13 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
 
     private bool IsControlledByDormantActivator()
     {
-        DormantEnemyActivator2D dormantActivator = GetComponent<DormantEnemyActivator2D>();
+        DormantEnemyActivator2D dormantActivator = GetDormantActivator();
         return dormantActivator != null && dormantActivator.KeepsEnemyDormantOnRespawn;
+    }
+
+    private DormantEnemyActivator2D GetDormantActivator()
+    {
+        return GetComponent<DormantEnemyActivator2D>();
     }
 }
 

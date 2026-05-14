@@ -18055,8 +18055,20 @@ PrefabInstance:
       value: -0.99
       objectReference: {fileID: 0}
     - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: cutsceneHoverSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: lockAimDuringBurst
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: enableCutsceneHover
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: cutsceneHoverAmplitude
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: lockAimDuringTelegraph
@@ -61963,6 +61975,18 @@ MonoBehaviour:
   playerTextFlipX: 0
   npcBubbleFlipX: 1
   npcTextFlipX: 0
+  enableEndingNpcVanish: 1
+  endingNpcVanishSecondsBeforeEnd: 1.1
+  endingNpcVanishFadeDuration: 0.8
+  endingNpcVanishEffectObjectName: Cutscene_SpawnEffect
+  endingNpcVanishEffectOffset: {x: 0, y: 0, z: 0}
+  endingNpcVanishEffectActiveDuration: 0.7
+  deactivateNpcAfterEndingVanish: 1
+  enableEndingLetterboxExit: 1
+  endingTopBarObjectName: TopBar
+  endingBottomBarObjectName: BottomBar
+  endingLetterboxExitDuration: 1
+  endingLetterboxExitPadding: 24
 --- !u!114 &1603505574
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -46,7 +46,7 @@ public class CutsceneDialogueMixerBehaviour : PlayableBehaviour
             controller.ShowTimelineDialogue(
                 activeDialogue.speaker,
                 activeDialogue.text,
-                ResolveVisibleText(activeDialogue, activeClipTime),
+                ResolveVisibleCharacterCount(activeDialogue, activeClipTime),
                 activeClipTime,
                 activeClipDuration,
                 activeDialogue.useCustomOffset,
@@ -101,24 +101,28 @@ public class CutsceneDialogueMixerBehaviour : PlayableBehaviour
         return Object.FindFirstObjectByType<CutsceneDialoguePlayer>();
     }
 
-    private static string ResolveVisibleText(CutsceneDialogueBehaviour dialogue, double clipTime)
+    private static int ResolveVisibleCharacterCount(CutsceneDialogueBehaviour dialogue, double clipTime)
     {
         string text = dialogue.text ?? string.Empty;
         if (dialogue.disableTypewriter || string.IsNullOrEmpty(text))
-            return text;
+            return int.MaxValue;
 
         float charactersPerSecond = dialogue.typewriterCharactersPerSecond > 0f
             ? dialogue.typewriterCharactersPerSecond
             : DefaultTypewriterCharactersPerSecond;
         double elapsed = clipTime - Mathf.Max(0f, dialogue.typewriterStartDelay);
         if (elapsed <= 0d)
-            return string.Empty;
+            return 0;
+
+        int totalVisibleCharacters = CutsceneDialoguePlayer.CountDialogueVisibleCharacters(text);
+        if (totalVisibleCharacters <= 0)
+            return 0;
 
         int visibleCharacters = Mathf.Clamp(
             Mathf.CeilToInt((float)(elapsed * charactersPerSecond)),
             0,
-            text.Length);
+            totalVisibleCharacters);
 
-        return visibleCharacters >= text.Length ? text : text.Substring(0, visibleCharacters);
+        return visibleCharacters >= totalVisibleCharacters ? int.MaxValue : visibleCharacters;
     }
 }
