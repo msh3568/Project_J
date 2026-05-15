@@ -64,6 +64,7 @@ MonoBehaviour:
   slamArmColor: {r: 1, g: 0.15, b: 0.08, a: 1}
   sortingOrder: 30
   hidePrototypeBlocksWhenArtAssigned: 1
+  useManualArtHierarchy: 0
   bossArtScale: 0.3
   bodyArtSourceAnchor: {x: 750, y: 750}
   leftArmArtSourceAnchor: {x: 350, y: 766.6667}
@@ -186,6 +187,14 @@ MonoBehaviour:
     localOffset: {x: 0, y: 0}
     localScaleMultiplier: {x: 1, y: 1}
     sortingOrderOffset: 5
+  useArmIkRig: 1
+  leftHandTarget: {fileID: 0}
+  rightHandTarget: {fileID: 0}
+  leftGripPoint: {fileID: 0}
+  leftGripPointLocalOffset: {x: 0, y: -0.15}
+  minArmIkSegmentLength: 0.35
+  leftArmIkBendSign: -1
+  rightArmIkBendSign: 1
   animateLeftHandGrabPose: 1
   leftGrabPoseSpeed: 14
   leftFingerCurlAngle: 24
@@ -196,7 +205,8 @@ MonoBehaviour:
   leftGrabFingerSortingOrderOffset: 3
   attachGrabbedPlayerToLeftHandArt: 1
   leftHandArtHeldPlayerOffset: {x: 0, y: 0}
-  stretchLeftArmArtFromBody: 1
+  leftArmMovesAsSingleRoot: 1
+  stretchLeftArmArtFromBody: 0
   leftArmStretchInfluence: 1
   animateRightHandFistPose: 1
   rightFistPoseSpeed: 16
@@ -204,8 +214,8 @@ MonoBehaviour:
   rightFingerFistPinchOffset: {x: 0.06, y: 0.03}
   rightPalmFistOffset: {x: -0.01, y: -0.03}
   rightPalmFistAngle: 6
-  rightArmMovesAsSingleRoot: 0
-  stretchRightArmArtFromBody: 1
+  rightArmMovesAsSingleRoot: 1
+  stretchRightArmArtFromBody: 0
   rightArmStretchInfluence: 1
   rightArmUsesChainLag: 0
   rightArmUpperFollowSpeed: 28
@@ -214,7 +224,7 @@ MonoBehaviour:
   rightArmMaxChainLagDistance: 1
   rightShoulderChainMaxRotation: 12
   rightShoulderChainRotationInfluence: 0.35
-  rightArmUsesHammerElbowBend: 1
+  rightArmUsesHammerElbowBend: 0
   rightArmAdaptiveHammerElbowBend: 1
   rightArmHammerElbowBendOffset: {x: 0.45, y: 0.18}
   rightArmHammerCloseBendDistance: 2.2
@@ -241,11 +251,17 @@ MonoBehaviour:
   liftSpeed: 10
   slamSpeed: 22
   recoverSpeed: 9
-  grabRadius: 0.7
-  grabOffset: {x: 0, y: 0.55}
+  grabRadius: 0.95
+  grabOffset: {x: 0, y: 0.65}
   liftHeight: 2.2
   slamDistance: 3.1
   heldPlayerOffset: {x: 0, y: -0.15}
+  clampLeftArmSlamToGround: 1
+  leftArmSlamGroundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  leftArmSlamMinGroundNormalY: 0.45
+  leftArmSlamGroundSkin: 0.04
   rightArmOnlyTargetsRightSide: 1
   limitRightArmRangeToArtEnd: 1
   rightArmArtReachPadding: 1.15
@@ -261,14 +277,22 @@ MonoBehaviour:
   rightArmHammerWindupAngle: -18
   rightArmHammerImpactAngle: 10
   rightArmAimSnapSize: 1.25
-  rightArmSlamAreaOffset: {x: 0, y: 2.1}
-  rightArmSlamAreaSize: {x: 2.4, y: 5.2}
+  rightArmSlamAreaOffset: {x: 0, y: 2.45}
+  rightArmSlamAreaSize: {x: 2.7, y: 6.2}
   rightArmSlamDamage: 1
   rightArmSlamDamageMask:
     serializedVersion: 2
     m_Bits: 128
   rightArmTelegraphColor: {r: 1, g: 0.1, b: 0.05, a: 0.25}
   rightArmImpactColor: {r: 1, g: 0.05, b: 0.02, a: 0.45}
+  requireRightArmSlamGroundImpact: 1
+  rightArmSlamGroundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  rightArmSlamGroundProbeSize: {x: 0.8, y: 0.8}
+  rightArmSlamGroundSearchDistance: 12
+  rightArmSlamMinGroundNormalY: 0.45
+  rightArmSlamGroundSkin: 0.04
   rightArmGrappleSwatSpeed: 46
   rightArmGrappleSwatDuration: 0.08
   rightArmGrappleSwatDistance: 1.1
@@ -283,6 +307,14 @@ MonoBehaviour:
   deactivateOnDeath: 1
   damageFlashColor: {r: 1, g: 1, b: 1, a: 1}
   damageFlashDuration: 0.08
+  scatterSpritesOnDeath: 1
+  deathScatterLifetime: 4
+  deathScatterRadialSpeedRange: {x: 3, y: 8}
+  deathScatterUpwardSpeedRange: {x: 4, y: 9}
+  deathScatterGravityScale: 2.2
+  deathScatterLinearDamping: 0.25
+  deathScatterAngularDamping: 0.05
+  deathScatterSpinSpeed: 720
 --- !u!114 &100003
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -49,6 +49,27 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         public bool visualEndInitialized;
     }
 
+    private sealed class ArmIkRig
+    {
+        public Transform root;
+        public Transform handTarget;
+        public Transform shoulderPivot;
+        public Transform elbowPivot;
+        public Transform wristPivot;
+        public Transform upperArmGroup;
+        public Transform lowerArmGroup;
+        public Transform handGroup;
+        public Transform gripPoint;
+        public Vector2 restHandPosition;
+        public Vector3 shoulderLocalPosition;
+        public float upperLength;
+        public float lowerLength;
+        public float bendSign;
+        public float upperRestAngle;
+        public float lowerRestAngle;
+        public float handRotationOffset;
+    }
+
     private enum AttackState
     {
         Waiting,
@@ -94,6 +115,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     [Header("Boss Art")]
     [SerializeField] private bool hidePrototypeBlocksWhenArtAssigned = true;
+    [SerializeField] private bool useManualArtHierarchy = true;
     [SerializeField, Min(0f)] private float bossArtScale = 0.3f;
     [SerializeField] private Vector2 bodyArtSourceAnchor = new Vector2(750f, 750f);
     [SerializeField] private Vector2 leftArmArtSourceAnchor = new Vector2(350f, 766.6667f);
@@ -101,6 +123,16 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField] private BossSpritePart[] bodyArtParts = new BossSpritePart[0];
     [SerializeField] private BossSpritePart[] leftArmArtParts = new BossSpritePart[0];
     [SerializeField] private BossSpritePart[] rightArmArtParts = new BossSpritePart[0];
+
+    [Header("Arm IK Visuals")]
+    [SerializeField] private bool useArmIkRig = true;
+    [SerializeField] private Transform leftHandTarget;
+    [SerializeField] private Transform rightHandTarget;
+    [SerializeField] private Transform leftGripPoint;
+    [SerializeField] private Vector2 leftGripPointLocalOffset = new Vector2(0f, -0.15f);
+    [SerializeField, Min(0.01f)] private float minArmIkSegmentLength = 0.35f;
+    [SerializeField] private float leftArmIkBendSign = -1f;
+    [SerializeField] private float rightArmIkBendSign = 1f;
 
     [Header("Left Hand Grab Pose")]
     [SerializeField] private bool animateLeftHandGrabPose = true;
@@ -115,6 +147,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField] private Vector2 leftHandArtHeldPlayerOffset = Vector2.zero;
 
     [Header("Left Arm Stretch Visuals")]
+    [SerializeField] private bool leftArmMovesAsSingleRoot = true;
     [SerializeField] private bool stretchLeftArmArtFromBody = true;
     [SerializeField, Range(0f, 1f)] private float leftArmStretchInfluence = 1f;
 
@@ -127,7 +160,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField, Range(-30f, 30f)] private float rightPalmFistAngle = 6f;
 
     [Header("Right Arm Stretch Visuals")]
-    [SerializeField] private bool rightArmMovesAsSingleRoot = false;
+    [SerializeField] private bool rightArmMovesAsSingleRoot = true;
     [SerializeField] private bool stretchRightArmArtFromBody = true;
     [SerializeField, Range(0f, 1f)] private float rightArmStretchInfluence = 1f;
     [SerializeField] private bool rightArmUsesChainLag = false;
@@ -168,11 +201,17 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField, Min(0f)] private float liftSpeed = 10f;
     [SerializeField, Min(0f)] private float slamSpeed = 22f;
     [SerializeField, Min(0f)] private float recoverSpeed = 9f;
-    [SerializeField, Min(0f)] private float grabRadius = 0.7f;
-    [SerializeField] private Vector2 grabOffset = new Vector2(0f, 0.55f);
+    [SerializeField, Min(0f)] private float grabRadius = 0.95f;
+    [SerializeField] private Vector2 grabOffset = new Vector2(0f, 0.65f);
     [SerializeField, Min(0f)] private float liftHeight = 2.2f;
     [SerializeField, Min(0f)] private float slamDistance = 3.1f;
     [SerializeField] private Vector2 heldPlayerOffset = new Vector2(0f, -0.15f);
+
+    [Header("Left Arm Slam Ground Clamp")]
+    [SerializeField] private bool clampLeftArmSlamToGround = true;
+    [SerializeField] private LayerMask leftArmSlamGroundMask;
+    [SerializeField, Range(0f, 1f)] private float leftArmSlamMinGroundNormalY = 0.45f;
+    [SerializeField, Min(0f)] private float leftArmSlamGroundSkin = 0.04f;
 
     [Header("Right Arm Slam")]
     [SerializeField] private bool rightArmOnlyTargetsRightSide = true;
@@ -190,12 +229,20 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField, Range(-60f, 60f)] private float rightArmHammerWindupAngle = -18f;
     [SerializeField, Range(-60f, 60f)] private float rightArmHammerImpactAngle = 10f;
     [SerializeField, Min(0f)] private float rightArmAimSnapSize = 1.25f;
-    [SerializeField] private Vector2 rightArmSlamAreaOffset = new Vector2(0f, 2.1f);
-    [SerializeField] private Vector2 rightArmSlamAreaSize = new Vector2(2.4f, 5.2f);
+    [SerializeField] private Vector2 rightArmSlamAreaOffset = new Vector2(0f, 2.45f);
+    [SerializeField] private Vector2 rightArmSlamAreaSize = new Vector2(2.7f, 6.2f);
     [SerializeField, Min(0f)] private float rightArmSlamDamage = 1f;
     [SerializeField] private LayerMask rightArmSlamDamageMask;
     [SerializeField] private Color rightArmTelegraphColor = new Color(1f, 0.1f, 0.05f, 0.25f);
     [SerializeField] private Color rightArmImpactColor = new Color(1f, 0.05f, 0.02f, 0.45f);
+
+    [Header("Right Arm Slam Ground Impact")]
+    [SerializeField] private bool requireRightArmSlamGroundImpact = true;
+    [SerializeField] private LayerMask rightArmSlamGroundMask;
+    [SerializeField] private Vector2 rightArmSlamGroundProbeSize = new Vector2(0.8f, 0.8f);
+    [SerializeField, Min(0f)] private float rightArmSlamGroundSearchDistance = 12f;
+    [SerializeField, Range(0f, 1f)] private float rightArmSlamMinGroundNormalY = 0.45f;
+    [SerializeField, Min(0f)] private float rightArmSlamGroundSkin = 0.04f;
 
     [Header("Right Arm Grapple Swat")]
     [SerializeField, Min(0f)] private float rightArmGrappleSwatSpeed = 46f;
@@ -214,6 +261,16 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     [SerializeField] private bool deactivateOnDeath = true;
     [SerializeField] private Color damageFlashColor = Color.white;
     [SerializeField, Min(0f)] private float damageFlashDuration = 0.08f;
+
+    [Header("Death Scatter")]
+    [SerializeField] private bool scatterSpritesOnDeath = true;
+    [SerializeField, Min(0f)] private float deathScatterLifetime = 4f;
+    [SerializeField] private Vector2 deathScatterRadialSpeedRange = new Vector2(3f, 8f);
+    [SerializeField] private Vector2 deathScatterUpwardSpeedRange = new Vector2(4f, 9f);
+    [SerializeField, Min(0f)] private float deathScatterGravityScale = 2.2f;
+    [SerializeField, Min(0f)] private float deathScatterLinearDamping = 0.25f;
+    [SerializeField, Min(0f)] private float deathScatterAngularDamping = 0.05f;
+    [SerializeField, Min(0f)] private float deathScatterSpinSpeed = 720f;
 
     [Header("Feel - Left Arm Slam Impact")]
     [SerializeField] private MMF_Player leftArmSlamImpactFeedback;
@@ -247,6 +304,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private Player grabbedPlayer;
     private Player_Health grabbedHealth;
     private Rigidbody2D grabbedRigidbody;
+    private Collider2D grabbedGroundProbeCollider;
     private float grabbedGravityScale;
     private Vector2 snatchTargetPosition;
     private Vector2 grabStartPosition;
@@ -269,6 +327,10 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private bool rightHandVisualEndInitialized;
     private readonly Collider2D[] rightArmSlamHitBuffer = new Collider2D[8];
     private readonly Player_Health[] rightArmDamagedPlayerBuffer = new Player_Health[8];
+    private readonly RaycastHit2D[] leftArmSlamGroundHitBuffer = new RaycastHit2D[8];
+    private readonly RaycastHit2D[] rightArmSlamGroundHitBuffer = new RaycastHit2D[8];
+    private ArmIkRig leftArmIkRig;
+    private ArmIkRig rightArmIkRig;
 
     private void Awake()
     {
@@ -351,6 +413,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
                 break;
         }
 
+        UpdateArmIkRigs();
         UpdateLeftArmStretchPose();
         UpdateRightArmStretchPose();
         UpdateLeftHandGrabPose();
@@ -384,12 +447,16 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             return;
 
         currentHealth -= Mathf.Max(0f, damage);
+
+        if (currentHealth <= 0f)
+        {
+            Die();
+            return;
+        }
+
         if (damageFlashCoroutine != null)
             StopCoroutine(damageFlashCoroutine);
         damageFlashCoroutine = StartCoroutine(DamageFlashRoutine());
-
-        if (currentHealth <= 0f)
-            Die();
     }
 
     public void OnCheckpointRespawn()
@@ -558,13 +625,13 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         AimLeftArmAt(snatchTargetPosition);
         MoveLeftArmTowards(snatchTargetPosition, snatchSpeed);
 
-        if (target != null && Vector2.Distance(leftArm.position, (Vector2)target.position + grabOffset) <= grabRadius)
+        if (IsTrackedPlayerWithinLeftGrabRange())
         {
             GrabTarget();
             return;
         }
 
-        bool reachedTarget = Vector2.Distance(leftArm.position, snatchTargetPosition) <= 0.05f;
+        bool reachedTarget = Vector2.Distance(GetLeftHandPosition(), snatchTargetPosition) <= 0.05f;
         if (reachedTarget || stateTimer >= snatchDuration)
             EnterState(AttackState.Recover);
     }
@@ -575,7 +642,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         MoveLeftArmTowards(liftTargetPosition, liftSpeed);
         AttachGrabbedPlayerToArm();
 
-        if (Vector2.Distance(leftArm.position, liftTargetPosition) <= 0.05f)
+        if (Vector2.Distance(GetLeftHandPosition(), liftTargetPosition) <= 0.05f)
             EnterState(AttackState.Hold);
     }
 
@@ -593,10 +660,10 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private void UpdateSlam()
     {
         SetLeftArmColor(slamArmColor);
-        MoveLeftArmTowards(slamTargetPosition, slamSpeed);
+        bool hitGround = MoveLeftArmTowardsSlamTarget();
         AttachGrabbedPlayerToArm();
 
-        if (Vector2.Distance(leftArm.position, slamTargetPosition) > 0.06f)
+        if (!hitGround && leftArm != null && Vector2.Distance(GetLeftHandPosition(), slamTargetPosition) > 0.06f)
             return;
 
         PlayLeftArmSlamImpactFeedback();
@@ -626,7 +693,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         MoveRightArmTowards(GetRightArmRestWorldPosition(), rightArmRecoverSpeed);
         HideRightArmSlamMarker();
 
-        bool armReturned = Vector2.Distance(leftArm.position, GetLeftArmRestWorldPosition()) <= 0.05f;
+        bool armReturned = Vector2.Distance(GetLeftHandPosition(), GetLeftArmRestWorldPosition()) <= 0.05f;
         if (armReturned && stateTimer >= recoverDuration)
         {
             cooldownTimer = attackCooldown;
@@ -654,30 +721,23 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     {
         stateTimer += Time.deltaTime;
         SetRightArmColor(slamArmColor);
-        if (rightArmUsesHammerSwing)
-        {
-            float slamProgress = GetRightArmSlamProgress();
-            float easedProgress = slamProgress * slamProgress;
-            MoveRightArmToWorldPosition(GetRightArmHammerSlamPosition(easedProgress));
-            ApplyRightArmHammerRotation(easedProgress, false);
-        }
-        else
-        {
-            ResetRightArmRotation();
-            MoveRightArmTowards(rightArmSlamImpactPosition, rightArmSlamSpeed);
-        }
+        bool requiresGroundImpact = ShouldRequireRightArmSlamGroundImpact();
+        bool hitGround = MoveRightArmDuringSlam(requiresGroundImpact);
 
         ShowRightArmSlamMarker(rightArmImpactColor);
 
-        bool reachedTarget = rightArmUsesHammerSwing
+        if (requiresGroundImpact && !hitGround)
+            return;
+
+        bool reachedTarget = hitGround || (rightArmUsesHammerSwing
             ? GetRightArmSlamProgress() >= 1f
-            : rightArm != null && Vector2.Distance(rightArm.position, rightArmSlamImpactPosition) <= 0.05f;
+            : rightArm != null && Vector2.Distance(GetRightHandPosition(), rightArmSlamImpactPosition) <= 0.05f);
         if (!reachedTarget && stateTimer < rightArmSlamDuration)
             return;
 
         MoveRightArmToWorldPosition(rightArmSlamImpactPosition);
         ApplyRightArmHammerRotation(1f, false);
-        PlayLeftArmSlamImpactFeedback(rightArm);
+        PlayLeftArmSlamImpactFeedback(GetRightHandFeedbackTransform());
         ApplyRightArmSlamDamage();
         EnterState(AttackState.RightImpact);
     }
@@ -706,7 +766,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         ResetLeftArmRotation();
         MoveLeftArmTowards(GetLeftArmRestWorldPosition(), recoverSpeed);
 
-        bool armReturned = rightArm != null && Vector2.Distance(rightArm.position, GetRightArmRestWorldPosition()) <= 0.05f;
+        bool armReturned = rightArm != null && Vector2.Distance(GetRightHandPosition(), GetRightArmRestWorldPosition()) <= 0.05f;
         if (armReturned && stateTimer >= recoverDuration)
         {
             cooldownTimer = attackCooldown;
@@ -722,7 +782,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         MoveRightArmTowards(rightArmGrappleSwatEndPosition, rightArmGrappleSwatSpeed);
         HideRightArmSlamMarker();
 
-        bool reachedTarget = rightArm != null && Vector2.Distance(rightArm.position, rightArmGrappleSwatEndPosition) <= 0.05f;
+        bool reachedTarget = rightArm != null && Vector2.Distance(GetRightHandPosition(), rightArmGrappleSwatEndPosition) <= 0.05f;
         if (reachedTarget || stateTimer >= rightArmGrappleSwatDuration)
             EnterState(AttackState.RightGrappleSwatRecover);
     }
@@ -735,7 +795,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         MoveRightArmTowards(GetRightArmRestWorldPosition(), rightArmRecoverSpeed);
         HideRightArmSlamMarker();
 
-        bool armReturned = rightArm != null && Vector2.Distance(rightArm.position, GetRightArmRestWorldPosition()) <= 0.05f;
+        bool armReturned = rightArm != null && Vector2.Distance(GetRightHandPosition(), GetRightArmRestWorldPosition()) <= 0.05f;
         if (armReturned && stateTimer >= recoverDuration)
         {
             cooldownTimer = attackCooldown;
@@ -767,9 +827,9 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             return;
 
         rightArmSlamAreaCenter = GetApproxRightArmSlamAreaCenter(target.position);
-        rightArmSlamImpactPosition = rightArmSlamAreaCenter;
+        rightArmSlamImpactPosition = ResolveRightArmSlamImpactPosition(rightArmSlamAreaCenter);
         rightArmSlamStartPosition = GetRightArmSlamStartPosition(rightArmSlamImpactPosition);
-        rightArmWindupStartPosition = rightArm != null ? (Vector2)rightArm.position : GetRightArmRestWorldPosition();
+        rightArmWindupStartPosition = rightArm != null ? GetRightHandPosition() : GetRightArmRestWorldPosition();
         rightArmSlamDamageApplied = false;
         ResetRightArmRotation();
         ShowRightArmSlamMarker(rightArmTelegraphColor);
@@ -960,6 +1020,34 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         CameraShakeManager.instance.Shake(leftArmSlamImpulseForce);
     }
 
+    private bool IsTrackedPlayerWithinLeftGrabRange()
+    {
+        if (target == null || leftArm == null && leftHandTarget == null)
+            return false;
+
+        Vector2 grabCenter = GetLeftHandPosition();
+        float radius = Mathf.Max(0f, grabRadius);
+        float radiusSqr = radius * radius;
+
+        Collider2D[] targetColliders = target.GetComponentsInChildren<Collider2D>();
+        if (targetColliders != null)
+        {
+            for (int i = 0; i < targetColliders.Length; i++)
+            {
+                Collider2D targetCollider = targetColliders[i];
+                if (targetCollider == null || !targetCollider.enabled)
+                    continue;
+
+                Vector2 closestPoint = targetCollider.ClosestPoint(grabCenter);
+                if (((Vector2)closestPoint - grabCenter).sqrMagnitude <= radiusSqr)
+                    return true;
+            }
+        }
+
+        Vector2 fallbackGrabPosition = (Vector2)target.position + grabOffset;
+        return ((Vector2)fallbackGrabPosition - grabCenter).sqrMagnitude <= radiusSqr;
+    }
+
     private bool CanLeftArmTargetPlayer()
     {
         if (!leftArmOnlyTargetsLeftSide || target == null)
@@ -1046,6 +1134,190 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         return QuadraticBezier(rightArmSlamStartPosition, controlPosition, rightArmSlamImpactPosition, clampedProgress);
     }
 
+    private bool MoveRightArmDuringSlam(bool requiresGroundImpact)
+    {
+        if (rightArm == null)
+            return false;
+
+        Vector2 currentPosition = GetRightHandPosition();
+        Vector2 desiredPosition;
+
+        if (rightArmUsesHammerSwing)
+        {
+            float slamProgress = GetRightArmSlamProgress();
+            float easedProgress = slamProgress * slamProgress;
+            desiredPosition = GetRightArmHammerSlamPosition(easedProgress);
+
+            if (requiresGroundImpact && slamProgress >= 1f && !IsRightArmSlamTouchingGround(currentPosition))
+                desiredPosition = currentPosition + Vector2.down * (Mathf.Max(0f, rightArmSlamSpeed) * Time.deltaTime);
+
+            ApplyRightArmHammerRotation(easedProgress, false);
+        }
+        else
+        {
+            ResetRightArmRotation();
+            float step = Mathf.Max(0f, rightArmSlamSpeed) * Time.deltaTime;
+            desiredPosition = Vector2.MoveTowards(currentPosition, rightArmSlamImpactPosition, step);
+
+            if (requiresGroundImpact
+                && Vector2.Distance(currentPosition, rightArmSlamImpactPosition) <= 0.05f
+                && !IsRightArmSlamTouchingGround(currentPosition))
+            {
+                desiredPosition = currentPosition + Vector2.down * step;
+            }
+        }
+
+        return MoveRightArmSlamToWorldPosition(desiredPosition, requiresGroundImpact);
+    }
+
+    private bool MoveRightArmSlamToWorldPosition(Vector2 desiredPosition, bool clampToGround)
+    {
+        if (rightArm == null)
+            return false;
+
+        Vector2 currentPosition = GetRightHandPosition();
+        if (clampToGround && TryClampRightArmSlamMoveToGround(currentPosition, desiredPosition, out Vector2 clampedPosition))
+        {
+            rightArmSlamImpactPosition = clampedPosition;
+            MoveRightArmToWorldPosition(clampedPosition);
+            return true;
+        }
+
+        MoveRightArmToWorldPosition(desiredPosition);
+
+        if (!clampToGround || !IsRightArmSlamTouchingGround(desiredPosition))
+            return false;
+
+        rightArmSlamImpactPosition = GetRightHandPosition();
+        return true;
+    }
+
+    private bool TryClampRightArmSlamMoveToGround(Vector2 currentPosition, Vector2 desiredPosition, out Vector2 clampedPosition)
+    {
+        clampedPosition = desiredPosition;
+
+        Vector2 movement = desiredPosition - currentPosition;
+        if (movement.y > 0.0001f || movement.sqrMagnitude <= 0.000001f)
+            return false;
+
+        int groundMask = GetRightArmSlamGroundMask();
+        if (groundMask == 0)
+            return false;
+
+        int hitCount = Physics2D.BoxCastNonAlloc(
+            currentPosition,
+            GetRightArmSlamGroundProbeSize(),
+            0f,
+            movement.normalized,
+            rightArmSlamGroundHitBuffer,
+            movement.magnitude + rightArmSlamGroundSkin,
+            groundMask);
+
+        if (!TryGetNearestUsableRightArmSlamGroundHit(hitCount, out RaycastHit2D hit))
+            return false;
+
+        clampedPosition = hit.centroid + hit.normal * rightArmSlamGroundSkin;
+        return true;
+    }
+
+    private bool IsRightArmSlamTouchingGround(Vector2 position)
+    {
+        int groundMask = GetRightArmSlamGroundMask();
+        if (groundMask == 0)
+            return false;
+
+        float skin = Mathf.Max(0.001f, rightArmSlamGroundSkin);
+        int hitCount = Physics2D.BoxCastNonAlloc(
+            position + Vector2.up * skin,
+            GetRightArmSlamGroundProbeSize(),
+            0f,
+            Vector2.down,
+            rightArmSlamGroundHitBuffer,
+            skin * 2f + 0.02f,
+            groundMask);
+
+        return TryGetNearestUsableRightArmSlamGroundHit(hitCount, out _);
+    }
+
+    private Vector2 ResolveRightArmSlamImpactPosition(Vector2 fallbackPosition)
+    {
+        if (!ShouldRequireRightArmSlamGroundImpact())
+            return fallbackPosition;
+
+        int groundMask = GetRightArmSlamGroundMask();
+        if (groundMask == 0)
+            return fallbackPosition;
+
+        float skin = Mathf.Max(0.001f, rightArmSlamGroundSkin);
+        int hitCount = Physics2D.BoxCastNonAlloc(
+            fallbackPosition + Vector2.up * skin,
+            GetRightArmSlamGroundProbeSize(),
+            0f,
+            Vector2.down,
+            rightArmSlamGroundHitBuffer,
+            Mathf.Max(0f, rightArmSlamGroundSearchDistance) + skin,
+            groundMask);
+
+        if (!TryGetNearestUsableRightArmSlamGroundHit(hitCount, out RaycastHit2D hit))
+            return fallbackPosition;
+
+        return hit.centroid + hit.normal * rightArmSlamGroundSkin;
+    }
+
+    private bool TryGetNearestUsableRightArmSlamGroundHit(int hitCount, out RaycastHit2D bestHit)
+    {
+        bestHit = default;
+        bool foundHit = false;
+        float bestDistance = float.MaxValue;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit2D hit = rightArmSlamGroundHitBuffer[i];
+            if (hit.collider == null
+                || hit.collider.isTrigger
+                || hit.normal.y < rightArmSlamMinGroundNormalY
+                || hit.collider.transform.IsChildOf(transform))
+                continue;
+
+            if (hit.distance >= bestDistance)
+                continue;
+
+            bestDistance = hit.distance;
+            bestHit = hit;
+            foundHit = true;
+        }
+
+        return foundHit;
+    }
+
+    private bool ShouldRequireRightArmSlamGroundImpact()
+    {
+        return requireRightArmSlamGroundImpact && GetRightArmSlamGroundMask() != 0;
+    }
+
+    private int GetRightArmSlamGroundMask()
+    {
+        if (rightArmSlamGroundMask.value != 0)
+            return rightArmSlamGroundMask.value;
+
+        if (target != null)
+        {
+            Player targetPlayer = target.GetComponent<Player>();
+            if (targetPlayer != null && targetPlayer.GroundLayerMask.value != 0)
+                return targetPlayer.GroundLayerMask.value;
+        }
+
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        return groundLayer >= 0 ? 1 << groundLayer : 0;
+    }
+
+    private Vector2 GetRightArmSlamGroundProbeSize()
+    {
+        return new Vector2(
+            Mathf.Max(0.05f, rightArmSlamGroundProbeSize.x),
+            Mathf.Max(0.05f, rightArmSlamGroundProbeSize.y));
+    }
+
     private static Vector2 QuadraticBezier(Vector2 start, Vector2 control, Vector2 end, float progress)
     {
         float clampedProgress = Mathf.Clamp01(progress);
@@ -1078,6 +1350,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             grabbedRigidbody.linearVelocity = Vector2.zero;
         }
 
+        grabbedGroundProbeCollider = ResolveGrabbedGroundProbeCollider(grabbedTransform);
         float totalLockTime = Mathf.Max(0.1f, liftHeight / Mathf.Max(0.01f, liftSpeed))
             + holdBeforeSlamDuration
             + Mathf.Max(0.1f, slamDistance / Mathf.Max(0.01f, slamSpeed))
@@ -1085,7 +1358,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         if (grabbedPlayer != null)
             grabbedPlayer.Immobilize(totalLockTime);
 
-        grabStartPosition = leftArm.position;
+        grabStartPosition = GetLeftHandPosition();
         liftTargetPosition = grabStartPosition + Vector2.up * liftHeight;
         slamTargetPosition = grabStartPosition + Vector2.down * slamDistance;
         AttachGrabbedPlayerToArm();
@@ -1111,10 +1384,199 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private Vector2 GetGrabbedPlayerHoldPosition()
     {
-        if (attachGrabbedPlayerToLeftHandArt && TryGetLeftHandArtGripWorldPosition(out Vector2 artGripPosition))
-            return artGripPosition + leftHandArtHeldPlayerOffset;
+        if (leftGripPoint != null)
+            return (Vector2)leftGripPoint.position + leftHandArtHeldPlayerOffset;
 
-        return (Vector2)leftArm.position + heldPlayerOffset;
+        if (attachGrabbedPlayerToLeftHandArt)
+            return GetLeftHandPosition() + leftHandArtHeldPlayerOffset;
+
+        return GetLeftHandPosition() + heldPlayerOffset;
+    }
+
+    private bool MoveLeftArmTowardsSlamTarget()
+    {
+        if (leftArm == null)
+            return false;
+
+        Vector2 currentPosition = GetLeftHandPosition();
+        float step = Mathf.Max(0f, slamSpeed) * Time.deltaTime;
+        Vector2 desiredPosition = Vector2.MoveTowards(currentPosition, slamTargetPosition, step);
+
+        if (TryClampLeftArmSlamMoveToGround(currentPosition, desiredPosition, out Vector2 clampedPosition))
+        {
+            MoveLeftArmToWorldPosition(clampedPosition);
+            return true;
+        }
+
+        MoveLeftArmToWorldPosition(desiredPosition);
+        return false;
+    }
+
+    private bool TryClampLeftArmSlamMoveToGround(Vector2 currentArmPosition, Vector2 desiredArmPosition, out Vector2 clampedArmPosition)
+    {
+        clampedArmPosition = desiredArmPosition;
+
+        if (!clampLeftArmSlamToGround || grabbedTransform == null)
+            return false;
+
+        Vector2 armDelta = desiredArmPosition - currentArmPosition;
+        if (armDelta.y >= -0.0001f || armDelta.sqrMagnitude <= 0.000001f)
+            return false;
+
+        int groundMask = GetLeftArmSlamGroundMask();
+        if (groundMask == 0)
+            return false;
+
+        Vector2 currentHoldPosition = GetGrabbedPlayerHoldPosition();
+        Vector2 desiredHoldPosition = currentHoldPosition + armDelta;
+        if (!TryGetGroundClampedGrabbedPosition(currentHoldPosition, desiredHoldPosition, groundMask, out Vector2 clampedHoldPosition))
+            return false;
+
+        clampedArmPosition = currentArmPosition + (clampedHoldPosition - currentHoldPosition);
+        return true;
+    }
+
+    private bool TryGetGroundClampedGrabbedPosition(
+        Vector2 currentHoldPosition,
+        Vector2 desiredHoldPosition,
+        int groundMask,
+        out Vector2 clampedHoldPosition)
+    {
+        clampedHoldPosition = desiredHoldPosition;
+
+        if (TryGetGroundClampedGrabbedColliderPosition(currentHoldPosition, desiredHoldPosition, groundMask, out clampedHoldPosition))
+            return true;
+
+        Vector2 movement = desiredHoldPosition - currentHoldPosition;
+        if (movement.sqrMagnitude <= 0.000001f)
+            return false;
+
+        int hitCount = Physics2D.RaycastNonAlloc(
+            currentHoldPosition,
+            movement.normalized,
+            leftArmSlamGroundHitBuffer,
+            movement.magnitude + leftArmSlamGroundSkin,
+            groundMask);
+
+        if (!TryGetNearestUsableLeftArmSlamGroundHit(hitCount, out RaycastHit2D hit))
+            return false;
+
+        clampedHoldPosition = hit.point + hit.normal * leftArmSlamGroundSkin;
+        return true;
+    }
+
+    private bool TryGetGroundClampedGrabbedColliderPosition(
+        Vector2 currentHoldPosition,
+        Vector2 desiredHoldPosition,
+        int groundMask,
+        out Vector2 clampedHoldPosition)
+    {
+        clampedHoldPosition = desiredHoldPosition;
+
+        if (grabbedGroundProbeCollider == null || !grabbedGroundProbeCollider.enabled)
+            return false;
+
+        Bounds bounds = grabbedGroundProbeCollider.bounds;
+        Vector2 currentRootPosition = grabbedTransform != null ? (Vector2)grabbedTransform.position : currentHoldPosition;
+        Vector2 currentBoundsCenter = (Vector2)bounds.center + (currentHoldPosition - currentRootPosition);
+        Vector2 holdToBoundsCenter = currentBoundsCenter - currentHoldPosition;
+        Vector2 desiredBoundsCenter = desiredHoldPosition + holdToBoundsCenter;
+        Vector2 movement = desiredBoundsCenter - currentBoundsCenter;
+
+        if (movement.sqrMagnitude <= 0.000001f)
+            return false;
+
+        int hitCount = Physics2D.BoxCastNonAlloc(
+            currentBoundsCenter,
+            bounds.size,
+            0f,
+            movement.normalized,
+            leftArmSlamGroundHitBuffer,
+            movement.magnitude + leftArmSlamGroundSkin,
+            groundMask);
+
+        if (!TryGetNearestUsableLeftArmSlamGroundHit(hitCount, out RaycastHit2D hit))
+            return false;
+
+        Vector2 clampedBoundsCenter = hit.centroid + hit.normal * leftArmSlamGroundSkin;
+        clampedHoldPosition = clampedBoundsCenter - holdToBoundsCenter;
+        return true;
+    }
+
+    private bool TryGetNearestUsableLeftArmSlamGroundHit(int hitCount, out RaycastHit2D bestHit)
+    {
+        bestHit = default;
+        bool foundHit = false;
+        float bestDistance = float.MaxValue;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit2D hit = leftArmSlamGroundHitBuffer[i];
+            if (hit.collider == null
+                || hit.collider.isTrigger
+                || hit.normal.y < leftArmSlamMinGroundNormalY
+                || IsGrabbedObjectCollider(hit.collider))
+                continue;
+
+            if (hit.distance >= bestDistance)
+                continue;
+
+            bestDistance = hit.distance;
+            bestHit = hit;
+            foundHit = true;
+        }
+
+        return foundHit;
+    }
+
+    private bool IsGrabbedObjectCollider(Collider2D collider)
+    {
+        if (collider == null)
+            return false;
+
+        if (collider == grabbedGroundProbeCollider)
+            return true;
+
+        if (grabbedRigidbody != null && collider.attachedRigidbody == grabbedRigidbody)
+            return true;
+
+        return grabbedTransform != null && collider.transform.IsChildOf(grabbedTransform);
+    }
+
+    private int GetLeftArmSlamGroundMask()
+    {
+        if (leftArmSlamGroundMask.value != 0)
+            return leftArmSlamGroundMask.value;
+
+        if (grabbedPlayer != null && grabbedPlayer.GroundLayerMask.value != 0)
+            return grabbedPlayer.GroundLayerMask.value;
+
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        return groundLayer >= 0 ? 1 << groundLayer : 0;
+    }
+
+    private Collider2D ResolveGrabbedGroundProbeCollider(Transform root)
+    {
+        if (root == null)
+            return null;
+
+        Collider2D rootCollider = root.GetComponent<Collider2D>();
+        if (CanUseGrabbedGroundProbeCollider(rootCollider))
+            return rootCollider;
+
+        Collider2D[] colliders = root.GetComponentsInChildren<Collider2D>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (CanUseGrabbedGroundProbeCollider(colliders[i]))
+                return colliders[i];
+        }
+
+        return null;
+    }
+
+    private static bool CanUseGrabbedGroundProbeCollider(Collider2D collider)
+    {
+        return collider != null && collider.enabled && !collider.isTrigger;
     }
 
     private void ReleaseGrabbedPlayer()
@@ -1129,6 +1591,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         grabbedPlayer = null;
         grabbedHealth = null;
         grabbedRigidbody = null;
+        grabbedGroundProbeCollider = null;
     }
 
     private void FindTarget()
@@ -1156,15 +1619,17 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         bodyArtRenderers = EnsureArtParts(body, bodyArtParts, bodyArtSourceAnchor, sortingOrder);
         leftArmArtRenderers = EnsureArtParts(leftArm, leftArmArtParts, leftArmArtSourceAnchor, sortingOrder + 1);
         rightArmArtRenderers = EnsureArtParts(rightArm, rightArmArtParts, rightArmArtSourceAnchor, sortingOrder + 1);
+        EnsureArmIkRigs();
+
         leftArmStretchArtParts = CacheArmStretchArtParts(leftArmArtRenderers);
         rightArmStretchArtParts = CacheArmStretchArtParts(rightArmArtRenderers);
         leftHandGrabPoseParts = CacheHandPoseParts(leftArmArtRenderers);
         rightHandFistPoseParts = CacheHandPoseParts(rightArmArtRenderers);
         CacheRightArmArtReachLimit();
 
-        SetPrototypeRendererVisible(bodyRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasArtParts(bodyArtParts));
-        SetPrototypeRendererVisible(leftArmRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasArtParts(leftArmArtParts));
-        SetPrototypeRendererVisible(rightArmRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasArtParts(rightArmArtParts));
+        SetPrototypeRendererVisible(bodyRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasCachedArtRenderers(bodyArtRenderers));
+        SetPrototypeRendererVisible(leftArmRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasCachedArtRenderers(leftArmArtRenderers));
+        SetPrototypeRendererVisible(rightArmRenderer, !hidePrototypeBlocksWhenArtAssigned || !HasCachedArtRenderers(rightArmArtRenderers));
 
         if (enableBossGrappleTargets)
             EnsureBossGrappleTargets();
@@ -1173,8 +1638,8 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private void EnsureBossGrappleTargets()
     {
         EnsureBossGrappleTarget(body, false, false);
-        EnsureBossGrappleTarget(leftArm, true, false);
-        EnsureBossGrappleTarget(rightArm, false, true);
+        EnsureBossGrappleTarget(GetLeftGrappleTargetTransform(), true, false);
+        EnsureBossGrappleTarget(GetRightGrappleTargetTransform(), false, true);
     }
 
     private void EnsureBossGrappleTarget(Transform part, bool triggersLeftArmPunish, bool triggersRightArmSwat)
@@ -1182,9 +1647,29 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         if (part == null)
             return;
 
+        Collider2D collider = part.GetComponent<Collider2D>();
+        if (collider == null)
+            collider = part.gameObject.AddComponent<BoxCollider2D>();
+
+        if (collider == null)
+            return;
+
+        if (collider is BoxCollider2D boxCollider)
+        {
+            boxCollider.isTrigger = true;
+            if (boxCollider.size.sqrMagnitude <= 0.0001f)
+                boxCollider.size = Vector2.one;
+        }
+        else if (collider != null)
+        {
+            collider.isTrigger = true;
+        }
+
         PrototypeBossGrappleTarget grappleTarget = part.GetComponent<PrototypeBossGrappleTarget>();
         if (grappleTarget == null)
             grappleTarget = part.gameObject.AddComponent<PrototypeBossGrappleTarget>();
+        if (grappleTarget == null)
+            return;
 
         grappleTarget.Configure(this, part, triggersLeftArmPunish, triggersRightArmSwat);
     }
@@ -1232,7 +1717,13 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private SpriteRenderer[] EnsureArtParts(Transform part, BossSpritePart[] artParts, Vector2 sourceAnchor, int baseSortingOrder)
     {
-        if (part == null || !HasArtParts(artParts))
+        if (part == null)
+            return new SpriteRenderer[0];
+
+        if (useManualArtHierarchy)
+            return CacheManualArtRenderers(part);
+
+        if (!HasArtParts(artParts))
             return new SpriteRenderer[0];
 
         Transform artRoot = part.Find(ArtRootName);
@@ -1256,12 +1747,16 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
                 continue;
 
             string partName = string.IsNullOrWhiteSpace(artPart.name) ? artPart.sprite.name : artPart.name;
-            Transform spriteTransform = artRoot.Find(partName);
+            Transform spriteTransform = FindDescendantByName(artRoot, partName);
             if (spriteTransform == null)
             {
                 GameObject spriteObject = new GameObject(partName);
                 spriteTransform = spriteObject.transform;
                 spriteTransform.SetParent(artRoot, false);
+            }
+            else if (spriteTransform.parent != artRoot)
+            {
+                spriteTransform.SetParent(artRoot, true);
             }
 
             spriteTransform.localPosition = GetArtLocalPosition(artPart.sprite, sourceAnchor, artPart.localOffset);
@@ -1285,6 +1780,465 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         }
 
         return renderers.ToArray();
+    }
+
+    private SpriteRenderer[] CacheManualArtRenderers(Transform part)
+    {
+        if (part == null)
+            return new SpriteRenderer[0];
+
+        Transform artRoot = part.Find(ArtRootName);
+        if (artRoot == null)
+            return new SpriteRenderer[0];
+
+        return artRoot.GetComponentsInChildren<SpriteRenderer>(true);
+    }
+
+    private void EnsureArmIkRigs()
+    {
+        if (!useArmIkRig)
+        {
+            leftArmIkRig = null;
+            rightArmIkRig = null;
+            return;
+        }
+
+        ArmIkRig previousLeftRig = leftArmIkRig;
+        ArmIkRig previousRightRig = rightArmIkRig;
+
+        leftArmIkRig = EnsureArmIkRig(
+            leftArm,
+            leftArmArtRenderers,
+            "Left",
+            leftHandTarget,
+            leftGripPoint,
+            true,
+            leftGripPointLocalOffset,
+            leftArmIkBendSign,
+            Vector2.left,
+            previousLeftRig);
+        if (leftArmIkRig != null)
+        {
+            leftHandTarget = leftArmIkRig.handTarget;
+            leftGripPoint = leftArmIkRig.gripPoint;
+        }
+
+        rightArmIkRig = EnsureArmIkRig(
+            rightArm,
+            rightArmArtRenderers,
+            "Right",
+            rightHandTarget,
+            null,
+            false,
+            Vector2.zero,
+            rightArmIkBendSign,
+            Vector2.right,
+            previousRightRig);
+        if (rightArmIkRig != null)
+            rightHandTarget = rightArmIkRig.handTarget;
+    }
+
+    private ArmIkRig EnsureArmIkRig(
+        Transform root,
+        SpriteRenderer[] renderers,
+        string sideName,
+        Transform existingHandTarget,
+        Transform existingGripPoint,
+        bool createGripPoint,
+        Vector2 gripPointLocalOffset,
+        float bendSign,
+        Vector2 fallbackDirection,
+        ArmIkRig previousRig)
+    {
+        if (root == null)
+            return null;
+
+        Transform artRoot = root.Find(ArtRootName);
+        if (artRoot == null)
+        {
+            GameObject artRootObject = new GameObject(ArtRootName);
+            artRoot = artRootObject.transform;
+            artRoot.SetParent(root, false);
+            artRoot.localPosition = Vector3.zero;
+            artRoot.localRotation = Quaternion.identity;
+            artRoot.localScale = Vector3.one;
+            TrySetEnemyIdentity(artRoot.gameObject);
+        }
+
+        Vector2 shoulderWorldPosition = root.position;
+        Vector2 wristRestWorldPosition = ResolveArmWristRestPosition(root, renderers, fallbackDirection);
+        Vector2 elbowRestWorldPosition = ResolveArmElbowRestPosition(root, renderers, sideName, shoulderWorldPosition, wristRestWorldPosition, fallbackDirection);
+
+        Transform handTarget = existingHandTarget != null
+            ? existingHandTarget
+            : FindDescendantByName(root, sideName + "HandTarget");
+        bool createdHandTarget = false;
+        if (handTarget == null)
+        {
+            GameObject handTargetObject = new GameObject(sideName + "HandTarget");
+            handTarget = handTargetObject.transform;
+            handTarget.SetParent(root, true);
+            createdHandTarget = true;
+            TrySetEnemyIdentity(handTargetObject);
+        }
+
+        Vector2 restHandWorldPosition = ResolveArmRestHandWorldPosition(root, handTarget, createdHandTarget, wristRestWorldPosition, previousRig);
+        if (createdHandTarget)
+        {
+            handTarget.position = restHandWorldPosition;
+            handTarget.localRotation = Quaternion.identity;
+            handTarget.localScale = Vector3.one;
+        }
+
+        Transform shoulderPivot = EnsureRigTransform(artRoot, sideName + "ShoulderPivot", shoulderWorldPosition);
+        Transform upperArmGroup = EnsureRigTransform(shoulderPivot, sideName + "UpperArmGroup", shoulderWorldPosition);
+        Transform elbowPivot = EnsureRigTransform(shoulderPivot, sideName + "ElbowPivot", elbowRestWorldPosition);
+        Transform lowerArmGroup = EnsureRigTransform(elbowPivot, sideName + "LowerArmGroup", elbowRestWorldPosition);
+        Transform wristPivot = EnsureRigTransform(elbowPivot, sideName + "WristPivot", restHandWorldPosition);
+        Transform handGroup = EnsureRigTransform(wristPivot, sideName + "HandGroup", restHandWorldPosition);
+
+        ReparentArmArtForIk(renderers, sideName, upperArmGroup, lowerArmGroup, handGroup);
+
+        Transform gripPoint = existingGripPoint != null
+            ? existingGripPoint
+            : createGripPoint ? FindDescendantByName(handGroup, sideName + "GripPoint") : null;
+        if (createGripPoint && gripPoint == null)
+        {
+            GameObject gripPointObject = new GameObject(sideName + "GripPoint");
+            gripPoint = gripPointObject.transform;
+            gripPoint.SetParent(handGroup, false);
+            gripPoint.localPosition = gripPointLocalOffset;
+            gripPoint.localRotation = Quaternion.identity;
+            gripPoint.localScale = Vector3.one;
+            TrySetEnemyIdentity(gripPointObject);
+        }
+        else if (createGripPoint && gripPoint.parent != handGroup)
+        {
+            gripPoint.SetParent(handGroup, true);
+        }
+
+        Vector2 upperRestVector = elbowRestWorldPosition - shoulderWorldPosition;
+        Vector2 lowerRestVector = restHandWorldPosition - elbowRestWorldPosition;
+        if (upperRestVector.sqrMagnitude <= 0.0001f)
+            upperRestVector = fallbackDirection.sqrMagnitude > 0.0001f ? fallbackDirection.normalized : Vector2.right;
+        if (lowerRestVector.sqrMagnitude <= 0.0001f)
+            lowerRestVector = upperRestVector;
+
+        ArmIkRig rig = new ArmIkRig
+        {
+            root = root,
+            handTarget = handTarget,
+            shoulderPivot = shoulderPivot,
+            elbowPivot = elbowPivot,
+            wristPivot = wristPivot,
+            upperArmGroup = upperArmGroup,
+            lowerArmGroup = lowerArmGroup,
+            handGroup = handGroup,
+            gripPoint = gripPoint,
+            restHandPosition = (Vector2)root.InverseTransformPoint(restHandWorldPosition),
+            shoulderLocalPosition = root.InverseTransformPoint(shoulderWorldPosition),
+            upperLength = Mathf.Max(minArmIkSegmentLength, upperRestVector.magnitude),
+            lowerLength = Mathf.Max(minArmIkSegmentLength, lowerRestVector.magnitude),
+            bendSign = Mathf.Approximately(bendSign, 0f) ? 1f : Mathf.Sign(bendSign),
+            upperRestAngle = GetVectorAngle(upperRestVector),
+            lowerRestAngle = GetVectorAngle(lowerRestVector),
+            handRotationOffset = previousRig != null && previousRig.root == root ? previousRig.handRotationOffset : 0f
+        };
+
+        UpdateArmIkRigPose(rig);
+        return rig;
+    }
+
+    private Vector2 ResolveArmRestHandWorldPosition(
+        Transform root,
+        Transform handTarget,
+        bool createdHandTarget,
+        Vector2 wristRestWorldPosition,
+        ArmIkRig previousRig)
+    {
+        if (previousRig != null && previousRig.root == root)
+            return root.TransformPoint(previousRig.restHandPosition);
+
+        if (!createdHandTarget && handTarget != null)
+            return handTarget.position;
+
+        return wristRestWorldPosition;
+    }
+
+    private Transform EnsureRigTransform(Transform parent, string name, Vector3 worldPosition)
+    {
+        Transform child = FindDescendantByName(parent, name);
+        if (child == null)
+        {
+            GameObject childObject = new GameObject(name);
+            child = childObject.transform;
+            child.SetParent(parent, true);
+            child.position = worldPosition;
+            child.rotation = Quaternion.identity;
+            child.localScale = Vector3.one;
+            TrySetEnemyIdentity(childObject);
+            return child;
+        }
+
+        if (child.parent != parent)
+            child.SetParent(parent, true);
+
+        return child;
+    }
+
+    private void ReparentArmArtForIk(SpriteRenderer[] renderers, string sideName, Transform upperArmGroup, Transform lowerArmGroup, Transform handGroup)
+    {
+        if (renderers == null)
+            return;
+
+        int upperSplitIndex = GetArmIkUpperSplitIndex(GetMaxArmArtIndex(renderers));
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SpriteRenderer renderer = renderers[i];
+            if (renderer == null)
+                continue;
+
+            Transform partTransform = renderer.transform;
+            Transform targetParent = GetArmIkGroupForPart(partTransform.name, sideName, upperSplitIndex, upperArmGroup, lowerArmGroup, handGroup);
+            if (targetParent == null || partTransform.parent == targetParent)
+                continue;
+
+            partTransform.SetParent(targetParent, true);
+        }
+    }
+
+    private Transform GetArmIkGroupForPart(
+        string partName,
+        string sideName,
+        int upperSplitIndex,
+        Transform upperArmGroup,
+        Transform lowerArmGroup,
+        Transform handGroup)
+    {
+        if (string.IsNullOrWhiteSpace(partName))
+            return null;
+
+        if (!partName.StartsWith(sideName, StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        if (partName.IndexOf("Hand", StringComparison.OrdinalIgnoreCase) >= 0
+            || partName.IndexOf("Finger", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            return handGroup;
+        }
+
+        if (partName.IndexOf("Shoulder", StringComparison.OrdinalIgnoreCase) >= 0)
+            return upperArmGroup;
+
+        if (partName.IndexOf("Arm", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            int armIndex = ExtractTrailingNumber(partName);
+            return armIndex <= upperSplitIndex ? upperArmGroup : lowerArmGroup;
+        }
+
+        return null;
+    }
+
+    private int GetMaxArmArtIndex(SpriteRenderer[] renderers)
+    {
+        int maxArmIndex = 0;
+        if (renderers == null)
+            return maxArmIndex;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SpriteRenderer renderer = renderers[i];
+            if (renderer == null)
+                continue;
+
+            string partName = renderer.transform.name;
+            if (partName.IndexOf("Arm", StringComparison.OrdinalIgnoreCase) >= 0)
+                maxArmIndex = Mathf.Max(maxArmIndex, ExtractTrailingNumber(partName));
+        }
+
+        return maxArmIndex;
+    }
+
+    private static int GetArmIkUpperSplitIndex(int maxArmIndex)
+    {
+        if (maxArmIndex <= 1)
+            return 1;
+
+        return Mathf.Min(2, maxArmIndex);
+    }
+
+    private Vector2 ResolveArmWristRestPosition(Transform root, SpriteRenderer[] renderers, Vector2 fallbackDirection)
+    {
+        Transform handTransform = FindArmArtTransform(renderers, "Hand");
+        if (handTransform != null)
+            return handTransform.position;
+
+        if (root == null)
+            return transform.position;
+
+        Vector2 direction = fallbackDirection.sqrMagnitude > 0.0001f ? fallbackDirection.normalized : Vector2.right;
+        return (Vector2)root.position + direction * Mathf.Max(minArmIkSegmentLength * 2f, 0.8f);
+    }
+
+    private Vector2 ResolveArmElbowRestPosition(
+        Transform root,
+        SpriteRenderer[] renderers,
+        string sideName,
+        Vector2 shoulderWorldPosition,
+        Vector2 wristRestWorldPosition,
+        Vector2 fallbackDirection)
+    {
+        Transform upperEnd = FindArmArtTransform(renderers, "Arm2");
+        Transform lowerStart = FindArmArtTransform(renderers, "Arm3");
+        if (upperEnd != null && lowerStart != null)
+            return ((Vector2)upperEnd.position + (Vector2)lowerStart.position) * 0.5f;
+
+        if (lowerStart != null)
+            return lowerStart.position;
+
+        Vector2 shoulderToWrist = wristRestWorldPosition - shoulderWorldPosition;
+        if (shoulderToWrist.sqrMagnitude <= 0.0001f)
+        {
+            Vector2 direction = fallbackDirection.sqrMagnitude > 0.0001f ? fallbackDirection.normalized : Vector2.right;
+            return shoulderWorldPosition + direction * Mathf.Max(minArmIkSegmentLength, 0.4f);
+        }
+
+        Vector2 bendDirection = new Vector2(-shoulderToWrist.y, shoulderToWrist.x).normalized;
+        float bendSign = string.Equals(sideName, "Left", StringComparison.OrdinalIgnoreCase) ? leftArmIkBendSign : rightArmIkBendSign;
+        if (Mathf.Approximately(bendSign, 0f))
+            bendSign = 1f;
+
+        return shoulderWorldPosition + shoulderToWrist * 0.5f + bendDirection * Mathf.Sign(bendSign) * minArmIkSegmentLength;
+    }
+
+    private Transform FindArmArtTransform(SpriteRenderer[] renderers, string suffix)
+    {
+        if (renderers == null || string.IsNullOrWhiteSpace(suffix))
+            return null;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            SpriteRenderer renderer = renderers[i];
+            if (renderer == null)
+                continue;
+
+            if (renderer.transform.name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+                return renderer.transform;
+        }
+
+        return null;
+    }
+
+    private static Transform FindDescendantByName(Transform root, string childName)
+    {
+        if (root == null || string.IsNullOrWhiteSpace(childName))
+            return null;
+
+        if (string.Equals(root.name, childName, StringComparison.OrdinalIgnoreCase))
+            return root;
+
+        for (int i = 0; i < root.childCount; i++)
+        {
+            Transform child = root.GetChild(i);
+            Transform match = FindDescendantByName(child, childName);
+            if (match != null)
+                return match;
+        }
+
+        return null;
+    }
+
+    private void UpdateArmIkRigs()
+    {
+        if (!useArmIkRig)
+            return;
+
+        UpdateArmIkRigPose(leftArmIkRig);
+        UpdateArmIkRigPose(rightArmIkRig);
+    }
+
+    private void UpdateArmIkRigPose(ArmIkRig rig)
+    {
+        if (!IsArmIkActive(rig))
+            return;
+
+        Vector2 shoulderPosition = (Vector2)rig.root.TransformPoint(rig.shoulderLocalPosition);
+        Vector2 wristPosition = rig.handTarget.position;
+        Vector2 shoulderToWrist = wristPosition - shoulderPosition;
+        Vector2 direction;
+        float targetDistance = shoulderToWrist.magnitude;
+        if (targetDistance <= 0.0001f)
+        {
+            direction = AngleToVector(rig.upperRestAngle);
+            targetDistance = 0.0001f;
+        }
+        else
+        {
+            direction = shoulderToWrist / targetDistance;
+        }
+
+        float upperLength = Mathf.Max(minArmIkSegmentLength, rig.upperLength);
+        float lowerLength = Mathf.Max(minArmIkSegmentLength, rig.lowerLength);
+        float minReach = Mathf.Abs(upperLength - lowerLength) + 0.001f;
+        float maxReach = upperLength + lowerLength - 0.001f;
+        float solveDistance = Mathf.Clamp(targetDistance, minReach, Mathf.Max(minReach, maxReach));
+        float shoulderToElbowDistance = (upperLength * upperLength - lowerLength * lowerLength + solveDistance * solveDistance) / (2f * solveDistance);
+        float elbowHeight = Mathf.Sqrt(Mathf.Max(0f, upperLength * upperLength - shoulderToElbowDistance * shoulderToElbowDistance));
+        Vector2 perpendicular = new Vector2(-direction.y, direction.x) * rig.bendSign;
+        Vector2 elbowPosition = shoulderPosition + direction * shoulderToElbowDistance + perpendicular * elbowHeight;
+
+        float upperAngleDelta = GetVectorAngle(elbowPosition - shoulderPosition) - rig.upperRestAngle;
+        float lowerAngleDelta = GetVectorAngle(wristPosition - elbowPosition) - rig.lowerRestAngle;
+
+        rig.shoulderPivot.position = shoulderPosition;
+        rig.shoulderPivot.rotation = Quaternion.Euler(0f, 0f, upperAngleDelta);
+        rig.elbowPivot.position = elbowPosition;
+        rig.elbowPivot.rotation = Quaternion.Euler(0f, 0f, lowerAngleDelta);
+        rig.wristPivot.position = wristPosition;
+        rig.wristPivot.rotation = rig.elbowPivot.rotation;
+
+        ResetRigGroupLocalTransform(rig.upperArmGroup);
+        ResetRigGroupLocalTransform(rig.lowerArmGroup);
+        if (rig.handGroup != null)
+        {
+            rig.handGroup.localPosition = Vector3.zero;
+            rig.handGroup.localRotation = Quaternion.Euler(0f, 0f, rig.handRotationOffset);
+            rig.handGroup.localScale = Vector3.one;
+        }
+    }
+
+    private static void ResetRigGroupLocalTransform(Transform group)
+    {
+        if (group == null)
+            return;
+
+        group.localPosition = Vector3.zero;
+        group.localRotation = Quaternion.identity;
+        group.localScale = Vector3.one;
+    }
+
+    private static bool IsArmIkActive(ArmIkRig rig)
+    {
+        return rig != null
+            && rig.root != null
+            && rig.handTarget != null
+            && rig.shoulderPivot != null
+            && rig.elbowPivot != null
+            && rig.wristPivot != null;
+    }
+
+    private static float GetVectorAngle(Vector2 vector)
+    {
+        if (vector.sqrMagnitude <= 0.0001f)
+            return 0f;
+
+        return Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+    }
+
+    private static Vector2 AngleToVector(float angle)
+    {
+        float radians = angle * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
     }
 
     private Vector3 GetArtLocalPosition(Sprite sprite, Vector2 sourceAnchor, Vector2 localOffset)
@@ -1324,6 +2278,20 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         for (int i = 0; i < artParts.Length; i++)
         {
             if (artParts[i].sprite != null)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool HasCachedArtRenderers(SpriteRenderer[] renderers)
+    {
+        if (renderers == null)
+            return false;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
                 return true;
         }
 
@@ -1426,7 +2394,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void UpdateLeftArmStretchPose()
     {
-        if (!stretchLeftArmArtFromBody)
+        if (IsArmIkActive(leftArmIkRig) || leftArmMovesAsSingleRoot || !stretchLeftArmArtFromBody)
         {
             ResetLeftArmStretchPose();
             return;
@@ -1437,7 +2405,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void ResetLeftArmStretchPose()
     {
-        ApplyLeftArmStretchPose(0f);
+        ResetLeftArmArtPartsToRoot();
     }
 
     private void ApplyLeftArmStretchPose(float amount)
@@ -1445,7 +2413,14 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         if (leftArm == null || leftArmStretchArtParts == null || leftArmStretchArtParts.Length == 0)
             return;
 
-        Vector3 stretchLocalOffset = GetLeftArmStretchLocalOffset() * Mathf.Clamp01(amount);
+        float clampedAmount = Mathf.Clamp01(amount);
+        if (clampedAmount <= 0f)
+        {
+            ResetLeftArmArtPartsToRoot();
+            return;
+        }
+
+        Vector3 stretchLocalOffset = GetLeftArmStretchLocalOffset() * clampedAmount;
         for (int i = 0; i < leftArmStretchArtParts.Length; i++)
         {
             ArmStretchArtPart stretchPart = leftArmStretchArtParts[i];
@@ -1468,6 +2443,11 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         }
     }
 
+    private void ResetLeftArmArtPartsToRoot()
+    {
+        ResetArmArtPartsToRoot(leftArmStretchArtParts);
+    }
+
     private Vector3 GetLeftArmStretchLocalOffset()
     {
         Vector2 worldOffset2D = GetLeftArmRestWorldPosition() - (Vector2)leftArm.position;
@@ -1481,7 +2461,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void UpdateRightArmStretchPose()
     {
-        if (rightArmMovesAsSingleRoot || !stretchRightArmArtFromBody)
+        if (IsArmIkActive(rightArmIkRig) || rightArmMovesAsSingleRoot || !stretchRightArmArtFromBody)
         {
             ResetRightArmStretchPose();
             return;
@@ -1546,7 +2526,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private float GetRightArmHammerElbowBendAmount()
     {
-        if (!rightArmUsesHammerSwing || !rightArmUsesHammerElbowBend)
+        if (IsArmIkActive(rightArmIkRig) || rightArmMovesAsSingleRoot || !rightArmUsesHammerSwing || !rightArmUsesHammerElbowBend)
             return 0f;
 
         return GetRightArmHammerStrikePoseAmount();
@@ -1701,7 +2681,11 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private bool ShouldUseRightArmChainLag()
     {
-        return Application.isPlaying && !rightArmMovesAsSingleRoot && stretchRightArmArtFromBody && rightArmUsesChainLag;
+        return Application.isPlaying
+            && !IsArmIkActive(rightArmIkRig)
+            && !rightArmMovesAsSingleRoot
+            && stretchRightArmArtFromBody
+            && rightArmUsesChainLag;
     }
 
     private Vector3 GetRightArmArtLocalVector(Vector2 worldVector2D)
@@ -1734,19 +2718,23 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void ResetRightArmArtPartsToRoot()
     {
-        if (rightArmStretchArtParts == null)
+        ResetArmArtPartsToRoot(rightArmStretchArtParts);
+    }
+
+    private void ResetArmArtPartsToRoot(ArmStretchArtPart[] stretchParts)
+    {
+        if (stretchParts == null)
             return;
 
-        for (int i = 0; i < rightArmStretchArtParts.Length; i++)
+        for (int i = 0; i < stretchParts.Length; i++)
         {
-            ArmStretchArtPart stretchPart = rightArmStretchArtParts[i];
+            ArmStretchArtPart stretchPart = stretchParts[i];
             if (stretchPart.transform == null)
                 continue;
 
             stretchPart.transform.localPosition = stretchPart.baseLocalPosition;
             stretchPart.transform.localRotation = stretchPart.baseLocalRotation;
             stretchPart.transform.localScale = stretchPart.baseLocalScale;
-            rightArmStretchArtParts[i] = stretchPart;
         }
     }
 
@@ -2005,8 +2993,9 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             return;
 
         float easedAmount = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(amount));
-        Vector3 chainLagLocalOffset = GetRightHandChainLagLocalOffset();
-        float hammerStrikeAmount = GetRightArmHammerStrikePoseAmount();
+        bool useIkRig = IsArmIkActive(rightArmIkRig);
+        Vector3 chainLagLocalOffset = useIkRig ? Vector3.zero : GetRightHandChainLagLocalOffset();
+        float hammerStrikeAmount = useIkRig ? 0f : GetRightArmHammerStrikePoseAmount();
         Quaternion hammerStrikeRotation = Quaternion.Euler(0f, 0f, rightHandHammerStrikeAngle * hammerStrikeAmount);
         Vector3 hammerPivotPosition = GetRightHandHammerPivotLocalPosition(chainLagLocalOffset);
 
@@ -2098,61 +3087,6 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             rightArmArtReachLimitOffsetX = maxWorldX - transform.position.x;
     }
 
-    private bool TryGetLeftHandArtGripWorldPosition(out Vector2 gripPosition)
-    {
-        gripPosition = Vector2.zero;
-
-        if (leftHandGrabPoseParts == null || leftHandGrabPoseParts.Length == 0)
-            return false;
-
-        bool foundHand = false;
-        bool foundFinger = false;
-        Vector2 handCenter = Vector2.zero;
-        Vector2 fingerCenterTotal = Vector2.zero;
-        int fingerCount = 0;
-
-        for (int i = 0; i < leftHandGrabPoseParts.Length; i++)
-        {
-            ArtPosePart posePart = leftHandGrabPoseParts[i];
-            if (posePart.renderer == null || !posePart.renderer.enabled)
-                continue;
-
-            Vector2 rendererCenter = posePart.renderer.bounds.center;
-            if (posePart.isHand)
-            {
-                handCenter = rendererCenter;
-                foundHand = true;
-            }
-            else if (posePart.isFinger)
-            {
-                fingerCenterTotal += rendererCenter;
-                fingerCount++;
-                foundFinger = true;
-            }
-        }
-
-        if (foundHand && foundFinger)
-        {
-            Vector2 fingerCenter = fingerCenterTotal / Mathf.Max(1, fingerCount);
-            gripPosition = Vector2.Lerp(handCenter, fingerCenter, 0.55f);
-            return true;
-        }
-
-        if (foundHand)
-        {
-            gripPosition = handCenter;
-            return true;
-        }
-
-        if (foundFinger)
-        {
-            gripPosition = fingerCenterTotal / Mathf.Max(1, fingerCount);
-            return true;
-        }
-
-        return false;
-    }
-
     private bool TryGetGrabbedSpriteSorting(out int sortingLayerID, out int sortingOrder)
     {
         sortingLayerID = 0;
@@ -2225,42 +3159,111 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void MoveLeftArmTowards(Vector2 targetPosition, float speed)
     {
-        if (leftArm == null)
+        if (leftArm == null && leftHandTarget == null)
             return;
 
         float step = Mathf.Max(0f, speed) * Time.deltaTime;
-        MoveLeftArmToWorldPosition(Vector2.MoveTowards(leftArm.position, targetPosition, step));
+        MoveLeftArmToWorldPosition(Vector2.MoveTowards(GetLeftHandPosition(), targetPosition, step));
     }
 
     private void MoveLeftArmToWorldPosition(Vector2 worldPosition)
     {
+        if (IsArmIkActive(leftArmIkRig))
+        {
+            leftArmIkRig.handTarget.position = worldPosition;
+            UpdateArmIkRigPose(leftArmIkRig);
+            return;
+        }
+
         if (leftArm != null)
             leftArm.position = worldPosition;
     }
 
     private void MoveRightArmTowards(Vector2 targetPosition, float speed)
     {
-        if (rightArm == null)
+        if (rightArm == null && rightHandTarget == null)
             return;
 
         float step = Mathf.Max(0f, speed) * Time.deltaTime;
-        MoveRightArmToWorldPosition(Vector2.MoveTowards(rightArm.position, targetPosition, step));
+        MoveRightArmToWorldPosition(Vector2.MoveTowards(GetRightHandPosition(), targetPosition, step));
     }
 
     private void MoveRightArmToWorldPosition(Vector2 worldPosition)
     {
+        if (IsArmIkActive(rightArmIkRig))
+        {
+            rightArmIkRig.handTarget.position = worldPosition;
+            UpdateArmIkRigPose(rightArmIkRig);
+            return;
+        }
+
         if (rightArm != null)
             rightArm.position = worldPosition;
     }
 
     private Vector2 GetLeftArmRestWorldPosition()
     {
+        if (IsArmIkActive(leftArmIkRig))
+            return (Vector2)leftArmIkRig.root.TransformPoint(leftArmIkRig.restHandPosition);
+
         return transform.TransformPoint(leftArmRestOffset);
     }
 
     private Vector2 GetRightArmRestWorldPosition()
     {
+        if (IsArmIkActive(rightArmIkRig))
+            return (Vector2)rightArmIkRig.root.TransformPoint(rightArmIkRig.restHandPosition);
+
         return transform.TransformPoint(rightArmRestOffset);
+    }
+
+    private Vector2 GetLeftHandPosition()
+    {
+        if (IsArmIkActive(leftArmIkRig))
+            return leftArmIkRig.handTarget.position;
+
+        if (leftHandTarget != null)
+            return leftHandTarget.position;
+
+        return leftArm != null ? (Vector2)leftArm.position : GetLeftArmRestWorldPosition();
+    }
+
+    private Vector2 GetRightHandPosition()
+    {
+        if (IsArmIkActive(rightArmIkRig))
+            return rightArmIkRig.handTarget.position;
+
+        if (rightHandTarget != null)
+            return rightHandTarget.position;
+
+        return rightArm != null ? (Vector2)rightArm.position : GetRightArmRestWorldPosition();
+    }
+
+    private Transform GetLeftGrappleTargetTransform()
+    {
+        if (leftGripPoint != null)
+            return leftGripPoint;
+
+        if (leftHandTarget != null)
+            return leftHandTarget;
+
+        return leftArm;
+    }
+
+    private Transform GetRightGrappleTargetTransform()
+    {
+        if (rightHandTarget != null)
+            return rightHandTarget;
+
+        return rightArm;
+    }
+
+    private Transform GetRightHandFeedbackTransform()
+    {
+        if (rightHandTarget != null)
+            return rightHandTarget;
+
+        return rightArm;
     }
 
     private Vector2 GetLeftArmAimWorldPosition(Vector2 targetPosition)
@@ -2278,6 +3281,9 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void AimLeftArmAt(Vector2 targetPosition)
     {
+        if (IsArmIkActive(leftArmIkRig))
+            return;
+
         if (leftArm == null)
             return;
 
@@ -2305,12 +3311,23 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void ResetLeftArmRotation()
     {
+        if (IsArmIkActive(leftArmIkRig))
+        {
+            leftArmIkRig.handRotationOffset = 0f;
+            if (leftArm != null)
+                leftArm.localRotation = Quaternion.identity;
+            return;
+        }
+
         if (leftArm != null)
             leftArm.localRotation = Quaternion.identity;
     }
 
     private void AimRightArmAt(Vector2 targetPosition)
     {
+        if (IsArmIkActive(rightArmIkRig))
+            return;
+
         if (rightArm == null)
             return;
 
@@ -2324,6 +3341,23 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void ApplyRightArmHammerRotation(float progress, bool windup)
     {
+        float clampedProgress = Mathf.Clamp01(progress);
+
+        if (IsArmIkActive(rightArmIkRig))
+        {
+            if (!rightArmUsesHammerSwing)
+            {
+                rightArmIkRig.handRotationOffset = 0f;
+                return;
+            }
+
+            rightArmIkRig.handRotationOffset = windup
+                ? Mathf.Lerp(0f, rightArmHammerWindupAngle, clampedProgress)
+                : Mathf.Lerp(rightArmHammerWindupAngle, rightArmHammerImpactAngle, clampedProgress);
+            UpdateArmIkRigPose(rightArmIkRig);
+            return;
+        }
+
         if (rightArm == null)
             return;
 
@@ -2333,7 +3367,6 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
             return;
         }
 
-        float clampedProgress = Mathf.Clamp01(progress);
         float angle = windup
             ? Mathf.Lerp(0f, rightArmHammerWindupAngle, clampedProgress)
             : Mathf.Lerp(rightArmHammerWindupAngle, rightArmHammerImpactAngle, clampedProgress);
@@ -2342,6 +3375,15 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
 
     private void ResetRightArmRotation()
     {
+        if (IsArmIkActive(rightArmIkRig))
+        {
+            rightArmIkRig.handRotationOffset = 0f;
+            if (rightArm != null)
+                rightArm.localRotation = Quaternion.identity;
+            UpdateArmIkRigPose(rightArmIkRig);
+            return;
+        }
+
         if (rightArm != null)
             rightArm.rotation = transform.rotation;
     }
@@ -2409,6 +3451,130 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         {
             if (renderers[i] != null)
                 renderers[i].color = colors[i];
+        }
+    }
+
+    private void ScatterSpritesOnDeath()
+    {
+        if (!scatterSpritesOnDeath)
+            return;
+
+        RestoreDeathScatterSourceColors();
+
+        List<SpriteRenderer> renderers = new List<SpriteRenderer>();
+        AddDeathScatterRenderer(renderers, bodyRenderer);
+        AddDeathScatterRenderer(renderers, leftArmRenderer);
+        AddDeathScatterRenderer(renderers, rightArmRenderer);
+        AddDeathScatterRenderers(renderers, bodyArtRenderers);
+        AddDeathScatterRenderers(renderers, leftArmArtRenderers);
+        AddDeathScatterRenderers(renderers, rightArmArtRenderers);
+
+        for (int i = 0; i < renderers.Count; i++)
+            SpawnDeathScatterFragment(renderers[i]);
+
+        HideDeathScatterSourceRenderers(renderers);
+    }
+
+    private void RestoreDeathScatterSourceColors()
+    {
+        if (bodyRenderer != null)
+            bodyRenderer.color = bodyColor;
+        if (leftArmRenderer != null)
+            leftArmRenderer.color = idleArmColor;
+        if (rightArmRenderer != null)
+            rightArmRenderer.color = idleArmColor;
+
+        SetArtRendererColors(bodyArtRenderers, Color.white);
+        SetArtRendererColors(leftArmArtRenderers, Color.white);
+        SetArtRendererColors(rightArmArtRenderers, Color.white);
+    }
+
+    private static void AddDeathScatterRenderers(List<SpriteRenderer> renderers, SpriteRenderer[] candidates)
+    {
+        if (renderers == null || candidates == null)
+            return;
+
+        for (int i = 0; i < candidates.Length; i++)
+            AddDeathScatterRenderer(renderers, candidates[i]);
+    }
+
+    private static void AddDeathScatterRenderer(List<SpriteRenderer> renderers, SpriteRenderer renderer)
+    {
+        if (renderers == null
+            || renderer == null
+            || renderer.sprite == null
+            || !renderer.enabled
+            || !renderer.gameObject.activeInHierarchy
+            || renderers.Contains(renderer))
+        {
+            return;
+        }
+
+        renderers.Add(renderer);
+    }
+
+    private void SpawnDeathScatterFragment(SpriteRenderer sourceRenderer)
+    {
+        if (sourceRenderer == null || sourceRenderer.sprite == null)
+            return;
+
+        Transform sourceTransform = sourceRenderer.transform;
+        GameObject fragmentObject = new GameObject(sourceRenderer.gameObject.name + "_DeathFragment");
+        Transform fragmentTransform = fragmentObject.transform;
+        fragmentTransform.SetPositionAndRotation(sourceTransform.position, sourceTransform.rotation);
+        fragmentTransform.localScale = sourceTransform.lossyScale;
+        fragmentObject.layer = sourceRenderer.gameObject.layer;
+
+        SpriteRenderer fragmentRenderer = fragmentObject.AddComponent<SpriteRenderer>();
+        fragmentRenderer.sprite = sourceRenderer.sprite;
+        fragmentRenderer.color = sourceRenderer.color;
+        fragmentRenderer.flipX = sourceRenderer.flipX;
+        fragmentRenderer.flipY = sourceRenderer.flipY;
+        fragmentRenderer.sortingLayerID = sourceRenderer.sortingLayerID;
+        fragmentRenderer.sortingOrder = sourceRenderer.sortingOrder;
+        fragmentRenderer.sharedMaterial = sourceRenderer.sharedMaterial;
+
+        Rigidbody2D fragmentBody = fragmentObject.AddComponent<Rigidbody2D>();
+        fragmentBody.gravityScale = deathScatterGravityScale;
+        fragmentBody.linearDamping = deathScatterLinearDamping;
+        fragmentBody.angularDamping = deathScatterAngularDamping;
+        fragmentBody.linearVelocity = GetDeathScatterVelocity(fragmentTransform.position);
+        fragmentBody.angularVelocity = UnityEngine.Random.Range(-deathScatterSpinSpeed, deathScatterSpinSpeed);
+
+        if (deathScatterLifetime > 0f)
+            Destroy(fragmentObject, deathScatterLifetime);
+    }
+
+    private Vector2 GetDeathScatterVelocity(Vector3 fragmentPosition)
+    {
+        Vector2 outward = (Vector2)(fragmentPosition - transform.position);
+        if (outward.sqrMagnitude <= 0.0001f)
+            outward = UnityEngine.Random.insideUnitCircle;
+        if (outward.sqrMagnitude <= 0.0001f)
+            outward = Vector2.up;
+
+        outward.Normalize();
+        float radialSpeed = GetRandomRange(deathScatterRadialSpeedRange);
+        float upwardSpeed = GetRandomRange(deathScatterUpwardSpeedRange);
+        return outward * radialSpeed + Vector2.up * upwardSpeed;
+    }
+
+    private static float GetRandomRange(Vector2 range)
+    {
+        float min = Mathf.Min(range.x, range.y);
+        float max = Mathf.Max(range.x, range.y);
+        return Mathf.Approximately(min, max) ? min : UnityEngine.Random.Range(min, max);
+    }
+
+    private static void HideDeathScatterSourceRenderers(List<SpriteRenderer> renderers)
+    {
+        if (renderers == null)
+            return;
+
+        for (int i = 0; i < renderers.Count; i++)
+        {
+            if (renderers[i] != null)
+                renderers[i].enabled = false;
         }
     }
 
@@ -2672,7 +3838,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         HideRightArmSlamMarker();
 
         int knockDirection = target.position.x >= transform.position.x ? 1 : -1;
-        rightArmGrappleSwatEndPosition = (Vector2)rightArm.position
+        rightArmGrappleSwatEndPosition = GetRightHandPosition()
             + new Vector2(knockDirection * rightArmGrappleSwatDistance, rightArmGrappleSwatLift);
 
         ApplyRightArmGrappleSwat(player, knockDirection);
@@ -2705,6 +3871,11 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private void Die()
     {
         isDead = true;
+        if (damageFlashCoroutine != null)
+        {
+            StopCoroutine(damageFlashCoroutine);
+            damageFlashCoroutine = null;
+        }
         if (leftArmGrapplePunishCoroutine != null)
         {
             StopCoroutine(leftArmGrapplePunishCoroutine);
@@ -2717,6 +3888,7 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
         }
 
         ReleaseGrabbedPlayer();
+        ScatterSpritesOnDeath();
 
         RoomTrackedUnit trackedUnit = GetComponent<RoomTrackedUnit>();
         if (trackedUnit != null)
