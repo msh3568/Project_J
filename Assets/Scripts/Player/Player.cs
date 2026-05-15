@@ -44,10 +44,12 @@ public class Player : Entity
     [SerializeField] private float grappleHitCooldown = 1.5f;
     private float grappleCooldownTimer;
     private float parryCooldownTimer;
+    private int cutsceneInvincibilityLocks;
     private float lastGrappleEndTime = -999f;
     [SerializeField] private AwakeningManager awakeningManager;
     public bool IsGrappling => grappleState != null && stateMachine != null && stateMachine.currentState == grappleState && grappleState.IsGrapplingActive;
     public bool IsParryAiming => parryAimState != null && stateMachine != null && stateMachine.currentState == parryAimState;
+    public bool IsCutsceneInvincible => cutsceneInvincibilityLocks > 0;
     public bool IsGrappleOnCooldown => grappleCooldownTimer > 0f;
     public bool IsParryOnCooldown => parryCooldownTimer > 0f;
     public bool grappleAirJumpAvailable { get; set; }
@@ -230,7 +232,8 @@ public class Player : Entity
         public IEnumerator ParryInvincibilityCoroutine(Player_Health playerHealth)
         {
             yield return new WaitForSeconds(parryInvincibilityDuration);
-            playerHealth.IsInvincible = false;
+            if (!IsCutsceneInvincible)
+                playerHealth.IsInvincible = false;
         }
 
     
@@ -652,6 +655,34 @@ public class Player : Entity
                 return false;
 
             return true;
+        }
+
+        public bool TryStartCutsceneGrapple(GrappleTargetBase target)
+        {
+            if (IsGrappling || target == null || grappleState == null || stateMachine == null)
+                return false;
+
+            if (!target.IsAvailableForGrapple(this))
+                return false;
+
+            ClearImmobilize();
+
+            if (grappleLockOnSystem == null)
+                grappleLockOnSystem = GetComponent<GrappleLockOnSystem>();
+
+            LockOnGrappleConfig configToUse = grappleConfig != null
+                ? grappleConfig
+                : (grappleLockOnSystem != null ? grappleLockOnSystem.Config : null);
+
+            if (configToUse == null)
+                return false;
+
+            grappleCooldownTimer = 0f;
+            lastGrappleEndTime = -999f;
+            grappleAirJumpAvailable = false;
+            grappleState.PrepareCutsceneGrapple(target, grappleLockOnSystem, configToUse);
+            stateMachine.ChangeState(grappleState);
+            return stateMachine.currentState == grappleState && grappleState.IsGrapplingActive;
         }
 
         public bool IsGrappleReadyForUI()
@@ -1363,6 +1394,22 @@ public class Player : Entity
             public float GetPerfectParryWindow() => Mathf.Max(0f, perfectParryWindow);
 
             public bool ShouldAutoReturnParriedProjectiles() => parriedProjectileReturnMode == ParriedProjectileReturnMode.AutoReturnToSource;
+
+            public void ClearParryCooldown()
+            {
+                parryCooldownTimer = 0f;
+            }
+
+            public void SetCutsceneInvincibility(bool enabled)
+            {
+                if (enabled)
+                {
+                    cutsceneInvincibilityLocks++;
+                    return;
+                }
+
+                cutsceneInvincibilityLocks = Mathf.Max(0, cutsceneInvincibilityLocks - 1);
+            }
 
             public void ApplyParryCooldownOnSuccess(bool wasPerfectParry)
             {

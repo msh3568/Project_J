@@ -15093,6 +15093,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &520235490 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5777396416537457761, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+  m_PrefabInstance: {fileID: 622826947}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520235455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534b15f3b02bf1c4cb882658670b7421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrappleDroneTarget
+--- !u!114 &520235491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520235455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9741efe118a4ceb8f33eb0dae8981d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDroneRevealFade
+  playOnEnable: 1
+  fadeDuration: 0.6
+  revealColor: {r: 0.15, g: 1, b: 0.35, a: 1}
+  startAlpha: 0
+  endAlpha: 1
+  greenHoldDuration: 0.08
+  fadeToOriginalColor: 1
+  returnToOriginalDuration: 0.35
 --- !u!1 &522415792
 GameObject:
   m_ObjectHideFlags: 0
@@ -16344,7 +16375,7 @@ Transform:
   m_GameObject: {fileID: 575835365}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.8, y: -0.27, z: -9.246601}
+  m_LocalPosition: {x: -2.62, y: -0.27, z: -9.246601}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17391,7 +17422,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1641008004}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
 --- !u!1001 &594920142
@@ -18041,8 +18075,20 @@ PrefabInstance:
       value: -0.99
       objectReference: {fileID: 0}
     - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: cutsceneHoverSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: lockAimDuringBurst
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: enableCutsceneHover
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      propertyPath: cutsceneHoverAmplitude
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 1486717537877274078, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       propertyPath: lockAimDuringTelegraph
@@ -18162,6 +18208,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4419452560728899010, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 520235486}
+    - targetCorrespondingSourceObject: {fileID: 4419452560728899010, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 520235491}
   m_SourcePrefab: {fileID: 100100000, guid: 8ddacb5f951c20e44af6f8946de5d7de, type: 3}
 --- !u!1 &623724629
 GameObject:
@@ -32156,6 +32205,22 @@ PrefabInstance:
     - target: {fileID: 4062257990042352957, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894276743770180234, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 520235474}
+    - target: {fileID: 6894276743770180234, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
+      propertyPath: targetOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894276743770180234, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
+      propertyPath: targetOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894276743770180234, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
+      propertyPath: snapToTargetOnEnable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9220682859740502033, guid: 8c3e07a3a8419db40bca7d6a208dd1b0, type: 3}
       propertyPath: m_Name
@@ -61773,6 +61838,8 @@ GameObject:
   - component: {fileID: 1603505570}
   - component: {fileID: 1603505572}
   - component: {fileID: 1603505573}
+  - component: {fileID: 1603505574}
+  - component: {fileID: 1603505575}
   m_Layer: 0
   m_Name: Cutscene_Director
   m_TagString: Untagged
@@ -61821,18 +61888,29 @@ PlayableDirector:
     value: {fileID: 1350302579}
   - key: {fileID: -9154384341037216662, guid: b0a7fb19ac6c5d64e9a73800bf672d47, type: 2}
     value: {fileID: 520235482}
+  - key: {fileID: 1862495638000031625, guid: b0a7fb19ac6c5d64e9a73800bf672d47, type: 2}
+    value: {fileID: 1641008002}
+  - key: {fileID: -6258645060076194450, guid: b0a7fb19ac6c5d64e9a73800bf672d47, type: 2}
+    value: {fileID: 1603505574}
+  - key: {fileID: 2196493391136191190, guid: b0a7fb19ac6c5d64e9a73800bf672d47, type: 2}
+    value: {fileID: 1603505575}
   m_ExposedReferences:
     m_References:
+    - 259e71efe8b47c0478b4ba888dc73df1: {fileID: 1785945150}
     - 285a26a67c4e1f240a58ee5e9655434a: {fileID: 1785945150}
     - 8affa6d0d450d8b479756904c14d8477: {fileID: 1008151982}
     - be2b2eb252c7a054fb63579a9269ae60: {fileID: 575835367}
     - a612aa7f75212aa4d9ca4402af4e5f2a: {fileID: 1008151982}
+    - b6333cf24b830634494b0b67b2a77ad0: {fileID: 1785945150}
     - c3d0a953ded218c41b5117643b6eaca2: {fileID: 1785945150}
     - 4c9c5abe608a58345a7b1157fcdcf619: {fileID: 1785945150}
     - 501539d6022fc714da09a34e15057ad3: {fileID: 1100720568}
+    - eb8e2ee666ec7fa4fb250879471f49bb: {fileID: 1008151982}
     - a2bb08be6dc1e9d4eb22f7c1baccd5e0: {fileID: 575835367}
+    - ec05badc0c55f554a9a4793569e1bd25: {fileID: 1008151982}
     - 3551583d58119fb40b4e05eb872e4855: {fileID: 1100720568}
     - 6cd8e6cc3bc1bf04a980c50f085875b8: {fileID: 1008151982}
+    - 422d08bfeb694e840bb080b0dc76b8dd: {fileID: 1785945150}
     - c08f0138753adca41a45175df0603616: {fileID: 1008151982}
     - 146419164c336af4ca49d3ba74d36411: {fileID: 1785945150}
 --- !u!4 &1603505571
@@ -61880,7 +61958,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603505569}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ad0637f6f7b4989aee9fcbde7ca0b3f, type: 3}
   m_Name: 
@@ -61920,6 +61998,86 @@ MonoBehaviour:
   playerTextFlipX: 0
   npcBubbleFlipX: 1
   npcTextFlipX: 0
+  enableEndingNpcVanish: 1
+  endingNpcVanishSecondsBeforeEnd: 1.1
+  endingNpcVanishFadeDuration: 0.8
+  endingNpcVanishEffectObjectName: Cutscene_SpawnEffect
+  endingNpcVanishEffectOffset: {x: 0, y: 0, z: 0}
+  endingNpcVanishEffectActiveDuration: 0.7
+  deactivateNpcAfterEndingVanish: 1
+  enableEndingLetterboxExit: 1
+  endingTopBarObjectName: TopBar
+  endingBottomBarObjectName: BottomBar
+  endingLetterboxExitDuration: 1
+  endingLetterboxExitPadding: 24
+--- !u!114 &1603505574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603505569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08226fc68dd9499090bef17d1b9a361c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneParryPromptPlayer
+  director: {fileID: 1603505570}
+  player: {fileID: 2049881623}
+  playerObject: {fileID: 2049881622}
+  drone: {fileID: 520235482}
+  playerObjectName: Player
+  droneObjectName: LatencyDroneStrong2
+  fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
+  dynamicFontSource: {fileID: 12800000, guid: 1a923220d1e5c19468671e9533851a3d, type: 3}
+  preferDynamicFontSource: 1
+  panelSize: {x: 650, y: 90}
+  promptPositionMode: 0
+  panelAnchoredPosition: {x: 0, y: 320}
+  fontSize: 35
+  panelColor: {r: 0, g: 0, b: 0, a: 0.72}
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1603505575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603505569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f09f87dfc56b4db4a327df26a308b353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneGrapplePromptPlayer
+  director: {fileID: 1603505570}
+  player: {fileID: 2049881623}
+  playerObject: {fileID: 2049881622}
+  grappleTarget: {fileID: 520235490}
+  playerObjectName: Player
+  grappleTargetObjectName: LatencyDroneStrong2
+  fontAsset: {fileID: 11400000, guid: 688a543337d911744a79b86c1f624e3c, type: 2}
+  dynamicFontSource: {fileID: 12800000, guid: 1a923220d1e5c19468671e9533851a3d, type: 3}
+  preferDynamicFontSource: 1
+  panelSize: {x: 650, y: 90}
+  promptPositionMode: 0
+  panelAnchoredPosition: {x: 0, y: 320}
+  fontSize: 35
+  panelColor: {r: 0, g: 0, b: 0, a: 0.72}
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  minimumDoubleTapMaxInterval: 0.6
+  resumeTimelineWhenGrappleStarts: 0
+  advanceDirectorToPromptEndOnComplete: 1
+  resumeTimePadding: 0.001
+  useDirectorTimeFallback: 1
+  debugLogs: 1
+  useScriptedCutsceneGrapple: 1
+  scriptedGrappleDuration: 0.35
+  scriptedArrivalHoldDuration: 0.08
+  waitForTargetHiddenBeforeComplete: 1
+  targetHiddenWaitTimeout: 1.5
+  forceCameraOnGrapple: 1
+  grappleCameraObjectName: Cam_D
+  forcedGrappleCameraPriority: 1000
 --- !u!1001 &1613994925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62851,6 +63009,96 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!1 &1641008002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1641008004}
+  - component: {fileID: 1641008003}
+  m_Layer: 0
+  m_Name: "\uB290\uB08C\uD45C_1"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!212 &1641008003
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641008002}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 1959873779689128557, guid: 1db1163f9a2ea0947b4a19c613881ead, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.85, y: 3.45}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &1641008004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641008002}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 1.03, y: 2.1339984, z: 0}
+  m_LocalScale: {x: 0.45727998, y: 0.36922, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1887134015}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1642079957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70855,6 +71103,11 @@ PrefabInstance:
 --- !u!1 &1887134014 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
+  m_PrefabInstance: {fileID: 594366705}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1887134015 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6f2985d7b21541e39ab4c27975c020d7, type: 3}
   m_PrefabInstance: {fileID: 594366705}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1890717895 stripped

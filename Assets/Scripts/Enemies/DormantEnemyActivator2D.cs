@@ -82,6 +82,22 @@ public class DormantEnemyActivator2D : MonoBehaviour, ICheckpointRespawnable
         ActivateEnemy();
     }
 
+    public void MarkActivatedForCutsceneReveal()
+    {
+        if (respawnRoutine != null)
+        {
+            StopCoroutine(respawnRoutine);
+            respawnRoutine = null;
+        }
+
+        hasActivated = true;
+        hasInitializedDormantState = true;
+        spawnPresentation?.RestoreImmediate();
+
+        if (debugLogs)
+            Debug.Log("[DormantEnemyActivator2D] Marked activated for cutscene reveal on " + name, this);
+    }
+
     public void OnCheckpointRespawn()
     {
         if (!reactivateDormantOnCheckpointRespawn)

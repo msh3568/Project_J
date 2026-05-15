@@ -32,6 +32,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     private Collider2D cachedCollider;
     private Transform autoReturnTarget;
     private bool isAutoReturningToSource;
+    private bool suppressPlayerImpact;
     
     void Update()
     {
@@ -77,6 +78,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
     public GameObject GetGameObject() => gameObject;
     public float GetProjectileSpeed() => projectileSpeed;
     public float GetParriedSpeedMultiplier() => parriedSpeedMultiplier;
+    public bool IsParried => isParried;
     public bool CanAutoReturnToSource => originalDroneTransform != null;
 
     void Awake()
@@ -135,10 +137,22 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         StartCoroutine(MuzzleFlashEffect());
     }
 
+    public void ConfigureProjectileSpeed(float speed)
+    {
+        projectileSpeed = Mathf.Max(0.05f, speed);
+    }
+
     public void ConfigureImpactMode(bool shouldUseFirewallDamage, int firewallDamageAmount)
     {
         useFirewallDamage = shouldUseFirewallDamage;
         firewallDamage = Mathf.Max(1, firewallDamageAmount);
+    }
+
+    public void ConfigureCutscenePlayerImpactSuppression(bool suppress)
+    {
+        suppressPlayerImpact = suppress;
+        if (cachedCollider != null && suppressPlayerImpact && !isParried)
+            cachedCollider.isTrigger = true;
     }
 
     private IEnumerator MuzzleFlashEffect()
@@ -192,6 +206,12 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
         
         if (other.CompareTag("Player"))
         {
+            if (suppressPlayerImpact)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (useFirewallDamage)
             {
                 IFirewallDamageable firewall = other.GetComponent<IFirewallDamageable>();

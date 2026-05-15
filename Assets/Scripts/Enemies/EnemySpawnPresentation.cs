@@ -95,6 +95,9 @@ public class EnemySpawnPresentation : MonoBehaviour, ICheckpointRespawnable
 
     public void RestoreImmediate()
     {
+        CacheReferences();
+        CacheInitialState();
+
         if (sequenceRoutine != null)
         {
             StopCoroutine(sequenceRoutine);

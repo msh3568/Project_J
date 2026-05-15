@@ -22,10 +22,148 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 51.483333333333334
+    m_Start: 43.233333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 5750083423959873847}
-    m_Duration: 21.03333333333333
+    m_Duration: 3.094482717042169
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -9154384341037216662}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: No Attack
+  - m_Version: 1
+    m_Start: 88.15
+    m_ClipIn: 0
+    m_Asset: {fileID: -4495035417832305288}
+    m_Duration: 9.100000000000009
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -9154384341037216662}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: No Attack
+  - m_Version: 1
+    m_Start: 116.48333333333336
+    m_ClipIn: 0
+    m_Asset: {fileID: 6325452972302693059}
+    m_Duration: 1.6999999999999886
     m_TimeScale: 1
     m_ParentTrack: {fileID: -9154384341037216662}
     m_EaseInDuration: 0
@@ -92,6 +230,44 @@ MonoBehaviour:
     m_DisplayName: No Attack
   m_Markers:
     m_Objects: []
+--- !u!114 &-9040191175690224317
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
+--- !u!114 &-8984240694132814822
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC790... \uC798 \uB4E4\uC5B4!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-8795646407559222158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -244,6 +420,136 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-8506135412614227960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uB108 \uD50C\uB808\uC774\uC5B4\uAD6C\uB098..!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.2
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-8374564004806681078
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uB418\uB294 \uAC70 \uC544\uB2CC\uAC00\uC694?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.8
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
+--- !u!114 &-8351016590429070405
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC544\uB0D0."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-8264267576838138251
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "ALT\uB97C \uBE60\uB974\uAC8C"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-8248128670441790710
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uAC00\uAE4C\uC774 \uAC00\uBA74"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-8225119269565439677
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,6 +572,32 @@ MonoBehaviour:
   m_Loop: 2
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &-8089973719050214760
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uC138\uC0C1\uC758 \uB05D\uC774\uC694?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &-7760706118247127439
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -318,6 +650,48 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-6667018255695854278
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC774\uC81C \uAC00\uBCFC\uAC8C."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-6646299125770796962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
+  m_Name: CinemachineShot(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
+  DisplayName: 
+  VirtualCamera:
+    exposedName: b6333cf24b830634494b0b67b2a77ad0
+    defaultValue: {fileID: 0}
 --- !u!114 &-6498775368914030801
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,13 +733,13 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: -8783914916639290969}
-    m_Duration: 5.2
+    m_Duration: 1.9
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 1.5500000000000016
+    m_BlendOutDuration: 0.6236811993643641
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -392,25 +766,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -425,61 +781,25 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 3.6499999999999986
+    m_Start: 1.2763188006356359
     m_ClipIn: 0
     m_Asset: {fileID: -6498775368914030801}
-    m_Duration: 6.23333333333334
+    m_Duration: 5.9570145326976975
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.5500000000000016
-    m_BlendOutDuration: 0.7833333333333332
+    m_BlendInDuration: 0.6236811993643641
+    m_BlendOutDuration: 0.8166666666666664
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -494,61 +814,25 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Player
   - m_Version: 1
-    m_Start: 25.100000000000005
+    m_Start: 19.35000000000001
     m_ClipIn: 0
     m_Asset: {fileID: 3225704693950690817}
-    m_Duration: 13.583333333333325
+    m_Duration: 12.116666666666656
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 2.18333333333333
-    m_BlendOutDuration: 2.1499999999999986
+    m_BlendInDuration: 0.7666666666666622
+    m_BlendOutDuration: 1.2833333333333634
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -563,61 +847,25 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_NPC
   - m_Version: 1
-    m_Start: 36.53333333333333
+    m_Start: 30.1833333333333
     m_ClipIn: 0
     m_Asset: {fileID: 3648468884977800482}
-    m_Duration: 6.06666666666667
+    m_Duration: 4.316666666666698
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 2.1499999999999986
-    m_BlendOutDuration: 0.4166666666666714
+    m_BlendInDuration: 1.2833333333333634
+    m_BlendOutDuration: 0.28333333333333144
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -632,61 +880,25 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 9.100000000000005
+    m_Start: 6.416666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -4627806869075987428}
-    m_Duration: 18.18333333333333
+    m_Duration: 13.700000000000003
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.7833333333333332
-    m_BlendOutDuration: 2.18333333333333
+    m_BlendInDuration: 0.8166666666666664
+    m_BlendOutDuration: 0.7666666666666622
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -701,61 +913,25 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 42.18333333333333
+    m_Start: 34.21666666666667
     m_ClipIn: 0
     m_Asset: {fileID: 7365975100115196930}
-    m_Duration: 5.200000000000003
+    m_Duration: 5.149999999999999
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.4166666666666714
-    m_BlendOutDuration: 0.3166666666666629
+    m_BlendInDuration: 0.28333333333333144
+    m_BlendOutDuration: 0.46666666666666146
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -770,16 +946,82 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Player
   - m_Version: 1
-    m_Start: 47.06666666666667
+    m_Start: 38.900000000000006
     m_ClipIn: 0
     m_Asset: {fileID: -5970712087259313594}
-    m_Duration: 4.399999999999999
+    m_Duration: 3.549999999999997
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.3166666666666629
-    m_BlendOutDuration: 1.3666666666666742
+    m_BlendInDuration: 0.46666666666666146
+    m_BlendOutDuration: 0.6500000000000057
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Cam_NPC
+  - m_Version: 1
+    m_Start: 41.8
+    m_ClipIn: 0
+    m_Asset: {fileID: 6277023823809032450}
+    m_Duration: 3.766666666666673
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6356528178048105526}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.6500000000000057
+    m_BlendOutDuration: 0.6000000000000014
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Cam_D
+  - m_Version: 1
+    m_Start: 44.96666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: 2207651817618129784}
+    m_Duration: 42.5
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6356528178048105526}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.6000000000000014
+    m_BlendOutDuration: 1.2666666666666657
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -837,18 +1079,18 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Cam_NPC
+    m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 50.099999999999994
+    m_Start: 86.2
     m_ClipIn: 0
-    m_Asset: {fileID: 6277023823809032450}
-    m_Duration: 29.233333333333334
+    m_Asset: {fileID: 3269046136508264516}
+    m_Duration: 11.649999999999991
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.3666666666666742
-    m_BlendOutDuration: -1
+    m_BlendInDuration: 1.2666666666666657
+    m_BlendOutDuration: 0.5166666666666657
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -907,9 +1149,264 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_D
+  - m_Version: 1
+    m_Start: 97.33333333333333
+    m_ClipIn: 0
+    m_Asset: {fileID: -3585732946477095788}
+    m_Duration: 18.46666666666667
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6356528178048105526}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.5166666666666657
+    m_BlendOutDuration: 0.4166666666666572
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Cam_Full
+  - m_Version: 1
+    m_Start: 115.38333333333334
+    m_ClipIn: 0
+    m_Asset: {fileID: 6864246764516015303}
+    m_Duration: 3.11666666666666
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6356528178048105526}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.4166666666666572
+    m_BlendOutDuration: 0.31666666666664867
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Cam_D
+  - m_Version: 1
+    m_Start: 118.18333333333335
+    m_ClipIn: 0
+    m_Asset: {fileID: -6646299125770796962}
+    m_Duration: 49.097384169387325
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6356528178048105526}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0.31666666666664867
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Cam_Full
   m_Markers:
     m_Objects: []
   TrackPriority: 0
+--- !u!114 &-6291488913945105230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
+--- !u!114 &-6258645060076194450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba5833e820484ebc95c72f17ec7f68c6, type: 3}
+  m_Name: Parry Prompt
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneParryPromptTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 95.23333333333335
+    m_ClipIn: 0
+    m_Asset: {fileID: 988580503226005703}
+    m_Duration: 2.0166666666666657
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -6258645060076194450}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Drone Projectile Parry
+  m_Markers:
+    m_Objects: []
+--- !u!114 &-6239792103489803736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC54C\uAC8C \uB420 \uAC70\uC57C."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-6152932133530024242
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC544, \uADF8\uB9AC\uACE0"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-5970712087259313594
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -926,18 +1423,6 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: 3551583d58119fb40b4e05eb872e4855
     defaultValue: {fileID: 0}
---- !u!114 &-5924496801238728756
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
-  m_Name: ActivationPlayableAsset(Clone)(Clone)
-  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
 --- !u!114 &-5863158596984725336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -986,10 +1471,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 51.483333333333334
+    m_Start: 43.233333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -8225119269565439677}
-    m_Duration: 4.350000000000001
+    m_Duration: 2.3333333333333357
     m_TimeScale: 1
     m_ParentTrack: {fileID: -5837693825667655299}
     m_EaseInDuration: 0
@@ -1052,7 +1537,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 51.483333333333334
+    m_PreExtrapolationTime: 43.233333333333334
     m_DisplayName: DroneRevealMovement
   m_Markers:
     m_Objects: []
@@ -1074,6 +1559,84 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
+--- !u!114 &-5744172747599302388
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uB4DC\uB860\uC740 \uB0A0\uC544\uB2E4\uB2C8\uB294 "
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-5517286673466568950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uB108\uBB34 \uBBFF\uC9C0\uB294 \uB9C8."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-5179062746618895147
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uD328\uB9C1\uC744 \uD560 \uC218 \uC788\uC5B4!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.2
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-4928503216915022901
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1100,6 +1663,44 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-4883229454431474785
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC544\uB0D0..."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-4644735602458026266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
 --- !u!114 &-4627806869075987428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1116,18 +1717,6 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: 4c9c5abe608a58345a7b1157fcdcf619
     defaultValue: {fileID: 0}
---- !u!114 &-4626082702015143918
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
-  m_Name: ActivationPlayableAsset
-  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
 --- !u!114 &-4536602036244101097
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1151,9 +1740,59 @@ MonoBehaviour:
     typewriterCharactersPerSecond: 8
     typewriterStartDelay: 0
     overrideTextLayout: 1
-    fontSize: 25
+    fontSize: 25.6
     textOffset: {x: 0, y: 20}
     textPadding: {x: 20, y: 58, z: 86, w: 74}
+--- !u!114 &-4495035417832305288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f91b380da1e45af927f081f34992e87, type: 3}
+  m_Name: CutsceneDroneCombatLockClip(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDroneCombatLockClip
+--- !u!114 &-4344615269833583906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
+--- !u!114 &-4082573902420307153
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC800 \uB4DC\uB860"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &-4077103519316756011
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1180,6 +1819,32 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-3957414423806523355
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uADF8\uAC8C \uBB54\uB370\uC694?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &-3804463224035761431
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1202,6 +1867,22 @@ MonoBehaviour:
   m_Loop: 2
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &-3585732946477095788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
+  m_Name: CinemachineShot(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
+  DisplayName: 
+  VirtualCamera:
+    exposedName: 422d08bfeb694e840bb080b0dc76b8dd
+    defaultValue: {fileID: 0}
 --- !u!114 &-3311876162918812142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1224,7 +1905,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 51.483333333333334
+    m_Start: 49.31666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -3804463224035761431}
     m_Duration: 4.350000000000001
@@ -1289,8 +1970,77 @@ MonoBehaviour:
     m_Recordable: 0
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
+    m_PostExtrapolationTime: 43.14999999999999
+    m_PreExtrapolationTime: 49.31666666666667
+    m_DisplayName: DroneIdle
+  - m_Version: 1
+    m_Start: 96.81666666666666
+    m_ClipIn: 0
+    m_Asset: {fileID: 7735699856898247083}
+    m_Duration: 4.349999999999994
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -3311876162918812142}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 1
+    m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 51.483333333333334
+    m_PreExtrapolationTime: 0
     m_DisplayName: DroneIdle
   m_Markers:
     m_Objects: []
@@ -1622,6 +2372,58 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events: []
+--- !u!114 &-3174916782795063222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC798 \uACF5\uACA9\uD574 \uBD10!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-3123908934103753026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC774\uBC88\uC5D4 \uC801\uC744 \uBCF4\uBA74\uC11C"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.2
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-2576258203230549521
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1658,6 +2460,32 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   m_PostPlaybackState: 3
+--- !u!114 &-2172978165721838344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC790\uC138\uD55C\uAC74 \uB098\uC911\uC5D0"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &-2119978021316223190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1680,6 +2508,84 @@ MonoBehaviour:
   m_Loop: 0
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &-2011683296922518023
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uB9F5\uC774\uB77C\uB294\uAC8C "
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
+--- !u!114 &-1891956469318148099
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC0C8 \uAC19\uC740 \uAC74\uB370,"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-1650125173636046802
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uB4DC\uB860\uC774 \uBB54\uB370\uC694?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &-1457292501426918453
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1706,6 +2612,84 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-1242162294853410898
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uBCF8 \uC801 \uC788\uC5B4?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &-1068263946644473303
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC88B\uC544! \uD6CC\uB96D\uD574."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-1035648629112409682
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uAC70\uAE38 \uC5B4\uB5BB\uAC8C \uAC00\uC694?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.8
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &-711443472879140960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1726,148 +2710,114 @@ MonoBehaviour:
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
   m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 1.7333333333333334
-    m_ClipIn: 0
-    m_Asset: {fileID: -4626082702015143918}
-    m_Duration: 0.833333333333333
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -711443472879140960}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: 0
-    m_BlendOutDuration: 0
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Active
-  - m_Version: 1
-    m_Start: 3.000000000000001
-    m_ClipIn: 0
-    m_Asset: {fileID: -5924496801238728756}
-    m_Duration: 0.6499999999999977
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -711443472879140960}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: 0
-    m_BlendOutDuration: 0
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Active
+  m_Clips: []
   m_Markers:
     m_Objects: []
   m_PostPlaybackState: 3
+--- !u!114 &-562686511197852394
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uB9F5 \uB05D\uAE4C\uC9C0...?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
+--- !u!114 &-485766206847834052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: ...!
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-478492555791224335
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uAC00\uB294\uAC70\uC57C."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &-396080342283850326
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uC131\uACF5...?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1886,14 +2836,17 @@ MonoBehaviour:
   - {fileID: 1079569158161496531}
   - {fileID: 8392342891579250796}
   - {fileID: -9154384341037216662}
-  - {fileID: -3311876162918812142}
+  - {fileID: -6258645060076194450}
+  - {fileID: 2196493391136191190}
   - {fileID: -5837693825667655299}
   - {fileID: 7880147275735154796}
   - {fileID: -8795646407559222158}
   - {fileID: 1037413637081862512}
+  - {fileID: 1862495638000031625}
   - {fileID: -711443472879140960}
   - {fileID: -2368813181525634270}
   - {fileID: 6429007828544323697}
+  - {fileID: -3311876162918812142}
   - {fileID: 454800001}
   m_FixedDuration: 0
   m_EditorSettings:
@@ -2055,6 +3008,64 @@ MonoBehaviour:
   m_Loop: 1
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &583616613519282475
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uB450 \uBC88 \uB204\uB974\uBA74"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.2
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &988580503226005703
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33ce464f8dd54b6ab26b3f54c8ccff09, type: 3}
+  m_Name: CutsceneParryPromptClip
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneParryPromptClip
+  template:
+    promptText: "X\uD0A4\uB97C \uB20C\uB7EC \uD328\uB9C1\uD558\uC138\uC694."
+    parryWindowText: "X\uD0A4\uB97C \uB5BC\uBA70 \uD0C0\uC774\uBC0D\uC5D0 \uB9DE\uAC8C
+      \uD295\uAE30\uC138\uC694!"
+    tooEarlyText: "\uB108\uBB34 \uBE68\uB77C\uC694!"
+    tooLateText: "\uB108\uBB34 \uB290\uB824\uC694!"
+    missedDroneText: "\uB4DC\uB860\uC744 \uB9DE\uCD94\uC138\uC694!"
+    fireProjectileOnStart: 1
+    pauseTimelineUntilSuccess: 1
+    showReleasePrompt: 1
+    clearParryCooldown: 1
+    slowTimeScale: 0.18
+    parryWindowDuration: 7
+    retryDelay: 0.45
+    timingFeedbackDuration: 0.8
+    fallbackParryDistance: 1.5
+    earlyPressDistancePadding: 0.2
+    overrideProjectileSpeed: 1
+    cutsceneProjectileSpeed: 30
+    cutsceneParrySuccessRangePadding: 0.7
 --- !u!114 &1037413637081862512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2187,10 +3198,148 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 51.483333333333334
+    m_Start: 42.583333333333336
     m_ClipIn: 0
     m_Asset: {fileID: -2576258203230549521}
-    m_Duration: 2.049999999999997
+    m_Duration: 0.6499999999999986
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 1079569158161496531}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Spawn Effect
+  - m_Version: 1
+    m_Start: 87.46666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: 1662812602428565036}
+    m_Duration: 0.6833333333333371
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 1079569158161496531}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Spawn Effect
+  - m_Version: 1
+    m_Start: 115.8
+    m_ClipIn: 0
+    m_Asset: {fileID: -4644735602458026266}
+    m_Duration: 0.6833333333333513
     m_TimeScale: 1
     m_ParentTrack: {fileID: 1079569158161496531}
     m_EaseInDuration: 0
@@ -2258,6 +3407,32 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   m_PostPlaybackState: 2
+--- !u!114 &1175318066337721733
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC870\uC2EC\uD574\uC57C \uD574."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &1253211238574573851
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2272,7 +3447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
   template:
     speaker: 1
-    text: "\uB2E4\uB978 \uC138\uACC4\uC120\uC744"
+    text: "<color=#DB0000>\uB2E4\uB978 \uC138\uACC4\uC120</color>\uC744"
     useCustomOffset: 1
     customOffset: {x: 0, y: 3.5, z: 0}
     overrideBubbleSize: 1
@@ -2284,6 +3459,297 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &1662812602428565036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
+  m_Name: ActivationPlayableAsset(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationPlayableAsset
+--- !u!114 &1862495638000031625
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21bf7f712d84d26478ebe6a299f21738, type: 3}
+  m_Name: Activation Track (2)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.ActivationTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 87.85
+    m_ClipIn: 0
+    m_Asset: {fileID: -9040191175690224317}
+    m_Duration: 0.30000000000001537
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 1862495638000031625}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Active
+  m_Markers:
+    m_Objects: []
+  m_PostPlaybackState: 3
+--- !u!114 &2147156460855373093
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uACF5\uACA9\uD558\uB2C8\uAE4C"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &2196493391136191190
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4327866d18b14d9ab516fb56182d13d3, type: 3}
+  m_Name: Grapple Prompt
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneGrapplePromptTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 116.71666666666668
+    m_ClipIn: 0
+    m_Asset: {fileID: 5059801315493048121}
+    m_Duration: 1.4666666666666686
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 2196493391136191190}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Drone Grapple
+  m_Markers:
+    m_Objects: []
+--- !u!114 &2207651817618129784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
+  m_Name: CinemachineShot(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
+  DisplayName: 
+  VirtualCamera:
+    exposedName: 259e71efe8b47c0478b4ba888dc73df1
+    defaultValue: {fileID: 0}
+--- !u!114 &2669461611011049665
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC774\uBC88\uC5D4,"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &3133067251591054967
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uCE7C\uB85C \uBCA0\uC5B4\uBC84\uB9AC\uBA74"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &3225704693950690817
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2300,6 +3766,48 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: 501539d6022fc714da09a34e15057ad3
     defaultValue: {fileID: 0}
+--- !u!114 &3269046136508264516
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
+  m_Name: CinemachineShot(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
+  DisplayName: 
+  VirtualCamera:
+    exposedName: ec05badc0c55f554a9a4793569e1bd25
+    defaultValue: {fileID: 0}
+--- !u!114 &3398626905457397806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uB098\uB3C4 \uC774\uBC88\uC5D4"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &3648468884977800482
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2394,6 +3902,32 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &4029135711296429598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "X\uD0A4\uB97C \uB20C\uB7EC\uC11C"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!74 &4042335592606978707
 AnimationClip:
   m_ObjectHideFlags: 0
@@ -2704,6 +4238,128 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events: []
+--- !u!114 &4271412358508320980
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "...\uC138\uC0C1\uC758 \uB05D."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &4875718316097963499
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC54C\uAC8C \uB420 \uAC70\uC57C."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &4925565398279130112
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uD50C\uB808\uC774\uC5B4?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
+--- !u!114 &5059801315493048121
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2b9027be3c4791be4709a964fc66ae, type: 3}
+  m_Name: CutsceneGrapplePromptClip
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneGrapplePromptClip
+  template:
+    promptText: "ALT\uB97C \uBE60\uB974\uAC8C \uB450 \uBC88 \uB20C\uB7EC \uADF8\uB798\uD50C\uB9C1\uD558\uC138\uC694."
+    pauseTimelineUntilSuccess: 1
+    waitForGrappleEnd: 1
+    slowTimeScale: 0.18
+    doubleTapMaxInterval: 0.35
+--- !u!114 &5093496497473751244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uAC00\uB2E4 \uBCF4\uBA74"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &5114568766027747382
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2754,6 +4410,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f91b380da1e45af927f081f34992e87, type: 3}
   m_Name: CutsceneDroneCombatLockClip
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneDroneCombatLockClip
+--- !u!114 &6034358473546705312
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uD30C\uC774\uD305!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &6277023823809032450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2770,6 +4452,18 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: 6cd8e6cc3bc1bf04a980c50f085875b8
     defaultValue: {fileID: 0}
+--- !u!114 &6325452972302693059
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f91b380da1e45af927f081f34992e87, type: 3}
+  m_Name: CutsceneDroneCombatLockClip(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDroneCombatLockClip
 --- !u!114 &6429007828544323697
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2928,6 +4622,48 @@ MonoBehaviour:
   m_Loop: 0
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &6864246764516015303
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
+  m_Name: CinemachineShot(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
+  DisplayName: 
+  VirtualCamera:
+    exposedName: eb8e2ee666ec7fa4fb250879471f49bb
+    defaultValue: {fileID: 0}
+--- !u!114 &7359718358812203941
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC88B\uC544."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &7365975100115196930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2944,6 +4680,58 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: a2bb08be6dc1e9d4eb22f7c1baccd5e0
     defaultValue: {fileID: 0}
+--- !u!114 &7472485800334521098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uBB54\uB370\uC694? \uC9C0\uB3C4?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
+--- !u!114 &7571585202794195066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC774\uC81C \uB9F5 \uB05D\uAE4C\uC9C0"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &7684525135373701980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2970,6 +4758,28 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 50, y: 58, z: 86, w: 74}
+--- !u!114 &7735699856898247083
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030f85c3f73729f4f976f66ffb23b875, type: 3}
+  m_Name: AnimationPlayableAsset of DroneIdle(Clone)(Clone)
+  m_EditorClassIdentifier: Unity.Timeline::UnityEngine.Timeline.AnimationPlayableAsset
+  m_Clip: {fileID: 7400000, guid: f516a399c4644433a0bb6a1bfbf9e320, type: 2}
+  m_Position: {x: 0, y: 0, z: 0}
+  m_EulerAngles: {x: 0, y: 0, z: 0}
+  m_UseTrackMatchFields: 1
+  m_MatchTargetFields: 63
+  m_RemoveStartOffset: 0
+  m_ApplyFootIK: 0
+  m_Loop: 2
+  m_Version: 1
+  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &7880147275735154796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2992,16 +4802,16 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 10.516666666666667
+    m_Start: 7.466666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -4077103519316756011}
-    m_Duration: 2.183333333333332
+    m_Duration: 1.7166666666666686
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -3028,25 +4838,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -3061,7 +4853,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 5.65
+    m_Start: 2.2840704983100295
     m_ClipIn: 0
     m_Asset: {fileID: -7760706118247127439}
     m_Duration: 1.75
@@ -3113,7 +4905,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 7.4
+    m_Start: 4.034070498310031
     m_ClipIn: 0
     m_Asset: {fileID: 5222063050046331008}
     m_Duration: 2.2
@@ -3165,7 +4957,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 12.7
+    m_Start: 9.183333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 7684525135373701980}
     m_Duration: 1.3
@@ -3173,29 +4965,11 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -3234,7 +5008,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 14.966666666666667
+    m_Start: 10.483333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 3984635295932924231}
     m_Duration: 2.1333333333333346
@@ -3286,10 +5060,10 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 17.1
+    m_Start: 12.616666666666674
     m_ClipIn: 0
     m_Asset: {fileID: 3718289910955814776}
-    m_Duration: 2.7833333333333314
+    m_Duration: 2.3000000000000007
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
@@ -3338,16 +5112,16 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 19.883333333333333
+    m_Start: 14.916666666666675
     m_ClipIn: 0
     m_Asset: {fileID: 8875875216114121346}
-    m_Duration: 1.7166666666666686
+    m_Duration: 2.200000000000003
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -3356,25 +5130,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -3390,7 +5146,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 22.483333333333334
+    m_Start: 17.116666666666674
     m_ClipIn: 0
     m_Asset: {fileID: 6437343848055226668}
     m_Duration: 1.516666666666664
@@ -3398,29 +5154,11 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -3459,10 +5197,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 25.133333333333333
+    m_Start: 20.366666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -8543775872275814474}
-    m_Duration: 2.183333333333332
+    m_Duration: 1.6166666666666654
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
@@ -3510,7 +5248,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 28.333333333333332
+    m_Start: 21.983333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -1457292501426918453}
     m_Duration: 1.6500000000000021
@@ -3519,7 +5257,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -3543,7 +5281,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 29.983333333333334
+    m_Start: 23.633333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -4928503216915022901}
     m_Duration: 2.183333333333332
@@ -3551,7 +5289,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -3576,7 +5314,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 32.166666666666664
+    m_Start: 25.816666666666663
     m_ClipIn: 0
     m_Asset: {fileID: 1253211238574573851}
     m_Duration: 2.183333333333339
@@ -3585,7 +5323,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -3609,7 +5347,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 34.35
+    m_Start: 27.99999999999997
     m_ClipIn: 0
     m_Asset: {fileID: -6795465655713805540}
     m_Duration: 2.183333333333332
@@ -3617,7 +5355,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 7880147275735154796}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -3660,7 +5398,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 39.166666666666664
+    m_Start: 31.466666666666665
     m_ClipIn: 0
     m_Asset: {fileID: 3659480998293043835}
     m_Duration: 2.2
@@ -3712,7 +5450,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 42.6
+    m_Start: 34.5
     m_ClipIn: 0
     m_Asset: {fileID: 8045963937365876495}
     m_Duration: 2.2
@@ -3764,7 +5502,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 44.86666666666667
+    m_Start: 36.7
     m_ClipIn: 0
     m_Asset: {fileID: -4536602036244101097}
     m_Duration: 2.2
@@ -3816,7 +5554,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 47.916666666666664
+    m_Start: 39.43333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -5863158596984725336}
     m_Duration: 2.183333333333332
@@ -3866,8 +5604,2993 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 45.56666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: -4082573902420307153}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 47.75
+    m_ClipIn: 0
+    m_Asset: {fileID: -1242162294853410898}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 50.83788243395587
+    m_ClipIn: 0
+    m_Asset: {fileID: -1650125173636046802}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 53.65454910062253
+    m_ClipIn: 0
+    m_Asset: {fileID: -5744172747599302388}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 55.83788243395585
+    m_ClipIn: 0
+    m_Asset: {fileID: -1891956469318148099}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 58.02121576728927
+    m_ClipIn: 0
+    m_Asset: {fileID: -8248128670441790710}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 60.204549100622614
+    m_ClipIn: 0
+    m_Asset: {fileID: 2147156460855373093}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 62.38788243395599
+    m_ClipIn: 0
+    m_Asset: {fileID: 1175318066337721733}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 65.33788243395597
+    m_ClipIn: 0
+    m_Asset: {fileID: 3133067251591054967}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 67.53788243395599
+    m_ClipIn: 0
+    m_Asset: {fileID: -8374564004806681078}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 70.2712157672893
+    m_ClipIn: 0
+    m_Asset: {fileID: -485766206847834052}
+    m_Duration: 2.183333333333337
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 72.45454910062264
+    m_ClipIn: 0
+    m_Asset: {fileID: -8506135412614227960}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 75.30454910062264
+    m_ClipIn: 0
+    m_Asset: {fileID: 4925565398279130112}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 77.50454910062265
+    m_ClipIn: 0
+    m_Asset: {fileID: -3957414423806523355}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 80.08788243395597
+    m_ClipIn: 0
+    m_Asset: {fileID: -4883229454431474785}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 82.2712157672893
+    m_ClipIn: 0
+    m_Asset: {fileID: -2172978165721838344}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 84.45454910062264
+    m_ClipIn: 0
+    m_Asset: {fileID: -6239792103489803736}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 88.68333333333334
+    m_ClipIn: 0
+    m_Asset: {fileID: -8984240694132814822}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 90.86666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: 4029135711296429598}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 93.05000000000001
+    m_ClipIn: 0
+    m_Asset: {fileID: -5179062746618895147}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 98
+    m_ClipIn: 0
+    m_Asset: {fileID: 8936766310689523446}
+    m_Duration: 2.0499999999999945
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 100.05
+    m_ClipIn: 0
+    m_Asset: {fileID: 7359718358812203941}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 102.23333333333333
+    m_ClipIn: 0
+    m_Asset: {fileID: -3123908934103753026}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 104.41666666666667
+    m_ClipIn: 0
+    m_Asset: {fileID: -8264267576838138251}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 106.60000000000001
+    m_ClipIn: 0
+    m_Asset: {fileID: 583616613519282475}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 108.78333333333335
+    m_ClipIn: 0
+    m_Asset: {fileID: 8581931938435875664}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 110.96666666666668
+    m_ClipIn: 0
+    m_Asset: {fileID: 9211625107606514450}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 113.15000000000002
+    m_ClipIn: 0
+    m_Asset: {fileID: -3174916782795063222}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 119.13071750272066
+    m_ClipIn: 0
+    m_Asset: {fileID: -1068263946644473303}
+    m_Duration: 2.183333333333337
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 121.314050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: 7571585202794195066}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 123.49738416938736
+    m_ClipIn: 0
+    m_Asset: {fileID: -478492555791224335}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 125.68071750272068
+    m_ClipIn: 0
+    m_Asset: {fileID: -562686511197852394}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 127.8807175027207
+    m_ClipIn: 0
+    m_Asset: {fileID: -2011683296922518023}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 130.0807175027207
+    m_ClipIn: 0
+    m_Asset: {fileID: 7472485800334521098}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 132.28071750272068
+    m_ClipIn: 0
+    m_Asset: {fileID: 4271412358508320980}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 134.464050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: -8089973719050214760}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 136.664050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: -1035648629112409682}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 138.864050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: 5093496497473751244}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 141.04738416938733
+    m_ClipIn: 0
+    m_Asset: {fileID: 4875718316097963499}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 143.23071750272067
+    m_ClipIn: 0
+    m_Asset: {fileID: -6152932133530024242}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 145.414050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: -5517286673466568950}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 147.59738416938734
+    m_ClipIn: 0
+    m_Asset: {fileID: 3398626905457397806}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 149.78071750272068
+    m_ClipIn: 0
+    m_Asset: {fileID: 8696878250781477424}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 151.964050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: 7975582773529712714}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 154.164050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: 2669461611011049665}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 156.34738416938734
+    m_ClipIn: 0
+    m_Asset: {fileID: 8454975967220250047}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 158.53071750272068
+    m_ClipIn: 0
+    m_Asset: {fileID: -396080342283850326}
+    m_Duration: 2.2
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
+      \uB41C ..."
+  - m_Version: 1
+    m_Start: 160.73071750272067
+    m_ClipIn: 0
+    m_Asset: {fileID: -8351016590429070405}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 162.914050836054
+    m_ClipIn: 0
+    m_Asset: {fileID: -6667018255695854278}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
+  - m_Version: 1
+    m_Start: 165.09738416938734
+    m_ClipIn: 0
+    m_Asset: {fileID: 6034358473546705312}
+    m_Duration: 2.183333333333332
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 7880147275735154796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: "NPC: \uC74C..."
   m_Markers:
     m_Objects: []
+--- !u!114 &7975582773529712714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uC774\uBC88\uC5D4...?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 10, y: 58, z: 86, w: 74}
 --- !u!114 &8045963937365876495
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3916,10 +8639,148 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 51.483333333333334
+    m_Start: 43.233333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 5114568766027747382}
-    m_Duration: 3.3333333333333357
+    m_Duration: 3.094482717042169
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 8392342891579250796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Drone Visible
+  - m_Version: 1
+    m_Start: 88.15
+    m_ClipIn: 0
+    m_Asset: {fileID: -4344615269833583906}
+    m_Duration: 9.100000000000009
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 8392342891579250796}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: 0
+    m_BlendOutDuration: 0
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Drone Visible
+  - m_Version: 1
+    m_Start: 116.48333333333336
+    m_ClipIn: 0
+    m_Asset: {fileID: -6291488913945105230}
+    m_Duration: 1.6999999999999886
     m_TimeScale: 1
     m_ParentTrack: {fileID: 8392342891579250796}
     m_EaseInDuration: 0
@@ -3987,6 +8848,84 @@ MonoBehaviour:
   m_Markers:
     m_Objects: []
   m_PostPlaybackState: 2
+--- !u!114 &8454975967220250047
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "<color=#DB0000>\uAF2D \uC131\uACF5\uD588\uC73C\uBA74...</color>"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &8581931938435875664
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uADF8\uB798\uD50C\uB9C1\uC744"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &8696878250781477424
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uCC98\uC74C\uC774\uAC70\uB4E0."
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
 --- !u!114 &8875875216114121346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4013,3 +8952,55 @@ MonoBehaviour:
     fontSize: 30
     textOffset: {x: 0, y: 20}
     textPadding: {x: 20, y: 58, z: 86, w: 74}
+--- !u!114 &8936766310689523446
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 0
+    text: "\uC6B0\uC640, \uBC29\uAE08.. \uBB34\uC2A8?"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 2, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 29.2
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}
+--- !u!114 &9211625107606514450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37223f34e1f84be1a976a65bcf2e97aa, type: 3}
+  m_Name: CutsceneDialogueClip(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
+  template:
+    speaker: 1
+    text: "\uC4F8 \uC218 \uC788\uC5B4!"
+    useCustomOffset: 1
+    customOffset: {x: 0, y: 3.5, z: 0}
+    overrideBubbleSize: 1
+    bubbleSize: {x: 350, y: 110}
+    disableTypewriter: 0
+    typewriterCharactersPerSecond: 8
+    typewriterStartDelay: 0
+    overrideTextLayout: 1
+    fontSize: 30
+    textOffset: {x: 0, y: 20}
+    textPadding: {x: 1, y: 58, z: 86, w: 74}

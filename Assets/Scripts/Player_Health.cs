@@ -172,7 +172,7 @@ public class Player_Health : Entity_Health
         if (IsInvincible)
         {
             bool expectedInvincibleState = isFirewallRespawning
-                || (player != null && (player.IsGrappling || player.IsParryAiming || player.ParryInvincibilityCoroutineHandle != null));
+                || (player != null && (player.IsGrappling || player.IsParryAiming || player.IsCutsceneInvincible || player.ParryInvincibilityCoroutineHandle != null));
 
             if (!expectedInvincibleState)
             {

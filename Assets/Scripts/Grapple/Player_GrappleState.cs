@@ -12,6 +12,8 @@ public class Player_GrappleState : PlayerState
     private GrappleTargetBase activeTarget;
     private GrappleLockOnSystem lockOnSystem;
     private LockOnGrappleConfig config;
+    private bool pendingCutsceneGrapple;
+    private bool cutsceneGrapple;
 
     private Player_Health playerHealth;
     private bool hadInvincibilityBeforeGrapple;
@@ -46,6 +48,15 @@ public class Player_GrappleState : PlayerState
         pendingTarget = target;
         lockOnSystem = lockOn;
         config = grappleConfig;
+        pendingCutsceneGrapple = false;
+    }
+
+    public void PrepareCutsceneGrapple(GrappleTargetBase target, GrappleLockOnSystem lockOn, LockOnGrappleConfig grappleConfig)
+    {
+        pendingTarget = target;
+        lockOnSystem = lockOn;
+        config = grappleConfig;
+        pendingCutsceneGrapple = true;
     }
 
     public override void Enter()
@@ -61,9 +72,11 @@ public class Player_GrappleState : PlayerState
         }
 
         activeTarget = pendingTarget;
+        cutsceneGrapple = pendingCutsceneGrapple;
         pendingTarget = null;
+        pendingCutsceneGrapple = false;
         LogGrappleAnim(
-            $"Enter target='{activeTarget.name}' controller='{anim.runtimeAnimatorController?.name ?? "null"}' " +
+            $"Enter target='{activeTarget.name}' cutscene={cutsceneGrapple} controller='{anim.runtimeAnimatorController?.name ?? "null"}' " +
             $"hasGrapple={HasAnimatorState(GrappleStateName)} hasAttack={HasAnimatorState(GrappleAttackStateName)}");
         ForcePlayState(GrappleStateName);
 
@@ -148,16 +161,13 @@ public class Player_GrappleState : PlayerState
 
         if (!movementStarted)
         {
-            startSlowTimer += Time.unscaledDeltaTime;
-            if (startSlowTimer >= config.startSlowDuration)
-            {
-                movementStarted = true;
-                if (startupSlowRequested)
-                {
-                    GameManager.Instance?.EndSlowMotion();
-                    startupSlowRequested = false;
-                }
-            }
+            AdvanceStartupSlow(Time.unscaledDeltaTime);
+            return;
+        }
+
+        if (cutsceneGrapple)
+        {
+            AdvanceGrappleMovement(Time.unscaledDeltaTime, true);
             return;
         }
 
@@ -169,11 +179,26 @@ public class Player_GrappleState : PlayerState
 
     public void FixedUpdateGrapple()
     {
-        if (!IsGrapplingActive || arrived || !movementStarted)
+        if (!IsGrapplingActive || arrived)
             return;
 
+        if (cutsceneGrapple)
+            return;
+
+        if (!movementStarted)
+        {
+            AdvanceStartupSlow(Time.fixedUnscaledDeltaTime);
+            if (!movementStarted)
+                return;
+        }
+
+        AdvanceGrappleMovement(Time.fixedDeltaTime, false);
+    }
+
+    private void AdvanceGrappleMovement(float deltaTime, bool directTransformMove)
+    {
         float speedMultiplier = player.GetAwakeningGrappleSpeedMultiplier();
-        elapsed += Time.fixedDeltaTime * speedMultiplier;
+        elapsed += Mathf.Max(0f, deltaTime) * Mathf.Max(0.01f, speedMultiplier);
         float t = Mathf.Clamp01(elapsed / baseTravelTime);
 
         TryTriggerAttackAnimation(t);
@@ -181,11 +206,25 @@ public class Player_GrappleState : PlayerState
         float accelMultiplier = player.GetAwakeningGrappleAccelMultiplier();
         float easedT = 1f - Mathf.Pow(1f - t, accelMultiplier);
         Vector2 nextPosition = Vector2.Lerp(startPosition, targetPosition, easedT);
-        rb.MovePosition(nextPosition);
+        MovePlayerTo(nextPosition, directTransformMove);
 
         if (t >= 1f)
         {
             CompleteGrapple();
+        }
+    }
+
+    private void AdvanceStartupSlow(float deltaTime)
+    {
+        startSlowTimer += Mathf.Max(0f, deltaTime);
+        if (startSlowTimer < config.startSlowDuration)
+            return;
+
+        movementStarted = true;
+        if (startupSlowRequested)
+        {
+            GameManager.Instance?.EndSlowMotion();
+            startupSlowRequested = false;
         }
     }
 
@@ -208,6 +247,8 @@ public class Player_GrappleState : PlayerState
             presentationController?.PopToFront();
             playerPresentationBoostApplied = false;
         }
+        cutsceneGrapple = false;
+        pendingCutsceneGrapple = false;
         anim.ResetTrigger(GrappleAttackTrigger);
         anim.SetBool(GrappleAnimBool, false);
         LogGrappleAnim($"Exit currentState='{anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.grapple")}' normalizedTime={anim.GetCurrentAnimatorStateInfo(0).normalizedTime:F2}");
@@ -219,7 +260,7 @@ public class Player_GrappleState : PlayerState
             return;
 
         arrived = true;
-        rb.MovePosition(targetPosition);
+        MovePlayerTo(targetPosition, cutsceneGrapple);
         player.SetVelocity(0f, 0f);
 
         if (activeTarget != null)
@@ -250,6 +291,20 @@ public class Player_GrappleState : PlayerState
 
         if (postAttackHoldTimer <= 0f)
             ReturnControlToDefaultState();
+    }
+
+    private void MovePlayerTo(Vector2 position, bool directTransformMove)
+    {
+        if (!directTransformMove)
+        {
+            rb.MovePosition(position);
+            return;
+        }
+
+        rb.position = position;
+        Vector3 current = player.transform.position;
+        player.transform.position = new Vector3(position.x, position.y, current.z);
+        rb.linearVelocity = Vector2.zero;
     }
 
     private void NotifyGrappleEnded()
