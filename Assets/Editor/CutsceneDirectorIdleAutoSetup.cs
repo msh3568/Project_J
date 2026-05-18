@@ -100,7 +100,7 @@ public static class CutsceneDirectorIdleAutoSetup
         }
 
         Undo.RegisterCompleteObjectUndo(dialogueTrack, "Restore opening dialogue clip");
-        CreateDialogueClip(dialogueTrack, OpeningDialogueStart, OpeningDialogueDuration, CutsceneDialoguePlayer.Speaker.Player, OpeningDialogueText);
+        CreateDialogueClip(dialogueTrack, OpeningDialogueStart, OpeningDialogueDuration, SpeakerType.Player, OpeningDialogueText);
         director.SetGenericBinding(dialogueTrack, dialoguePlayer);
         EditorUtility.SetDirty(dialogueTrack);
         EditorUtility.SetDirty(timelineAsset);
@@ -485,16 +485,16 @@ public static class CutsceneDirectorIdleAutoSetup
         if (dialogueTrack == null)
             return;
 
-        CreateDialogueClip(dialogueTrack, OpeningDialogueStart, OpeningDialogueDuration, CutsceneDialoguePlayer.Speaker.Player, OpeningDialogueText);
-        CreateDialogueClip(dialogueTrack, 3.0d, 2.0d, CutsceneDialoguePlayer.Speaker.NPC, "아... 이거? 별일은 아니야.");
-        CreateDialogueClip(dialogueTrack, 5.3d, 2.8d, CutsceneDialoguePlayer.Speaker.Player, "그건 그렇고 왜 저희 둘은 그림체가 다르죠?");
-        CreateDialogueClip(dialogueTrack, 8.6d, 1.3d, CutsceneDialoguePlayer.Speaker.NPC, "음...");
-        CreateDialogueClip(dialogueTrack, 10.3d, 1.3d, CutsceneDialoguePlayer.Speaker.NPC, "음...!");
-        CreateDialogueClip(dialogueTrack, 12.0d, 1.7d, CutsceneDialoguePlayer.Speaker.NPC, "그건...!");
-        CreateDialogueClip(dialogueTrack, 14.2d, 3.2d, CutsceneDialoguePlayer.Speaker.NPC, "하핫! 너랑 나랑은 다른 세계선을 살고 있거든!");
+        CreateDialogueClip(dialogueTrack, OpeningDialogueStart, OpeningDialogueDuration, SpeakerType.Player, OpeningDialogueText);
+        CreateDialogueClip(dialogueTrack, 3.0d, 2.0d, SpeakerType.NPC, "아... 이거? 별일은 아니야.");
+        CreateDialogueClip(dialogueTrack, 5.3d, 2.8d, SpeakerType.Player, "그건 그렇고 왜 저희 둘은 그림체가 다르죠?");
+        CreateDialogueClip(dialogueTrack, 8.6d, 1.3d, SpeakerType.NPC, "음...");
+        CreateDialogueClip(dialogueTrack, 10.3d, 1.3d, SpeakerType.NPC, "음...!");
+        CreateDialogueClip(dialogueTrack, 12.0d, 1.7d, SpeakerType.NPC, "그건...!");
+        CreateDialogueClip(dialogueTrack, 14.2d, 3.2d, SpeakerType.NPC, "하핫! 너랑 나랑은 다른 세계선을 살고 있거든!");
     }
 
-    private static void CreateDialogueClip(CutsceneDialogueTrack dialogueTrack, double start, double duration, CutsceneDialoguePlayer.Speaker speaker, string text)
+    private static void CreateDialogueClip(CutsceneDialogueTrack dialogueTrack, double start, double duration, SpeakerType speaker, string text)
     {
         TimelineClip timelineClip = dialogueTrack.CreateClip<CutsceneDialogueClip>();
         timelineClip.start = start;
@@ -505,8 +505,7 @@ public static class CutsceneDirectorIdleAutoSetup
         if (dialogueClip == null)
             return;
 
-        dialogueClip.template.speaker = speaker;
-        dialogueClip.template.text = text;
+        dialogueClip.template.SetDialogueLine(speaker, text);
         dialogueClip.template.useCustomOffset = false;
         dialogueClip.template.customOffset = Vector3.zero;
         dialogueClip.template.overrideBubbleSize = false;
@@ -529,16 +528,16 @@ public static class CutsceneDirectorIdleAutoSetup
         foreach (TimelineClip clip in dialogueTrack.GetClips())
         {
             CutsceneDialogueClip dialogueClip = clip.asset as CutsceneDialogueClip;
-            if (dialogueClip != null && dialogueClip.template != null && dialogueClip.template.text == text)
+            if (dialogueClip != null && dialogueClip.template != null && dialogueClip.template.Text == text)
                 return true;
         }
 
         return false;
     }
 
-    private static string GetDialogueClipName(CutsceneDialoguePlayer.Speaker speaker, string text)
+    private static string GetDialogueClipName(SpeakerType speaker, string text)
     {
-        string prefix = speaker == CutsceneDialoguePlayer.Speaker.NPC ? "NPC" : "Player";
+        string prefix = speaker == SpeakerType.NPC ? "NPC" : "Player";
         if (string.IsNullOrWhiteSpace(text))
             return prefix;
 

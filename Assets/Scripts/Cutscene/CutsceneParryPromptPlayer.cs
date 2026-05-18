@@ -19,6 +19,8 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
     {
         Inactive,
         WaitingForParry,
+        WaitingForParryRelease,
+        WaitingForParryLaunch,
         WaitingForDroneExplosion
     }
 
@@ -74,6 +76,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
     private float appliedCutsceneParrySuccessRangePadding;
     private bool parrySucceededThisAttempt;
     private bool timeRestoredAfterParrySuccess;
+    private float parryLaunchStartedAt;
 #if ENABLE_INPUT_SYSTEM
     private bool counterActionWasEnabled;
 #endif
@@ -99,6 +102,18 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         if (promptState == PromptState.WaitingForParry)
         {
             UpdateWaitingForParry();
+            return;
+        }
+
+        if (promptState == PromptState.WaitingForParryRelease)
+        {
+            UpdateWaitingForParryRelease();
+            return;
+        }
+
+        if (promptState == PromptState.WaitingForParryLaunch)
+        {
+            UpdateWaitingForParryLaunch();
             return;
         }
 
@@ -139,6 +154,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         retryPending = false;
         parrySucceededThisAttempt = false;
         timeRestoredAfterParrySuccess = false;
+        parryLaunchStartedAt = 0f;
 
         ApplyCutsceneInvincibility();
         EnableCounterAttackAction();
@@ -180,6 +196,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         retryPending = false;
         parrySucceededThisAttempt = false;
         timeRestoredAfterParrySuccess = false;
+        parryLaunchStartedAt = 0f;
     }
 
     private void UpdateWaitingForParry()
@@ -193,6 +210,18 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
 
         if (HasParrySucceededThisAttempt())
         {
+            if (activePrompt.completeOnParryRelease)
+            {
+                BeginWaitingForParryRelease();
+                return;
+            }
+
+            if (activePrompt.completeOnParrySuccess)
+            {
+                CompletePromptAfterParrySuccess();
+                return;
+            }
+
             BeginWaitingForDroneExplosion();
             return;
         }
@@ -231,7 +260,21 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         }
 
         if (HasParrySucceededThisAttempt())
+        {
             parrySucceededThisAttempt = true;
+
+            if (activePrompt.completeOnParryRelease)
+            {
+                BeginWaitingForParryRelease();
+                return;
+            }
+
+            if (activePrompt.completeOnParrySuccess)
+            {
+                CompletePromptAfterParrySuccess();
+                return;
+            }
+        }
 
         RestoreTimeScaleAfterParryLaunch();
 
@@ -240,6 +283,37 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
 
         if (activeProjectileWasFired && activeProjectile == null)
             ScheduleRetry(activePrompt.missedDroneText);
+    }
+
+    private void UpdateWaitingForParryRelease()
+    {
+        if (HasTargetDroneExploded())
+        {
+            CompletePrompt();
+            return;
+        }
+
+        RestoreTimeScaleAfterParryLaunch();
+
+        if (player == null || player.WasCounterAttackReleasedThisFrame() || !player.IsCounterAttackBeingHeld())
+            BeginWaitingForParryLaunch();
+    }
+
+    private void UpdateWaitingForParryLaunch()
+    {
+        if (HasTargetDroneExploded())
+        {
+            CompletePromptAfterParryLaunch();
+            return;
+        }
+
+        RestoreTimeScaleAfterParryLaunch();
+
+        float previewDuration = activePrompt != null ? Mathf.Max(0f, activePrompt.parryLaunchPreviewDuration) : 0f;
+        bool previewElapsed = Time.unscaledTime >= parryLaunchStartedAt + previewDuration;
+        bool playerFinishedParryLaunch = player == null || !player.IsParryAiming;
+        if (playerFinishedParryLaunch && previewElapsed)
+            CompletePromptAfterParryLaunch();
     }
 
     private void StartParryAttempt()
@@ -258,6 +332,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         parryWindowStartedAt = Time.unscaledTime;
         parrySucceededThisAttempt = false;
         timeRestoredAfterParrySuccess = false;
+        parryLaunchStartedAt = 0f;
 
         if (activePrompt.clearParryCooldown && player != null)
             player.ClearParryCooldown();
@@ -322,6 +397,65 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
 
         if (activePrompt.showReleasePrompt)
             ShowPrompt(activePrompt.parryWindowText);
+    }
+
+    private void BeginWaitingForParryRelease()
+    {
+        parrySucceededThisAttempt = true;
+        promptState = PromptState.WaitingForParryRelease;
+        retryPending = false;
+        RestoreTimeScaleAfterParryLaunch();
+
+        if (activePrompt.showReleasePrompt)
+            ShowPrompt(activePrompt.parryWindowText);
+    }
+
+    private void BeginWaitingForParryLaunch()
+    {
+        parrySucceededThisAttempt = true;
+        promptState = PromptState.WaitingForParryLaunch;
+        retryPending = false;
+        parryLaunchStartedAt = Time.unscaledTime;
+        // Let Player_ParryAimState fire the reflected projectile before resuming the timeline.
+        HidePrompt();
+    }
+
+    private void CompletePromptAfterParrySuccess()
+    {
+        parrySucceededThisAttempt = true;
+        ReturnPlayerFromParryState();
+        DestroyActiveProjectile();
+        CompletePrompt();
+    }
+
+    private void CompletePromptAfterParryLaunch()
+    {
+        parrySucceededThisAttempt = true;
+        activeProjectile = null;
+        activeProjectileWasFired = false;
+        CompletePrompt();
+    }
+
+    private void ReturnPlayerFromParryState()
+    {
+        if (player == null || player.stateMachine == null || player.idleState == null)
+            return;
+
+        if (player.IsParryAiming || player.stateMachine.currentState == player.counterAttackState)
+            player.stateMachine.ChangeState(player.idleState);
+    }
+
+    private void DestroyActiveProjectile()
+    {
+        if (activeProjectile == null)
+            return;
+
+        GameObject projectileObject = activeProjectile.gameObject;
+        activeProjectile = null;
+        activeProjectileWasFired = false;
+
+        if (projectileObject != null)
+            Destroy(projectileObject);
     }
 
     private void RestoreTimeScaleAfterParryLaunch()
@@ -397,6 +531,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         promptState = PromptState.WaitingForParry;
         parrySucceededThisAttempt = false;
         timeRestoredAfterParrySuccess = false;
+        parryLaunchStartedAt = 0f;
         float delay = activePrompt.retryDelay;
         if (!string.IsNullOrEmpty(feedbackText))
             delay = Mathf.Max(delay, activePrompt.timingFeedbackDuration);
@@ -425,6 +560,7 @@ public class CutsceneParryPromptPlayer : MonoBehaviour
         retryPending = false;
         parrySucceededThisAttempt = false;
         timeRestoredAfterParrySuccess = false;
+        parryLaunchStartedAt = 0f;
     }
 
     private void ResolveReferences()

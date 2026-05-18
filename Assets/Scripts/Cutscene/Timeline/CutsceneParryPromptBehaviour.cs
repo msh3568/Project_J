@@ -22,8 +22,14 @@ public class CutsceneParryPromptBehaviour : PlayableBehaviour
 
     public bool fireProjectileOnStart = true;
     public bool pauseTimelineUntilSuccess = true;
+    public bool completeOnParryRelease = true;
+    [HideInInspector]
+    public bool completeOnParrySuccess = true;
     public bool showReleasePrompt = true;
     public bool clearParryCooldown = true;
+
+    [Min(0f)]
+    public float parryLaunchPreviewDuration = 0.75f;
 
     [Range(0.02f, 1f)]
     public float slowTimeScale = 0.18f;

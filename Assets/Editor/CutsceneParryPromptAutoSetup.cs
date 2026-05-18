@@ -209,6 +209,18 @@ public static class CutsceneParryPromptAutoSetup
             changed = true;
         }
 
+        if (!template.completeOnParryRelease)
+        {
+            template.completeOnParryRelease = true;
+            changed = true;
+        }
+
+        if (template.completeOnParrySuccess)
+        {
+            template.completeOnParrySuccess = false;
+            changed = true;
+        }
+
         if (!template.showReleasePrompt)
         {
             template.showReleasePrompt = true;
@@ -218,6 +230,12 @@ public static class CutsceneParryPromptAutoSetup
         if (!template.clearParryCooldown)
         {
             template.clearParryCooldown = true;
+            changed = true;
+        }
+
+        if (!Mathf.Approximately(template.parryLaunchPreviewDuration, 0.75f))
+        {
+            template.parryLaunchPreviewDuration = 0.75f;
             changed = true;
         }
 

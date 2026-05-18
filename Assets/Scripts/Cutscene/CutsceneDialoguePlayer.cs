@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Audio;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -14,11 +15,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(PlayableDirector))]
 public class CutsceneDialoguePlayer : MonoBehaviour
 {
-    public enum Speaker
-    {
-        Player,
-        NPC
-    }
+    private const float DefaultTypewriterCharactersPerSecond = 28f;
+    private const float DefaultPunctuationExtraDelay = 0.12f;
+    private const int GeneratedTypingClipSampleRate = 44100;
+    private const float GeneratedTypingClipDuration = 0.045f;
 
     [Header("Timeline Start")]
     [SerializeField] private PlayableDirector director;
@@ -72,6 +72,24 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     [SerializeField] private bool npcBubbleFlipX;
     [SerializeField] private bool npcTextFlipX;
 
+    [Header("Dialogue Text Effects")]
+    [SerializeField] private bool shakeRedDialogueText = true;
+    [SerializeField, Min(0f)] private float redTextShakeAmplitude = 3.2f;
+    [SerializeField, Min(0f)] private float redTextShakeFrequency = 42f;
+
+    [Header("Dialogue Typing Sound")]
+    [SerializeField] private AudioSource dialogueTypingAudioSource;
+    [SerializeField] private AudioMixerGroup dialogueTypingMixerGroup;
+    [SerializeField] private AudioClip playerTypingClip;
+    [SerializeField] private AudioClip npcTypingClip;
+    [SerializeField, Range(0f, 1f)] private float typingSoundVolume = 0.75f;
+    [SerializeField, Min(0f)] private float playerTypingVolumeMultiplier = 1f;
+    [SerializeField, Min(0f)] private float npcTypingVolumeMultiplier = 1.35f;
+    [SerializeField] private Vector2 playerTypingPitchRange = new Vector2(1.12f, 1.28f);
+    [SerializeField] private Vector2 npcTypingPitchRange = new Vector2(0.92f, 1.04f);
+    [SerializeField, Min(0f)] private float punctuationExtraDelay = DefaultPunctuationExtraDelay;
+    [SerializeField] private bool useGeneratedTypingClipsWhenMissing = true;
+
     [Header("Ending NPC Vanish")]
     [SerializeField] private bool enableEndingNpcVanish = true;
     [SerializeField, Min(0f)] private float endingNpcVanishSecondsBeforeEnd = 1.1f;
@@ -105,7 +123,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private bool timelineStartedByTrigger;
     private bool timelineFinished;
     private bool showingTimelineDialogue;
-    private Speaker activeSpeaker;
+    private SpeakerType activeSpeaker;
     private bool activeUsesCustomOffset;
     private Vector3 activeCustomOffset;
     private bool activeOverridesBubbleSize;
@@ -124,6 +142,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private float activeManualRevealStartTime;
     private bool activeManualForceFullText;
     private bool pausedForManualDialogueAdvance;
+    private int lastTypingSoundVisibleCharacters;
+    private AudioClip generatedPlayerTypingClip;
+    private AudioClip generatedNpcTypingClip;
     private Transform activeBubbleTarget;
     private bool playerLockApplied;
     private int playerSkillControlUnlockCount;
@@ -164,6 +185,15 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private void Reset()
     {
         director = GetComponent<PlayableDirector>();
+    }
+
+    private void OnValidate()
+    {
+        if (Mathf.Approximately(npcTypingPitchRange.x, 0.82f) && Mathf.Approximately(npcTypingPitchRange.y, 0.98f))
+            npcTypingPitchRange = new Vector2(0.92f, 1.04f);
+
+        if (Mathf.Approximately(npcTypingVolumeMultiplier, 0f))
+            npcTypingVolumeMultiplier = 1.35f;
     }
 
     private void Awake()
@@ -218,7 +248,10 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private void LateUpdate()
     {
         if (showingTimelineDialogue)
+        {
             UpdateBubblePosition();
+            ApplyRedDialogueTextShake();
+        }
 
         if (ShouldKeepConversationFacing())
             ApplyConversationFacing();
@@ -247,7 +280,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     }
 
     public void ShowTimelineDialogue(
-        Speaker speaker,
+        SpeakerType speaker,
         string fullText,
         int timelineVisibleCharacters,
         double clipLocalTime,
@@ -313,6 +346,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         activeClipEndTime = double.NaN;
         activeManualForceFullText = false;
         pausedForManualDialogueAdvance = false;
+        lastTypingSoundVisibleCharacters = 0;
         HideDialogue();
     }
 
@@ -324,7 +358,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (!IsManualDialogueFullyVisible())
         {
             activeManualForceFullText = true;
-            SetDialogueText(activeFullText, int.MaxValue);
+            SetDialogueText(activeFullText, int.MaxValue, false);
             PauseDirectorForManualDialogueAdvance();
             return;
         }
@@ -435,6 +469,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         activeManualRevealStartTime = Time.unscaledTime;
         activeManualForceFullText = typewriterDisabled;
         pausedForManualDialogueAdvance = false;
+        lastTypingSoundVisibleCharacters = 0;
     }
 
     private int ResolveDisplayVisibleCharacters(int timelineVisibleCharacters)
@@ -450,16 +485,12 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (activeTypewriterDisabled || activeManualForceFullText || string.IsNullOrEmpty(activeFullText))
             return int.MaxValue;
 
-        float charactersPerSecond = activeTypewriterCharactersPerSecond > 0f ? activeTypewriterCharactersPerSecond : 28f;
+        float charactersPerSecond = activeTypewriterCharactersPerSecond > 0f ? activeTypewriterCharactersPerSecond : DefaultTypewriterCharactersPerSecond;
         float elapsed = Time.unscaledTime - activeManualRevealStartTime - activeTypewriterStartDelay;
         if (elapsed < 0f)
             return 0;
 
-        int visibleCharacters = Mathf.CeilToInt(elapsed * charactersPerSecond);
-        if (activeFullTextVisibleCharacterCount > 0)
-            visibleCharacters = Mathf.Max(1, visibleCharacters);
-
-        return Mathf.Clamp(visibleCharacters, 0, activeFullTextVisibleCharacterCount);
+        return ResolveTypewriterVisibleCharacters(activeFullText, elapsed, charactersPerSecond, punctuationExtraDelay);
     }
 
     private bool IsManualDialogueFullyVisible()
@@ -467,7 +498,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return ResolveManualVisibleCharacters() >= activeFullTextVisibleCharacterCount;
     }
 
-    private bool IsNewTimelineDialogue(Speaker speaker, string fullText, double clipStartTime)
+    private bool IsNewTimelineDialogue(SpeakerType speaker, string fullText, double clipStartTime)
     {
         if (!showingTimelineDialogue)
             return true;
@@ -1099,9 +1130,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return null;
     }
 
-    private Transform ResolveSpeakerTransform(Speaker speaker)
+    private Transform ResolveSpeakerTransform(SpeakerType speaker)
     {
-        if (speaker == Speaker.NPC)
+        if (speaker == SpeakerType.NPC)
             return npcObject != null ? npcObject.transform : null;
 
         return playerObject != null ? playerObject.transform : null;
@@ -1112,7 +1143,7 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         if (activeUsesCustomOffset)
             return activeCustomOffset;
 
-        return activeSpeaker == Speaker.NPC ? npcBubbleOffset : playerBubbleOffset;
+        return activeSpeaker == SpeakerType.NPC ? npcBubbleOffset : playerBubbleOffset;
     }
 
     private void EnsureRuntimeUi()
@@ -1249,6 +1280,75 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         return visibleCharacters;
     }
 
+    public static int ResolveTypewriterVisibleCharacters(string text, float elapsed, float charactersPerSecond)
+    {
+        return ResolveTypewriterVisibleCharacters(text, elapsed, charactersPerSecond, DefaultPunctuationExtraDelay);
+    }
+
+    public static int ResolveTypewriterVisibleCharacters(string text, float elapsed, float charactersPerSecond, float extraPunctuationDelay)
+    {
+        if (string.IsNullOrEmpty(text))
+            return 0;
+
+        int totalVisibleCharacters = CountDialogueVisibleCharacters(text);
+        if (totalVisibleCharacters <= 0)
+            return 0;
+
+        if (elapsed < 0f)
+            return 0;
+
+        float characterDelay = 1f / Mathf.Max(1f, charactersPerSecond);
+        float punctuationDelay = Mathf.Max(0f, extraPunctuationDelay);
+        float nextRevealTime = 0f;
+        int visibleCharacters = 0;
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '<')
+            {
+                int tagEndIndex = text.IndexOf('>', i + 1);
+                if (tagEndIndex > i)
+                {
+                    i = tagEndIndex;
+                    continue;
+                }
+            }
+
+            if (elapsed + 0.0001f < nextRevealTime)
+                break;
+
+            char visibleCharacter = text[i];
+            visibleCharacters++;
+            nextRevealTime += characterDelay;
+
+            if (IsDialoguePausePunctuation(visibleCharacter))
+                nextRevealTime += punctuationDelay;
+
+            if (visibleCharacters >= totalVisibleCharacters)
+                break;
+        }
+
+        return Mathf.Clamp(visibleCharacters, 0, totalVisibleCharacters);
+    }
+
+    private static bool IsDialoguePausePunctuation(char character)
+    {
+        switch (character)
+        {
+            case ',':
+            case '.':
+            case '?':
+            case '!':
+            case '\uFF0C':
+            case '\u3002':
+            case '\uFF1F':
+            case '\uFF01':
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void ShowDialogue()
     {
         if (runtimeUiRoot != null)
@@ -1267,13 +1367,230 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         }
     }
 
-    private void SetDialogueText(string text, int maxVisibleCharacters = int.MaxValue)
+    private void SetDialogueText(string text, int maxVisibleCharacters = int.MaxValue, bool playTypingSounds = true)
     {
         if (dialogueText == null)
             return;
 
         dialogueText.text = text ?? string.Empty;
-        dialogueText.maxVisibleCharacters = maxVisibleCharacters < 0 ? int.MaxValue : maxVisibleCharacters;
+        int resolvedMaxVisibleCharacters = maxVisibleCharacters < 0 ? int.MaxValue : maxVisibleCharacters;
+        dialogueText.maxVisibleCharacters = resolvedMaxVisibleCharacters;
+
+        if (playTypingSounds)
+            PlayTypingSoundsForNewVisibleCharacters(resolvedMaxVisibleCharacters);
+    }
+
+    private void ApplyRedDialogueTextShake()
+    {
+        if (!Application.isPlaying || !shakeRedDialogueText || dialogueText == null || string.IsNullOrEmpty(dialogueText.text))
+            return;
+
+        if (redTextShakeAmplitude <= 0f || redTextShakeFrequency <= 0f)
+            return;
+
+        dialogueText.ForceMeshUpdate();
+        TMP_TextInfo textInfo = dialogueText.textInfo;
+        int characterCount = textInfo.characterCount;
+        if (characterCount <= 0)
+            return;
+
+        bool updatedVertices = false;
+        float time = Time.unscaledTime * redTextShakeFrequency;
+        int visibleLimit = dialogueText.maxVisibleCharacters == int.MaxValue
+            ? characterCount
+            : Mathf.Clamp(dialogueText.maxVisibleCharacters, 0, characterCount);
+
+        for (int i = 0; i < visibleLimit; i++)
+        {
+            TMP_CharacterInfo characterInfo = textInfo.characterInfo[i];
+            if (!characterInfo.isVisible)
+                continue;
+
+            int materialIndex = characterInfo.materialReferenceIndex;
+            int vertexIndex = characterInfo.vertexIndex;
+            Color32[] colors = textInfo.meshInfo[materialIndex].colors32;
+            if (colors == null || colors.Length <= vertexIndex || !IsRedDialogueVertexColor(colors[vertexIndex]))
+                continue;
+
+            Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
+            if (vertices == null || vertices.Length <= vertexIndex + 3)
+                continue;
+
+            Vector3 offset = ResolveRedTextShakeOffset(i, time);
+            vertices[vertexIndex] += offset;
+            vertices[vertexIndex + 1] += offset;
+            vertices[vertexIndex + 2] += offset;
+            vertices[vertexIndex + 3] += offset;
+            updatedVertices = true;
+        }
+
+        if (updatedVertices)
+            dialogueText.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
+    }
+
+    private Vector3 ResolveRedTextShakeOffset(int characterIndex, float time)
+    {
+        float characterSeed = characterIndex * 12.9898f;
+        float x = Mathf.Sin(time + characterSeed) + Mathf.Sin(time * 1.71f + characterSeed * 0.37f) * 0.5f;
+        float y = Mathf.Cos(time * 1.23f + characterSeed * 0.61f) + Mathf.Sin(time * 0.87f + characterSeed) * 0.5f;
+        return new Vector3(x, y, 0f).normalized * redTextShakeAmplitude;
+    }
+
+    private static bool IsRedDialogueVertexColor(Color32 color)
+    {
+        return color.a > 0 && color.r >= 120 && color.g <= 90 && color.b <= 90 && color.r > color.g * 1.5f && color.r > color.b * 1.5f;
+    }
+
+    private void PlayTypingSoundsForNewVisibleCharacters(int maxVisibleCharacters)
+    {
+        if (!Application.isPlaying || !showingTimelineDialogue || activeTypewriterDisabled || activeManualForceFullText)
+            return;
+
+        if (string.IsNullOrEmpty(activeFullText) || activeFullTextVisibleCharacterCount <= 0)
+            return;
+
+        int currentVisibleCharacters = maxVisibleCharacters == int.MaxValue
+            ? activeFullTextVisibleCharacterCount
+            : Mathf.Clamp(maxVisibleCharacters, 0, activeFullTextVisibleCharacterCount);
+
+        if (currentVisibleCharacters <= lastTypingSoundVisibleCharacters)
+        {
+            lastTypingSoundVisibleCharacters = currentVisibleCharacters;
+            return;
+        }
+
+        for (int visibleCharacterNumber = lastTypingSoundVisibleCharacters + 1;
+             visibleCharacterNumber <= currentVisibleCharacters;
+             visibleCharacterNumber++)
+        {
+            if (TryGetVisibleCharacter(activeFullText, visibleCharacterNumber, out char character) && !char.IsWhiteSpace(character))
+                PlayTypingSound(activeSpeaker);
+        }
+
+        lastTypingSoundVisibleCharacters = currentVisibleCharacters;
+    }
+
+    private void PlayTypingSound(SpeakerType speakerType)
+    {
+        AudioClip clip = ResolveTypingClip(speakerType);
+        if (clip == null || typingSoundVolume <= 0f)
+            return;
+
+        AudioSource audioSource = EnsureDialogueTypingAudioSource();
+        if (audioSource == null)
+            return;
+
+        Vector2 pitchRange = ResolveTypingPitchRange(speakerType);
+        if (audioSource.outputAudioMixerGroup == null)
+            audioSource.outputAudioMixerGroup = ResolveDialogueTypingMixerGroup();
+
+        float minPitch = Mathf.Max(0.01f, Mathf.Min(pitchRange.x, pitchRange.y));
+        float maxPitch = Mathf.Max(minPitch, Mathf.Max(pitchRange.x, pitchRange.y));
+        audioSource.pitch = Random.Range(minPitch, maxPitch);
+        audioSource.PlayOneShot(clip, typingSoundVolume * ResolveTypingVolumeMultiplier(speakerType));
+    }
+
+    private AudioClip ResolveTypingClip(SpeakerType speakerType)
+    {
+        AudioClip clip = speakerType == SpeakerType.NPC ? npcTypingClip : playerTypingClip;
+        if (clip != null || !useGeneratedTypingClipsWhenMissing)
+            return clip;
+
+        return speakerType == SpeakerType.NPC
+            ? EnsureGeneratedTypingClip(ref generatedNpcTypingClip, "Generated_NPC_Typing", 520f, true)
+            : EnsureGeneratedTypingClip(ref generatedPlayerTypingClip, "Generated_Player_Typing", 700f, false);
+    }
+
+    private Vector2 ResolveTypingPitchRange(SpeakerType speakerType)
+    {
+        return speakerType == SpeakerType.NPC ? npcTypingPitchRange : playerTypingPitchRange;
+    }
+
+    private float ResolveTypingVolumeMultiplier(SpeakerType speakerType)
+    {
+        return speakerType == SpeakerType.NPC ? npcTypingVolumeMultiplier : playerTypingVolumeMultiplier;
+    }
+
+    private AudioSource EnsureDialogueTypingAudioSource()
+    {
+        if (dialogueTypingAudioSource != null)
+            return dialogueTypingAudioSource;
+
+        dialogueTypingAudioSource = gameObject.AddComponent<AudioSource>();
+        dialogueTypingAudioSource.hideFlags = HideFlags.HideInInspector;
+        dialogueTypingAudioSource.playOnAwake = false;
+        dialogueTypingAudioSource.loop = false;
+        dialogueTypingAudioSource.spatialBlend = 0f;
+        dialogueTypingAudioSource.outputAudioMixerGroup = ResolveDialogueTypingMixerGroup();
+        return dialogueTypingAudioSource;
+    }
+
+    private AudioMixerGroup ResolveDialogueTypingMixerGroup()
+    {
+        if (dialogueTypingMixerGroup != null)
+            return dialogueTypingMixerGroup;
+
+        if (AudioManager.Instance == null || AudioManager.Instance.audioMixer == null)
+            return null;
+
+        AudioMixerGroup[] sfxGroups = AudioManager.Instance.audioMixer.FindMatchingGroups("SFX");
+        return sfxGroups.Length > 0 ? sfxGroups[0] : null;
+    }
+
+    private static AudioClip EnsureGeneratedTypingClip(ref AudioClip clip, string clipName, float frequency, bool heavierVoice)
+    {
+        if (clip != null)
+            return clip;
+
+        int sampleCount = Mathf.Max(1, Mathf.CeilToInt(GeneratedTypingClipSampleRate * GeneratedTypingClipDuration));
+        float[] samples = new float[sampleCount];
+        float normalizedDivisor = Mathf.Max(1f, sampleCount - 1f);
+        for (int i = 0; i < sampleCount; i++)
+        {
+            float time = i / (float)GeneratedTypingClipSampleRate;
+            float normalizedTime = i / normalizedDivisor;
+            float envelope = Mathf.Exp(-normalizedTime * (heavierVoice ? 10f : 14f));
+            float fundamental = Mathf.Sin(2f * Mathf.PI * frequency * time);
+            float secondHarmonic = Mathf.Sin(2f * Mathf.PI * frequency * 2f * time) * (heavierVoice ? 0.45f : 0.28f);
+            float thirdHarmonic = Mathf.Sin(2f * Mathf.PI * frequency * 3f * time) * (heavierVoice ? 0.18f : 0.12f);
+            float attackClick = normalizedTime < 0.12f ? (1f - normalizedTime / 0.12f) * (heavierVoice ? 0.22f : 0.12f) : 0f;
+            samples[i] = (fundamental + secondHarmonic + thirdHarmonic + attackClick) * envelope * (heavierVoice ? 0.42f : 0.35f);
+        }
+
+        clip = AudioClip.Create(clipName, sampleCount, 1, GeneratedTypingClipSampleRate, false);
+        clip.hideFlags = HideFlags.HideAndDontSave;
+        clip.SetData(samples, 0);
+        return clip;
+    }
+
+    private static bool TryGetVisibleCharacter(string text, int visibleCharacterNumber, out char character)
+    {
+        character = '\0';
+        if (string.IsNullOrEmpty(text) || visibleCharacterNumber <= 0)
+            return false;
+
+        int visibleCharacters = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '<')
+            {
+                int tagEndIndex = text.IndexOf('>', i + 1);
+                if (tagEndIndex > i)
+                {
+                    i = tagEndIndex;
+                    continue;
+                }
+            }
+
+            visibleCharacters++;
+            if (visibleCharacters == visibleCharacterNumber)
+            {
+                character = text[i];
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void UpdateBubblePosition()
@@ -1327,12 +1644,12 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
     private bool ResolveSpeakerBubbleFlipX()
     {
-        return activeSpeaker == Speaker.NPC ? npcBubbleFlipX : playerBubbleFlipX;
+        return activeSpeaker == SpeakerType.NPC ? npcBubbleFlipX : playerBubbleFlipX;
     }
 
     private bool ResolveSpeakerTextFlipX()
     {
-        return activeSpeaker == Speaker.NPC ? npcTextFlipX : playerTextFlipX;
+        return activeSpeaker == SpeakerType.NPC ? npcTextFlipX : playerTextFlipX;
     }
 
     private Vector3 ResolveBubbleLocalScale()
@@ -1545,6 +1862,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
                 DestroyImmediate(runtimeFontAsset);
         }
 
+        DestroyGeneratedTypingClip(generatedPlayerTypingClip);
+        DestroyGeneratedTypingClip(generatedNpcTypingClip);
+
         if (endingNpcVanishEffectRuntimeObject != null)
         {
             if (Application.isPlaying)
@@ -1555,7 +1875,20 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         runtimeUiRoot = null;
         runtimeFontAsset = null;
+        generatedPlayerTypingClip = null;
+        generatedNpcTypingClip = null;
         endingNpcVanishEffectRuntimeObject = null;
+    }
+
+    private static void DestroyGeneratedTypingClip(AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (Application.isPlaying)
+            Destroy(clip);
+        else
+            DestroyImmediate(clip);
     }
 
     private static bool WasEnterPressedThisFrame()

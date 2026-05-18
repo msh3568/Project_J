@@ -14958,7 +14958,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -14983,7 +14983,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 87.230736, y: 3.1845298, z: -8.271406}
+  m_LocalPosition: {x: 98.35324, y: 7.1440983, z: 10.975195}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61998,6 +61998,20 @@ MonoBehaviour:
   playerTextFlipX: 0
   npcBubbleFlipX: 1
   npcTextFlipX: 0
+  shakeRedDialogueText: 1
+  redTextShakeAmplitude: 3.2
+  redTextShakeFrequency: 42
+  dialogueTypingAudioSource: {fileID: 0}
+  dialogueTypingMixerGroup: {fileID: 0}
+  playerTypingClip: {fileID: 0}
+  npcTypingClip: {fileID: 0}
+  typingSoundVolume: 0.75
+  playerTypingVolumeMultiplier: 1
+  npcTypingVolumeMultiplier: 1.35
+  playerTypingPitchRange: {x: 1.12, y: 1.28}
+  npcTypingPitchRange: {x: 0.92, y: 1.04}
+  punctuationExtraDelay: 0.12
+  useGeneratedTypingClipsWhenMissing: 1
   enableEndingNpcVanish: 1
   endingNpcVanishSecondsBeforeEnd: 1.1
   endingNpcVanishFadeDuration: 0.8

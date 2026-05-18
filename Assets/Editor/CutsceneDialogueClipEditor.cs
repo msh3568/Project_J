@@ -4,8 +4,11 @@ using UnityEngine;
 [CustomEditor(typeof(CutsceneDialogueClip))]
 public class CutsceneDialogueClipEditor : Editor
 {
-    private SerializedProperty speaker;
-    private SerializedProperty text;
+    private SerializedProperty dialogueLine;
+    private SerializedProperty speakerType;
+    private SerializedProperty lineText;
+    private SerializedProperty legacySpeaker;
+    private SerializedProperty legacyText;
     private SerializedProperty useCustomOffset;
     private SerializedProperty customOffset;
     private SerializedProperty overrideBubbleSize;
@@ -24,8 +27,15 @@ public class CutsceneDialogueClipEditor : Editor
         if (template == null)
             return;
 
-        speaker = template.FindPropertyRelative("speaker");
-        text = template.FindPropertyRelative("text");
+        dialogueLine = template.FindPropertyRelative("dialogueLine");
+        if (dialogueLine != null)
+        {
+            speakerType = dialogueLine.FindPropertyRelative("speakerType");
+            lineText = dialogueLine.FindPropertyRelative("text");
+        }
+
+        legacySpeaker = template.FindPropertyRelative("speaker");
+        legacyText = template.FindPropertyRelative("text");
         useCustomOffset = template.FindPropertyRelative("useCustomOffset");
         customOffset = template.FindPropertyRelative("customOffset");
         overrideBubbleSize = template.FindPropertyRelative("overrideBubbleSize");
@@ -41,7 +51,7 @@ public class CutsceneDialogueClipEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        if (speaker == null || text == null || useCustomOffset == null || customOffset == null ||
+        if (speakerType == null || lineText == null || useCustomOffset == null || customOffset == null ||
             overrideBubbleSize == null || bubbleSize == null ||
             disableTypewriter == null || typewriterCharactersPerSecond == null || typewriterStartDelay == null ||
             overrideTextLayout == null || fontSize == null || textOffset == null || textPadding == null)
@@ -51,11 +61,13 @@ public class CutsceneDialogueClipEditor : Editor
         }
 
         serializedObject.Update();
+        MigrateLegacyDialogueLineIfNeeded();
 
-        EditorGUILayout.PropertyField(speaker);
+        EditorGUILayout.PropertyField(speakerType, new GUIContent("Speaker Type"));
 
         EditorGUILayout.LabelField("Text");
-        text.stringValue = EditorGUILayout.TextArea(text.stringValue, GUILayout.MinHeight(80f));
+        lineText.stringValue = EditorGUILayout.TextArea(lineText.stringValue, GUILayout.MinHeight(80f));
+        SyncLegacyDialogueLine();
 
         EditorGUILayout.Space();
         DrawBubblePositionFields();
@@ -158,9 +170,30 @@ public class CutsceneDialogueClipEditor : Editor
 
     private Vector3 GetDefaultBubbleOffset()
     {
-        return speaker.enumValueIndex == (int)CutsceneDialoguePlayer.Speaker.NPC
+        return speakerType.enumValueIndex == (int)SpeakerType.NPC
             ? new Vector3(0f, 2.2f, 0f)
             : new Vector3(0f, 2.4f, 0f);
+    }
+
+    private void MigrateLegacyDialogueLineIfNeeded()
+    {
+        if (legacySpeaker == null || legacyText == null || speakerType == null || lineText == null)
+            return;
+
+        if (!string.IsNullOrEmpty(lineText.stringValue) || string.IsNullOrEmpty(legacyText.stringValue))
+            return;
+
+        speakerType.enumValueIndex = legacySpeaker.enumValueIndex;
+        lineText.stringValue = legacyText.stringValue;
+    }
+
+    private void SyncLegacyDialogueLine()
+    {
+        if (legacySpeaker != null)
+            legacySpeaker.enumValueIndex = speakerType.enumValueIndex;
+
+        if (legacyText != null)
+            legacyText.stringValue = lineText.stringValue ?? string.Empty;
     }
 
     private static Vector2 GetDefaultBubbleSize()
