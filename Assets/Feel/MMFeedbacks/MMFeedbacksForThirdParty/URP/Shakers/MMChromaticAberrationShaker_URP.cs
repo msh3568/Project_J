@@ -50,7 +50,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		{
 			base.Initialization();
 			_volume = this.gameObject.GetComponent<Volume>();
-			_volume.profile.TryGet(out _chromaticAberration);
+			TryResolveChromaticAberration();
 		}
 
 		/// <summary>
@@ -58,6 +58,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void Shake()
 		{
+			if (!TryResolveChromaticAberration())
+			{
+				return;
+			}
+
 			float newValue = ShakeFloat(ShakeIntensity, RemapIntensityZero, RemapIntensityOne, RelativeIntensity, _initialIntensity);
 			_chromaticAberration.intensity.Override(newValue);
 		}
@@ -67,6 +72,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void GrabInitialValues()
 		{
+			if (!TryResolveChromaticAberration())
+			{
+				return;
+			}
+
 			_initialIntensity = _chromaticAberration.intensity.value;
 		}
 
@@ -132,7 +142,32 @@ namespace MoreMountains.FeedbacksForThirdParty
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
+			if (!TryResolveChromaticAberration())
+			{
+				return;
+			}
+
 			_chromaticAberration.intensity.Override(_initialIntensity);
+		}
+
+		protected virtual bool TryResolveChromaticAberration()
+		{
+			if (_chromaticAberration != null)
+			{
+				return true;
+			}
+
+			if (_volume == null)
+			{
+				_volume = this.gameObject.GetComponent<Volume>();
+			}
+
+			if (_volume == null || _volume.profile == null)
+			{
+				return false;
+			}
+
+			return _volume.profile.TryGet(out _chromaticAberration) && (_chromaticAberration != null);
 		}
 
 		/// <summary>

@@ -14,8 +14,6 @@ public static class CutsceneParryPromptAutoSetup
     private const string DroneObjectName = "LatencyDroneStrong2";
     private const string TrackName = "Parry Prompt";
     private const string ClipName = "Drone Projectile Parry";
-    private const double PromptStart = 63.14d;
-    private const double PromptDuration = 4.0d;
     private const string GalmuriFontGuid = "688a543337d911744a79b86c1f624e3c";
     private const string GalmuriFontSourceGuid = "1a923220d1e5c19468671e9533851a3d";
     private static bool setupQueued;
@@ -72,7 +70,7 @@ public static class CutsceneParryPromptAutoSetup
         }
 
         if (addedComponent || componentChanged || timelineChanged)
-            Debug.Log("Cutscene parry prompt clip is set up at 63.14 seconds on Cutscene_Director.", directorObject);
+            Debug.Log("Cutscene parry prompt clip is set up on Cutscene_Director.", directorObject);
     }
 
     private static void QueueSetup()
@@ -112,10 +110,8 @@ public static class CutsceneParryPromptAutoSetup
         if (promptTimelineClip == null)
         {
             promptTimelineClip = promptTrack.CreateClip<CutsceneParryPromptClip>();
-            changed = true;
+            changed |= ConfigureNewPromptClip(promptTimelineClip);
         }
-
-        changed |= ConfigurePromptClip(promptTimelineClip);
 
         if (!changed)
             return false;
@@ -144,24 +140,12 @@ public static class CutsceneParryPromptAutoSetup
         return null;
     }
 
-    private static bool ConfigurePromptClip(TimelineClip timelineClip)
+    private static bool ConfigureNewPromptClip(TimelineClip timelineClip)
     {
         if (timelineClip == null)
             return false;
 
         bool changed = false;
-        if (Mathf.Abs((float)(timelineClip.start - PromptStart)) > 0.0001f)
-        {
-            timelineClip.start = PromptStart;
-            changed = true;
-        }
-
-        if (Mathf.Abs((float)(timelineClip.duration - PromptDuration)) > 0.0001f)
-        {
-            timelineClip.duration = PromptDuration;
-            changed = true;
-        }
-
         if (timelineClip.displayName != ClipName)
         {
             timelineClip.displayName = ClipName;

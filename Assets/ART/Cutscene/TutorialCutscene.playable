@@ -22,10 +22,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 43.233333333333334
+    m_Start: 40.699999999999996
     m_ClipIn: 0
     m_Asset: {fileID: 5750083423959873847}
-    m_Duration: 3.094482717042169
+    m_Duration: 3.750000000000007
     m_TimeScale: 1
     m_ParentTrack: {fileID: -9154384341037216662}
     m_EaseInDuration: 0
@@ -91,10 +91,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: No Attack
   - m_Version: 1
-    m_Start: 88.15
+    m_Start: 82.88333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -4495035417832305288}
-    m_Duration: 9.100000000000009
+    m_Duration: 7.983333333333334
     m_TimeScale: 1
     m_ParentTrack: {fileID: -9154384341037216662}
     m_EaseInDuration: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: No Attack
   - m_Version: 1
-    m_Start: 116.48333333333336
+    m_Start: 110.75000000000003
     m_ClipIn: 0
     m_Asset: {fileID: 6325452972302693059}
     m_Duration: 1.6999999999999886
@@ -901,16 +901,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Player
   - m_Version: 1
-    m_Start: 19.35000000000001
+    m_Start: 18.6
     m_ClipIn: 0
     m_Asset: {fileID: 3225704693950690817}
-    m_Duration: 12.116666666666656
+    m_Duration: 11.133333333333333
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.7666666666666622
-    m_BlendOutDuration: 1.2833333333333634
+    m_BlendInDuration: 0.5166666666666657
+    m_BlendOutDuration: 0.8000000000000327
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -970,16 +970,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_NPC
   - m_Version: 1
-    m_Start: 30.1833333333333
+    m_Start: 28.9333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 3648468884977800482}
-    m_Duration: 4.316666666666698
+    m_Duration: 3.583333333333364
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.2833333333333634
-    m_BlendOutDuration: 0.28333333333333144
+    m_BlendInDuration: 0.8000000000000327
+    m_BlendOutDuration: 0.25
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1042,13 +1042,13 @@ MonoBehaviour:
     m_Start: 6.416666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -4627806869075987428}
-    m_Duration: 13.700000000000003
+    m_Duration: 12.7
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: 0.8166666666666664
-    m_BlendOutDuration: 0.7666666666666622
+    m_BlendOutDuration: 0.5166666666666657
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1108,16 +1108,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 34.21666666666667
+    m_Start: 32.266666666666666
     m_ClipIn: 0
     m_Asset: {fileID: 7365975100115196930}
-    m_Duration: 5.149999999999999
+    m_Duration: 5.033333333333331
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.28333333333333144
-    m_BlendOutDuration: 0.46666666666666146
+    m_BlendInDuration: 0.25
+    m_BlendOutDuration: 0.38333333333332575
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1177,16 +1177,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Player
   - m_Version: 1
-    m_Start: 38.900000000000006
+    m_Start: 36.91666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -5970712087259313594}
-    m_Duration: 3.549999999999997
+    m_Duration: 3.1333333333333258
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.46666666666666146
-    m_BlendOutDuration: 0.6500000000000057
+    m_BlendInDuration: 0.38333333333332575
+    m_BlendOutDuration: 0.56666666666667
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1246,16 +1246,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_NPC
   - m_Version: 1
-    m_Start: 41.8
+    m_Start: 39.48333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 6277023823809032450}
-    m_Duration: 3.766666666666673
+    m_Duration: 4.050000000000004
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.6500000000000057
-    m_BlendOutDuration: 0.6000000000000014
+    m_BlendInDuration: 0.56666666666667
+    m_BlendOutDuration: 0.8500000000000014
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1315,16 +1315,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_D
   - m_Version: 1
-    m_Start: 44.96666666666667
+    m_Start: 42.68333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 2207651817618129784}
-    m_Duration: 42.5
+    m_Duration: 39.45000000000001
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.6000000000000014
-    m_BlendOutDuration: 1.2666666666666657
+    m_BlendInDuration: 0.8500000000000014
+    m_BlendOutDuration: 1.3999999999998352
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1384,16 +1384,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 86.2
+    m_Start: 80.7333333333335
     m_ClipIn: 0
     m_Asset: {fileID: 3269046136508264516}
-    m_Duration: 11.649999999999991
+    m_Duration: 11.099999999999824
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.2666666666666657
-    m_BlendOutDuration: 0.5166666666666657
+    m_BlendInDuration: 1.3999999999998352
+    m_BlendOutDuration: 0.9666666666666544
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1453,16 +1453,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_D
   - m_Version: 1
-    m_Start: 97.33333333333333
+    m_Start: 90.86666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -3585732946477095788}
-    m_Duration: 18.46666666666667
+    m_Duration: 19.19999999999999
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.5166666666666657
-    m_BlendOutDuration: 0.4166666666666572
+    m_BlendInDuration: 0.9666666666666544
+    m_BlendOutDuration: 0.8999999999999773
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1522,16 +1522,16 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_Full
   - m_Version: 1
-    m_Start: 115.38333333333334
+    m_Start: 109.16666666666669
     m_ClipIn: 0
     m_Asset: {fileID: 6864246764516015303}
-    m_Duration: 3.11666666666666
+    m_Duration: 3.84999999999998
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.4166666666666572
-    m_BlendOutDuration: 0.31666666666664867
+    m_BlendInDuration: 0.8999999999999773
+    m_BlendOutDuration: 0.5666666666666487
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -1591,15 +1591,15 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Cam_D
   - m_Version: 1
-    m_Start: 118.18333333333335
+    m_Start: 112.45000000000002
     m_ClipIn: 0
     m_Asset: {fileID: -6646299125770796962}
-    m_Duration: 49.097384169387325
+    m_Duration: 48.716666666666725
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6356528178048105526}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.31666666666664867
+    m_BlendInDuration: 0.5666666666666487
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -1678,10 +1678,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 63.14
+    m_Start: 89.96666666666668
     m_ClipIn: 0
     m_Asset: {fileID: 988580503226005703}
-    m_Duration: 4
+    m_Duration: 0.8999999999999915
     m_TimeScale: 1
     m_ParentTrack: {fileID: -6258645060076194450}
     m_EaseInDuration: 0
@@ -1836,8 +1836,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneDialogueClip
   template:
     dialogueLine:
-      speakerType: 0
-      text: 
+      speakerType: 1
+      text: "\uC557! \uB4DC\uB860\uC774\uB2E4!"
     speaker: 1
     text: "\uC557! \uB4DC\uB860\uC774\uB2E4!"
     useCustomOffset: 1
@@ -1873,10 +1873,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 43.233333333333334
+    m_Start: 40.699999999999996
     m_ClipIn: 0
     m_Asset: {fileID: -8225119269565439677}
-    m_Duration: 2.3333333333333357
+    m_Duration: 1.9833333333333343
     m_TimeScale: 1
     m_ParentTrack: {fileID: -5837693825667655299}
     m_EaseInDuration: 0
@@ -1939,7 +1939,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 43.233333333333334
+    m_PreExtrapolationTime: 40.699999999999996
     m_DisplayName: DroneRevealMovement
   m_Markers:
     m_Objects: []
@@ -3019,7 +3019,7 @@ MonoBehaviour:
   template:
     dialogueLine:
       speakerType: 0
-      text: 
+      text: "\uB4DC\uB860\uC774 \uBB54\uB370\uC694?"
     speaker: 0
     text: "\uB4DC\uB860\uC774 \uBB54\uB370\uC694?"
     useCustomOffset: 1
@@ -3675,7 +3675,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 42.583333333333336
+    m_Start: 40.05
     m_ClipIn: 0
     m_Asset: {fileID: -2576258203230549521}
     m_Duration: 0.6499999999999986
@@ -3744,7 +3744,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Spawn Effect
   - m_Version: 1
-    m_Start: 87.46666666666667
+    m_Start: 82.2
     m_ClipIn: 0
     m_Asset: {fileID: 1662812602428565036}
     m_Duration: 0.6833333333333371
@@ -3813,7 +3813,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Spawn Effect
   - m_Version: 1
-    m_Start: 115.8
+    m_Start: 110.06666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -4644735602458026266}
     m_Duration: 0.6833333333333513
@@ -3976,7 +3976,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 87.85
+    m_Start: 82.88333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -9040191175690224317}
     m_Duration: 0.30000000000001537
@@ -4098,7 +4098,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 116.71666666666668
+    m_Start: 110.98333333333335
     m_ClipIn: 0
     m_Asset: {fileID: 5059801315493048121}
     m_Duration: 1.4666666666666686
@@ -4334,7 +4334,7 @@ MonoBehaviour:
   template:
     dialogueLine:
       speakerType: 0
-      text: 
+      text: "\uC544, \uADF8\uB807\uAD70\uC694..."
     speaker: 0
     text: "\uC544, \uADF8\uB807\uAD70\uC694..."
     useCustomOffset: 1
@@ -5737,7 +5737,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 20.366666666666667
+    m_Start: 19.116666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -8543775872275814474}
     m_Duration: 1.6166666666666654
@@ -5788,7 +5788,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 21.983333333333334
+    m_Start: 20.733333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -1457292501426918453}
     m_Duration: 1.6500000000000021
@@ -5821,7 +5821,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 23.633333333333333
+    m_Start: 22.383333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -4928503216915022901}
     m_Duration: 2.183333333333332
@@ -5854,7 +5854,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 25.816666666666663
+    m_Start: 24.566666666666663
     m_ClipIn: 0
     m_Asset: {fileID: 1253211238574573851}
     m_Duration: 2.183333333333339
@@ -5887,7 +5887,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 27.99999999999997
+    m_Start: 26.74999999999997
     m_ClipIn: 0
     m_Asset: {fileID: -6795465655713805540}
     m_Duration: 2.183333333333332
@@ -5938,7 +5938,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 31.466666666666665
+    m_Start: 30.066666666666666
     m_ClipIn: 0
     m_Asset: {fileID: 3659480998293043835}
     m_Duration: 2.2
@@ -5990,7 +5990,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 34.5
+    m_Start: 32.516666666666666
     m_ClipIn: 0
     m_Asset: {fileID: 8045963937365876495}
     m_Duration: 2.2
@@ -6042,7 +6042,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 36.7
+    m_Start: 34.71666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -4536602036244101097}
     m_Duration: 2.2
@@ -6094,7 +6094,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 39.43333333333333
+    m_Start: 37.3
     m_ClipIn: 0
     m_Asset: {fileID: -5863158596984725336}
     m_Duration: 2.183333333333332
@@ -6145,7 +6145,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 45.56666666666667
+    m_Start: 43.53333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -4082573902420307153}
     m_Duration: 2.183333333333332
@@ -6196,7 +6196,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 47.75
+    m_Start: 45.71666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -1242162294853410898}
     m_Duration: 2.183333333333332
@@ -6247,7 +6247,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 50.83788243395587
+    m_Start: 47.89999999999999
     m_ClipIn: 0
     m_Asset: {fileID: -1650125173636046802}
     m_Duration: 2.2
@@ -6299,7 +6299,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 53.65454910062253
+    m_Start: 50.099999999999994
     m_ClipIn: 0
     m_Asset: {fileID: -5744172747599302388}
     m_Duration: 2.183333333333332
@@ -6332,7 +6332,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 55.83788243395585
+    m_Start: 52.28333333333331
     m_ClipIn: 0
     m_Asset: {fileID: -1891956469318148099}
     m_Duration: 2.183333333333332
@@ -6383,7 +6383,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 58.02121576728927
+    m_Start: 54.46666666666673
     m_ClipIn: 0
     m_Asset: {fileID: -8248128670441790710}
     m_Duration: 2.183333333333332
@@ -6416,7 +6416,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 60.204549100622614
+    m_Start: 56.65000000000008
     m_ClipIn: 0
     m_Asset: {fileID: 2147156460855373093}
     m_Duration: 2.183333333333332
@@ -6467,7 +6467,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 62.38788243395599
+    m_Start: 58.83333333333345
     m_ClipIn: 0
     m_Asset: {fileID: 1175318066337721733}
     m_Duration: 2.183333333333332
@@ -6518,7 +6518,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 65.33788243395597
+    m_Start: 61.01666666666678
     m_ClipIn: 0
     m_Asset: {fileID: 3133067251591054967}
     m_Duration: 2.2
@@ -6570,7 +6570,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 67.53788243395599
+    m_Start: 63.2166666666668
     m_ClipIn: 0
     m_Asset: {fileID: -8374564004806681078}
     m_Duration: 2.2
@@ -6622,7 +6622,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 70.2712157672893
+    m_Start: 65.4166666666668
     m_ClipIn: 0
     m_Asset: {fileID: -485766206847834052}
     m_Duration: 2.183333333333337
@@ -6673,7 +6673,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 72.45454910062264
+    m_Start: 67.60000000000014
     m_ClipIn: 0
     m_Asset: {fileID: -8506135412614227960}
     m_Duration: 2.183333333333332
@@ -6724,7 +6724,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 75.30454910062264
+    m_Start: 69.78333333333347
     m_ClipIn: 0
     m_Asset: {fileID: 4925565398279130112}
     m_Duration: 2.2
@@ -6776,7 +6776,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 77.50454910062265
+    m_Start: 71.98333333333349
     m_ClipIn: 0
     m_Asset: {fileID: -3957414423806523355}
     m_Duration: 2.2
@@ -6828,7 +6828,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 80.08788243395597
+    m_Start: 74.1833333333335
     m_ClipIn: 0
     m_Asset: {fileID: -4883229454431474785}
     m_Duration: 2.183333333333332
@@ -6879,7 +6879,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 82.2712157672893
+    m_Start: 76.36666666666683
     m_ClipIn: 0
     m_Asset: {fileID: -2172978165721838344}
     m_Duration: 2.183333333333332
@@ -6930,7 +6930,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 84.45454910062264
+    m_Start: 78.55000000000017
     m_ClipIn: 0
     m_Asset: {fileID: -6239792103489803736}
     m_Duration: 2.183333333333332
@@ -6981,7 +6981,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 88.68333333333334
+    m_Start: 83.41666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -8984240694132814822}
     m_Duration: 2.183333333333332
@@ -7032,7 +7032,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 90.86666666666667
+    m_Start: 85.60000000000001
     m_ClipIn: 0
     m_Asset: {fileID: 4029135711296429598}
     m_Duration: 2.183333333333332
@@ -7083,7 +7083,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 93.05000000000001
+    m_Start: 87.78333333333335
     m_ClipIn: 0
     m_Asset: {fileID: -5179062746618895147}
     m_Duration: 2.183333333333332
@@ -7134,7 +7134,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 98
+    m_Start: 91.83333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 8936766310689523446}
     m_Duration: 2.0499999999999945
@@ -7186,7 +7186,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 100.05
+    m_Start: 93.88333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 7359718358812203941}
     m_Duration: 2.183333333333332
@@ -7255,7 +7255,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 102.23333333333333
+    m_Start: 96.06666666666666
     m_ClipIn: 0
     m_Asset: {fileID: -3123908934103753026}
     m_Duration: 2.183333333333332
@@ -7324,7 +7324,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 104.41666666666667
+    m_Start: 98.25
     m_ClipIn: 0
     m_Asset: {fileID: -8264267576838138251}
     m_Duration: 2.183333333333332
@@ -7393,7 +7393,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 106.60000000000001
+    m_Start: 100.43333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 583616613519282475}
     m_Duration: 2.183333333333332
@@ -7462,7 +7462,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 108.78333333333335
+    m_Start: 102.61666666666667
     m_ClipIn: 0
     m_Asset: {fileID: 8581931938435875664}
     m_Duration: 2.183333333333332
@@ -7531,7 +7531,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 110.96666666666668
+    m_Start: 104.80000000000001
     m_ClipIn: 0
     m_Asset: {fileID: 9211625107606514450}
     m_Duration: 2.183333333333332
@@ -7600,7 +7600,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 113.15000000000002
+    m_Start: 106.98333333333335
     m_ClipIn: 0
     m_Asset: {fileID: -3174916782795063222}
     m_Duration: 2.183333333333332
@@ -7669,7 +7669,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 119.13071750272066
+    m_Start: 113.01666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -1068263946644473303}
     m_Duration: 2.183333333333337
@@ -7738,7 +7738,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 121.314050836054
+    m_Start: 115.2
     m_ClipIn: 0
     m_Asset: {fileID: 7571585202794195066}
     m_Duration: 2.183333333333332
@@ -7807,7 +7807,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 123.49738416938736
+    m_Start: 117.38333333333337
     m_ClipIn: 0
     m_Asset: {fileID: -478492555791224335}
     m_Duration: 2.183333333333332
@@ -7858,7 +7858,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 125.68071750272068
+    m_Start: 119.56666666666669
     m_ClipIn: 0
     m_Asset: {fileID: -562686511197852394}
     m_Duration: 2.2
@@ -7910,7 +7910,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 127.8807175027207
+    m_Start: 121.76666666666671
     m_ClipIn: 0
     m_Asset: {fileID: -2011683296922518023}
     m_Duration: 2.2
@@ -7980,7 +7980,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 130.0807175027207
+    m_Start: 123.96666666666673
     m_ClipIn: 0
     m_Asset: {fileID: 7472485800334521098}
     m_Duration: 2.2
@@ -8016,25 +8016,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -8050,7 +8032,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 132.28071750272068
+    m_Start: 126.16666666666673
     m_ClipIn: 0
     m_Asset: {fileID: 4271412358508320980}
     m_Duration: 2.183333333333332
@@ -8062,25 +8044,7 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -8119,7 +8083,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 134.464050836054
+    m_Start: 128.35000000000008
     m_ClipIn: 0
     m_Asset: {fileID: -8089973719050214760}
     m_Duration: 2.2
@@ -8171,7 +8135,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 136.664050836054
+    m_Start: 130.55000000000007
     m_ClipIn: 0
     m_Asset: {fileID: -1035648629112409682}
     m_Duration: 2.2
@@ -8241,7 +8205,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 138.864050836054
+    m_Start: 132.75000000000006
     m_ClipIn: 0
     m_Asset: {fileID: 5093496497473751244}
     m_Duration: 2.183333333333332
@@ -8310,7 +8274,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 141.04738416938733
+    m_Start: 134.9333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 4875718316097963499}
     m_Duration: 2.183333333333332
@@ -8379,7 +8343,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 143.23071750272067
+    m_Start: 137.11666666666673
     m_ClipIn: 0
     m_Asset: {fileID: -6152932133530024242}
     m_Duration: 2.183333333333332
@@ -8448,7 +8412,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 145.414050836054
+    m_Start: 139.30000000000007
     m_ClipIn: 0
     m_Asset: {fileID: -5517286673466568950}
     m_Duration: 2.183333333333332
@@ -8517,7 +8481,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 147.59738416938734
+    m_Start: 141.4833333333334
     m_ClipIn: 0
     m_Asset: {fileID: 3398626905457397806}
     m_Duration: 2.183333333333332
@@ -8586,7 +8550,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 149.78071750272068
+    m_Start: 143.66666666666674
     m_ClipIn: 0
     m_Asset: {fileID: 8696878250781477424}
     m_Duration: 2.183333333333332
@@ -8655,7 +8619,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 151.964050836054
+    m_Start: 145.85000000000008
     m_ClipIn: 0
     m_Asset: {fileID: 7975582773529712714}
     m_Duration: 2.2
@@ -8707,7 +8671,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 154.164050836054
+    m_Start: 148.05000000000007
     m_ClipIn: 0
     m_Asset: {fileID: 2669461611011049665}
     m_Duration: 2.183333333333332
@@ -8776,7 +8740,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 156.34738416938734
+    m_Start: 150.2333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 8454975967220250047}
     m_Duration: 2.183333333333332
@@ -8845,7 +8809,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 158.53071750272068
+    m_Start: 152.41666666666674
     m_ClipIn: 0
     m_Asset: {fileID: -396080342283850326}
     m_Duration: 2.2
@@ -8897,7 +8861,7 @@ MonoBehaviour:
     m_DisplayName: "Player: \uC5B4\uCA4C\uB2E4 \uB9C8\uC744\uC774 \uC774\uB807\uAC8C
       \uB41C ..."
   - m_Version: 1
-    m_Start: 160.73071750272067
+    m_Start: 154.61666666666673
     m_ClipIn: 0
     m_Asset: {fileID: -8351016590429070405}
     m_Duration: 2.183333333333332
@@ -8966,7 +8930,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 162.914050836054
+    m_Start: 156.80000000000007
     m_ClipIn: 0
     m_Asset: {fileID: -6667018255695854278}
     m_Duration: 2.183333333333332
@@ -9035,7 +8999,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: "NPC: \uC74C..."
   - m_Version: 1
-    m_Start: 165.09738416938734
+    m_Start: 158.9833333333334
     m_ClipIn: 0
     m_Asset: {fileID: 6034358473546705312}
     m_Duration: 2.183333333333332
@@ -9185,10 +9149,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 43.233333333333334
+    m_Start: 40.699999999999996
     m_ClipIn: 0
     m_Asset: {fileID: 5114568766027747382}
-    m_Duration: 3.094482717042169
+    m_Duration: 3.750000000000007
     m_TimeScale: 1
     m_ParentTrack: {fileID: 8392342891579250796}
     m_EaseInDuration: 0
@@ -9254,10 +9218,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Drone Visible
   - m_Version: 1
-    m_Start: 88.15
+    m_Start: 82.88333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -4344615269833583906}
-    m_Duration: 9.100000000000009
+    m_Duration: 7.983333333333334
     m_TimeScale: 1
     m_ParentTrack: {fileID: 8392342891579250796}
     m_EaseInDuration: 0
@@ -9323,7 +9287,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Drone Visible
   - m_Version: 1
-    m_Start: 116.48333333333336
+    m_Start: 110.75000000000003
     m_ClipIn: 0
     m_Asset: {fileID: -6291488913945105230}
     m_Duration: 1.6999999999999886

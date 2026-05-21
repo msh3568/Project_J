@@ -516,8 +516,24 @@ public class Player_Health : Entity_Health
     {
         if (feedback == null)
             return;
-        feedback.StopFeedbacks();
-        feedback.RestoreInitialValues();
+
+        try
+        {
+            feedback.StopFeedbacks();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[Player_Health] StopFeedbacks failed but gameplay will continue: {ex.Message}", feedback);
+        }
+
+        try
+        {
+            feedback.RestoreInitialValues();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[Player_Health] RestoreInitialValues failed but gameplay will continue: {ex.Message}", feedback);
+        }
     }
 
     private void ResolveHitFeedbackReferences()

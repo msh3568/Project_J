@@ -52,7 +52,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		{
 			base.Initialization();
 			_volume = this.gameObject.GetComponent<Volume>();
-			_volume.profile.TryGet(out _filmGrain);
+			TryResolveFilmGrain();
 		}
 
 		/// <summary>
@@ -60,6 +60,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void Shake()
 		{
+			if (!TryResolveFilmGrain())
+			{
+				return;
+			}
+
 			float newValue = ShakeFloat(ShakeIntensity, RemapIntensityZero, RemapIntensityOne, RelativeIntensity, _initialIntensity);
 			_filmGrain.intensity.Override(newValue);
 		}
@@ -69,6 +74,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void GrabInitialValues()
 		{
+			if (!TryResolveFilmGrain())
+			{
+				return;
+			}
+
 			_initialIntensity = _filmGrain.intensity.value;
 		}
 
@@ -134,7 +144,32 @@ namespace MoreMountains.FeedbacksForThirdParty
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
+			if (!TryResolveFilmGrain())
+			{
+				return;
+			}
+
 			_filmGrain.intensity.Override(_initialIntensity);
+		}
+
+		protected virtual bool TryResolveFilmGrain()
+		{
+			if (_filmGrain != null)
+			{
+				return true;
+			}
+
+			if (_volume == null)
+			{
+				_volume = this.gameObject.GetComponent<Volume>();
+			}
+
+			if (_volume == null || _volume.profile == null)
+			{
+				return false;
+			}
+
+			return _volume.profile.TryGet(out _filmGrain) && (_filmGrain != null);
 		}
 
 		/// <summary>

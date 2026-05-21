@@ -52,7 +52,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		{
 			base.Initialization();
 			_volume = this.gameObject.GetComponent<Volume>();
-			_volume.profile.TryGet(out _paniniProjection);
+			TryResolvePaniniProjection();
 		}
 
 		/// <summary>
@@ -60,6 +60,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void Shake()
 		{
+			if (!TryResolvePaniniProjection())
+			{
+				return;
+			}
+
 			float newValue = ShakeFloat(ShakeDistance, RemapDistanceZero, RemapDistanceOne, RelativeDistance, _initialDistance);
 			_paniniProjection.distance.Override(newValue);
 		}
@@ -69,6 +74,11 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// </summary>
 		protected override void GrabInitialValues()
 		{
+			if (!TryResolvePaniniProjection())
+			{
+				return;
+			}
+
 			_initialDistance = _paniniProjection.distance.value;
 		}
 
@@ -134,7 +144,32 @@ namespace MoreMountains.FeedbacksForThirdParty
 		protected override void ResetTargetValues()
 		{
 			base.ResetTargetValues();
+			if (!TryResolvePaniniProjection())
+			{
+				return;
+			}
+
 			_paniniProjection.distance.Override(_initialDistance);
+		}
+
+		protected virtual bool TryResolvePaniniProjection()
+		{
+			if (_paniniProjection != null)
+			{
+				return true;
+			}
+
+			if (_volume == null)
+			{
+				_volume = this.gameObject.GetComponent<Volume>();
+			}
+
+			if (_volume == null || _volume.profile == null)
+			{
+				return false;
+			}
+
+			return _volume.profile.TryGet(out _paniniProjection) && (_paniniProjection != null);
 		}
 
 		/// <summary>

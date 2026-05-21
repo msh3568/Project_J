@@ -33,7 +33,7 @@ public class CursorSafeSetter : MonoBehaviour
         if (cursorTexture == null)
         {
             ReleaseRuntimeCursorTexture();
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            SetCursorSafely(null, Vector2.zero, CursorMode.Auto);
             if (enableDebugLogs)
                 Debug.Log("[CursorSafeSetter] Cursor reset to default (null texture).", this);
             return;
@@ -43,12 +43,12 @@ public class CursorSafeSetter : MonoBehaviour
         if (safeCursorTexture == null)
         {
             if (enableDebugLogs)
-                Debug.LogWarning($"[CursorSafeSetter] Failed to prepare a compliant cursor texture from '{cursorTexture.name}'. Falling back to default cursor.", this);
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                Debug.LogWarning($"[CursorSafeSetter] Failed to prepare a runtime cursor texture from '{cursorTexture.name}'. Falling back to default cursor.", this);
+            SetCursorSafely(null, Vector2.zero, CursorMode.Auto);
             return;
         }
 
-        Cursor.SetCursor(safeCursorTexture, hotspot, cursorMode);
+        SetCursorSafely(safeCursorTexture, hotspot, cursorMode);
         if (enableDebugLogs)
             Debug.Log($"[CursorSafeSetter] Applied cursor '{safeCursorTexture.name}'.", this);
     }
@@ -58,43 +58,14 @@ public class CursorSafeSetter : MonoBehaviour
         if (source == null)
             return null;
 
-        if (Application.isPlaying)
-        {
-            // Unity cursor textures must already be imported in a cursor-safe format.
-            // Do not call Cursor.SetCursor with a compressed/non-readable source because
-            // that logs every time play mode starts.
-            if (!IsCursorTextureCompliant(source))
-                return null;
-
-            int sourceId = source.GetInstanceID();
-            if (runtimeCursorTexture != null && runtimeCursorSourceId == sourceId)
-                return runtimeCursorTexture;
-
-            ReleaseRuntimeCursorTexture();
-            runtimeCursorTexture = CreateReadableCursorCopy(source);
-            runtimeCursorSourceId = sourceId;
-            return runtimeCursorTexture;
-        }
-
-        if (IsCursorTextureCompliant(source))
-            return source;
-
-        int editorSourceId = source.GetInstanceID();
-        if (runtimeCursorTexture != null && runtimeCursorSourceId == editorSourceId)
+        int sourceId = source.GetInstanceID();
+        if (runtimeCursorTexture != null && runtimeCursorSourceId == sourceId)
             return runtimeCursorTexture;
 
         ReleaseRuntimeCursorTexture();
         runtimeCursorTexture = CreateReadableCursorCopy(source);
-        runtimeCursorSourceId = editorSourceId;
+        runtimeCursorSourceId = sourceId;
         return runtimeCursorTexture;
-    }
-
-    private static bool IsCursorTextureCompliant(Texture2D texture)
-    {
-        return texture != null &&
-               texture.isReadable &&
-               texture.mipmapCount <= 1 &&
-               texture.format == TextureFormat.RGBA32;
     }
 
     private Texture2D CreateReadableCursorCopy(Texture2D source)
@@ -140,6 +111,20 @@ public class CursorSafeSetter : MonoBehaviour
         {
             RenderTexture.active = previousActive;
             RenderTexture.ReleaseTemporary(temporary);
+        }
+    }
+
+    private void SetCursorSafely(Texture2D texture, Vector2 cursorHotspot, CursorMode mode)
+    {
+        try
+        {
+            Cursor.SetCursor(texture, cursorHotspot, mode);
+        }
+        catch (Exception ex)
+        {
+            if (enableDebugLogs)
+                Debug.LogWarning($"[CursorSafeSetter] Failed to apply cursor '{(texture != null ? texture.name : "default")}': {ex.Message}", this);
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
     }
 
