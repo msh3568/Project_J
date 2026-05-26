@@ -39,7 +39,7 @@ public class GlitchFullScreenFeature : ScriptableRendererFeature
 
         float tvPower = Shader.GetGlobalFloat("_TVPower");
         float glitchStrength = Shader.GetGlobalFloat("_GlitchStrength");
-        if (tvPower <= 0.0001f && glitchStrength <= 0.0001f)
+        if (Mathf.Abs(tvPower - 1f) <= 0.0001f && glitchStrength <= 0.0001f)
             return;
 
         pass.Setup(renderer);

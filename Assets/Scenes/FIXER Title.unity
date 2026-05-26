@@ -3060,6 +3060,20 @@ MonoBehaviour:
   pressEnterText: {fileID: 1512208384}
   sceneToLoad: GameSceneRespawn 1
   delayBeforePressEnter: 3
+  showModeButtons: 1
+  storyModeScene: GameSceneRespawn 1
+  rankingModeScene: GameSceneRespawn
+  modeButtonCenter: {x: 0, y: -285}
+  modeButtonSize: {x: 420, y: 78}
+  modeButtonSpacing: 18
+  modeButtonColor: {r: 0.015, g: 0.035, b: 0.028, a: 0.94}
+  modeButtonHighlightedColor: {r: 0.03, g: 0.16, b: 0.08, a: 0.98}
+  modeButtonPressedColor: {r: 0.01, g: 0.09, b: 0.045, a: 1}
+  modeButtonBorderColor: {r: 0, g: 1, b: 0.2129209, a: 0.8}
+  modeButtonDepthColor: {r: 0, g: 0.42, b: 0.11, a: 0.9}
+  modeButtonInnerHighlightColor: {r: 0.55, g: 1, b: 0.68, a: 0.22}
+  modeButtonTextColor: {r: 0, g: 1, b: 0.2129209, a: 1}
+  buttonSceneLoadDelay: 0.12
 --- !u!1 &2098065589
 GameObject:
   m_ObjectHideFlags: 0
