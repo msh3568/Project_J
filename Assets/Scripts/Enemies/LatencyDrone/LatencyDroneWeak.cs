@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 using UnityEngine.Serialization;
 using MoreMountains.Feedbacks;
 
-public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnable
+public class LatencyDroneWeak : MonoBehaviour, IDamageable, IDamageableStatus, ICheckpointRespawnable
 {
     private enum MovementMode
     {
@@ -179,6 +179,7 @@ public class LatencyDroneWeak : MonoBehaviour, IDamageable, ICheckpointRespawnab
     [SerializeField] private float verticalAdjustSpeed = 2f; // Y�?조정 ?�도
 
     private bool IsStationaryMode => movementMode == MovementMode.Stationary;
+    public bool CanReceiveDamage => !isDead && !isDying;
     public bool IsDeathInProgress => isDead || isDying;
     public bool HasDeathExplosionCompleted => deathExplosionCompleted;
 

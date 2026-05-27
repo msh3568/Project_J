@@ -329,8 +329,7 @@ public class LatencyCapsuleProjectile : MonoBehaviour, IParryable
             return;
         }
 
-        IDamageable damageable = autoReturnTarget.GetComponentInParent<IDamageable>();
-        if (damageable != null && damageSource != null)
+        if (DamageableLookup.TryGetDamageable(autoReturnTarget, out IDamageable damageable) && damageSource != null)
         {
             damageable.TakeDamage(1000f, damageSource);
             GameManager.Instance?.RequestHitSlowMoAndShake();

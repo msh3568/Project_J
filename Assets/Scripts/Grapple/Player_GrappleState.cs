@@ -33,6 +33,7 @@ public class Player_GrappleState : PlayerState
     private bool movementStarted;
     private bool startupSlowRequested;
     private bool attackAnimationTriggered;
+    private bool grappleTravelSoundPlayed;
     private float postAttackHoldTimer;
     private bool playerPresentationBoostApplied;
 
@@ -101,6 +102,7 @@ public class Player_GrappleState : PlayerState
         startSlowTimer = 0f;
         startupSlowRequested = false;
         attackAnimationTriggered = false;
+        grappleTravelSoundPlayed = false;
         postAttackHoldTimer = 0f;
         anim.ResetTrigger(GrappleAttackTrigger);
 
@@ -133,10 +135,8 @@ public class Player_GrappleState : PlayerState
         Entity_VFX entityVfx = player.GetComponent<Entity_VFX>();
         entityVfx?.PlayDashVfx(player.facingDir);
 
-        if (config.grappleStartSfx != null && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(config.grappleStartSfx, config.grappleStartSfxVolume);
-        }
+        if (movementStarted)
+            PlayGrappleTravelSound();
     }
 
     public override void Update()
@@ -221,11 +221,38 @@ public class Player_GrappleState : PlayerState
             return;
 
         movementStarted = true;
+        PlayGrappleTravelSound();
+
         if (startupSlowRequested)
         {
             GameManager.Instance?.EndSlowMotion();
             startupSlowRequested = false;
         }
+    }
+
+    private void PlayGrappleTravelSound()
+    {
+        if (grappleTravelSoundPlayed)
+            return;
+
+        grappleTravelSoundPlayed = true;
+
+        if (config != null && config.grappleStartSfx != null)
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(config.grappleStartSfx, config.grappleStartSfxVolume);
+                return;
+            }
+
+            if (player.fxSource != null)
+            {
+                player.fxSource.PlayOneShot(config.grappleStartSfx, config.grappleStartSfxVolume);
+                return;
+            }
+        }
+
+        player.PlaySound(player.dashSound1);
     }
 
     public override void Exit()

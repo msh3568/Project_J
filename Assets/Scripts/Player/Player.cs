@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 public class Player : Entity
 {
@@ -162,6 +163,9 @@ public class Player : Entity
         public SoundEffect hitSound;
 
         public SoundEffect basicAttackSound;
+
+        [FormerlySerializedAs("airAttackHitSound")]
+        public SoundEffect grappleAttackHitSound;
 
         public SoundEffect baldoSkillSound;
 

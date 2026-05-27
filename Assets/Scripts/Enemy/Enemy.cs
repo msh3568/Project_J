@@ -68,6 +68,9 @@ public class Enemy : Entity
     public override void onEntityDeath()
     {
         Debug.Log($"[Enemy] {gameObject.name} onEntityDeath() called. Changing to DeadState.");
+        if (TryGetComponent(out Entity_Health health))
+            health.MarkDeadForDamageLookup();
+
         base.onEntityDeath();
 
         if (TryGetComponent<RoomTrackedUnit>(out var trackedUnit))

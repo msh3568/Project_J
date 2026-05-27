@@ -70,6 +70,9 @@ public class PauseManager : MonoBehaviour
         // ESC ???낅젰 媛먯?
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (!IsGamePaused && CutsceneDialoguePlayer.IsAnyTimelineRunning)
+                return;
+
             // ?ㅼ젙 李쎌씠 ?쒖꽦?붾릺???덉쑝硫??ㅼ젙 李쎌쓣 ?レ쓬
             if (settingsContentsGroup != null && settingsContentsGroup.activeSelf)
             {

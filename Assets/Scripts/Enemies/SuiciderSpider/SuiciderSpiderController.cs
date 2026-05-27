@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 
-public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, ICheckpointRespawnable
+public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, IDamageableStatus, ICheckpointRespawnable
 {
     private enum SpiderState
     {
@@ -133,6 +133,8 @@ public class SuiciderSpiderController : MonoBehaviour, IParryable, IDamageable, 
     private bool isIgnoringPlayerCollisions;
     private bool isFacingRight = true;
     private bool isAttachedToPlayer;
+
+    public bool CanReceiveDamage => state != SpiderState.Exploded && currentHp > 0f;
     private SpiderState previousState;
     private float walkStepTimer;
     private bool playedAttachedWarning;

@@ -41,8 +41,7 @@ public class SuiciderSpiderExplosion : MonoBehaviour
         Collider2D[] enemies = Physics2D.OverlapCircleAll(origin, radius, enemyLayer);
         foreach (var enemy in enemies)
         {
-            IDamageable damageable = enemy.GetComponent<IDamageable>();
-            if (damageable != null)
+            if (DamageableLookup.TryGetDamageable(enemy, out IDamageable damageable))
             {
                 damageable.TakeDamage(enemyDamage, transform);
             }

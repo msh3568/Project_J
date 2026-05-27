@@ -42,6 +42,6 @@ MonoBehaviour:
   startSlowDuration: 0.06
   droneArriveSlowScale: 0.2
   droneArriveSlowDuration: 0.1
-  grappleStartSfx: {fileID: 0}
+  grappleStartSfx: {fileID: 8300000, guid: 12e68214798307c44ab358d7e7bbccb1, type: 3}
   grappleStartSfxVolume: 1
   spawnAfterImageOnStart: 1

@@ -7073,8 +7073,8 @@ Transform:
   m_GameObject: {fileID: 248804976}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 178.8364, y: 38.4556, z: 0}
-  m_LocalScale: {x: 8.410358, y: 7.368366, z: 1}
+  m_LocalPosition: {x: 226.47598, y: 28.6676, z: 0}
+  m_LocalScale: {x: 12.518878, y: 9.498471, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1517762491}
@@ -8712,8 +8712,8 @@ Transform:
   m_GameObject: {fileID: 302175295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.8, y: 10.2, z: 0}
-  m_LocalScale: {x: 6.100568, y: 43.273735, z: 0.817}
+  m_LocalPosition: {x: -19.4554, y: 10.2, z: 0}
+  m_LocalScale: {x: 6.7899323, y: 43.273735, z: 0.817}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1517762491}
@@ -8812,7 +8812,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0.5283019, b: 0.036023952, a: 1}
+  m_Color: {r: 0, g: 0.5283019, b: 0.036023952, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -43788,11 +43788,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.2593027
+      value: 1.874481
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.320919
+      value: 5.5700445
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalScale.z
@@ -43800,11 +43800,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 174.17
+      value: 219.53
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 40.04
+      value: 30.71
       objectReference: {fileID: 0}
     - target: {fileID: 7114629210727707915, guid: b6a04fa9e422d6a48aba4a18b6173b4a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -428762,6 +428762,18 @@ MonoBehaviour:
   lockPlayerWhileTimelineRuns: 1
   disableRoomCameraManagerWhileTimelineRuns: 1
   enterCompletesAndAdvancesDialogue: 1
+  allowEscapeHoldSkip: 1
+  escapeSkipHoldDuration: 0.6
+  evaluateTimelineEndOnSkip: 1
+  showEscapeSkipPrompt: 1
+  escapeSkipPromptText: "ESC\uB97C \uB20C\uB7EC\uC11C \uB118\uAE30\uC138\uC694"
+  escapeSkipPromptAnchoredPosition: {x: -48, y: 48}
+  escapeSkipPromptSize: {x: 420, y: 58}
+  escapeSkipPromptFontSize: 28
+  escapeSkipPromptTextColor: {r: 1, g: 1, b: 1, a: 0.92}
+  escapeSkipPromptBackgroundColor: {r: 0, g: 0, b: 0, a: 0.55}
+  escapeSkipPromptProgressColor: {r: 1, g: 1, b: 1, a: 0.22}
+  escapeSkipPromptPressedScale: 0.96
   playerObject: {fileID: 2049881622}
   npcObject: {fileID: 1887134014}
   playerObjectName: Player
@@ -442172,13 +442184,13 @@ MonoBehaviour:
   fxSource: {fileID: 0}
   dashSound1:
     clip: {fileID: 8300000, guid: 430678261efe7474f91340bffafa7f74, type: 3}
-    volume: 1
+    volume: 0.66
   dashSound2:
     clip: {fileID: 8300000, guid: 806b58b1489abaa439da2cfc3d027aeb, type: 3}
-    volume: 1
+    volume: 0
   jumpSound:
     clip: {fileID: 8300000, guid: bd1f16598da328b498da10f3c8aafe61, type: 3}
-    volume: 1
+    volume: 0.67
   walkSound:
     clip: {fileID: 8300000, guid: b9949249e648dee4a82c847f727fa6bf, type: 3}
     volume: 0.398
@@ -442188,12 +442200,15 @@ MonoBehaviour:
   basicAttackSound:
     clip: {fileID: 8300000, guid: e7f8c133294633341bda99f58e877a63, type: 3}
     volume: 1
+  grappleAttackHitSound:
+    clip: {fileID: 8300000, guid: e7f8c133294633341bda99f58e877a63, type: 3}
+    volume: 0.83
   baldoSkillSound:
     clip: {fileID: 8300000, guid: 4d8c99531e97f9d449cb2dac91b73563, type: 3}
     volume: 1
   screamSound:
     clip: {fileID: 8300000, guid: faae4ce2a9ef3a1489f00d2fcf00ff8f, type: 3}
-    volume: 0.63
+    volume: 0
   screamTriggerFallDistance: 9.5
   jumpVfxPrefab: {fileID: 2334693365341204478, guid: 7c01c9991f736e84f9892dceb32fcdcd, type: 3}
   jumpVfxOffset: {x: -0.2, y: -0.8, z: 0}
@@ -442360,7 +442375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5d7a8b0785c294b9ab8c19f202b111, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Skill_Baldo
-  cooldown: 0.2
+  cooldown: 4.5
   baldoPrefab: {fileID: 8611842689374235054, guid: cee7bf1011e79424bbbe2d23637633fd, type: 3}
   effectOffset: {x: 1, y: 1}
   damage: 200

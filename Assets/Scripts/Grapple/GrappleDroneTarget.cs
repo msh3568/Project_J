@@ -32,8 +32,7 @@ public class GrappleDroneTarget : GrappleTargetBase, ICheckpointRespawnable
         nextAllowedTriggerTime = Time.time + retriggerCooldown;
 
         // Reuse the parent enemy's own death pipeline (explosion/sound/cleanup).
-        IDamageable damageable = GetComponentInParent<IDamageable>();
-        if (damageable != null)
+        if (DamageableLookup.TryGetDamageable(this, out IDamageable damageable))
         {
             damageable.TakeDamage(grappleDamage, player != null ? player.transform : transform);
             GameManager.Instance?.RequestHitSlowMoAndShake();

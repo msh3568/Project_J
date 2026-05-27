@@ -5,13 +5,13 @@ public static class DamageableLookup
     public static bool TryGetDamageable(Component source, out IDamageable damageable)
     {
         damageable = Resolve<IDamageable>(source);
-        return damageable != null;
+        return IsDamageableValid(damageable);
     }
 
     public static bool TryGetDamageable(GameObject source, out IDamageable damageable)
     {
         damageable = Resolve<IDamageable>(source != null ? source.transform : null);
-        return damageable != null;
+        return IsDamageableValid(damageable);
     }
 
     public static bool TryGetDamageable(Collision2D collision, out IDamageable damageable)
@@ -58,5 +58,16 @@ public static class DamageableLookup
         }
 
         return resolved;
+    }
+
+    private static bool IsDamageableValid(IDamageable damageable)
+    {
+        if (damageable == null)
+            return false;
+
+        if (damageable is IDamageableStatus status)
+            return status.CanReceiveDamage;
+
+        return true;
     }
 }

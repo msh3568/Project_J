@@ -13,7 +13,7 @@ public class Player_Combat : Entity_Combat
     private Player player;
     private float parryCheckRadiusPadding;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         player = GetComponent<Player>();
@@ -100,7 +100,15 @@ public class Player_Combat : Entity_Combat
         if (target != null && target.CompareTag("Player"))
             return;
 
+        if (ShouldPlayGrappleAttackHitSound())
+            player.PlaySound(player.grappleAttackHitSound);
+
         GameManager.Instance?.RequestHitSlowMoAndShake();
+    }
+
+    private bool ShouldPlayGrappleAttackHitSound()
+    {
+        return player != null && player.IsGrappling;
     }
 
     protected override bool ShouldDamageTarget(Collider2D target, IDamageable damageable)

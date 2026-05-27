@@ -160,8 +160,7 @@ public class SpikeBall : MonoBehaviour, IParryable
             return;
         }
 
-        IDamageable damageable = sourceTransform.GetComponentInParent<IDamageable>();
-        if (damageable != null && damageSource != null)
+        if (DamageableLookup.TryGetDamageable(sourceTransform, out IDamageable damageable) && damageSource != null)
         {
             Debug.Log($"[SpikeBall AutoReturn] Hitting source '{sourceTransform.name}'. Dealing {parriedDamage} damage from source '{damageSource.name}'.");
             damageable.TakeDamage(parriedDamage, damageSource);

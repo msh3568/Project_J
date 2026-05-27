@@ -5,7 +5,7 @@ using MoreMountains.Feedbacks;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRespawnable
+public class PrototypeBossController : MonoBehaviour, IDamageable, IDamageableStatus, ICheckpointRespawnable
 {
     [Serializable]
     private struct BossSpritePart
@@ -331,6 +331,8 @@ public class PrototypeBossController : MonoBehaviour, IDamageable, ICheckpointRe
     private readonly RaycastHit2D[] rightArmSlamGroundHitBuffer = new RaycastHit2D[8];
     private ArmIkRig leftArmIkRig;
     private ArmIkRig rightArmIkRig;
+
+    public bool CanReceiveDamage => !isDead;
 
     private void Awake()
     {

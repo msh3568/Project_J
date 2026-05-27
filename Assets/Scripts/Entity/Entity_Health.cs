@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Entity_Health : MonoBehaviour, IDamageable
+public class Entity_Health : MonoBehaviour, IDamageable, IDamageableStatus
 {
     protected Entity_VFX entityVfx;
     protected Entity entity;
@@ -11,6 +11,9 @@ public class Entity_Health : MonoBehaviour, IDamageable
     [SerializeField] public float currentHp;
     [SerializeField] public float maxHp = 100;
     [SerializeField] protected bool isDead;
+
+    public bool CanReceiveDamage => !isDead;
+    public bool IsDead => isDead;
 
     [Header("On Damage Knockback")]
     [SerializeField] private Vector2 knockbackPower = new Vector2(1.5f, 2.5f);
@@ -103,6 +106,16 @@ public class Entity_Health : MonoBehaviour, IDamageable
     {
         isDead = false;
         currentHp = maxHp;
+        onHealthChanged?.Invoke(currentHp, maxHp);
+    }
+
+    public void MarkDeadForDamageLookup()
+    {
+        if (isDead)
+            return;
+
+        isDead = true;
+        currentHp = Mathf.Min(currentHp, 0f);
         onHealthChanged?.Invoke(currentHp, maxHp);
     }
 

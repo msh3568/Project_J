@@ -19,6 +19,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private const float DefaultPunctuationExtraDelay = 0.12f;
     private const int GeneratedTypingClipSampleRate = 44100;
     private const float GeneratedTypingClipDuration = 0.045f;
+    private static int activeTimelineCount;
+
+    public static bool IsAnyTimelineRunning => activeTimelineCount > 0;
 
     [Header("Timeline Start")]
     [SerializeField] private PlayableDirector director;
@@ -28,6 +31,20 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     [SerializeField, FormerlySerializedAs("lockPlayerWhileDialogueRuns")] private bool lockPlayerWhileTimelineRuns = true;
     [SerializeField] private bool disableRoomCameraManagerWhileTimelineRuns = true;
     [SerializeField] private bool enterCompletesAndAdvancesDialogue = true;
+
+    [Header("Timeline Skip")]
+    [SerializeField] private bool allowEscapeHoldSkip = true;
+    [SerializeField, Min(0.05f)] private float escapeSkipHoldDuration = 0.6f;
+    [SerializeField] private bool evaluateTimelineEndOnSkip = true;
+    [SerializeField] private bool showEscapeSkipPrompt = true;
+    [SerializeField] private string escapeSkipPromptText = "ESC\uB97C \uB20C\uB7EC\uC11C \uB118\uAE30\uC138\uC694";
+    [SerializeField] private Vector2 escapeSkipPromptAnchoredPosition = new Vector2(-48f, 28f);
+    [SerializeField] private Vector2 escapeSkipPromptSize = new Vector2(360f, 44f);
+    [SerializeField] private float escapeSkipPromptFontSize = 28f;
+    [SerializeField] private Color escapeSkipPromptTextColor = new Color(1f, 1f, 1f, 0.92f);
+    [SerializeField] private Color escapeSkipPromptBackgroundColor = new Color(0f, 0f, 0f, 0.82f);
+    [SerializeField] private Color escapeSkipPromptProgressColor = new Color(1f, 1f, 1f, 0.45f);
+    [SerializeField, Range(0.8f, 1f)] private float escapeSkipPromptPressedScale = 0.96f;
 
     [Header("Actors")]
     [SerializeField] private GameObject playerObject;
@@ -113,6 +130,12 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private TextMeshProUGUI dialogueText;
     private GameObject runtimeUiRoot;
     private TMP_FontAsset runtimeFontAsset;
+    private Canvas escapeSkipPromptCanvas;
+    private RectTransform escapeSkipPromptRootRect;
+    private TextMeshProUGUI escapeSkipPromptTextComponent;
+    private Image escapeSkipPromptBackgroundImage;
+    private Image escapeSkipPromptProgressImage;
+    private GameObject escapeSkipPromptRoot;
 
     private Player player;
     private CutsceneNpcActor npcActor;
@@ -122,6 +145,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private Vector3 initialPlayerPosition;
     private bool timelineStartedByTrigger;
     private bool timelineFinished;
+    private bool timelineRegisteredAsRunning;
+    private bool skipRequested;
+    private float escapeSkipHoldTimer;
     private bool showingTimelineDialogue;
     private SpeakerType activeSpeaker;
     private bool activeUsesCustomOffset;
@@ -232,6 +258,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private void Update()
     {
         if (!Application.isPlaying)
+            return;
+
+        if (HandleEscapeHoldSkipInput())
             return;
 
         HandleDialogueAdvanceInput();
@@ -406,6 +435,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
         timelineStartedByTrigger = true;
         timelineFinished = false;
+        skipRequested = false;
+        escapeSkipHoldTimer = 0f;
+        RegisterRunningTimeline();
 
         if (director != null && playDirectorWhenTimelineStarts)
         {
@@ -419,6 +451,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         HideTimelineDialogue();
         LockRoomCameraManager(false);
         LockPlayer(false);
+        escapeSkipHoldTimer = 0f;
+        UpdateEscapeSkipPrompt(false, 0f, false);
+        UnregisterRunningTimeline();
         timelineFinished = true;
     }
 
@@ -433,6 +468,9 @@ public class CutsceneDialoguePlayer : MonoBehaviour
     private void OnDirectorStopped(PlayableDirector stoppedDirector)
     {
         if (stoppedDirector != director)
+            return;
+
+        if (skipRequested)
             return;
 
         if (Application.isPlaying)
@@ -612,6 +650,278 @@ public class CutsceneDialoguePlayer : MonoBehaviour
             return false;
 
         return time >= duration - 0.0005d;
+    }
+
+    private bool HandleEscapeHoldSkipInput()
+    {
+        if (!allowEscapeHoldSkip || skipRequested || !IsTimelineSkippable())
+        {
+            escapeSkipHoldTimer = 0f;
+            UpdateEscapeSkipPrompt(false, 0f, false);
+            return false;
+        }
+
+        bool escapePressed = IsEscapePressed();
+        if (escapePressed)
+        {
+            escapeSkipHoldTimer += Time.unscaledDeltaTime;
+        }
+        else
+        {
+            escapeSkipHoldTimer = 0f;
+        }
+
+        float holdDuration = Mathf.Max(0.05f, escapeSkipHoldDuration);
+        UpdateEscapeSkipPrompt(true, Mathf.Clamp01(escapeSkipHoldTimer / holdDuration), escapePressed);
+
+        if (escapeSkipHoldTimer < holdDuration)
+            return false;
+
+        SkipTimelineToEnd();
+        return true;
+    }
+
+    private bool IsTimelineSkippable()
+    {
+        if (!timelineStartedByTrigger || timelineFinished)
+            return false;
+
+        if (showingTimelineDialogue || pausedForManualDialogueAdvance || endingCutsceneSequenceStarted)
+            return true;
+
+        return director != null && (director.state == PlayState.Playing || director.state == PlayState.Paused);
+    }
+
+    private void UpdateEscapeSkipPrompt(bool visible, float progress, bool pressed)
+    {
+        if (!showEscapeSkipPrompt || !allowEscapeHoldSkip)
+            visible = false;
+
+        if (!visible)
+        {
+            if (escapeSkipPromptRoot != null)
+                escapeSkipPromptRoot.SetActive(false);
+
+            return;
+        }
+
+        EnsureEscapeSkipPromptUi();
+        if (escapeSkipPromptRoot == null)
+            return;
+
+        escapeSkipPromptRoot.SetActive(true);
+
+        if (escapeSkipPromptRootRect != null)
+        {
+            escapeSkipPromptRootRect.anchoredPosition = escapeSkipPromptAnchoredPosition;
+            escapeSkipPromptRootRect.sizeDelta = escapeSkipPromptSize;
+            float scale = pressed ? escapeSkipPromptPressedScale : 1f;
+            escapeSkipPromptRootRect.localScale = Vector3.one * scale;
+        }
+
+        if (escapeSkipPromptTextComponent != null)
+        {
+            escapeSkipPromptTextComponent.text = escapeSkipPromptText;
+            escapeSkipPromptTextComponent.font = ResolveDialogueFont();
+            escapeSkipPromptTextComponent.fontSize = escapeSkipPromptFontSize;
+            escapeSkipPromptTextComponent.color = escapeSkipPromptTextColor;
+        }
+
+        if (escapeSkipPromptBackgroundImage != null)
+        {
+            escapeSkipPromptBackgroundImage.color = pressed
+                ? Color.Lerp(escapeSkipPromptBackgroundColor, Color.white, 0.06f)
+                : escapeSkipPromptBackgroundColor;
+        }
+
+        if (escapeSkipPromptProgressImage != null)
+        {
+            escapeSkipPromptProgressImage.color = escapeSkipPromptProgressColor;
+            escapeSkipPromptProgressImage.fillAmount = Mathf.Clamp01(progress);
+        }
+    }
+
+    private void EnsureEscapeSkipPromptUi()
+    {
+        if (escapeSkipPromptRoot != null && escapeSkipPromptTextComponent != null && escapeSkipPromptProgressImage != null)
+            return;
+
+        GameObject canvasObject = new GameObject("CutsceneEscapeSkipPromptCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        canvasObject.hideFlags = HideFlags.HideAndDontSave;
+
+        escapeSkipPromptCanvas = canvasObject.GetComponent<Canvas>();
+        escapeSkipPromptCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        escapeSkipPromptCanvas.overrideSorting = true;
+        escapeSkipPromptCanvas.sortingOrder = 32760;
+
+        CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        escapeSkipPromptRoot = new GameObject("EscapeSkipPrompt", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        escapeSkipPromptRoot.hideFlags = HideFlags.HideAndDontSave;
+        escapeSkipPromptRoot.transform.SetParent(canvasObject.transform, false);
+
+        escapeSkipPromptRootRect = escapeSkipPromptRoot.GetComponent<RectTransform>();
+        escapeSkipPromptRootRect.anchorMin = new Vector2(1f, 0f);
+        escapeSkipPromptRootRect.anchorMax = new Vector2(1f, 0f);
+        escapeSkipPromptRootRect.pivot = new Vector2(1f, 0f);
+        escapeSkipPromptRootRect.anchoredPosition = escapeSkipPromptAnchoredPosition;
+        escapeSkipPromptRootRect.sizeDelta = escapeSkipPromptSize;
+
+        escapeSkipPromptBackgroundImage = escapeSkipPromptRoot.GetComponent<Image>();
+        escapeSkipPromptBackgroundImage.color = escapeSkipPromptBackgroundColor;
+        escapeSkipPromptBackgroundImage.raycastTarget = false;
+
+        GameObject progressObject = new GameObject("HoldProgress", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        progressObject.hideFlags = HideFlags.HideAndDontSave;
+        progressObject.transform.SetParent(escapeSkipPromptRoot.transform, false);
+
+        RectTransform progressRect = progressObject.GetComponent<RectTransform>();
+        progressRect.anchorMin = new Vector2(0f, 0f);
+        progressRect.anchorMax = new Vector2(1f, 0f);
+        progressRect.pivot = new Vector2(0.5f, 0f);
+        progressRect.sizeDelta = new Vector2(0f, 3f);
+        progressRect.anchoredPosition = Vector2.zero;
+
+        escapeSkipPromptProgressImage = progressObject.GetComponent<Image>();
+        escapeSkipPromptProgressImage.color = escapeSkipPromptProgressColor;
+        escapeSkipPromptProgressImage.type = Image.Type.Filled;
+        escapeSkipPromptProgressImage.fillMethod = Image.FillMethod.Horizontal;
+        escapeSkipPromptProgressImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+        escapeSkipPromptProgressImage.fillAmount = 0f;
+        escapeSkipPromptProgressImage.raycastTarget = false;
+
+        GameObject textObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textObject.hideFlags = HideFlags.HideAndDontSave;
+        textObject.transform.SetParent(escapeSkipPromptRoot.transform, false);
+
+        RectTransform labelRect = textObject.GetComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = new Vector2(14f, 2f);
+        labelRect.offsetMax = new Vector2(-14f, 0f);
+
+        escapeSkipPromptTextComponent = textObject.GetComponent<TextMeshProUGUI>();
+        escapeSkipPromptTextComponent.alignment = TextAlignmentOptions.MidlineRight;
+        escapeSkipPromptTextComponent.enableWordWrapping = false;
+        escapeSkipPromptTextComponent.raycastTarget = false;
+        escapeSkipPromptTextComponent.text = escapeSkipPromptText;
+
+        escapeSkipPromptRoot.SetActive(false);
+    }
+
+    private void SkipTimelineToEnd()
+    {
+        if (skipRequested || timelineFinished)
+            return;
+
+        skipRequested = true;
+        escapeSkipHoldTimer = 0f;
+        UpdateEscapeSkipPrompt(false, 0f, false);
+
+        ResolveReferences();
+        CancelActiveCutscenePrompts();
+        HideTimelineDialogue();
+        RestoreDirectorPlaybackSpeed();
+        StopEndingCutsceneSequenceRoutine();
+        StopEndingNpcVanishRoutines();
+        DisableEndingNpcVanishEffect();
+        EvaluateDirectorAtEndForSkip();
+        ApplyEndingCutsceneFinalStateForSkip();
+        EndTimelineSequence();
+    }
+
+    private void EvaluateDirectorAtEndForSkip()
+    {
+        if (director == null)
+            return;
+
+        if (evaluateTimelineEndOnSkip && TryGetDirectorEndTime(out double endTime))
+        {
+            director.time = endTime;
+            director.Evaluate();
+        }
+
+        director.Stop();
+    }
+
+    private bool TryGetDirectorEndTime(out double endTime)
+    {
+        endTime = 0d;
+
+        if (director == null)
+            return false;
+
+        double duration = director.duration;
+        if (double.IsNaN(duration) || double.IsInfinity(duration) || duration <= 0d)
+            return false;
+
+        endTime = duration;
+        return true;
+    }
+
+    private void ApplyEndingCutsceneFinalStateForSkip()
+    {
+        endingCutsceneSequenceStarted = true;
+        endingCutsceneSequenceCompleting = true;
+
+        if (enableEndingNpcVanish)
+            ApplyEndingNpcVanishFinalStateForSkip();
+
+        if (enableEndingLetterboxExit)
+        {
+            ResolveEndingLetterboxBars();
+            CacheEndingLetterboxExitPositions();
+            ApplyEndingLetterboxExitTargetPositions();
+        }
+
+        endingCutsceneSequenceCompleting = false;
+    }
+
+    private void ApplyEndingNpcVanishFinalStateForSkip()
+    {
+        ResolveReferences();
+        if (npcObject == null)
+            return;
+
+        CacheEndingNpcState();
+        ApplyEndingNpcAlpha(0f);
+
+        if (deactivateNpcAfterEndingVanish)
+            npcObject.SetActive(false);
+
+        endingNpcVanishStarted = true;
+    }
+
+    private void CancelActiveCutscenePrompts()
+    {
+        CutsceneParryPromptPlayer parryPromptPlayer = GetComponent<CutsceneParryPromptPlayer>();
+        if (parryPromptPlayer != null)
+            parryPromptPlayer.CancelPrompt();
+
+        CutsceneGrapplePromptPlayer grapplePromptPlayer = GetComponent<CutsceneGrapplePromptPlayer>();
+        if (grapplePromptPlayer != null)
+            grapplePromptPlayer.CancelPrompt();
+    }
+
+    private void RegisterRunningTimeline()
+    {
+        if (timelineRegisteredAsRunning)
+            return;
+
+        activeTimelineCount++;
+        timelineRegisteredAsRunning = true;
+    }
+
+    private void UnregisterRunningTimeline()
+    {
+        if (!timelineRegisteredAsRunning)
+            return;
+
+        activeTimelineCount = Mathf.Max(0, activeTimelineCount - 1);
+        timelineRegisteredAsRunning = false;
     }
 
     private void UpdateEndingCutsceneSequence()
@@ -1854,6 +2164,14 @@ public class CutsceneDialoguePlayer : MonoBehaviour
                 DestroyImmediate(runtimeUiRoot);
         }
 
+        if (escapeSkipPromptCanvas != null)
+        {
+            if (Application.isPlaying)
+                Destroy(escapeSkipPromptCanvas.gameObject);
+            else
+                DestroyImmediate(escapeSkipPromptCanvas.gameObject);
+        }
+
         if (runtimeFontAsset != null)
         {
             if (Application.isPlaying)
@@ -1874,6 +2192,12 @@ public class CutsceneDialoguePlayer : MonoBehaviour
         }
 
         runtimeUiRoot = null;
+        escapeSkipPromptCanvas = null;
+        escapeSkipPromptRoot = null;
+        escapeSkipPromptRootRect = null;
+        escapeSkipPromptTextComponent = null;
+        escapeSkipPromptBackgroundImage = null;
+        escapeSkipPromptProgressImage = null;
         runtimeFontAsset = null;
         generatedPlayerTypingClip = null;
         generatedNpcTypingClip = null;
@@ -1902,6 +2226,22 @@ public class CutsceneDialoguePlayer : MonoBehaviour
 
 #if ENABLE_LEGACY_INPUT_MANAGER
         pressed |= Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+#endif
+
+        return pressed;
+    }
+
+    private static bool IsEscapePressed()
+    {
+        bool pressed = false;
+
+#if ENABLE_INPUT_SYSTEM
+        Keyboard keyboard = Keyboard.current;
+        pressed |= keyboard != null && keyboard.escapeKey.isPressed;
+#endif
+
+#if ENABLE_LEGACY_INPUT_MANAGER
+        pressed |= Input.GetKey(KeyCode.Escape);
 #endif
 
         return pressed;

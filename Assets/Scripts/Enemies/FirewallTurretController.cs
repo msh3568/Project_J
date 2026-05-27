@@ -7,7 +7,7 @@ using MoreMountains.Feedbacks;
 using UnityEditor;
 #endif
 
-public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointRespawnable
+public class FirewallTurretController : MonoBehaviour, IDamageable, IDamageableStatus, ICheckpointRespawnable
 {
     private enum ForwardDirection
     {
@@ -242,6 +242,8 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
     private ForwardDirection initialForwardDirection;
     private Vector3 initialFacingMirrorLocalScale;
     private bool initialBodyFlipX;
+
+    public bool CanReceiveDamage => !isDead && !isDying;
     private Transform wreckVisualRoot;
     private SpriteRenderer wreckBodySpriteRenderer;
     private SpriteRenderer wreckHeadSpriteRenderer;
@@ -336,7 +338,9 @@ public class FirewallTurretController : MonoBehaviour, IDamageable, ICheckpointR
             return;
 
         ResolveReferences();
+#if UNITY_EDITOR
         AutoFixReplacementSpritesInEditor();
+#endif
         damagedVisualHealthThreshold = Mathf.Max(0f, damagedVisualHealthThreshold);
         preFireTrackingDuration = Mathf.Max(0f, preFireTrackingDuration);
         preFireTrackingRotationSpeed = Mathf.Max(0f, preFireTrackingRotationSpeed);
