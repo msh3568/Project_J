@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46902d1d051ec549aeed69ef07080df, type: 3}
+  m_Name: LockOnGrappleConfig
+  m_EditorClassIdentifier: Assembly-CSharp::LockOnGrappleConfig
+  inputAction: 1
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 32768
+  includeEnemyLayer: 1
+  searchRadius: 12
+  coneAngle: 120
+  fallbackConeAngle: 180
+  upInputThreshold: 0.25
+  upBias: 0.7
+  requireOnScreen: 1
+  blockBehindWalls: 1
+  occlusionMask:
+    serializedVersion: 2
+    m_Bits: 16448
+  occlusionNearTargetGrace: 0.6
+  occlusionMinBlockedDistance: 0.2
+  distWeight: 1
+  angleWeight: 1
+  excludeTime: 1.2
+  travelTime: 0.15
+  phaseThroughDuringGrapple: 1
+  invincibleDuringGrapple: 1
+  startSlowScale: 0.7
+  startSlowDuration: 0.06
+  droneArriveSlowScale: 0.2
+  droneArriveSlowDuration: 0.1
+  grappleStartSfx: {fileID: 0}
+  grappleStartSfxVolume: 1
+  spawnAfterImageOnStart: 1

@@ -364,6 +364,15 @@ public class Player_GrappleState : PlayerState
         LogGrappleAnim($"Attack trigger fired at progress={travelProgress:F2} threshold={triggerProgress:F2}");
         anim.SetTrigger(GrappleAttackTrigger);
         ForcePlayState(GrappleAttackStateName);
+        PlayGrappleAttackSound();
+    }
+
+    private void PlayGrappleAttackSound()
+    {
+        SoundEffect sound = player.grappleAttackHitSound != null && player.grappleAttackHitSound.clip != null
+            ? player.grappleAttackHitSound
+            : player.basicAttackSound;
+        player.PlaySound(sound);
     }
 
     private void ForcePlayState(string stateName)
